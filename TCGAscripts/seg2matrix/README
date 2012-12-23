@@ -1,0 +1,13 @@
+
+BUILD:
+# make
+
+Get refgene_hg18
+# ./getRefGene_hg18.sh
+
+Generate genomic matrix from segfile
+# ./segToMatrix.py ../broad.mit.edu_BRCA_Genome_Wide_SNP_6_20110506 refGene_hg18 my_matrix_file
+
+Generate normalized hugo mapped matrix from segfile
+# ./mapSegToGenesNorm.py ../broad.mit.edu_BRCA_Genome_Wide_SNP_6_20110506 ../refGene_hg18 my_hugomatrix_file
+
