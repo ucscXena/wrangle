@@ -1,0 +1,17 @@
+FREEZE=cgDataFreeze2012-12-21
+
+rsync -avL --exclude '*~' --exclude 'public/TCGA' --exclude 'probeMap' data/* /inside/depot/cancerGenomeFreeze/$FREEZE/
+
+rsync -avL --exclude '*~' data_flatten/probeMap /inside/depot/cancerGenomeFreeze/$FREEZE/
+
+rsync -avL --exclude '*~' data_flatten/stat* /inside/depot/cancerGenomeFreeze/$FREEZE/
+
+rsync -avL --exclude '*~' data_flatten/public/TCGA /inside/depot/cancerGenomeFreeze/$FREEZE/public/
+
+chmod -R a-wx+X /inside/depot/cancerGenomeFreeze/$FREEZE/
+
+chgrp -R cancer /inside/depot/cancerGenomeFreeze/$FREEZE/
+
+cp -pR /inside/depot/cancerGenomeFreeze/$FREEZE/ /data/cancerGenomeData/
+
+chmod -R a-wx+X /data/cancerGenomeData/$FREEZE/

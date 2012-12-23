@@ -1,0 +1,27 @@
+cut -f 1 preFreeze/TCGA/BRCA/Paradigm_Expression_CopyNumber > tmp1
+
+cut -f 1 preFreeze/TCGA/BRCA/Paradigm_Expression_CopyNumber |cut -d "_" -f 2-  > tmp
+
+paste tmp1 tmp > tmp2
+
+more +2 tmp2 > tmp3
+
+sort tmp3 > tmp4
+
+grep -v "/" tmp4|grep -v " "|grep -v ":" |grep -v [a-z]|grep -v "\." > tmp5
+
+mv tmp5 paradigmPathwayV1.aliasMap
+
+sort -t$'\t' /inside/home/jzhu/cgDataJing/scripts/data_flatten/probeMap/collapsed_hugo_symbols_aliases_only_hg18.probeMap >tmp6
+
+sort -t$'\t' -k 2 paradigmPathwayV1.aliasMap >tmp7
+
+join -t$'\t' -1 2 -2 1 tmp7 tmp6 > tmp8
+
+cut -f 2 tmp8 >tmp9
+
+cut -f 1,4- tmp8> tmp10
+
+paste tmp9 tmp10 > paradigmPathwayV1.probeMap
+
+rm -f tmp1 tmp2 tmp3 tmp4 tmp5 tmp6 tmp7 tmp8 tmp9 tmp10
