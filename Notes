@@ -1,0 +1,4 @@
+git add files
+git commit -m ""
+git push https://github.com/jingchunzhu/cgDataNew.git
+
