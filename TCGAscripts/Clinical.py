@@ -8,6 +8,7 @@ import TCGAUtil
 sys.path.insert(0,"../CGDataNew")
 from ClinicalMatrixNew import *
 from CGDataUtil import *
+from survival import *
 
 #/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/bcr/minbiotab/clin
 
@@ -60,6 +61,7 @@ def Clinical(inDir, outDir, cancer,flog,PATHPATTERN):
         deriveCancer="COADREAD"
         process(inDir, outDir, dataDir, deriveCancer,flog,PATHPATTERN, lastDate, cancer)
 
+    survival(outDir+cancer+"/",cancer )
     cleanGarbage(garbage)
     return
 
