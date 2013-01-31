@@ -8,18 +8,28 @@ import TCGAUtil
 sys.path.insert(0,"../CGDataNew")
 from CGDataUtil import *
 
-def Pathway_Paradigm_expression (inDir, outDir, cancer,flog, REALRUN):
+def Pathway_Paradigm_agilent (inDir, outDir, cancer,flog, REALRUN):
     #print status
     print cancer, inspect.stack()[0][3] 
-    
-    PATHPATTERN= "Paradigm_Expression."
+    PATHPATTERN= "Paradigm."
     Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN)
 
-def Pathway_Paradigm_expression_copynumber (inDir, outDir, cancer,flog, REALRUN):
+def Pathway_Paradigm_copynumber (inDir, outDir, cancer,flog, REALRUN):
     #print status
     print cancer, inspect.stack()[0][3] 
+    PATHPATTERN= "ParadigmWithCopyNumber."
+    Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN)
     
-    PATHPATTERN= "Paradigm_Expression_CopyNumber."
+def Pathway_Paradigm_RNAseq (inDir, outDir, cancer,flog, REALRUN):
+    #print status
+    print cancer, inspect.stack()[0][3]
+    PATHPATTERN= "ParadigmWithRNASeq."
+    Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN)
+
+def Pathway_Paradigm_RNAseq_copynumber (inDir, outDir, cancer,flog, REALRUN):
+    #print status
+    print cancer, inspect.stack()[0][3] 
+    PATHPATTERN= "ParadigmWithRNASeqAndCopyNumber."
     Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN)
 
 def Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN):
@@ -57,14 +67,18 @@ def Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN):
         #is tar.gz?, uncompress
         if string.find(file,".tar.gz")!=-1:
             if REALRUN:
-                os.system("tar -xzf "+inDir+file +" -C tmptmp/") 
-            dataDir ="tmptmp/"+string.replace(file,".tar.gz","")+"/"
+                os.system("tar -xzf "+inDir+file +" -C tmptmp/")
+            # strange FH dir name
+            dirName = string.split(string.replace(file,".tar.gz",""),".")
+            dataDir="tmptmp/"+string.join(dirName[0:3],".")+"-TP."+string.join(dirName[3:],".")+"/"
+            # dataDir ="tmptmp/"+string.replace(file,".tar.gz","")+"/"
             break
 
     #make sure there is data
     if dataDir =="" or (REALRUN and not os.path.exists(dataDir)):
         cleanGarbage(garbage)
         return
+
 
     #set output dir
     if not os.path.exists( outDir ):
@@ -75,6 +89,7 @@ def Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN):
     #data processing single dir mode
     foundfile=""
     pattern="inferredPathwayLevels.tab"
+
     if REALRUN:
         for file in os.listdir(dataDir):
             if string.find(file,pattern)!=-1:
@@ -92,17 +107,31 @@ def Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN):
     oHandle = open(outDir+cancer+"/"+cgFileName+".json","w")
     J={}
     #stable
-    if PATHPATTERN=="Paradigm_Expression.":
+    if PATHPATTERN== "Paradigm.":
+        suffix="PDMarray"
+        J["shortTitle"]="Paradigm.array_expression"
+        J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") PARADIGM inference activity (agilent expression)"
+        J[":dataSubType"]="PARADIGM"
+        J["gain"]=1.0
+        
+    if PATHPATTERN== "ParadigmWithCopyNumber.":
+        suffix="PDMCNV"
+        J["shortTitle"]="Paradigm.CNV"
+        J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") PARADIGM inference activity (CNV)"
+        J[":dataSubType"]="PARADIGM"
+        J["gain"]=1.0
+        
+    if PATHPATTERN== "ParadigmWithRNASeq.":
         suffix="PDMExp"
-        J["shortTitle"]="Paradigm.expression"
-        J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") PARADIGM inference activity (expression)"
+        J["shortTitle"]="Paradigm.RNAseq"
+        J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") PARADIGM inference activity (RNAseq)"
         J[":dataSubType"]="PARADIGM"
         J["gain"]=1.0
 
-    if PATHPATTERN=="Paradigm_Expression_CopyNumber.":
+    if PATHPATTERN=="ParadigmWithRNASeqAndCopyNumber.":
         suffix="PDMExpCNV"
-        J["shortTitle"]="Paradigm.CNV+expression"
-        J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") PARADIGM inference activity (CNV, expression)"
+        J["shortTitle"]="Paradigm.RNAseq+CNV"
+        J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") PARADIGM inference activity (RNAseq,CNV)"
         J[":dataSubType"]="PARADIGM"
         J["gain"]=1.0
 
@@ -111,20 +140,25 @@ def Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN):
     J["redistribution"]= True
     J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
     J["dataProducer"]= "TCGA FIREHOSE pipeline"
-    J["url"]= "http://gdac.broadinstitute.org/runs/analyses__"+FHdate[0:4]+"_"+FHdate[4:6]+"_"+FHdate[6:8]+"/data/"+cancer+"/"+FHdate[0:8]+"/gdac.broadinstitute.org_"+cancer+".Pathway_"+PATHPATTERN+"Level_4."+FHdate+".0.0.tar.gz"
+    J["url"]= "http://gdac.broadinstitute.org/runs/analyses__"+FHdate[0:4]+"_"+FHdate[4:6]+"_"+FHdate[6:8]+"/data/"+cancer+"/"+FHdate[0:8]+"/gdac.broadinstitute.org_"+cancer+"."+PATHPATTERN+"Level_4."+FHdate+".0.0.tar.gz"
     J["version"]= datetime.date.today().isoformat()
     J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
     
     #change description
     J["wrangling_procedure"]= "FIREHOSE data download from TCGA DCC, processed at UCSC into cgData repository"
-    
-    if PATHPATTERN=="Paradigm_Expression.":
-        J["description"]= "The dataset shows TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+")"+\
-                          " gene activity level inferred using the PARADIGM method on gene expression data alone."
-                          
-    if PATHPATTERN=="Paradigm_Expression_CopyNumber.":
-        J["description"]= "The dataset shows TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+")"+\
-                          " gene activity level inferred using the PARADIGM method by integrating gene expression and copy number data."
+
+    if PATHPATTERN== "Paradigm.":
+        J["description"]= "Broad FireHose automated run results of TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+")"+\
+                          " gene activity level inferred using the PARADIGM method on gene expression data from Agilent array alone."
+    if PATHPATTERN== "ParadigmWithCopyNumber.":
+        J["description"]= "Broad FireHose automated run results of TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+")"+\
+                          " gene activity level inferred using the PARADIGM method on copy number data alone."
+    if PATHPATTERN=="ParadigmWithRNASeq.":
+        J["description"]= "Broad FireHose automated run results of TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+")"+\
+                          " gene activity level inferred using the PARADIGM method on RNAseq data alone."
+    if PATHPATTERN=="ParadigmWithRNASeqAndCopyNumber.":
+        J["description"]= "Broad FireHose automated run results of TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+")"+\
+                          " gene activity level inferred using the PARADIGM method by integrating RNAseq and copy number data."
 
     J["description"] = J["description"] +" PARADIGM is pathway analysis method to infer patient or sample-specific genetic activities by incorporating curated pathway interactions as well as integrating diverse types of genomic data, such as gene expression and copy number data. The pathways used in this analysis are from <a href=\"http://pid.nci.nih.gov/\" target=\"_blank\"><u>NCI pathway interaction database</u></a>."+\
                        " Genes are mapped onto the human genome coordinates using cgData HUGO probeMap."+\

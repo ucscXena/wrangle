@@ -7,9 +7,14 @@ from ClinicalMatrixNew import *
 from CGDataUtil import *
 from CGDataLib import *
 
-def survival (dir,cancer):
-    os.system("rm "+dir+"clinical_survival")
-    os.system("rm "+dir+"clinical_survival.json")
+def survival (dir,cancer,tag):
+    if tag!= cancer:
+        os.system("rm "+dir+"clinical_survival_"+tag)
+        os.system("rm "+dir+"clinical_survival_"+tag+".json")
+    else:
+        os.system("rm "+dir+"clinical_survival")
+        os.system("rm "+dir+"clinical_survival.json")
+        
     ignore=0
     bookDic=cgWalk(dir,ignore)
     sampleMaps = collectSampleMaps(bookDic)
@@ -83,8 +88,11 @@ def survival (dir,cancer):
             foundFollowup =1
             print "found days_to_last_followup"
             break
-    
-    survivalMatrix= ClinicalMatrixNew(None,"clinical_"+cancer+"_survival")
+
+    if tag!=cancer:
+        survivalMatrix= ClinicalMatrixNew(None,"clinical_"+cancer+"_survival_"+tag)
+    else:
+        survivalMatrix= ClinicalMatrixNew(None,"clinical_"+cancer+"_survival")
     survivalMatrix.addNewRows(finalClinMatrix.getROWs(),{})
     survivalMatrix.addOneColWithSameValue("_SURVIVAL","")
     survivalMatrix.addOneColWithSameValue("_CENSOR","")
@@ -124,7 +132,10 @@ def survival (dir,cancer):
             if foundL:
                 survivalMatrix.setDATA(id,"_CENSOR","0")
                 survivalMatrix.setDATA(id,"_SURVIVAL",foundL)
-    fout=open(dir+"clinical_survival",'w')
+    if tag!=cancer:
+        fout=open(dir+"clinical_survival_"+tag,'w')
+    else:
+        fout=open(dir+"clinical_survival",'w')
     survivalMatrix.store(fout,True)
     fout.close()
 
@@ -148,21 +159,30 @@ def survival (dir,cancer):
     J[":clinicalFeature"] = cFJ["name"]
 
     #clinicalFeature
-    cFfile =dir+"clinical_survival_clinicalFeature"
+    if tag!=cancer:
+        cFfile =dir+"clinical_survival_clinicalFeature_"+tag
+    else:
+        cFfile =dir+"clinical_survival_clinicalFeature"
     fout = open(cFfile,"w")
     fout.write("_CENSOR\tshortTitle\t_CENSOR\n")
-    fout.write("_CENSOR\tlongTitle\t_CENSOR=vital_status\n")
+    fout.write("_CENSOR\tlongTitle\t_CENSOR (from vital_status)\n")
     fout.write("_CENSOR\tvalueType\tcategory\n")
 
     fout.write("_SURVIVAL\tshortTitle\t_SURVIVAL\n")
-    fout.write("_SURVIVAL\tlongTitle\t_SURVIVAL=days_to_death(event);_SURVIVAL=max(days_to_last_known_alive,days_to_last_followup) (no_event)\n")
-    fout.write("_CENSOR\tvalueType\float\n")
+    fout.write("_SURVIVAL\tlongTitle\t_SURVIVAL=days_to_death(event); _SURVIVAL=max(days_to_last_known_alive,days_to_last_followup) (no_event)\n")
+    fout.write("_SURVIVAL\tvalueType\tfloat\n")
     fout.close()
 
-    fout=open(dir+"clinical_survival.json",'w')
+    if tag!=cancer:
+        fout=open(dir+"clinical_survival_"+tag+".json",'w')
+    else:
+        fout=open(dir+"clinical_survival.json",'w')
     fout.write( json.dumps( J, indent=-1 ) )
     fout.close()
 
-    fout=open(dir+"clinical_survival_clinicalFeature.json",'w')
+    if tag!=cancer:
+        fout=open(dir+"clinical_survival_clinicalFeature_"+tag+".json",'w')
+    else:
+        fout=open(dir+"clinical_survival_clinicalFeature.json",'w')
     fout.write( json.dumps( cFJ, indent=-1 ) )
     fout.close()

@@ -123,6 +123,18 @@ class ClinicalFeatureNew():
     def getFeatures(self):
         return copy.deepcopy(self.__FEATUREs)
 
+    def setFeatureShortTitle(self, feature, shortTitle):
+        if feature not in self.__FEATUREs:
+            self.__DATA[feature]={}
+        self.__DATA[feature]["shortTitle"]= shortTitle
+        return True
+    
+    def setFeatureLongTitle(self, feature, longTitle):
+        if feature not in self.__FEATUREs:
+            self.__DATA[feature]={}
+        self.__DATA[feature]["longTitle"]= longTitle
+        return True
+
     def setFeaturePriority(self, feature, priority):
         if feature not in self.__FEATUREs:
             return False

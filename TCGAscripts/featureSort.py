@@ -13,6 +13,6 @@ def shortTitle():
     for key in index:
         print "\t\""+key+"\":\""+TCGAUtil.featureShortTitle[key]+"\","
 
-#longTitle()
+longTitle()
 print
-shortTitle()
+#shortTitle()

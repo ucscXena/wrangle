@@ -56,12 +56,12 @@ def Clinical(inDir, outDir, cancer,flog,PATHPATTERN):
         return
 
     process(inDir, outDir, dataDir, cancer,flog,PATHPATTERN, lastDate, cancer)
+    survival(outDir+cancer+"/", cancer, cancer)
 
     if cancer in ["COAD","READ"]:
         deriveCancer="COADREAD"
         process(inDir, outDir, dataDir, deriveCancer,flog,PATHPATTERN, lastDate, cancer)
-
-    survival(outDir+cancer+"/",cancer )
+        survival(outDir+deriveCancer+"/", deriveCancer, cancer)
     cleanGarbage(garbage)
     return
 

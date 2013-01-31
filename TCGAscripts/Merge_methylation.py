@@ -49,13 +49,14 @@ def Merge_methylation(inDir, outDir, cancer,flog,PATHPATTERN,REALRUN):
 
         #file date
         lastDate=  datetime.date.fromtimestamp(os.stat(inDir+file).st_mtime)
-        
+
+
         #is tar.gz?, uncompress
         if string.find(file,".tar.gz")!=-1:
             os.system("tar -xzf "+inDir+file +" -C tmptmp/") 
             dataDir ="tmptmp/"+string.replace(file,".tar.gz","")+"/"
             break
-        
+
     #make sure there is data
     if lastDate == None:
         cleanGarbage(garbage)
@@ -76,6 +77,7 @@ def Merge_methylation(inDir, outDir, cancer,flog,PATHPATTERN,REALRUN):
 
     #data processing
     for file in os.listdir(dataDir):
+        print file
         pattern ="data"
         if string.find(file,pattern)!=-1:
             cgFileName= string.split(dataDir[7:],PATHPATTERN)[0]+PATHPATTERN

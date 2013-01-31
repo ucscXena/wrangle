@@ -16,7 +16,7 @@ import os.path, time,datetime
 remoteBase="https://tcga-data.nci.nih.gov/"
 localBase="/inside/depot/"
 
-uuid_barcode_txt= "https://tcga-data.nci.nih.gov/tcgafiles/ftp_auth/distro_ftpusers/anonymous/other/metadata/metadata.20121217.txt"
+uuid_barcode_txt= "https://tcga-data.nci.nih.gov/tcgafiles/ftp_auth/distro_ftpusers/anonymous/other/metadata/metadata.20130121.txt"
 
 # all sorted by short titles
 cancerOfficial={
@@ -321,6 +321,24 @@ featurePriority={
     }
 
 featureLongTitle={
+        "ajcc_clinical_group_stage":"ajcc clinical group stage",
+        "ajcc_clinical_primary_tumor_m_stage":"ajcc clinical primary tumor M stage",
+        "ajcc_clinical_primary_tumor_n_stage":"ajcc clinical primary tumor N stage",
+        "ajcc_clinical_primary_tumor_t_stage":"ajcc clinical primary tumor T stage",
+        "anatomic_site_colorectal":"anatomic site colorectal",
+        "complete_response_observed":"complete response observed",
+        "date_of_collection":"date of collection",
+        "date_of_form_completion":"date of form completion",
+        "date_of_initial_pathologic_diagnosis":"date of initial pathologic diagnosis",
+        "date_of_sample_procurement":"date of sample procurement",
+        "date_of_tobacco_smoking_onset":"date of tobacco smoking onset",
+        "hist_of_non_mibc":"hist of non mibc (non-muscle-invasive bladder cancer)",
+        "induction_course_complete":"induction course complete",
+        "lost_follow_up":"lost follow up",
+        "maint_therapy_course_complete":"maint therapy course complete",
+        "mibc_90day_post_resection_bcg":"mibc_90day_post_resection_bcg",
+        "non_mibc_tx":"non_mibc_tx",
+        "resp_maint_from_bcg_admin_month_dur":"resp_maint_from_bcg_admin_month_dur",
 	"FISH_test_component":"FISH test component",
 	"FISH_test_component_percentage_value":"FISH test component percentage value",
 	"FISH_test_component_results":"FISH test component results",
@@ -929,7 +947,8 @@ featureLongTitle={
 	"steroid_therapy_administered":"steroid therapy administered",
 	"stomach_neoplasm_anatomic_subsite":"stomach neoplasm anatomic subsite",
 	"stopped_smoking_year":"stopped smoking year",
-	"supratentorial_localization":"supratentorial localization",
+        "subsequent_primary_melanoma_during_followup":"subsequent primary melanoma during followup",
+        "supratentorial_localization":"supratentorial localization",
 	"surgical_approach":"surgical approach",
 	"surgical_margin_resection_status":"surgical margin resection status",
 	"surgical_procedure_name_other_specify_text":"surgical procedure name other specify text",
@@ -999,6 +1018,23 @@ featureLongTitle={
 }
 
 featureShortTitle={
+        "ajcc_clinical_group_stage":"ajcc clinical group stage",
+        "ajcc_clinical_primary_tumor_m_stage":"ajcc clinical primary tumor M stage",
+        "ajcc_clinical_primary_tumor_n_stage":"ajcc clinical primary tumor N stage",
+        "ajcc_clinical_primary_tumor_t_stage":"ajcc clinical primary tumor T stage",
+        "anatomic_site_colorectal":"anatomic site colorectal",
+        "complete_response_observed":"complete response observed",
+        "date_of_collection":"date of collection",
+        "date_of_form_completion":"date of form completion",
+        "date_of_initial_pathologic_diagnosis":"date of initial pathologic diagnosis",
+        "date_of_sample_procurement":"date of sample procurement",
+        "date_of_tobacco_smoking_onset":"date of tobacco smoking onset",
+        "hist_of_non_mibc":"hist of non mibc (non-muscle-invasive bladder cancer)",
+        "induction_course_complete":"induction course complete",
+        "lost_follow_up":"lost follow up",
+        "maint_therapy_course_complete":"maint therapy course complete",
+        "mibc_90day_post_resection_bcg":"mibc_90day_post_resection_bcg",
+        "non_mibc_tx":"non_mibc_tx",
 	"FISH_test_component":"FISH test component",
 	"FISH_test_component_percentage_value":"FISH test component pct",
 	"FISH_test_component_results":"FISH test component results",
@@ -1588,7 +1624,8 @@ featureShortTitle={
 	"stomach_neoplasm_anatomic_subsite":"stomach neoplasm anatomic subsite",
 	"stopped_smoking_year":"stopped smoking year",
 	"supratentorial_localization":"supratentorial localization",
-	"surgical_approach":"surgical approach",
+        "subsequent_primary_melanoma_during_followup":"subsequent primary melanoma during followup",
+        "surgical_approach":"surgical approach",
 	"surgical_margin_resection_status":"surgical margin resection status",
 	"surgical_procedure_name_other_specify_text":"surgical procedure name other specify text",
 	"surgical_procedure_purpose_other_text":"surgical procedure purpose other text",

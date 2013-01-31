@@ -43,7 +43,10 @@ def CopyNumber_Gistic2 (inDir, outDir, cancer,flog,REALRUN):
         if string.find(file,".tar.gz")!=-1:
             if REALRUN:
                 os.system("tar -xzf "+inDir+file +" -C tmptmp/") 
-            dataDir ="tmptmp/"+string.replace(file,".tar.gz","")+"/"
+            # strange FH dir name
+            dirName = string.split(string.replace(file,".tar.gz",""),".")
+            dataDir="tmptmp/"+string.join(dirName[0:3],".")+"-TP."+string.join(dirName[3:],".")+"/"
+            # dataDir ="tmptmp/"+string.replace(file,".tar.gz","")+"/"
             break
         
     #make sure there is data

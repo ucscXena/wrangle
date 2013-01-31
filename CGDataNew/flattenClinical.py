@@ -6,7 +6,7 @@ from ClinicalFeatureNew  import *
 from IntegrationId  import *
 from CGDataUtil import *
 
-def runFlatten(inDir, outDir,REALRUN, SMAPNAME=None, ADDROOT=1):
+def runFlatten(inDir, outDir,REALRUN, SMAPNAME=None):
     dir = inDir
     bookDic={}
     sampleMaps={}
@@ -42,7 +42,7 @@ def runFlatten(inDir, outDir,REALRUN, SMAPNAME=None, ADDROOT=1):
                 return 0
             fin.close()
         
-        r = flattenEachSampleMap(sMap,bookDic,ADDROOT)
+        r = flattenEachSampleMap(sMap,bookDic)
         if r== False:
             return 0
         finalClinicalMatrix,finalClinicalMatrixJSON,finalClinFeature,finalClinFeatureJSON= r
@@ -55,7 +55,7 @@ def runFlatten(inDir, outDir,REALRUN, SMAPNAME=None, ADDROOT=1):
             cpProbeMaps(REALRUN,outDir,bookDic,sMap)
     return 1
 
-def flattenEachSampleMap(sMap, bookDic,ADDROOT):
+def flattenEachSampleMap(sMap, bookDic):
     sampleMap = sMap.getName()
 
     jsonName= trackName_fix(sampleMapBaseName(sMap)+"_clinicalMatrix")
@@ -178,11 +178,10 @@ def flattenEachSampleMap(sMap, bookDic,ADDROOT):
             print "remove features", badFeatures
 
         # add _PATIENT col
-        if ADDROOT:
-            if finalClinMatrix.addColRoot(sMap) == None:
-                print "Fail to addColRoot"
-                return 0
-
+        if finalClinMatrix.addColRoot(sMap) == None:
+            print "Fail to addColRoot"
+            return 0
+            
         # add _INTEGRATION col
         intList=[]
         if bookDic[sampleMap].has_key(":integrationId"):
@@ -217,7 +216,12 @@ def flattenEachSampleMap(sMap, bookDic,ADDROOT):
             finalClinFeature.fillInTitles()
             #clinicalFeature fillin priority visibility
             finalClinFeature.fillInPriorityVisibility()
-        
+
+            finalClinFeature.setFeatureShortTitle("_PATIENT","_PATIENT_ID")
+            finalClinFeature.setFeatureLongTitle("_PATIENT","_PATIENT_ID")
+            finalClinFeature.setFeatureShortTitle("_INTEGRATION","_SAMPLE_ID")
+            finalClinFeature.setFeatureLongTitle("_INTEGRATION","_SAMPLE_ID")
+
     print sampleMap,finalClinMatrix.getROWnum()
     return finalClinMatrix,finalClinMatrixJSON, finalClinFeature, finalClinFeatureJSON
 
@@ -242,13 +246,15 @@ def outputEachSampleMapRelated(outDir, bookDic, sMap,
     sMap.store(fout)
     fout.close()
 
-    #copy integratiionId and .json
+    #copy integratiionId and .json, ignore it for now
+    """
     if bookDic[sampleMap].has_key(":integrationId"):
         intName=bookDic[sampleMap][":integrationId"]
         path = bookDic[intName]['path']
         os.system("cp "+path+" "+dataPackageDir+"/")
         os.system("cp "+path+".json "+dataPackageDir+"/")
-
+    """
+        
     #output clinicalMatrix data
     fout = open(dataPackageDir+"/"+sampleMapBaseName(sMap)+"_clinicalMatrix",'w')
     finalClinMatrix.store(fout)
