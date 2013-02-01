@@ -132,95 +132,132 @@ def flattenEachSampleMap(sMap, bookDic):
                 if clinFeatureJSON !=finalClinFeatureJSON:
                     finalClinFeatureJSON = cgDataMergeJSON(finalClinFeatureJSON, clinFeatureJSON, jsonName)
                 finalClinFeatureJSON["version"]=datetime.date.today().isoformat() 
-                #if finalClinFeatureJSON.has_key("notes"):
-                #    finalClinFeatureJSON.pop("notes")
 
-    if 1:
-        #clinical data push down
-        roots = sMap.allRoots()
-        for root in roots:
-            r = finalClinMatrix.pushToChildren (root,sMap)
-            if r != True:
-                print "Fail to push down"
-                return 0
-        print "after clinical push down", sampleMap,finalClinMatrix.getROWnum()
-
-        # collect all genomic data
-        keepSamples  = getAllGenomicIds(sMap, bookDic)
-
-        # removing rows without genomic data from  clinical data matrix due to mysql enum limitation
-        # should remove this step after the display functionality is done better, currently cgb clinical data range in feature control panel shows the full range of clinical data without checking if the specific track/dataset has the full value range.
-        print "genomic sample count", len(keepSamples)
-        success= finalClinMatrix.onlyKeepRows(keepSamples)
-        if not success:
-            print "fail to remove extra rows"
-        else:
-            print "after keeping sample with genomic data", finalClinMatrix.getROWnum()
-
-        #add to the clinical matrix any samples with genomic data but no clinical data
-        emptyData={}
-        for col in finalClinMatrix.getCOLs():
-            emptyData[col]=""
-        success = finalClinMatrix.addNewRows(keepSamples,emptyData)
-        if not success:
-            print "fail to add new roows"
-        else:
-            print "after adding all genomic data", finalClinMatrix.getROWnum()
-
-        if finalClinMatrix.validate() != True:
-            print "Fail to validate"
-            cMatrix = oldCMatrix
+    #clinicalFeature
+    if finalClinFeatureJSON != None:
+        targetfile = ".tmp"
+        fout = open(targetfile,'w')
+        fout.close()
+        for clinF in clinFeatures:
+            path= clinF['path']
+            os.system("cat "+path+" >> "+targetfile)
+        fin = open(targetfile,'r')
+        finalClinFeature =ClinicalFeatureNew(fin,finalClinFeatureJSON['name'])
+        if not finalClinFeature.isValid():
+            print targetfile, "is invalid"
             return 0
+        fin.close()
 
-        #identify empty features
-        badFeatures= finalClinMatrix.badCols()
-        if badFeatures:
-            print "remove features", badFeatures
-
-        # add _PATIENT col
-        if finalClinMatrix.addColRoot(sMap) == None:
-            print "Fail to addColRoot"
+    #SURVIVAL data
+    #check matrix does not _SURVIVAL and _CENSOR
+    foundS=0
+    foundC=0
+    if finalClinFeature:
+        features= finalClinFeature.getFeatures()
+        for feature in features:
+            sameAs = finalClinFeature.getFeatureSameAs(feature)
+            if sameAs =="_TIME_TO_EVENT":
+                if foundS==1:
+                    print "ERROR there is already _TIME_TO_EVENT"
+                    continue
+                foundS=1
+                finalClinMatrix.addNewColfromOld(sameAs, feature)
+            if sameAs =="_EVENT":
+                if foundC==1:
+                    print "ERROR there is already _EVENT"
+                    continue
+                states= finalClinFeature.getStates(feature)
+                for state in states:
+                    if state not in [0,1,"0","1"]:
+                        print "ERROR _EVENT values are not correct", state
+                    foundC=1
+                finalClinMatrix.addNewColfromOld(sameAs, feature)
+            
+    #clinical data push down
+    roots = sMap.allRoots()
+    for root in roots:
+        r = finalClinMatrix.pushToChildren (root,sMap)
+        if r != True:
+            print "Fail to push down"
             return 0
-            
-        # add _INTEGRATION col
-        intList=[]
-        if bookDic[sampleMap].has_key(":integrationId"):
-            intName=bookDic[sampleMap][":integrationId"]
-            fin= open(bookDic[intName]["path"],"r")
-            intId = IntegrationId(intName,fin)
-            intList = intId.getList()
-        finalClinMatrix.addColIntegration(sMap,intList)
-            
-        if finalClinFeatureJSON != None:
-            targetfile = ".tmp"
-            fout = open(targetfile,'w')
-            fout.close()
-            for clinF in clinFeatures:
-                path= clinF['path']
-                os.system("cat "+path+" >> "+targetfile)
-            fin = open(targetfile,'r')
-            finalClinFeature =ClinicalFeatureNew(fin,finalClinFeatureJSON['name'])
-            if not finalClinFeature.isValid():
-                print targetfile, "is invalid"
-                return 0
-            fin.close()
-            finalClinFeature.removeFeatures(badFeatures)
+    print "after clinical push down", sampleMap,finalClinMatrix.getROWnum()
 
-            finalClinFeature.cleanState()
-            finalClinFeature.checkFeatureWithMatrix(finalClinMatrix)
-            #clinicalFeature fillin ValueType
-            finalClinFeature.fillInValueTypeWithMatrix(finalClinMatrix)
-            #clinicalFeature fillin missing features
-            finalClinFeature.fillInFeaturesWithMatrix(finalClinMatrix)
-            #clinicalFeature fillin short and long titles
-            finalClinFeature.fillInTitles()
-            #clinicalFeature fillin priority visibility
-            finalClinFeature.fillInPriorityVisibility()
+    # collect all genomic data
+    keepSamples  = getAllGenomicIds(sMap, bookDic)
 
-            finalClinFeature.setFeatureShortTitle("_PATIENT","_PATIENT_ID")
-            finalClinFeature.setFeatureLongTitle("_PATIENT","_PATIENT_ID")
-            finalClinFeature.setFeatureShortTitle("_INTEGRATION","_SAMPLE_ID")
-            finalClinFeature.setFeatureLongTitle("_INTEGRATION","_SAMPLE_ID")
+    # removing rows without genomic data from  clinical data matrix due to mysql enum limitation
+    # should remove this step after the display functionality is done better, currently cgb clinical data range in feature control panel shows the full range of clinical data without checking if the specific track/dataset has the full value range.
+    print "genomic sample count", len(keepSamples)
+    success= finalClinMatrix.onlyKeepRows(keepSamples)
+    if not success:
+        print "fail to remove extra rows"
+    else:
+        print "after keeping sample with genomic data", finalClinMatrix.getROWnum()
+        
+    #add to the clinical matrix any samples with genomic data but no clinical data
+    emptyData={}
+    for col in finalClinMatrix.getCOLs():
+        emptyData[col]=""
+    success = finalClinMatrix.addNewRows(keepSamples,emptyData)
+    if not success:
+        print "fail to add new roows"
+    else:
+        print "after adding all genomic data", finalClinMatrix.getROWnum()
+
+    if finalClinMatrix.validate() != True:
+        print "Fail to validate"
+        cMatrix = oldCMatrix
+        return 0
+
+    #identify empty features
+    badFeatures= finalClinMatrix.badCols()
+    if badFeatures:
+        print "remove features", badFeatures
+
+    # add _PATIENT col
+    if finalClinMatrix.addColRoot(sMap) == None:
+        print "Fail to addColRoot"
+        return 0
+            
+    # add _INTEGRATION col
+    intList=[]
+    if bookDic[sampleMap].has_key(":integrationId"):
+        intName=bookDic[sampleMap][":integrationId"]
+        fin= open(bookDic[intName]["path"],"r")
+        intId = IntegrationId(intName,fin)
+        intList = intId.getList()
+    finalClinMatrix.addColIntegration(sMap,intList)
+            
+    if finalClinFeatureJSON != None:
+        targetfile = ".tmp"
+        fout = open(targetfile,'w')
+        fout.close()
+        for clinF in clinFeatures:
+            path= clinF['path']
+            os.system("cat "+path+" >> "+targetfile)
+        fin = open(targetfile,'r')
+        finalClinFeature =ClinicalFeatureNew(fin,finalClinFeatureJSON['name'])
+        if not finalClinFeature.isValid():
+            print targetfile, "is invalid"
+            return 0
+        fin.close()
+        finalClinFeature.removeFeatures(badFeatures)
+
+        finalClinFeature.cleanState()
+        finalClinFeature.checkFeatureWithMatrix(finalClinMatrix)
+        #clinicalFeature fillin ValueType
+        finalClinFeature.fillInValueTypeWithMatrix(finalClinMatrix)
+        #clinicalFeature fillin missing features
+        finalClinFeature.fillInFeaturesWithMatrix(finalClinMatrix)
+        #clinicalFeature fillin short and long titles
+        finalClinFeature.fillInTitles()
+        #clinicalFeature fillin priority visibility
+        finalClinFeature.fillInPriorityVisibility()
+
+        finalClinFeature.setFeatureShortTitle("_PATIENT","_PATIENT_ID")
+        finalClinFeature.setFeatureLongTitle("_PATIENT","_PATIENT_ID")
+        finalClinFeature.setFeatureShortTitle("_INTEGRATION","_SAMPLE_ID")
+        finalClinFeature.setFeatureLongTitle("_INTEGRATION","_SAMPLE_ID")
 
     print sampleMap,finalClinMatrix.getROWnum()
     return finalClinMatrix,finalClinMatrixJSON, finalClinFeature, finalClinFeatureJSON

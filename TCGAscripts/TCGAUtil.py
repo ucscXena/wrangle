@@ -16,7 +16,7 @@ import os.path, time,datetime
 remoteBase="https://tcga-data.nci.nih.gov/"
 localBase="/inside/depot/"
 
-uuid_barcode_txt= "https://tcga-data.nci.nih.gov/tcgafiles/ftp_auth/distro_ftpusers/anonymous/other/metadata/metadata.20130121.txt"
+uuid_barcode_txt= "https://tcga-data.nci.nih.gov/tcgafiles/ftp_auth/distro_ftpusers/anonymous/other/metadata/metadata.20130128.txt"
 
 # all sorted by short titles
 cancerOfficial={
@@ -171,11 +171,18 @@ valueType={
     }
 
 featureStateOrder={
-    "er_level_cell_percentage_category":["<10%","10-19%","20-29%","30-39%","40-49%","50-59%","60-69%","70-79%","80-89%","90-99%"],
-    "her2_erbb_pos_finding_cell_percent_category":["<10%","10-19%","20-29%","30-39%","40-49%","50-59%","60-69%","70-79%","80-89%","90-99%"],
-    "distant_metastasis_pathologic_spread":['MX', 'M0', 'M1', 'M1a', 'M1b'],
-    "neoplasm_histologic_grade":["GX","GB","G1","G2","G3","G4"],
-    "sample_type":["Primary Tumor","Primary solid Tumor",
+    "er_level_cell_percentage_category":{"BRCA":
+                                         ["<10%","10-19%","20-29%","30-39%","40-49%","50-59%","60-69%","70-79%","80-89%","90-99%"]},
+    "her2_erbb_pos_finding_cell_percent_category":{"BRCA":
+                                                   ["<10%","10-19%","20-29%","30-39%","40-49%","50-59%","60-69%","70-79%","80-89%","90-99%"]},
+    "distant_metastasis_pathologic_spread":{"ALL":
+                                            ['MX', 'M0', 'M1', 'M1a', 'M1b']},
+    "histological_type":{"LGG":
+                         ["Oligodendroglioma","Oligoastrocytoma","Astrocytoma"]},
+    "neoplasm_histologic_grade":{"ALL":
+                                 ["GX","GB","G1","G2","G3","G4"]},
+    "sample_type":{"ALL":
+                   ["Primary Tumor","Primary solid Tumor",
                    "Primary Blood Derived Cancer - Peripheral Blood",
                    "Primary Blood Derived Cancer - Bone Marrow",
                    "Recurrent Tumor",
@@ -194,11 +201,18 @@ featureStateOrder={
                    "Cell Lines",
                    "Primary Xenograft Tissue",
                    "Cell Line Derived Xenograft Tissue",
-                   "Control Analyte"],
-    "tobacco_smoking_history_indicator":["Lifelong Non-smoker",
+                   "Control Analyte"]},
+    "tobacco_smoking_history_indicator":{"LUSC":
+                                         ["Lifelong Non-smoker",
                                          "Current reformed smoker for > 15 years",
                                          "Current reformed smoker for < or = 15 years",
                                          "Current smoker"],
+                                         "LUAD":
+                                         ["Lifelong Non-smoker",
+                                         "Current reformed smoker for > 15 years",
+                                         "Current reformed smoker for < or = 15 years",
+                                         "Current smoker"]
+                                         },
     "":""
     }
 
@@ -240,7 +254,7 @@ featurePriority={
     "GBM":  {"sample_type":"1",
              "GeneExp_Subtype":"2",
              "G-CIMP_STATUS":"3",
-             "CDE.survival_time":"4",
+             "CDE_survival_time":"4",
              "":""    
              },
     "HNSC": {"sample_type":"1",
@@ -267,9 +281,9 @@ featurePriority={
              "":""    
              },
     "LGG":  {"sample_type":"1",
-             "histologic_classification":"2",
-             "days_to_last_followup":"3",
-             "age_at_initial_pathologic_diagnosis":"4",
+             "histological_type":"2",
+             "histologic_classification":"3",
+             "days_to_last_followup":"4",
              "":""    
              },
     "LUAD": {"sample_type":"1",

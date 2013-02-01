@@ -1,7 +1,7 @@
 import re
 
 def col_fix( name ):
-    out = name.replace('`', '_').replace('\\','_').replace('.','_').replace(':','_').replace(' ','_').strip()
+    out = name.replace('`', '_').replace('\\','_').replace('.','_').replace(':','_').replace(' ','_').replace('/','_').strip()
     while (len(out) > 64):
         out = re.sub( r'[aeiou]([^aioeu]*)$', r'\1', out)
         new = re.sub( r'[aeiou]([^aioeu]*)$', r'\1', out)

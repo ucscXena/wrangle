@@ -43,10 +43,7 @@ def CopyNumber_Gistic2 (inDir, outDir, cancer,flog,REALRUN):
         if string.find(file,".tar.gz")!=-1:
             if REALRUN:
                 os.system("tar -xzf "+inDir+file +" -C tmptmp/") 
-            # strange FH dir name
-            dirName = string.split(string.replace(file,".tar.gz",""),".")
-            dataDir="tmptmp/"+string.join(dirName[0:3],".")+"-TP."+string.join(dirName[3:],".")+"/"
-            # dataDir ="tmptmp/"+string.replace(file,".tar.gz","")+"/"
+                dataDir = "tmptmp/"+os.listdir("tmptmp/")[0]+"/"
             break
         
     #make sure there is data
@@ -58,14 +55,14 @@ def CopyNumber_Gistic2 (inDir, outDir, cancer,flog,REALRUN):
     print cancer, __name__
     
     #set output dir
-    if not os.path.exists( outDir ):
+    if not os.path.exists( outDir ):\
         os.makedirs( outDir )
     if not os.path.exists( outDir +cancer+"/"):
         os.makedirs( outDir+cancer+"/" )
 
     #data processing single dir mode
     for pattern in ["all_data_by_genes","all_thresholded.by_genes","focal_data_by_genes"]:
-        cgFileName= string.split(dataDir[7:],PATHPATTERN)[0]+PATHPATTERN
+        cgFileName= "Gistic2_"+PATHPATTERN
         cgFileName = cgFileName +"_"+pattern
 
         if REALRUN:

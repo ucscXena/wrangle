@@ -50,10 +50,11 @@ class ClinicalMatrixNew():
                 print "WARNING, feature name >self.__maxColLen characters", d, new_d
                 d =new_d
 
-            #if the feature name has [" " ,":","."] it will not work, the info should go to clinicalFeature file
-            if string.find(d,':')!=-1 or string.find(d,'.')!=-1:
-                new_d= col_fix(d)
+            #fix col
+            new_d= col_fix(d)
+            if new_d!=d:
                 print "WARNING, feature name has bad characters", d, "new name:", new_d
+                d =new_d
                 
             #do not use _PATIENT
             if d in ["_PATIENT","_INTEGRATION"]:
@@ -227,6 +228,20 @@ class ClinicalMatrixNew():
         for sample in self.__ROWs:
             self.__DATA[sample][colName]=value
 
+        return True
+
+    #function to add a new col from an existing col as the last column
+    def addNewColfromOld(self, newCol, oldCol):
+        if oldCol not in self.__COLs:
+            return False
+        if newCol in self.__COLs:
+            return False
+        
+        #build out uniq new cols
+        self.__COL = self.__COL+ 1
+        self.__COLs.append(newCol)
+        for sample in self.__ROWs:
+            self.__DATA[sample][newCol]= self.__DATA[sample][oldCol]
         return True
 
     def addNewCols(self,aCMatrix,validation=False):

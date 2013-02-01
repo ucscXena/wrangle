@@ -68,17 +68,12 @@ def Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN):
         if string.find(file,".tar.gz")!=-1:
             if REALRUN:
                 os.system("tar -xzf "+inDir+file +" -C tmptmp/")
-            # strange FH dir name
-            dirName = string.split(string.replace(file,".tar.gz",""),".")
-            dataDir="tmptmp/"+string.join(dirName[0:3],".")+"-TP."+string.join(dirName[3:],".")+"/"
-            # dataDir ="tmptmp/"+string.replace(file,".tar.gz","")+"/"
+                dataDir = "tmptmp/"+os.listdir("tmptmp/")[0]+"/"
             break
-
     #make sure there is data
     if dataDir =="" or (REALRUN and not os.path.exists(dataDir)):
         cleanGarbage(garbage)
         return
-
 
     #set output dir
     if not os.path.exists( outDir ):

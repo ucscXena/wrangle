@@ -65,7 +65,7 @@ def survival (dir,cancer,tag):
             found =1
             break
     if not found:
-        print "no vital_status, can not compute _SURVIVAL _CENSOR"
+        print "no vital_status, can not compute _TIME_TO_EVENT _EVENT"
         return 0
     found =0
     for col in cols:
@@ -73,7 +73,7 @@ def survival (dir,cancer,tag):
             found =1
             break
     if not found:
-        print "no days_to_death, can not compute _SURVIVAL _CENSOR"
+        print "no days_to_death, can not compute _TIME_TO_EVENT _EVENT"
         return 0
 
     foundAlive=0
@@ -94,11 +94,11 @@ def survival (dir,cancer,tag):
     else:
         survivalMatrix= ClinicalMatrixNew(None,"clinical_"+cancer+"_survival")
     survivalMatrix.addNewRows(finalClinMatrix.getROWs(),{})
-    survivalMatrix.addOneColWithSameValue("_SURVIVAL","")
-    survivalMatrix.addOneColWithSameValue("_CENSOR","")
+    survivalMatrix.addOneColWithSameValue("_TIME_TO_EVENT","")
+    survivalMatrix.addOneColWithSameValue("_EVENT","")
 
     for id in finalClinMatrix.getROWs():
-        #_CENSOR         #_SURVIVAL
+        #_EVENT         #_TIME_TO_EVENT
         v = finalClinMatrix.getDATA(id, "vital_status")
         if v=="DECEASED":
             d = finalClinMatrix.getDATA(id,"days_to_death")
@@ -106,8 +106,8 @@ def survival (dir,cancer,tag):
             try:
                 int(d)
                 foundD =1
-                survivalMatrix.setDATA(id,"_CENSOR","1")
-                survivalMatrix.setDATA(id,"_SURVIVAL",d)
+                survivalMatrix.setDATA(id,"_EVENT","1")
+                survivalMatrix.setDATA(id,"_TIME_TO_EVENT",d)
                 continue
             except:
                 # bad data no days_to_death for DECEASED
@@ -129,9 +129,9 @@ def survival (dir,cancer,tag):
                         foundL=d
                 except:
                     pass
-            if foundL:
-                survivalMatrix.setDATA(id,"_CENSOR","0")
-                survivalMatrix.setDATA(id,"_SURVIVAL",foundL)
+            if foundL:# and foundL!="0":
+                survivalMatrix.setDATA(id,"_EVENT","0")
+                survivalMatrix.setDATA(id,"_TIME_TO_EVENT",foundL)
     if tag!=cancer:
         fout=open(dir+"clinical_survival_"+tag,'w')
     else:
@@ -146,7 +146,7 @@ def survival (dir,cancer,tag):
     J["dataProducer"]= "UCSC"
     J["version"]= datetime.date.today().isoformat()
     J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
-    J["wrangling_procedure"]= "_CENSOR=vital_status 0=no-event=LIVING 1=event=DECEASED; _SURVIVAL=days_to_death when _CENSOR=1; _SURVIVAL=max(days_to_last_followup, days_to_last_known_alive) when _CENSOR=0"
+    J["wrangling_procedure"]= "_EVENT from vital_status 0=no_event=LIVING 1=event=DECEASED; _TIME_TO_EVENT=days_to_death when _EVENT=1; _TIME_TO_EVENT=max(days_to_last_followup, days_to_last_known_alive) when _EVENT=0"
     J["name"]=survivalMatrix.getName()
     J["type"]= "clinicalMatrix"
     J[":sampleMap"]="TCGA."+cancer+".sampleMap"
@@ -164,13 +164,13 @@ def survival (dir,cancer,tag):
     else:
         cFfile =dir+"clinical_survival_clinicalFeature"
     fout = open(cFfile,"w")
-    fout.write("_CENSOR\tshortTitle\t_CENSOR\n")
-    fout.write("_CENSOR\tlongTitle\t_CENSOR (from vital_status)\n")
-    fout.write("_CENSOR\tvalueType\tcategory\n")
+    fout.write("_EVENT\tshortTitle\t_EVENT\n")
+    fout.write("_EVENT\tlongTitle\t_EVENT 0=censor(no_event) 1=event; derived from vital_status\n")
+    fout.write("_EVENT\tvalueType\tcategory\n")
 
-    fout.write("_SURVIVAL\tshortTitle\t_SURVIVAL\n")
-    fout.write("_SURVIVAL\tlongTitle\t_SURVIVAL=days_to_death(event); _SURVIVAL=max(days_to_last_known_alive,days_to_last_followup) (no_event)\n")
-    fout.write("_SURVIVAL\tvalueType\tfloat\n")
+    fout.write("_TIME_TO_EVENT\tshortTitle\tOVERALL SURVIVAL\n")
+    fout.write("_TIME_TO_EVENT\tlongTitle\t_TIME_TO_EVENT Overall survival; =days_to_death (if deceased); =max(days_to_last_known_alive,days_to_last_followup) (if living)\n")
+    fout.write("_TIME_TO_EVENT\tvalueType\tfloat\n")
     fout.close()
 
     if tag!=cancer:

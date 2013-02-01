@@ -14,6 +14,7 @@ class ClinicalFeatureNew():
         self.__CONTROLVOC =["shortTitle","longTitle",
                             "valueType","state","stateOrder",
                             "stateOrderRelax",
+                            "sameAs",
                             "priority","visibility"]
         
         self.__VIS =4
@@ -120,6 +121,13 @@ class ClinicalFeatureNew():
         else:
             return None
 
+    def getFeatureSameAs(self,feature):
+        if feature in self.__FEATUREs:
+            if self.__DATA[feature].has_key("sameAs"):
+                return self.__DATA[feature]["sameAs"]
+        else:
+            return None
+        
     def getFeatures(self):
         return copy.deepcopy(self.__FEATUREs)
 
@@ -419,4 +427,6 @@ class ClinicalFeatureNew():
                 fout.write(feature+"\tpriority\t"+self.__DATA[feature]["priority"]+"\n")
             if self.__DATA[feature].has_key("visibility"):
                 fout.write(feature+"\tvisibility\t"+self.__DATA[feature]["visibility"]+"\n")
+            if self.__DATA[feature].has_key("sameAs"):
+                fout.write(feature+"\tsameAs\t"+self.__DATA[feature]["sameAs"]+"\n")
         fout.close()

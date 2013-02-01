@@ -152,8 +152,10 @@ def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN, lastDate, originCa
                 clinMatrix.replaceValue("[NULL]","")
                 clinMatrix.replaceValue("[Null]","")
                 clinMatrix.replaceValue("[NA]","")
+                clinMatrix.replaceValue("[Not Available]|","")
                 clinMatrix.replaceValue("[Not Available]","")
                 clinMatrix.replaceValue("[Not Reported]","")
+                clinMatrix.replaceValue("[Not Applicable]|","")
                 clinMatrix.replaceValue("[Not Applicable]","")
                 clinMatrix.replaceValue("[Not Requested]","")
                 clinMatrix.replaceValue("[Completed]","")
@@ -190,13 +192,18 @@ def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN, lastDate, originCa
                         fout.write(feature+"\tvisibility\toff\n")
                     if TCGAUtil.valueType.has_key(feature):
                         fout.write(feature+"\tvalueType\t"+TCGAUtil.valueType[feature]+"\n")
+                    stateOrder=None
                     if TCGAUtil.featureStateOrder.has_key(feature):
-                        fout.write(feature+"\tvalueType\tcategory\n")
-                        stateOrder = TCGAUtil.featureStateOrder[feature]                        
-                        for state in stateOrder:
-                            fout.write(feature+"\tstate\t"+state+"\n")
-                        fout.write(feature+"\tstateOrder\t\""+string.join(stateOrder,"\",\"")+"\"\n")
-
+                        if TCGAUtil.featureStateOrder[feature].has_key(cancer):
+                            fout.write(feature+"\tvalueType\tcategory\n")
+                            stateOrder = TCGAUtil.featureStateOrder[feature][cancer]
+                        if TCGAUtil.featureStateOrder[feature].has_key("ALL"):
+                            fout.write(feature+"\tvalueType\tcategory\n")
+                            stateOrder = TCGAUtil.featureStateOrder[feature]["ALL"]
+                        if stateOrder:
+                            for state in stateOrder:
+                                fout.write(feature+"\tstate\t"+state+"\n")
+                            fout.write(feature+"\tstateOrder\t\""+string.join(stateOrder,"\",\"")+"\"\n")
                     if TCGAUtil.featurePriority.has_key(cancer):
                         if TCGAUtil.featurePriority[cancer].has_key(feature):
                             priority= TCGAUtil.featurePriority[cancer][feature]
