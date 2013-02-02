@@ -167,10 +167,12 @@ def checkIdsAllIn(sMap, bookDic):
             if obj['type']=="clinicalMatrix":
                 #get matrix obj
                 path = obj['path']
-                name = obj['name']
-                cMatrix = ClinicalMatrixNew(path,name)
-                #check matrix obj id all in sampleMap
-                for sample in cMatrix.getROWs():
+                fin=open(path,'r')
+                fin.readline()
+                for line in fin.readlines():
+                    if string.strip(line)=="":
+                        break
+                    sample = string.split(line,'\t')[0]
                     if not sMap.inData(sample):
                         sMap.addNode(sample)
                         sMapChanged=1
