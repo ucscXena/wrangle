@@ -107,6 +107,13 @@ class ClinicalFeatureNew():
         else:
             return None
 
+    def getValueType(self, feature):
+        if feature in self.__FEATUREs:
+            if self.__DATA[feature].has_key("valueType"):
+                return self.__DATA[feature]["valueType"]
+        else:
+            return None
+
     def getStates(self, feature):
         if feature in self.__FEATUREs:
             if self.__DATA[feature].has_key("state"):
@@ -156,7 +163,33 @@ class ClinicalFeatureNew():
             return False
         self.__DATA[feature]["visibility"]= visibility
         return True
-        
+    
+    def setFeatureValueType(self, feature, valueType):
+        if feature not in self.__FEATUREs:
+            self.__DATA[feature]={}
+        if valueType not in ["category","float"]:
+            return False
+        self.__DATA[feature]["valueType"]= valueType
+        return True
+
+    def setFeatureStates(self, feature, states):
+        if feature not in self.__FEATUREs:
+            self.__DATA[feature]={}
+        if (not self.__DATA[feature].has_key("valueType")) or self.__DATA[feature]["valueType"]!="category":
+            return False
+        self.__DATA[feature]["state"]= states
+        return True
+
+    def setFeatureStateOrder(self, feature, stateOrder):
+        if feature not in self.__FEATUREs:
+            self.__DATA[feature]={}
+        if (not self.__DATA[feature].has_key("valueType")) or self.__DATA[feature]["valueType"]!="category":
+            return False
+        if (not self.__DATA[feature].has_key("state")):
+            return False
+        self.__DATA[feature]["stateOrder"]= stateOrder
+        return True
+
     def cleanState(self):
         removeF =[]
         for feature in self.__FEATUREs:
@@ -194,6 +227,20 @@ class ClinicalFeatureNew():
             self.__DATA.pop(feature)
             self.__FEATUREs.remove(feature)
             self.__FEATURE=self.__FEATURE-1
+
+    def replaceFeatureName(self, oldName, newName):
+        if oldName ==newName:
+            return
+        if newName in self.__FEATUREs:
+            return
+        if oldName not in self.__FEATUREs:
+            return
+
+        print oldName
+        self.__DATA[newName]=copy.deepcopy(self.__DATA[oldName])
+        self.__DATA.pop(oldName)
+        self.__FEATUREs.append(newName)
+        self.__FEATUREs.remove(oldName)
 
     def checkFeatureWithMatrix(self,cMa):
         cMaFeatures = cMa.getCOLs()
@@ -415,12 +462,14 @@ class ClinicalFeatureNew():
                 fout.write(feature+"\tlongTitle\t"+self.__DATA[feature]["longTitle"]+"\n")
             if self.__DATA[feature].has_key("valueType") and self.__DATA[feature]["valueType"]=="category" : 
                 fout.write(feature+"\tvalueType\tcategory\n")
-                for state in self.__DATA[feature]["state"]:
-                    fout.write(feature+"\tstate\t"+str(state)+"\n")
-                fout.write(feature+"\tstateOrder\t")
-                for item in self.__DATA[feature]["stateOrder"][:-1]:
-                    fout.write("\""+item+"\",")
-                fout.write("\""+self.__DATA[feature]["stateOrder"][-1]+"\"\n")
+                if self.__DATA[feature].has_key("state"):
+                    for state in self.__DATA[feature]["state"]:
+                        fout.write(feature+"\tstate\t"+str(state)+"\n")
+                if self.__DATA[feature].has_key("stateOrder"):
+                    fout.write(feature+"\tstateOrder\t")
+                    for item in self.__DATA[feature]["stateOrder"][:-1]:
+                        fout.write("\""+item+"\",")
+                    fout.write("\""+self.__DATA[feature]["stateOrder"][-1]+"\"\n")
             if self.__DATA[feature].has_key("valueType") and self.__DATA[feature]["valueType"]=="float" : 
                 fout.write(feature+"\tvalueType\tfloat\n")
             if self.__DATA[feature].has_key("priority"):

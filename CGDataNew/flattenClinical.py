@@ -98,10 +98,18 @@ def flattenEachSampleMap(sMap, bookDic):
     for name in datasetsOrdered:  
         obj= bookDic[name]
         if obj['type']=="clinicalMatrix":
+            clinFeature=None
+            #clinFeature obj
+            if obj.has_key(':clinicalFeature'):
+                path=  bookDic[obj[':clinicalFeature']]['path']
+                neme = bookDic[obj[':clinicalFeature']]['name']
+                clinFeature = ClinicalFeatureNew(path, name)
+
             #get matrix obj
             path = obj['path']
             name = obj['name']
-            cMatrix = ClinicalMatrixNew(path,name)
+
+            cMatrix = ClinicalMatrixNew(path,name,False, clinFeature)
             
             if finalClinMatrix==None:
                 finalClinMatrix= cMatrix
@@ -109,70 +117,100 @@ def flattenEachSampleMap(sMap, bookDic):
             if finalClinMatrixJSON==None:
                 finalClinMatrixJSON= obj
 
-
             #merge final and cMatrix
-            #if finalClinMatrix.getName() != cMatrix.getName():
             if finalClinMatrix != cMatrix:
                 r = finalClinMatrix.addNewCols(cMatrix,validation=True)
                 if r!=True:
                     print "Fail to merge"
                     return False
 
+            #add clinFeature
+            if clinFeature:
+                clinFeatures.append(clinFeature)
+            
             #merge finalClinMatrixJSON with new json
             if finalClinMatrixJSON != obj:
                 jsonName= trackName_fix(sampleMapBaseName(sMap)+"_clinicalMatrix")
                 finalClinMatrixJSON= cgDataMergeJSON(finalClinMatrixJSON, obj, jsonName)
-        
-            if obj.has_key(':clinicalFeature'):
-                clinFeatures.append(bookDic[obj[':clinicalFeature']])
-                clinFeatureJSON = bookDic[obj[':clinicalFeature']]
-                jsonName=  trackName_fix(sampleMapBaseName(sMap)+"_clinicalFeature")
-                if finalClinFeatureJSON==None:
-                    finalClinFeatureJSON= bookDic[obj[':clinicalFeature']]
-                if clinFeatureJSON !=finalClinFeatureJSON:
-                    finalClinFeatureJSON = cgDataMergeJSON(finalClinFeatureJSON, clinFeatureJSON, jsonName)
-                finalClinFeatureJSON["version"]=datetime.date.today().isoformat() 
 
-    #clinicalFeature
-    if finalClinFeatureJSON != None:
-        targetfile = ".tmp"
-        fout = open(targetfile,'w')
+            # final ClinFeature json
+            if clinFeature:
+                clinFeatureJSON = bookDic[obj[':clinicalFeature']]
+                if finalClinFeatureJSON==None:
+                    finalClinFeatureJSON= clinFeatureJSON
+                else:
+                    jsonName=  trackName_fix(sampleMapBaseName(sMap)+"_clinicalFeature")
+                    finalClinFeatureJSON["version"]=datetime.date.today().isoformat() 
+                    finalClinFeatureJSON["type"]="clinicalFeature"
+                    finalClinFeatureJSON["name"]=jsonName
+                    finalClinFeatureJSON["cgDataVersion"]=1
+
+    #final clinicalFeature
+    if finalClinFeatureJSON:
+        fout = open(".tmp",'w')
         fout.close()
         for clinF in clinFeatures:
-            path= clinF['path']
-            os.system("cat "+path+" >> "+targetfile)
-        fin = open(targetfile,'r')
+            fout = open(".tmptmp",'w')
+            clinF.store(fout)
+            fout.close()
+            os.system("cat .tmptmp >> .tmp")
+        fin = open(".tmp",'r')
         finalClinFeature =ClinicalFeatureNew(fin,finalClinFeatureJSON['name'])
         if not finalClinFeature.isValid():
-            print targetfile, "is invalid"
+            print "final clinFeature file .tmp is invalid"
             return 0
         fin.close()
 
-    #SURVIVAL data
-    #check matrix does not _SURVIVAL and _CENSOR
-    foundS=0
-    foundC=0
+    #SURVIVAL analysis data
+    foundE=0
+    foundT=0
     if finalClinFeature:
         features= finalClinFeature.getFeatures()
         for feature in features:
             sameAs = finalClinFeature.getFeatureSameAs(feature)
             if sameAs =="_TIME_TO_EVENT":
-                if foundS==1:
+                #check there is only one parameter is set to be _TIME_TO_EVENT
+                if foundT==1:
                     print "ERROR there is already _TIME_TO_EVENT"
                     continue
-                foundS=1
-                finalClinMatrix.addNewColfromOld(sameAs, feature)
+                #check matrix does not have _TIME_TO_EVNET
+                if sameAs in finalClinMatrix.getCOLs():
+                    print "ERROR there is already _TIME_TO_EVENT in matrix"
+                    continue
+                #data check need to check these are floats or "" in both clinFeature and clinMatrix 
+                GOOD=1
+                if finalClinMatrix.isTypeFloat(feature)!= True:
+                    print "ERROR _TIME_TO_EVENT parent feature values are not correct", finalClinMatrix.getColStates(feature)
+                    GOOD=0
+                if GOOD:
+                    foundT=1
+                    finalClinMatrix.addNewColfromOld(sameAs, feature)
+                    finalClinFeature.setFeatureValueType(sameAs,"float")
+                    
             if sameAs =="_EVENT":
-                if foundC==1:
+                #check there is only one parameter is set to be _EVENT
+                if foundE==1:
                     print "ERROR there is already _EVENT"
                     continue
-                states= finalClinFeature.getStates(feature)
+                #check matrix does not have _EVNET
+                if sameAs in finalClinMatrix.getCOLs():
+                    print "ERROR there is already _EVENT in matrix"
+                    continue
+                #data check
+                GOOD=1
+                states= finalClinMatrix.getColStates(feature)
                 for state in states:
-                    if state not in [0,1,"0","1"]:
+                    if state not in [0,1,"0","1",""]:
                         print "ERROR _EVENT values are not correct", state
-                    foundC=1
-                finalClinMatrix.addNewColfromOld(sameAs, feature)
-            
+                        GOOD=0
+                        break
+                if GOOD:
+                    foundE=1
+                    finalClinMatrix.addNewColfromOld(sameAs, feature)
+                    finalClinFeature.setFeatureValueType(sameAs,"category")
+                    finalClinFeature.setFeatureStates(sameAs,["0","1"])
+                    finalClinFeature.setFeatureStateOrder(sameAs,["0","1"])
+
     #clinical data push down
     roots = sMap.allRoots()
     for root in roots:
@@ -228,21 +266,10 @@ def flattenEachSampleMap(sMap, bookDic):
         intList = intId.getList()
     finalClinMatrix.addColIntegration(sMap,intList)
             
-    if finalClinFeatureJSON != None:
-        targetfile = ".tmp"
-        fout = open(targetfile,'w')
-        fout.close()
-        for clinF in clinFeatures:
-            path= clinF['path']
-            os.system("cat "+path+" >> "+targetfile)
-        fin = open(targetfile,'r')
-        finalClinFeature =ClinicalFeatureNew(fin,finalClinFeatureJSON['name'])
-        if not finalClinFeature.isValid():
-            print targetfile, "is invalid"
-            return 0
-        fin.close()
+    #final clinicalFeature
+    if finalClinFeature:
         finalClinFeature.removeFeatures(badFeatures)
-
+        
         finalClinFeature.cleanState()
         finalClinFeature.checkFeatureWithMatrix(finalClinMatrix)
         #clinicalFeature fillin ValueType

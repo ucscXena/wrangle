@@ -213,6 +213,8 @@ featureStateOrder={
                                          "Current reformed smoker for < or = 15 years",
                                          "Current smoker"]
                                          },
+    "vital_status":{"ALL":
+                    ["LIVING","DECEASED"]},
     "":""
     }
 

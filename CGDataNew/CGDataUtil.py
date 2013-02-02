@@ -1,16 +1,25 @@
 import re
 
 def col_fix( name ):
-    out = name.replace('`', '_').replace('\\','_').replace('.','_').replace(':','_').replace(' ','_').replace('/','_').strip()
-    while (len(out) > 64):
-        out = re.sub( r'[aeiou]([^aioeu]*)$', r'\1', out)
-        new = re.sub( r'[aeiou]([^aioeu]*)$', r'\1', out)
-        if new != out:
-            out =new
+    newName=""
+    regex = re.compile('[a-z,A-Z,0-9,_]')
+    for i in range (0,len(name)):
+        if not regex.match(name[i]):
+            if i==0:
+                continue
+            if newName[-1]!="_":
+                newName=newName+"_"
         else:
-            out = out[:-1]
-    return out
-
+            newName =newName+name[i]
+    if newName[-1]=="_":
+        newName=newName[:-1]
+    while (len(newName) > 64):
+        out = re.sub( r'[aeiou]([^aioeu]*)$', r'\1', newName)
+        if newName != out:
+            newName =out
+        else:
+            newName = newName[:-1]
+    return newName
 
 def colStringLength (states):
     totalL =0

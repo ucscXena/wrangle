@@ -4,9 +4,10 @@ import re
 import csv
 
 from CGDataUtil import *
+import ClinicalFeatureNew
 
 class ClinicalMatrixNew():
-    def __init__ (self, rFHandle,name,FirstColAuto=False):
+    def __init__ (self, rFHandle,name,FirstColAuto=False, ClinF=None):
         #1stColAuto== True, replace first column with autoincrement index 1,2,3,...
         # return emptySelf if fail to initiate
         self.__name=""
@@ -32,9 +33,6 @@ class ClinicalMatrixNew():
         lineReader= csv.reader(readHandle,delimiter='\t', quotechar='"')
         data = lineReader.next()
 
-        #line = readHandle.readline()
-        #data = string.split(string.strip(line),"\t")
-
         ignoreCol=[]
 
         for i in range (1,len(data)):
@@ -44,16 +42,13 @@ class ClinicalMatrixNew():
                 self = emptySelf
                 return
 
-            #to do the longer version should go to the clinicalFeature file, 
-            if len(d) >self.__maxColLen:
-                new_d= col_fix(d)
-                print "WARNING, feature name >self.__maxColLen characters", d, new_d
-                d =new_d
-
             #fix col
             new_d= col_fix(d)
             if new_d!=d:
-                print "WARNING, feature name has bad characters", d, "new name:", new_d
+                #print "WARNING, feature name is modified", d, "new name:", new_d
+                # modify ClinF if exist
+                if ClinF:
+                    ClinF.replaceFeatureName(d, new_d)
                 d =new_d
                 
             #do not use _PATIENT
@@ -67,9 +62,6 @@ class ClinicalMatrixNew():
             
         # load data
         c=0
-        #for line in readHandle.readlines():
-            #data = string.split(line[:-1],"\t")
-
         for line in lineReader:
             data =line
             #bad line
@@ -373,10 +365,11 @@ class ClinicalMatrixNew():
         for sample in self.__ROWs:
             self.__DATA[sample][ColInt]=sampleMap.getIntegrationId(sample, integrationList)
         
+    """
     def isTypeCategory (self, col):
         getRoot(sample)
         return True
-
+    """
 
     def isTypeCategory (self, col):
         isFloat = True
@@ -410,7 +403,6 @@ class ClinicalMatrixNew():
 
 
     def isTypeInt (self, col):
-        isInt = True
         states =self.getColStates (col)
         if states == None:
             return None
@@ -421,8 +413,21 @@ class ClinicalMatrixNew():
                 int(state)
             except:
                 isInt=False
-                break
-        return isInt
+                return False
+        return True
+
+    def isTypeFloat (self, col):
+        states =self.getColStates (col)
+        if states == None:
+            return None
+        for state in states:
+            if state in [ None,""]:
+                continue
+            try:
+                float(state)
+            except:
+                return False
+        return True
 
 
     def pushToChildren(self, parent, sMap):
