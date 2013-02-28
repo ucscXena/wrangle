@@ -255,7 +255,7 @@ featurePriority={
              },
     "GBM":  {"sample_type":"1",
              "GeneExp_Subtype":"2",
-             "G-CIMP_STATUS":"3",
+             "G_CIMP_STATUS":"3",
              "CDE_survival_time":"4",
              "":""    
              },

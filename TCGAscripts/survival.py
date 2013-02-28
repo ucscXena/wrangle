@@ -169,7 +169,7 @@ def survival (dir,cancer,tag):
     fout.write("_EVENT\tvalueType\tcategory\n")
 
     fout.write("_TIME_TO_EVENT\tshortTitle\tOVERALL SURVIVAL\n")
-    fout.write("_TIME_TO_EVENT\tlongTitle\t_TIME_TO_EVENT Overall survival; =days_to_death (if deceased); =max(days_to_last_known_alive,days_to_last_followup) (if living)\n")
+    fout.write("_TIME_TO_EVENT\tlongTitle\t_TIME_TO_EVENT overall survival; =days_to_death (if deceased); =max(days_to_last_known_alive,days_to_last_followup) (if living)\n")
     fout.write("_TIME_TO_EVENT\tvalueType\tfloat\n")
     fout.close()
 

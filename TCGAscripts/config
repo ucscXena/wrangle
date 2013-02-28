@@ -8,22 +8,21 @@ $FIREHOSEDATE_PARADIGM_LITE=2012032100
 0	0	Pathway_Paradigmlite	Pathway_Paradigmlite	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/tcga4yeo/other/gdacs/gdacbroad/*/analyses/$FIREHOSEDATE_PARADIGM_LITE/	$TMP
 
 #FH analysis
-$FIREHOSEDATE_ana=2012122100
+$FIREHOSEDATE_ana
 0	1	Pathway_Paradigm	Pathway_Paradigm_agilent	/inside/depot/tcgafiles/tcga4yeo/other/gdacs/gdacbroad/*/analyses/$FIREHOSEDATE_ana/	$TMP
 0	1	Pathway_Paradigm	Pathway_Paradigm_copynumber	/inside/depot/tcgafiles/tcga4yeo/other/gdacs/gdacbroad/*/analyses/$FIREHOSEDATE_ana/	$TMP
 0	1	Pathway_Paradigm	Pathway_Paradigm_RNAseq	/inside/depot/tcgafiles/tcga4yeo/other/gdacs/gdacbroad/*/analyses/$FIREHOSEDATE_ana/	$TMP
 0	1	Pathway_Paradigm	Pathway_Paradigm_RNAseq_copynumber	/inside/depot/tcgafiles/tcga4yeo/other/gdacs/gdacbroad/*/analyses/$FIREHOSEDATE_ana/	$TMP
 0	1	CopyNumber_Gistic2	CopyNumber_Gistic2	/inside/depot/tcgafiles/tcga4yeo/other/gdacs/gdacbroad/*/analyses/$FIREHOSEDATE_ana/	$TMP
 
-#standard data
-$FIREHOSEDATE_Merge_methylation=2012122100
-0	1	Merge_methylation	Merge_methylation27	/inside/depot/tcgafiles/tcga4yeo/other/gdacs/gdacbroad/*/stddata/$FIREHOSEDATE_Merge_methylation/	$TMP
+$FIREHOSEDATE_data
+0	1	Merge_methylation	Merge_methylation27	/inside/depot/tcgafiles/tcga4yeo/other/gdacs/gdacbroad/*/stddata/$FIREHOSEDATE_data/	$TMP
 
 #One Offs
-0	1	OneOff	OneOffClinical	/data/TCGA/tcgaDataOneOff/Clinical/*/	$TMP
+1	1	OneOff	OneOffClinical	/data/TCGA/tcgaDataOneOff/Clinical/*/	$TMP
 
 #DCC data
-1	1	Clinical	ClinicalPublicBioTab	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/bcr/biotab/clin/	$TMP
+0	1	Clinical	ClinicalPublicBioTab	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/bcr/biotab/clin/	$TMP
 
 
 0	1	AgilentGeneExp	AgilentG4502A_07_3	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/unc.edu/agilentg4502a_07_3/transcriptome/	$TMP

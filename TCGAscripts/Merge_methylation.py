@@ -54,7 +54,7 @@ def Merge_methylation(inDir, outDir, cancer,flog,PATHPATTERN,REALRUN):
         #is tar.gz?, uncompress
         if string.find(file,".tar.gz")!=-1:
             os.system("tar -xzf "+inDir+file +" -C tmptmp/") 
-            dataDir ="tmptmp/"+string.replace(file,".tar.gz","")+"/"
+            dataDir = "tmptmp/"+os.listdir("tmptmp/")[0]+"/"
             break
 
     #make sure there is data
