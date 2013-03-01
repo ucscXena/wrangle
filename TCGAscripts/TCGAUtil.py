@@ -48,11 +48,18 @@ cancerOfficial={
     "SKCM":"skin cutaneous melanoma",
     "STAD":"stomach adenocarcinoma",
     "THCA":"thyroid carcinoma",
-    "UCEC":"uterine corpus endometrioid carcinoma"
+    "UCEC":"uterine corpus endometrioid carcinoma",
+    "ACC":"adrenocortical carcinoma",
+    "LCLL":"chronic lymphocytic leukemia",
+    "LCML":"chronic myelogenous leukemia",
+    "MESO":"mesothelioma",
+    "MISC":"miscellaneous",
+    "PCPG":"pheochromocytoma and paraganglioma",
+    "UCS":"uterine carcinosarcoma"
     }
 
 cancerHumanReadable={
-    "LAML":"Leukemia",
+    "LAML":"Acute Myeloid Leukemia",
     "BLCA":"Bladder Cancer",
     "LGG":"Lower Grade Glioma",
     "BRCA":"Breast Cancer",
@@ -79,7 +86,14 @@ cancerHumanReadable={
     "SKCM":"Melanoma",
     "STAD":"Stomach Cancer",
     "THCA":"Thyroid Cancer",
-    "UCEC":"Endometrioid Cancer"
+    "UCEC":"Endometrioid Cancer",
+    "ACC":"Adrenocortical Cancer",
+    "LCLL":"Chronic Lymphocytic Leukemia",
+    "LCML":"Chronic Myeloid Leukemia",
+    "MESO":"Mesothelioma",
+    "MISC":"Miscellaneous",
+    "PCPG":"Pheochromocytoma & Paraganglioma",
+    "UCS":"Uterine Cancer"
     }
 
 cancerGroupTitle={
@@ -95,8 +109,8 @@ cancerGroupTitle={
     "GBM":"glioblastoma multiforme",
     "HNSC":"head & neck squamous cell carcinoma",
     "KICH":"kidney chromophobe",
-    "KIRC":"kidney renal clear cell carcinoma",
-    "KIRP":"kidney renal papillary cell carcinoma",
+    "KIRC":"kiney clear cell carcinoma",
+    "KIRP":"kiney papillary cell carcinoma",
     "LIHC":"liver hepatocellular carcinoma",
     "LUAD":"lung adenocarcinoma",
     "LUSC":"lung squamous cell carcinoma",
@@ -110,40 +124,17 @@ cancerGroupTitle={
     "SKCM":"skin cutaneous melanoma",
     "STAD":"stomach adenocarcinoma",
     "THCA":"thyroid carcinoma",
-    "UCEC":"uterine corpus endometrioid carcinoma"
+    "UCEC":"uterine corpus endometrioid carcinoma",
+    "ACC":"adrenocortical cancer",
+    "LCLL":"chronic lymphocytic leukemia",
+    "LCML":"chronic myeloid leukemia",
+    "MESO":"mesothelioma",
+    "MISC":"miscellaneous",
+    "PCPG":"pheochromocytoma & paraganglioma",
+    "UCS":"uterine Cancer"
+
     }
 
-"""
-browserPriority={
-    "LAML":"1",
-    "BLCA":"2",
-    "LGG":"4",
-    "BRCA":"6",
-    "CESC":"8",
-    "COAD":"10",
-    "COADREAD":"12",
-    "ECSA":"13",
-    "GBM":"14",
-    "HNSC":"16",
-    "KICH":"17",
-    "KIRC":"18",
-    "KIRP":"20",
-    "LIHC":"22",
-    "LUAD":"24",
-    "LUSC":"26",
-    "DLBC":"28",
-    "LNNH":"30",
-    "OV":"32",
-    "PAAD":"34",
-    "PRAD":"36",
-    "READ":"38",
-    "SARC":"39",
-    "SKCM":"40",
-    "STAD":"42",
-    "THCA":"44",
-    "UCEC":"46"
-    }
-"""
 TCGASampleType={
     "01":"Primary solid Tumor",
     "02":"Recurrent Solid Tumor",

@@ -45,7 +45,7 @@ class ClinicalMatrixNew():
             #fix col
             new_d= col_fix(d)
             if new_d!=d:
-                #print "WARNING, feature name is modified", d, "new name:", new_d
+                print "WARNING, feature name is modified", d, "new name:", new_d
                 # modify ClinF if exist
                 if ClinF:
                     ClinF.replaceFeatureName(d, new_d)
