@@ -1,0 +1,43 @@
+#UUID service https://wiki.nci.nih.gov/display/TCGA/TCGA+Biospecimen+Metadata+Web+Service+User's+Guide
+#UUID browser https://tcga-data.nci.nih.gov/uuid/uuidBrowser.htm
+
+$TMP=preFreeze/TCGA/
+
+#FIREHOSE analysis PARADIGM_LITE
+$FIREHOSEDATE_PARADIGM_LITE=2012032100
+0	0	Pathway_Paradigmlite	Pathway_Paradigmlite	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/tcga4yeo/other/gdacs/gdacbroad/*/analyses/$FIREHOSEDATE_PARADIGM_LITE/	$TMP
+
+#FH analysis
+$FIREHOSEDATE_ana
+1	1	Pathway_Paradigm	Pathway_Paradigm_agilent	/inside/depot/tcgafiles/tcga4yeo/other/gdacs/gdacbroad/*/analyses/$FIREHOSEDATE_ana/	$TMP
+1	1	Pathway_Paradigm	Pathway_Paradigm_copynumber	/inside/depot/tcgafiles/tcga4yeo/other/gdacs/gdacbroad/*/analyses/$FIREHOSEDATE_ana/	$TMP
+1	1	Pathway_Paradigm	Pathway_Paradigm_RNAseq	/inside/depot/tcgafiles/tcga4yeo/other/gdacs/gdacbroad/*/analyses/$FIREHOSEDATE_ana/	$TMP
+1	1	Pathway_Paradigm	Pathway_Paradigm_RNAseq_copynumber	/inside/depot/tcgafiles/tcga4yeo/other/gdacs/gdacbroad/*/analyses/$FIREHOSEDATE_ana/	$TMP
+1	1	CopyNumber_Gistic2	CopyNumber_Gistic2	/inside/depot/tcgafiles/tcga4yeo/other/gdacs/gdacbroad/*/analyses/$FIREHOSEDATE_ana/	$TMP
+
+$FIREHOSEDATE_data
+1	1	Merge_methylation	Merge_methylation27	/inside/depot/tcgafiles/tcga4yeo/other/gdacs/gdacbroad/*/stddata/$FIREHOSEDATE_data/	$TMP
+
+#One Offs
+1	1	OneOff	OneOffClinical	/data/TCGA/tcgaDataOneOff/Clinical/*/	$TMP
+
+#DCC data
+0	1	Clinical	ClinicalPublicBioTab	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/bcr/biotab/clin/	$TMP
+
+
+1	1	AgilentGeneExp	AgilentG4502A_07_3	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/unc.edu/agilentg4502a_07_3/transcriptome/	$TMP
+1	1	AgilentGeneExp	AgilentG4502A_07_2	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/unc.edu/agilentg4502a_07_2/transcriptome/	$TMP
+1	1	AgilentGeneExp	AgilentG4502A_07_1	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/unc.edu/agilentg4502a_07_1/transcriptome/	$TMP
+1	1	Affy	Affy	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/broad.mit.edu/ht_hg-u133a/transcriptome/	$TMP
+1	1	Methylation	humanmethylation27	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/jhu-usc.edu/humanmethylation27/methylation/	$TMP
+1	1	Methylation	humanmethylation450	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/jhu-usc.edu/humanmethylation450/methylation/	$TMP
+1	1	RNAseq	illuminahiseq_rnaseq_unc	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/unc.edu/illuminahiseq_rnaseq/rnaseq/	$TMP
+1	1	RNAseq	illuminahiseq_rnaseqV2_unc	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/unc.edu/illuminahiseq_rnaseqv2/rnaseqv2/	$TMP
+1	1	RNAseq	illuminaga_rnaseq_unc	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/unc.edu/illuminaga_rnaseq/rnaseq/	$TMP
+1	1	RNAseq	illuminaga_rnaseq_bcgsc	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/bcgsc.ca/illuminaga_rnaseq/rnaseq/	$TMP
+1	1	SNP6	SNP6	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/broad.mit.edu/genome_wide_snp_6/snp/	$TMP
+
+
+#sampleMap
+1	1	TCGASampleMap	TCGASampleMap	$TMP*/	$TMP
+

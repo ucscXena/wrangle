@@ -1,0 +1,7 @@
+#UUID service https://wiki.nci.nih.gov/display/TCGA/TCGA+Biospecimen+Metadata+Web+Service+User's+Guide
+#UUID browser https://tcga-data.nci.nih.gov/uuid/uuidBrowser.htm
+
+$TMP=preFreeze/TCGA/
+
+#DCC data
+1	1	Clinical	ClinicalPublicBioTab	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/bcr/biotab/clin/	$TMP
