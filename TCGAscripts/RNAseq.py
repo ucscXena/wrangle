@@ -1,4 +1,4 @@
-import string, os, sys, glob
+import sys,string,os
 import json,datetime
 import math
 import inspect
@@ -28,6 +28,15 @@ def illuminahiseq_rnaseqV2_unc (inDir, outDir, cancer,flog,REALRUN):
     PATHPATTERN= "IlluminaHiSeq_RNASeqV2"
     suffix     = "IlluminaHiSeq_RNASeqV2"
     namesuffix = "HiSeqV2"
+    dataProducer = "University of North Carolina TCGA genome characterization center"
+    geneRPKM (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN)
+    return
+
+def illuminahiseq_rnaseqV2_exon_unc (inDir, outDir, cancer,flog,REALRUN):
+    print cancer, sys._getframe().f_code.co_name
+    PATHPATTERN= "IlluminaHiSeq_RNASeqV2_exon"
+    suffix     = "IlluminaHiSeq_RNASeqV2_exon"
+    namesuffix = "HiSeqV2_exon"
     dataProducer = "University of North Carolina TCGA genome characterization center"
     geneRPKM (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN)
     return
@@ -166,6 +175,18 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
                     valuePOS=1
                     LOG2=1
                     process(dataMatrix,samples,sample,cancer,infile,flog, valuePOS,LOG2)
+                #v2 exon from unc
+                pattern ="bt.exon_quantification"
+                if string.find(file,pattern)!=-1:
+                    infile = rootDir+dataDir+"/"+file
+                    # unc stupid sample name in file name
+                    if dataProducer =="University of North Carolina TCGA genome characterization center":
+                        sample = string.split(file,".")[2]
+                    else:
+                        print "please check how to identify sample name"
+                    valuePOS=3
+                    LOG2=1
+                    process(dataMatrix,samples,sample,cancer,infile,flog, valuePOS,LOG2)
                         
         outfile = outDir+cancer+"/"+cgFileName
         outputMatrix(dataMatrix, samples, outfile, flog)
@@ -175,13 +196,14 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     J={}
     #stable
     J["cgDataVersion"]=1
-    J["shortTitle"]="Gene Expression ("+suffix+")"
-    J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression ("+suffix+")"
     J[":dataSubType"]="geneExp"
     J["redistribution"]= True
     J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
     J["dataProducer"]= dataProducer
     J["colNormalization"]=True
+    J["PLATFORM"]= suffix
+    J["type"]= "genomicMatrix" 
+    J[":sampleMap"]="TCGA."+cancer+".sampleMap"
     
     #multiple dirs
     J["url"]=TCGAUtil.remoteBase \
@@ -189,35 +211,55 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     J["version"]= datetime.date.today().isoformat()
     J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
 
-    #change description
     if PATHPATTERN =="IlluminaHiSeq_RNASeqV2":  
-        J["gain"]=0.7
+        J["gain"]=0.67
     else:
         J["gain"]=1.0
-    J["PLATFORM"]= suffix
-    if PATHPATTERN in ["IlluminaHiSeq_RNASeq","IlluminaHiSeq_RNASeqV2"]:
+
+    if PATHPATTERN in ["IlluminaHiSeq_RNASeq","IlluminaHiSeq_RNASeqV2","IlluminaHiSeq_RNASeqV2_exon"]:
         platformTitle ="Illumina HiSeq 2000 RNA Sequencing platform"
     if PATHPATTERN =="IlluminaGA_RNASeq":
         platformTitle =" Illumina Genome Analyzer RNA Sequencing platform"
-    J["description"]= "The dataset shows TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression data."+ \
-                      " Gene expression profile was measured experimentally using the "+platformTitle+" by the "+ dataProducer +"." + \
-                      " Level 3 interpreted level data was downloaded from TCGA data coordination center. This dataset shows the gene-level transcription estimates, "
 
+    #change description
+    J["description"]=""
+    if string.find(PATHPATTERN, "exon")==-1:
+        J[":probeMap"]= "unc_RNAseq_exon"
+        J["shortTitle"]="Gene Expression ("+suffix+")"
+        J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression ("+suffix+")"
+        J["description"]= J["description"] +"The dataset shows TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression."+ \
+                          " The gene expression profile was measured experimentally using the "+platformTitle+" by the "+ dataProducer +"." + \
+                          " Level 3 interpreted level data was downloaded from TCGA data coordination center. This dataset shows the gene-level transcription estimates, "
+        
+    else:
+        J[":probeMap"]= "hugo"
+        J["shortTitle"]="Exon Expression ("+suffix+")"
+        J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") exon expression ("+suffix+")"
+        J["description"]= J["description"] +"The dataset shows TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") exon expression."+ \
+                          " The exon expression profile was measured experimentally using the "+platformTitle+" by the "+ dataProducer +"." + \
+                          " Level 3 interpreted level data was downloaded from TCGA data coordination center. This dataset shows the gene-level transcription estimates, "
+        
     if PATHPATTERN =="IlluminaHiSeq_RNASeqV2":
         J["description"] = J["description"] + "as in RSEM normalized count."
         J["wrangling_procedure"]= "Level_3 Data (file names: *.rsem.genes.normalized_results) download from TCGA DCC, log2(x+1) transformed, and processed at UCSC into cgData repository"
+    elif PATHPATTERN =="IlluminaHiSeq_RNASeqV2_exon":
+        J["description"] = J["description"] + "as in RPKM values (Reads Per Kilobase of exon model per Million mapped reads)."
+        J["wrangling_procedure"]= "Level_3 Data (file names: *.exon_quantification.txt) download from TCGA DCC, log2(x+1) transformed, and processed at UCSC into cgData repository"
     else:
         J["description"] = J["description"] + "as in RPKM values (Reads Per Kilobase of exon model per Million mapped reads)."
         J["wrangling_procedure"]= "Level_3 Data (file names: *.gene.quantification.txt) download from TCGA DCC, log2(x+1) transformed, and processed at UCSC into cgData repository"
-    
-    J["description"] = J["description"] + " Genes are mapped onto the human genome coordinates using UCSC cgData HUGO probeMap."
 
+    if string.find(PATHPATTERN, "exon")==-1:
+        J["description"] = J["description"] + " Genes are mapped onto the human genome coordinates using UCSC cgData HUGO probeMap."
+    else:
+        J["description"] = J["description"] + " Genes are mapped onto the human genome coordinates using UCSC cgData unc_RNAseq_exon probeMap."
+        
     if dataProducer =="University of North Carolina TCGA genome characterization center":
         J["description"] = J["description"] +\
                            " Reference to method description from "+dataProducer+": <a href=\"" + TCGAUtil.remoteBase +string.replace(inDir,TCGAUtil.localBase,"") +remoteDataDirExample+"/DESCRIPTION.txt\" target=\"_blank\"><u>DCC description</u></a>"
         
     J["description"] = J["description"] +\
-                       "<br><br>In order to more easily view the differential gene expression between samples, we set the default view to center each gene to zero by independently subtracting the mean of the genomic location on the fly. Users can view the original non-normalized values by uncheck the \"Normalize\" option. For more information on how to use the cancer browser, please refer to the help page."
+                       "<br><br>In order to more easily view the differential expression between samples, we set the default view to center each gene to zero by independently subtracting the mean of the genomic location on the fly. Users can view the original non-normalized values by uncheck the \"Normalize\" option. For more information on how to use the cancer browser, please refer to the help page."
     J["description"] = J["description"] +"<br><br>"+TCGAUtil.clinDataDesc
     
     J["notes"]= "the probeMap should be tcgaGAF, but untill the probeMap is made, we will have to use hugo for the short term, however probably around 10% of the gene symbols are not HUGO names, but ENTRE genes"
@@ -232,9 +274,8 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
         return
     else:
         J["name"]=name        
-    J[":probeMap"]= "hugo"
-    J["type"]= "genomicMatrix" 
-    J[":sampleMap"]="TCGA."+cancer+".sampleMap"
+
+        
     oHandle.write( json.dumps( J, indent=-1 ) )
     oHandle.close()
             

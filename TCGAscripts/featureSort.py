@@ -43,11 +43,11 @@ shortTitle(new,change)
 
 fout=open("missingpython",'w')
 sys.stdout = fout
-fout.write("featureLongTitle=\n")
+fout.write("featureLongTitle= ")
 pprint.pprint(featureLongTitle)
 
 fout.write("\n")
-fout.write("featureShortTitle=\n")
+fout.write("featureShortTitle= ")
 pprint.pprint(featureShortTitle)
 
 fout.close()
