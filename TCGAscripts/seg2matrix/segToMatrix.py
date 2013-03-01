@@ -7,7 +7,6 @@ import CGData.RefGene
 import CGData.GeneMap
 
 class matrix_write:    
-    
     def __init__(self, handle):
         self.buff = ""
         self.handle = handle
@@ -40,7 +39,7 @@ if __name__ == "__main__":
     refgene = CGData.RefGene.RefGene()
     refgene.load(sys.argv[2])
     
-    nrefgene = CGData.GeneMap.filter_longest_form(refgene)
+    #nrefgene = CGData.GeneMap.filter_longest_form(refgene)
 
     outbase = "out"
     
@@ -56,8 +55,9 @@ if __name__ == "__main__":
     probeMapper = CGData.GeneMap.ProbeMapper('b')
     for probe in m.probes:
         hits = []
-        for hit in probeMapper.find_overlap( probe, nrefgene ):
-            hits.append(hit.name)
+        for hit in probeMapper.find_overlap( probe, refgene ):
+            if hit.name not in hit:
+                hits.append(hit.name)
         handle.write("%s\t%s\t%s\t%s\t%s\t.\n" % (probe.name, ",".join(hits), probe.chrom, probe.chrom_start, probe.chrom_end))
     handle.close()
     
