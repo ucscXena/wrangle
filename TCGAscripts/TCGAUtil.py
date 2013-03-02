@@ -132,7 +132,6 @@ cancerGroupTitle={
     "MISC":"miscellaneous",
     "PCPG":"pheochromocytoma & paraganglioma",
     "UCS":"uterine Cancer"
-
     }
 
 TCGASampleType={
@@ -269,9 +268,9 @@ featurePriority={
              "":""    
              },
     "LAML": {"sample_type_id":"1",
-             "pretreatment_history":"2",
-             "age_at_initial_pathologic_diagnosis":"3",
-             "days_to_last_followup":"4",
+             "acute_myeloid_leukemia_calgb_cytogenetics_risk_category":"2",
+             "gender":"3",
+             "age_at_initial_pathologic_diagnosis":"4",
              "":""    
              },
     "LGG":  {"sample_type":"1",
@@ -313,6 +312,7 @@ featurePriority={
              "":""
              },
     "SKCM": {"sample_type":"1",
+             "gender":"2",
              "":""    
              },
     "STAD": {"sample_type":"1",
@@ -324,8 +324,28 @@ featurePriority={
     "UCEC": {"sample_type":"1",
              "mononucleotide_and_dinucleotide_marker_panel_analysis_status":"2",
              "":""
+             },
+    "ACC":{"sample_type":"1",
+             "":""    
+             },
+    "LCLL":{"sample_type":"1",
+             "":""    
+             },
+    "LCML":{"sample_type":"1",
+             "":""    
+             },
+    "MESO":{"sample_type":"1",
+             "":""    
+             },
+    "MISC":{"sample_type":"1",
+             "":""    
+             },
+    "PCPG":{"sample_type":"1",
+             "":""    
+             },
+    "UCS":{"sample_type":"1",
+             "":""    
              }
-
     }
 
 

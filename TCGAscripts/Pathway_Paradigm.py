@@ -11,25 +11,25 @@ from CGDataUtil import *
 def Pathway_Paradigm_agilent (inDir, outDir, cancer,flog, REALRUN):
     #print status
     print cancer, inspect.stack()[0][3] 
-    PATHPATTERN= "Paradigm."
+    PATHPATTERN= "ParadigmReport."
     Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN)
 
 def Pathway_Paradigm_copynumber (inDir, outDir, cancer,flog, REALRUN):
     #print status
     print cancer, inspect.stack()[0][3] 
-    PATHPATTERN= "ParadigmWithCopyNumber."
+    PATHPATTERN= "ParadigmReportWithCopyNumber."
     Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN)
     
 def Pathway_Paradigm_RNAseq (inDir, outDir, cancer,flog, REALRUN):
     #print status
     print cancer, inspect.stack()[0][3]
-    PATHPATTERN= "ParadigmWithRNASeq."
+    PATHPATTERN= "ParadigmReportWithRNASeq."
     Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN)
 
 def Pathway_Paradigm_RNAseq_copynumber (inDir, outDir, cancer,flog, REALRUN):
     #print status
     print cancer, inspect.stack()[0][3] 
-    PATHPATTERN= "ParadigmWithRNASeqAndCopyNumber."
+    PATHPATTERN= "ParadigmReportWithRNASeqAndCopyNumber."
     Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN)
 
 def Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN):
@@ -102,28 +102,28 @@ def Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN):
     oHandle = open(outDir+cancer+"/"+cgFileName+".json","w")
     J={}
     #stable
-    if PATHPATTERN== "Paradigm.":
+    if PATHPATTERN== "ParadigmReport.":
         suffix="PDMarray"
         J["shortTitle"]="Paradigm.array_expression"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") PARADIGM inference activity (agilent expression)"
         J[":dataSubType"]="PARADIGM"
         J["gain"]=1.0
         
-    if PATHPATTERN== "ParadigmWithCopyNumber.":
+    if PATHPATTERN== "ParadigmReportWithCopyNumber.":
         suffix="PDMCNV"
         J["shortTitle"]="Paradigm.CNV"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") PARADIGM inference activity (CNV)"
         J[":dataSubType"]="PARADIGM"
         J["gain"]=1.0
         
-    if PATHPATTERN== "ParadigmWithRNASeq.":
+    if PATHPATTERN== "ParadigmReportWithRNASeq.":
         suffix="PDMExp"
         J["shortTitle"]="Paradigm.RNAseq"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") PARADIGM inference activity (RNAseq)"
         J[":dataSubType"]="PARADIGM"
         J["gain"]=1.0
 
-    if PATHPATTERN=="ParadigmWithRNASeqAndCopyNumber.":
+    if PATHPATTERN=="ParadigmReportWithRNASeqAndCopyNumber.":
         suffix="PDMExpCNV"
         J["shortTitle"]="Paradigm.RNAseq+CNV"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") PARADIGM inference activity (RNAseq,CNV)"
@@ -142,16 +142,16 @@ def Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN):
     #change description
     J["wrangling_procedure"]= "FIREHOSE data download from TCGA DCC, processed at UCSC into cgData repository"
 
-    if PATHPATTERN== "Paradigm.":
+    if PATHPATTERN== "ParadigmReport.":
         J["description"]= "Broad FireHose automated run results of TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+")"+\
                           " gene activity level inferred using the PARADIGM method on gene expression data from Agilent array alone."
-    if PATHPATTERN== "ParadigmWithCopyNumber.":
+    if PATHPATTERN== "ParadigmReportWithCopyNumber.":
         J["description"]= "Broad FireHose automated run results of TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+")"+\
                           " gene activity level inferred using the PARADIGM method on copy number data alone."
-    if PATHPATTERN=="ParadigmWithRNASeq.":
+    if PATHPATTERN=="ParadigmReportWithRNASeq.":
         J["description"]= "Broad FireHose automated run results of TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+")"+\
                           " gene activity level inferred using the PARADIGM method on RNAseq data alone."
-    if PATHPATTERN=="ParadigmWithRNASeqAndCopyNumber.":
+    if PATHPATTERN=="ParadigmReportWithRNASeqAndCopyNumber.":
         J["description"]= "Broad FireHose automated run results of TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+")"+\
                           " gene activity level inferred using the PARADIGM method by integrating RNAseq and copy number data."
 

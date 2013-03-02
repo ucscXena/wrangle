@@ -210,7 +210,7 @@ def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN, lastDate, originCa
                             fout.write(feature+"\tpriority\t"+str(priority)+"\n")
                             fout.write(feature+"\tvisibility\ton\n")
                             
-                    if feature in ["age_at_initial_pathologic_diagnosis","days_to_last_followup","days_to_last_known_alive","sample_type","mononucleotide_and_dinucleotide_marker_panel_analysis_status","cancer type","tumor_necrosis_percent","tumor_nuclei_percent"]:
+                    if feature in ["gender","age_at_initial_pathologic_diagnosis","days_to_last_followup","days_to_last_known_alive","sample_type","mononucleotide_and_dinucleotide_marker_panel_analysis_status","cancer type","tumor_necrosis_percent","tumor_nuclei_percent"]:
                         fout.write(feature+"\tvisibility\ton\n")
                 fout.close()
 

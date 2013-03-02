@@ -31,8 +31,9 @@ $FIREHOSEDATE_data
 1	1	Affy	Affy	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/broad.mit.edu/ht_hg-u133a/transcriptome/	$TMP
 1	1	Methylation	humanmethylation27	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/jhu-usc.edu/humanmethylation27/methylation/	$TMP
 1	1	Methylation	humanmethylation450	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/jhu-usc.edu/humanmethylation450/methylation/	$TMP
-1	1	RNAseq	illuminahiseq_rnaseq_unc	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/unc.edu/illuminahiseq_rnaseq/rnaseq/	$TMP
+0	0	RNAseq	illuminahiseq_rnaseq_unc	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/unc.edu/illuminahiseq_rnaseq/rnaseq/	$TMP
 1	1	RNAseq	illuminahiseq_rnaseqV2_unc	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/unc.edu/illuminahiseq_rnaseqv2/rnaseqv2/	$TMP
+1	0	RNAseq	illuminahiseq_rnaseqV2_exon_unc	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/unc.edu/illuminahiseq_rnaseqv2/rnaseqv2/	$TMP
 1	1	RNAseq	illuminaga_rnaseq_unc	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/unc.edu/illuminaga_rnaseq/rnaseq/	$TMP
 1	1	RNAseq	illuminaga_rnaseq_bcgsc	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/bcgsc.ca/illuminaga_rnaseq/rnaseq/	$TMP
 1	1	SNP6	SNP6	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/broad.mit.edu/genome_wide_snp_6/snp/	$TMP

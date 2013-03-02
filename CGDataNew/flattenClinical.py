@@ -199,17 +199,24 @@ def flattenEachSampleMap(sMap, bookDic):
                 #data check
                 GOOD=1
                 states= finalClinMatrix.getColStates(feature)
+                """
                 for state in states:
                     if state not in [0,1,"0","1",""]:
                         print "ERROR _EVENT values are not correct", state
                         GOOD=0
                         break
+                """
+                if len(states) not in [2,3]:
+                    GOOD=0
+                if len(states)==3 and states.count('')!=1:
+                    GOOD=0
+
                 if GOOD:
                     foundE=1
                     finalClinMatrix.addNewColfromOld(sameAs, feature)
                     finalClinFeature.setFeatureValueType(sameAs,"category")
-                    finalClinFeature.setFeatureStates(sameAs,["0","1"])
-                    finalClinFeature.setFeatureStateOrder(sameAs,["0","1"])
+                    #finalClinFeature.setFeatureStates(sameAs,["0","1"])
+                    #finalClinFeature.setFeatureStateOrder(sameAs,["0","1"])
 
     #clinical data push down
     roots = sMap.allRoots()
