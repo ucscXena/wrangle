@@ -17,7 +17,7 @@ from TCGAfeature import *
 remoteBase="https://tcga-data.nci.nih.gov/"
 localBase="/inside/depot/"
 
-uuid_barcode_txt= "https://tcga-data.nci.nih.gov/tcgafiles/ftp_auth/distro_ftpusers/anonymous/other/metadata/metadata.20130228.txt"
+uuid_barcode_txt= "https://tcga-data.nci.nih.gov/tcgafiles/ftp_auth/distro_ftpusers/anonymous/other/metadata/metadata.current.txt"
 
 # all sorted by short titles
 cancerOfficial={

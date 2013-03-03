@@ -64,7 +64,6 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     garbage=["tmptmp/"]
     if os.path.exists( "tmptmp/" ):
         os.system("rm -rf tmptmp/*")
-        pass
     else:
         os.system("mkdir tmptmp/")
 
@@ -328,7 +327,6 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
                        "<br><br>In order to more easily view the differential expression between samples, we set the default view to center each gene or exon to zero by independently subtracting the mean of the genomic location on the fly. Users can view the original non-normalized values by uncheck the \"Normalize\" option. For more information on how to use the cancer browser, please refer to the help page."
     J["description"] = J["description"] +"<br><br>"+TCGAUtil.clinDataDesc
     
-
     #change cgData
     J["name"]="TCGA_"+cancer+"_exp_"+namesuffix
     name = trackName_fix(J['name'])

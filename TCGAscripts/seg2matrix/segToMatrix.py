@@ -56,7 +56,7 @@ if __name__ == "__main__":
     for probe in m.probes:
         hits = []
         for hit in probeMapper.find_overlap( probe, refgene ):
-            if hit.name not in hit:
+            if hit.name not in hits:
                 hits.append(hit.name)
         handle.write("%s\t%s\t%s\t%s\t%s\t.\n" % (probe.name, ",".join(hits), probe.chrom, probe.chrom_start, probe.chrom_end))
     handle.close()
