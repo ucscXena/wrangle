@@ -2,6 +2,7 @@ import sys,string,os
 import json,datetime
 import math
 import inspect
+import copy
 
 LEVEL="Level_3"
 
@@ -61,7 +62,6 @@ def illuminaga_rnaseq_bcgsc (inDir, outDir, cancer, flog,REALRUN):
     return
 
 def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataProducer,REALRUN):
-    garbage=["tmptmp/"]
     if os.path.exists( "tmptmp/" ):
         os.system("rm -rf tmptmp/*")
     else:
@@ -130,7 +130,6 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
             
     #make sure there is data
     if REALRUN and (rootDir =="" or not os.path.exists(rootDir)):
-        cleanGarbage(garbage)
         print "ERROR expect data, but wrong dirpath", rootDir, cancer, __name__
         return
 
@@ -144,9 +143,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
 
     #data processing multiple dirs mode
     if REALRUN:
-        dataMatrix=[]
-        samples={}
-        genes={}
+        allSamples={}
 
         for dataDir in os.listdir(rootDir):
             for file in os.listdir(rootDir+dataDir):
@@ -184,7 +181,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
 
                 if sample=="":
                     continue
-                if sample in samples:
+                if sample in allSamples:
                     message =  "ERROR duplicated sample = "+ sample+ " " +cancer+" "+ __name__
                     flog.write(message+"\n")
                     print message
@@ -202,9 +199,16 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
                         print "control cell line ignore", sample
                         continue
 
-                p=len(samples)
-                samples[sample]=p
-            
+                p=len(allSamples)
+                allSamples[sample]=p
+
+        c=0
+        dataMatrix=[]
+        tmpSamples={}
+        genes={}
+        oldgenes={}
+        files=[]
+        GOOD=1
         for dataDir in os.listdir(rootDir):
             for file in os.listdir(rootDir+dataDir):
                 sample=""
@@ -247,14 +251,42 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
                     
                 if sample=="":
                     continue
-                if sample not in samples:
+                if sample not in allSamples:
                     continue
+
+                p=len(tmpSamples)
+                tmpSamples[sample]=p
                 
-                process(dataMatrix,samples,sample,genes, cancer,infile,flog, valuePOS,LOG2)
-            
+                c=c+1
+                #print c
+                process(dataMatrix,tmpSamples,sample,genes, cancer,infile,flog, valuePOS,LOG2,500)
+                if (c % 500)==0:
+                    tmpout="tmp_"+ str(int(c/500.0))
+                    files.append(tmpout)
+                    r =outputMatrix(dataMatrix, tmpSamples, genes, oldgenes, tmpout, flog)
+                    if r:
+                        GOOD=0
+                    dataMatrix=[]
+                    tmpSamples={}
+                    oldgenes=copy.deepcopy(genes)
+                    genes ={}
+                    
+        if (c % 500)!=0:
+            tmpout= "tmp_"+ str(int(c/500.0)+1)
+            files.append(tmpout)
+            r= outputMatrix(dataMatrix, tmpSamples, genes, oldgenes,tmpout, flog)
+            if r:
+                GOOD=0
+                
+        #paste all together
         outfile = outDir+cancer+"/"+cgFileName
-        outputMatrix(dataMatrix, samples, genes, outfile, flog)
-    
+        if GOOD:
+            os.system("paste -d \'\' "+string.join(files," ")+" > "+ outfile)
+        else:
+            sys.exit()
+        for file in files:
+            os.system("rm "+ file)
+        
     oHandle = open(outDir+cancer+"/"+cgFileName+".json","w")
     
     J={}
@@ -341,23 +373,13 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     oHandle.write( json.dumps( J, indent=-1 ) )
     oHandle.close()
             
-    cleanGarbage(garbage)
     return
 
-def cleanGarbage(garbageDirs):
-    for dir in garbageDirs:
-        os.system("rm -rf dir")
-    return
-
-def process(dataMatrix,samples, sample,genes, cancer,infile,flog, valuePOS, LOG2):
+def process(dataMatrix,samples, sample,genes, cancer,infile,flog, valuePOS, LOG2, maxLength):
     # one sample a file
     fin=open(infile,'U')    
     fin.readline()
 
-    l=[]
-    for j in range (0,len(samples)):
-        l.append("")
-        
     for line in fin.readlines():
         data =string.split(line[:-1],"\t")
         hugo = data[0]
@@ -369,7 +391,10 @@ def process(dataMatrix,samples, sample,genes, cancer,infile,flog, valuePOS, LOG2
         if hugo not in genes:
             p=len(genes)
             genes[hugo]=p
-            dataMatrix.append(l[:])
+            l=[]
+            for j in range (0,maxLength):
+                l.append("")    
+            dataMatrix.append(l)
         
         if value not in ["","null","NULL","Null","NA"]:
             if LOG2:
@@ -377,27 +402,40 @@ def process(dataMatrix,samples, sample,genes, cancer,infile,flog, valuePOS, LOG2
                 if value<0:
                     value = ""
                 else:
-                    value = str(math.log10(float(value+1))/math.log10(2))
+                    value = math.log10(float(value+1))/math.log10(2)
             x=genes[hugo]
             y=samples[sample]
             dataMatrix[x][y]=value
     fin.close()
     return 
 
-def outputMatrix(dataMatrix, samples, genes, outfile, flog):
+def outputMatrix(dataMatrix, samples, genes, oldgenes,outfile, flog):
+    #compare genes and oldgenes:
+    if oldgenes!={}:
+        if len(genes)!=len(oldgenes):
+            print "ERROR genes total length is different"
+            return 1
+        for gene in genes:
+            if genes[gene]!=oldgenes[gene]:
+                print "ERROR gene length is different",gene
+                return 1
+            
     fout = open(outfile,"w")
-    fout.write("sample")
+    if oldgenes=={}:
+        fout.write("sample")
     for sample in samples:
         fout.write("\t"+sample)
     fout.write("\n")
 
     for gene in genes:
-        fout.write(gene)
+        if oldgenes=={}:
+            fout.write(gene)
         for sample in samples:
             value = dataMatrix[genes[gene]][samples[sample]]
             if value !="":
-                fout.write("\t"+value)
+                fout.write("\t"+str(value))
             else:
                 fout.write("\tNA")
         fout.write("\n")
     fout.close()
+    return 0
