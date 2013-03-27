@@ -44,10 +44,12 @@ def CopyNumber_Gistic2 (inDir, outDir, cancer,flog,REALRUN):
             if REALRUN:
                 os.system("tar -xzf "+inDir+file +" -C tmptmp/") 
                 dataDir = "tmptmp/"+os.listdir("tmptmp/")[0]+"/"
+            print file
             break
-        
+
     #make sure there is data
-    if dataDir =="" or (REALRUN and not os.path.exists(dataDir)):
+    if REALRUN and (dataDir =="" or (not os.path.exists(dataDir))):
+#    if dataDir =="" or (REALRUN and not os.path.exists(dataDir)):
         cleanGarbage(garbage)
         return
 

@@ -71,7 +71,8 @@ def Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN):
                 dataDir = "tmptmp/"+os.listdir("tmptmp/")[0]+"/"
             break
     #make sure there is data
-    if dataDir =="" or (REALRUN and not os.path.exists(dataDir)):
+    if REALRUN and (dataDir =="" or (not os.path.exists(dataDir))):
+    #if dataDir =="" or (REALRUN and not os.path.exists(dataDir)):
         cleanGarbage(garbage)
         return
 

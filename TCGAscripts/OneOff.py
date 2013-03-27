@@ -64,6 +64,10 @@ def process (inDir,outDir,cancer,flog,PATHPATTERN,originCancer):
 
                 #data processing
                 if clinFJ["type"]=="clinicalFeature" and clinFJ["name"]==clinFname:
+                    print originCancer, cancer
+                    if cancer != originCancer:
+                        clinFname= clinFname+"_"+originCancer
+                        clinFJ["name"]=clinFname
                     clinFeature= ClinicalFeatureNew(inDir+clinFfile,clinFname)
                     for feature in clinFeature.getFeatures():
                         if TCGAUtil.featurePriority.has_key(cancer):
@@ -132,6 +136,7 @@ def process (inDir,outDir,cancer,flog,PATHPATTERN,originCancer):
         json.dump(J, fjson, indent=-1)
         fjson.close()
 
+        #output clinFeature 
         if clinFeature:
             if cancer != originCancer:
                 outfile = outDir+cancer+"/"+clinFfile+"_"+originCancer
