@@ -8,28 +8,28 @@ import TCGAUtil
 sys.path.insert(0,"../CGDataNew")
 from CGDataUtil import *
 
-def Pathway_Paradigm_agilent (inDir, outDir, cancer,flog, REALRUN):
+def Pathway_Paradigm_mRNA  (inDir, outDir, cancer,flog, REALRUN):
     #print status
     print cancer, inspect.stack()[0][3] 
-    PATHPATTERN= "ParadigmReport."
+    PATHPATTERN= "Pathway_Paradigm_mRNA."
     Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN)
 
-def Pathway_Paradigm_copynumber (inDir, outDir, cancer,flog, REALRUN):
+def Pathway_Paradigm_mRNA_And_Copy_Number (inDir, outDir, cancer,flog, REALRUN):
     #print status
     print cancer, inspect.stack()[0][3] 
-    PATHPATTERN= "ParadigmReportWithCopyNumber."
+    PATHPATTERN= "Pathway_Paradigm_mRNA_And_Copy_Number."
     Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN)
     
 def Pathway_Paradigm_RNAseq (inDir, outDir, cancer,flog, REALRUN):
     #print status
     print cancer, inspect.stack()[0][3]
-    PATHPATTERN= "ParadigmReportWithRNASeq."
+    PATHPATTERN= "Pathway_Paradigm_RNASeq."
     Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN)
 
-def Pathway_Paradigm_RNAseq_copynumber (inDir, outDir, cancer,flog, REALRUN):
+def Pathway_Paradigm_RNASeq_And_Copy_Number (inDir, outDir, cancer,flog, REALRUN):
     #print status
     print cancer, inspect.stack()[0][3] 
-    PATHPATTERN= "ParadigmReportWithRNASeqAndCopyNumber."
+    PATHPATTERN= "Pathway_Paradigm_RNASeq_And_Copy_Number."
     Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN)
 
 def Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN):
@@ -103,31 +103,31 @@ def Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN):
     oHandle = open(outDir+cancer+"/"+cgFileName+".json","w")
     J={}
     #stable
-    if PATHPATTERN== "ParadigmReport.":
+    if PATHPATTERN== "Pathway_Paradigm_mRNA.":
         suffix="PDMarray"
-        J["shortTitle"]="Paradigm.array_expression"
-        J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") PARADIGM inference activity (agilent expression)"
+        J["shortTitle"]="Paradigm.mRNA_array"
+        J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") PARADIGM inference activity (array mRNA)"
         J[":dataSubType"]="PARADIGM"
         J["gain"]=1.0
         
-    if PATHPATTERN== "ParadigmReportWithCopyNumber.":
-        suffix="PDMCNV"
-        J["shortTitle"]="Paradigm.CNV"
-        J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") PARADIGM inference activity (CNV)"
+    if PATHPATTERN== "Pathway_Paradigm_mRNA_And_Copy_Number.":
+        suffix="PDMarrayCNV"
+        J["shortTitle"]="Paradigm.mRNA+CNV"
+        J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") PARADIGM inference activity (array mRNA + CNV)"
         J[":dataSubType"]="PARADIGM"
         J["gain"]=1.0
         
-    if PATHPATTERN== "ParadigmReportWithRNASeq.":
-        suffix="PDMExp"
+    if PATHPATTERN== "Pathway_Paradigm_RNASeq.":
+        suffix="PDMRNAseq"
         J["shortTitle"]="Paradigm.RNAseq"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") PARADIGM inference activity (RNAseq)"
         J[":dataSubType"]="PARADIGM"
         J["gain"]=1.0
 
-    if PATHPATTERN=="ParadigmReportWithRNASeqAndCopyNumber.":
-        suffix="PDMExpCNV"
+    if PATHPATTERN=="Pathway_Paradigm_RNASeq_And_Copy_Number.":
+        suffix="PDMRNAseqCNV"
         J["shortTitle"]="Paradigm.RNAseq+CNV"
-        J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") PARADIGM inference activity (RNAseq,CNV)"
+        J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") PARADIGM inference activity (RNAseq + CNV)"
         J[":dataSubType"]="PARADIGM"
         J["gain"]=1.0
 
@@ -143,22 +143,22 @@ def Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN):
     #change description
     J["wrangling_procedure"]= "FIREHOSE data download from TCGA DCC, processed at UCSC into cgData repository"
 
-    if PATHPATTERN== "ParadigmReport.":
+    if PATHPATTERN== "Pathway_Paradigm_mRNA.":
         J["description"]= "Broad FireHose automated run results of TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+")"+\
                           " gene activity level inferred using the PARADIGM method on gene expression data from Agilent array alone."
-    if PATHPATTERN== "ParadigmReportWithCopyNumber.":
+    if PATHPATTERN== "Pathway_Paradigm_mRNA_And_Copy_Number.":
         J["description"]= "Broad FireHose automated run results of TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+")"+\
                           " gene activity level inferred using the PARADIGM method on copy number data alone."
-    if PATHPATTERN=="ParadigmReportWithRNASeq.":
+    if PATHPATTERN=="Pathway_Paradigm_RNASeq.":
         J["description"]= "Broad FireHose automated run results of TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+")"+\
                           " gene activity level inferred using the PARADIGM method on RNAseq data alone."
-    if PATHPATTERN=="ParadigmReportWithRNASeqAndCopyNumber.":
+    if PATHPATTERN=="Pathway_Paradigm_RNASeq_And_Copy_Number.":
         J["description"]= "Broad FireHose automated run results of TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+")"+\
                           " gene activity level inferred using the PARADIGM method by integrating RNAseq and copy number data."
 
-    J["description"] = J["description"] +" PARADIGM is pathway analysis method to infer patient or sample-specific genetic activities by incorporating curated pathway interactions as well as integrating diverse types of genomic data, such as gene expression and copy number data. The pathways used in this analysis are from <a href=\"http://pid.nci.nih.gov/\" target=\"_blank\"><u>NCI pathway interaction database</u></a>."+\
-                       " Genes are mapped onto the human genome coordinates using cgData HUGO probeMap."+\
-                       " Reference to PARADIGM pathway analysis method: PMID 20529912."
+    J["description"] = J["description"] +" PARADIGM (PMID 20529912) is pathway analysis method to infer tumor sample-specific genetic activities by incorporating curated pathway interactions as well as integrating diverse types of genomic data, such as gene expression and copy number data. The pathways used in this analysis are from <a href=\"http://pid.nci.nih.gov/\" target=\"_blank\"><u>NCI pathway interaction database</u></a>."+\
+                       " Genes are mapped onto the human genome coordinates using cgData HUGO probeMap."
+
     J["description"] = J["description"] +"<br><br>"+TCGAUtil.clinDataDesc
         
     #change cgData

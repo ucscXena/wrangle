@@ -34,7 +34,8 @@ def process (inDir,outDir,cancer,flog,PATHPATTERN,originCancer):
 
         #find the file
         #clinMatrix
-        if string.find(file,PATHPATTERN)!=-1 and os.path.exists(inDir+ file+".json"):
+
+        if file[0:6]== PATHPATTERN and os.path.exists(inDir+ file+".json") :
             pass
         else:
             continue
@@ -48,7 +49,7 @@ def process (inDir,outDir,cancer,flog,PATHPATTERN,originCancer):
 
         if J["type"]!="clinicalMatrix":
             continue
-        
+
         #clinFeature
         if J.has_key(":clinicalFeature"):
             clinFname = J[":clinicalFeature"]

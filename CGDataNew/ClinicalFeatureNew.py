@@ -5,6 +5,7 @@ import re
 from CGDataUtil import *
 
 class ClinicalFeatureNew():
+
     def __init__ (self, rFHandle,name):
         # return emptySelf if fail to initiate
         self.__name=""
@@ -17,10 +18,12 @@ class ClinicalFeatureNew():
                             "sameAs",
                             "priority","visibility"]
         
-        self.__VIS =4
         emptySelf =copy.deepcopy(self)
         self.__name=name
         self.__VALID=0
+        
+        if rFHandle ==None:
+            return
         
         try:
             rFHandle+"a"
@@ -372,7 +375,7 @@ class ClinicalFeatureNew():
         sTitles.sort()
 
 
-    def fillInPriorityVisibility(self):
+    def fillInPriorityVisibility(self, VIS):
         visib=0
         for feature in self.__FEATUREs:
             if self.__DATA[feature].has_key("visibility") and self.__DATA[feature]['visibility']=="on":
@@ -401,16 +404,16 @@ class ClinicalFeatureNew():
         else:
             startPriority = 1
 
-        if visib > self.__VIS:  # too many feature has visibility on, set those without priority to off
+        if visib > VIS:  # too many feature has visibility on, set those without priority to off
             for feature in self.__FEATUREs:
                 if self.__DATA[feature].has_key("visibility") and self.__DATA[feature]['visibility']=="on":
                     if not self.__DATA[feature].has_key("priority"):
                         self.__DATA[feature]["visibility"] = "off"
                         visib=visib-1
-                        if visib <= self.__VIS:
+                        if visib <= VIS:
                             break
 
-        if visib > self.__VIS:  # too many feature has visibility on
+        if visib > VIS:  # too many feature has visibility on
             numPriorityR = copy.deepcopy(numPriority)
             numPriorityR.reverse()
             for p in numPriorityR:
@@ -419,12 +422,12 @@ class ClinicalFeatureNew():
                         if float(self.__DATA[feature]["priority"]) == p:
                             self.__DATA[feature]["visibility"] = "off"
                             visib=visib-1
-                            if visib <= self.__VIS:
+                            if visib <= VIS:
                                 break
-                if visib <= self.__VIS:
+                if visib <= VIS:
                     break
 
-        if visib < self.__VIS: #too few has visibilities
+        if visib < VIS: #too few has visibilities
             for p in numPriority:
                 for feature in self.__FEATUREs:
                     #if ((not self.__DATA[feature].has_key("visibility")) or (self.__DATA[feature].has_key("visibility") and self.__DATA[feature]["visibility"] =="off")) and self.__DATA[feature].has_key("priority"):  #no visi with prio
@@ -432,9 +435,9 @@ class ClinicalFeatureNew():
                         if float(self.__DATA[feature]["priority"]) == p:
                             self.__DATA[feature]["visibility"] = "on"
                             visib=visib+1
-                            if visib >= self.__VIS:
+                            if visib >= VIS:
                                 break
-                if visib >= self.__VIS:
+                if visib >= VIS:
                     break
                     
         for feature in self.__FEATUREs:
@@ -443,13 +446,13 @@ class ClinicalFeatureNew():
                     if string.upper(self.__DATA[feature]["shortTitle"]) == sTitles[i]:
                         self.__DATA[feature]["priority"] = str(startPriority + i)
             if not self.__DATA[feature].has_key("visibility"):
-                if visib < self.__VIS:
+                if visib < VIS:
                     self.__DATA[feature]["visibility"] = "on"
                     visib=visib+1
                 else:
                     self.__DATA[feature]["visibility"] = "off"
             else:
-                if visib < self.__VIS and self.__DATA[feature]["visibility"]!="off":
+                if visib < VIS and self.__DATA[feature]["visibility"]!="off":
                     self.__DATA[feature]["visibility"] = "on"
                     visib=visib+1
         return

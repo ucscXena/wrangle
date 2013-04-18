@@ -214,10 +214,10 @@ featurePriority={
              "":""    
              },
     "BRCA": {"sample_type":"1",
-             "PAM50Call":"2",
-             "er_level_cell_percentage_category":"3",
-             "her2_immunohistochemistry_level_result":"4",
-             "":""
+             "PAM50 mRNA_nature2012":"2",
+             "ER Status_nature2012":"3",
+             "PR Status_nature2012":"4",
+             "HER2 Final Status_nature2012":"5"
              },
     "COAD": {"braf_gene_analysis_result":"1",
              "kras_mutation_found":"2",
@@ -280,13 +280,10 @@ featurePriority={
              "":""    
              },
     "LUAD": {"sample_type":"1",
-             "Expression_Subtype":"1.2",
-             "EGFR":"1.3",
-             "KRAS":"1.4",
-             "tobacco_smoking_history_indicator":"2",
-             "tumor_stage":"3",
-             "distant_metastasis_pathologic_spread":"4",
-             "":""    
+             "Expression_Subtype":"2",
+             "EGFR":"3",
+             "KRAS":"4",
+             "tobacco_smoking_history_indicator":"5"
              },
     "LUSC": {"sample_type":"1",
              "":""    

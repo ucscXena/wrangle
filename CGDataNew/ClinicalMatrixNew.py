@@ -89,7 +89,7 @@ class ClinicalMatrixNew():
             if not self.__DATA.has_key(sample):
                 self.__DATA[sample]={}
             else:
-                print "WARNING detected duplicate sample", sample
+                print "WARNING detected duplicate sample", sample, rFHandle,name
                 continue
 
             

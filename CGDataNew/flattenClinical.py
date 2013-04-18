@@ -273,6 +273,17 @@ def flattenEachSampleMap(sMap, bookDic):
         intList = intId.getList()
     finalClinMatrix.addColIntegration(sMap,intList)
             
+    # final ClinFeature json
+    if finalClinFeatureJSON==None:
+        jsonName=  trackName_fix(sampleMapBaseName(sMap)+"_clinicalFeature")
+        finalClinFeatureJSON= {}
+        finalClinFeatureJSON["version"]=datetime.date.today().isoformat() 
+        finalClinFeatureJSON["type"]="clinicalFeature"
+        finalClinFeatureJSON["cgDataVersion"]=1
+        finalClinFeatureJSON["name"]=jsonName
+        finalClinFeatureJSON["path"]=""
+        finalClinFeature = ClinicalFeatureNew (None, finalClinFeatureJSON["name"])
+
     #final clinicalFeature
     if finalClinFeature:
         finalClinFeature.removeFeatures(badFeatures)
@@ -286,7 +297,11 @@ def flattenEachSampleMap(sMap, bookDic):
         #clinicalFeature fillin short and long titles
         finalClinFeature.fillInTitles()
         #clinicalFeature fillin priority visibility
-        finalClinFeature.fillInPriorityVisibility()
+        VIS_limit=4
+        #bad code for exceptions
+        if sMap.getName() in ["TCGA.BRCA.sampleMap","TCGA.LUAD.sampleMap"]:
+            VIS_limit=5
+        finalClinFeature.fillInPriorityVisibility(VIS_limit)
 
         finalClinFeature.setFeatureShortTitle("_PATIENT","_PATIENT_ID")
         finalClinFeature.setFeatureLongTitle("_PATIENT","_PATIENT_ID")
