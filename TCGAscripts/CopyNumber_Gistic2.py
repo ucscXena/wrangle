@@ -8,12 +8,14 @@ import TCGAUtil
 sys.path.insert(0,"../CGDataNew")
 from CGDataUtil import *
 
+tmpDir = "tmptmp/"
+
 def CopyNumber_Gistic2 (inDir, outDir, cancer,flog,REALRUN):
-    garbage=["tmptmp/"]
-    if os.path.exists( "tmptmp/" ):
-        os.system("rm -rf tmptmp/*")
+    garbage=[tmpDir]
+    if os.path.exists( tmpDir ):
+        os.system("rm -rf "+tmpDir+"*")
     else:
-        os.system("mkdir tmptmp/")
+        os.system("mkdir "+tmpDir)
 
     #figure out the FH date
     if inDir[-1]!="/":
@@ -42,8 +44,8 @@ def CopyNumber_Gistic2 (inDir, outDir, cancer,flog,REALRUN):
         #is tar.gz?, uncompress
         if string.find(file,".tar.gz")!=-1:
             if REALRUN:
-                os.system("tar -xzf "+inDir+file +" -C tmptmp/") 
-                dataDir = "tmptmp/"+os.listdir("tmptmp/")[0]+"/"
+                os.system("tar -xzf "+inDir+file +" -C "+ tmpDir) 
+                dataDir = tmpDir +os.listdir(tmpDir)[0]+"/"
             print file
             break
 
@@ -156,6 +158,6 @@ def CopyNumber_Gistic2 (inDir, outDir, cancer,flog,REALRUN):
 
 def cleanGarbage(garbageDirs):
     for dir in garbageDirs:
-        os.system("rm -rf dir")
+        os.system("rm -rf "+ dir+"*")
     return
 

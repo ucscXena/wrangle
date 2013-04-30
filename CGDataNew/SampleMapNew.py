@@ -86,9 +86,6 @@ class SampleMapNew():
         return ""
 
     
-    def getChildren(self, id):
-        return self.__DATA[id][:]
-        
     def isRoot(self, id):
         if not self.inData(id):
             return None 

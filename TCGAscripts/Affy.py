@@ -214,7 +214,7 @@ def processMageTab (dic,file):
 
 def cleanGarbage(garbageDirs):
     for dir in garbageDirs:
-        os.system("rm -rf dir")
+        os.system("rm -rf "+dir+"*")
     return
 
 def process(dataMatrix,samples,cancer,infile,mapping, flog):

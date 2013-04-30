@@ -154,7 +154,7 @@ def Merge_methylation(inDir, outDir, cancer,flog,PATHPATTERN,REALRUN):
 
 def cleanGarbage(garbageDirs):
     for dir in garbageDirs:
-        os.system("rm -rf dir")
+        os.system("rm -rf "+dir+"*")
     return
 
 def methylationProcess(infile, outfile, offset):

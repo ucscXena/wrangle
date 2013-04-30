@@ -10,30 +10,29 @@ from ClinicalMatrixNew import *
 from CGDataUtil import *
 from survival import *
 
-#/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/bcr/minbiotab/clin
+#https://tcga-data.nci.nih.gov/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/brca/bcr/biotab/clin/
+#/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/bcr/biotab/clin/
+
+tmpDir="tmptmp/"
 
 def ClinicalPublicBioTab(inDir, outDir, cancer,flog,REALRUN):
     PATHPATTERN= ""
     Clinical(inDir, outDir, cancer,flog,PATHPATTERN)
     
-def ClinicalPublic(inDir, outDir, cancer,flog,REALRUN):
-    PATHPATTERN= "public"
-    Clinical(inDir, outDir, cancer,flog,PATHPATTERN)
-    
-def ClinicalAll(inDir, outDir, cancer,flog,REALRUN):
-    PATHPATTERN = "all"
-    Clinical(inDir, outDir, cancer,flog,PATHPATTERN)
-    
 def Clinical(inDir, outDir, cancer,flog,PATHPATTERN):
-    garbage=["tmptmp/"]
-    if os.path.exists( "tmptmp/" ):
-        os.system("rm -rf tmptmp/*")
+    garbage=[tmpDir]
+    if os.path.exists( tmpDir ):
+        os.system("rm -rf "+tmpDir+"*")
     else:
-        os.system("mkdir tmptmp/")
+        os.system("mkdir "+tmpDir)
 
+    os.system("wget -r -l1 -H -nd -P"+ tmpDir +" -erobots=off  https://tcga-data.nci.nih.gov/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/"+ string.lower(cancer) +"/bcr/biotab/clin/")
+    dataDir=tmpDir
+    
+    """
     #single file in dir mode, uncompress to files
     dataDir =""
-    lastDate=""
+
     for file in os.listdir(inDir):
         #find the file
         if string.find(file,PATHPATTERN)!=-1 and string.find(file,"md5")==-1:
@@ -41,32 +40,30 @@ def Clinical(inDir, outDir, cancer,flog,PATHPATTERN):
         else:
             continue
         
-        #file date
-        lastDate=  datetime.date.fromtimestamp(os.stat(inDir+file).st_mtime)
-        
         #is tar.gz?, uncompress 
         if string.find(file,".tar.gz")!=-1:
             os.system("tar -xzf "+inDir+file +" -C tmptmp/") 
             dataDir ="tmptmp/"
             break
-
+    """
+            
     #make sure there is data
     if dataDir =="" or not os.path.exists(dataDir):
         cleanGarbage(garbage)
         return
 
-    process(inDir, outDir, dataDir, cancer,flog,PATHPATTERN, lastDate, cancer)
+    process(inDir, outDir, dataDir, cancer,flog,PATHPATTERN, cancer)
     survival(outDir+cancer+"/", cancer, cancer)
 
     if cancer in ["COAD","READ"]:
         deriveCancer="COADREAD"
-        process(inDir, outDir, dataDir, deriveCancer,flog,PATHPATTERN, lastDate, cancer)
+        process(inDir, outDir, dataDir, deriveCancer,flog,PATHPATTERN,  cancer)
         survival(outDir+deriveCancer+"/", deriveCancer, cancer)
     cleanGarbage(garbage)
     return
 
 
-def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN, lastDate, originCancer):
+def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN,  originCancer):
     #print status
     print cancer, __name__
     
@@ -160,8 +157,11 @@ def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN, lastDate, originCa
                 clinMatrix.replaceValue("[Not Requested]","")
                 clinMatrix.replaceValue("[Completed]","")
                 clinMatrix.replaceValue("[Pending]","")
-                clinMatrix.replaceValue("[]","")
                 clinMatrix.replaceValue("Not Tested","")
+                clinMatrix.replaceValue("[Not Evaluated]","")
+                clinMatrix.replaceValue("[Unknown]","")
+                clinMatrix.replaceValue("[]","")
+
                 oHandle = open(outfile,"w")
                 if pattern =="biospecimen_tumor_sample":
                     clinMatrix.storeSkip1stCol(oHandle, validation=True)
@@ -255,7 +255,7 @@ def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN, lastDate, originCa
                 J["dataProducer"]= "TCGA biospecimen core resource"
                 J["url"]=TCGAUtil.remoteBase \
                           +string.replace(inDir,TCGAUtil.localBase,"") \
-                          + string.replace(dataDir,"tmptmp/","")[:-1]
+                          + string.replace(dataDir,tmpDir,"")[:-1]
                 J["version"]= datetime.date.today().isoformat()
                 J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
 
@@ -299,7 +299,7 @@ def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN, lastDate, originCa
 
 def cleanGarbage(garbageDirs):
     for dir in garbageDirs:
-        os.system("rm -rf dir")
+        os.system("rm -rf "+dir+"*")
     return
 
 def cleanupFollowUpFile(infile, outfile):

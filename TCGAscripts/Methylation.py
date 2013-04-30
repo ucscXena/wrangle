@@ -219,7 +219,7 @@ def humanmethylation (inDir, outDir, cancer,flog,PATHPATTERN,BETAOFFSET,REALRUN)
 
 def cleanGarbage(garbageDirs):
     for dir in garbageDirs:
-        os.system("rm -rf dir")
+        os.system("rm -rf "+dir+"*")
     return
 
 def betaMean(total, count,samples, probes,cancer,infile,flog):

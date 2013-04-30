@@ -180,7 +180,7 @@ def Pathway_Paradigmlite (inDir, outDir, cancer,flog,REALRUN):
 
 def cleanGarbage(garbageDirs):
     for dir in garbageDirs:
-        os.system("rm -rf dir")
+        os.system("rm -rf "+dir+"*")
     return
 
 def transpose(infile, outfile, offset, errorTag,flog):

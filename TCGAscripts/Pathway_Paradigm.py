@@ -8,6 +8,8 @@ import TCGAUtil
 sys.path.insert(0,"../CGDataNew")
 from CGDataUtil import *
 
+tmpDir="tmpTry/"
+
 def Pathway_Paradigm_mRNA  (inDir, outDir, cancer,flog, REALRUN):
     #print status
     print cancer, inspect.stack()[0][3] 
@@ -33,11 +35,11 @@ def Pathway_Paradigm_RNASeq_And_Copy_Number (inDir, outDir, cancer,flog, REALRUN
     Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN)
 
 def Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN):
-    garbage=["tmptmp/"]
-    if os.path.exists( "tmptmp/" ):
-        os.system("rm -rf tmptmp/*")
+    garbage=[tmpDir]
+    if os.path.exists(tmpDir ):
+        os.system("rm -rf "+ tmpDir+"*")
     else:
-        os.system("mkdir tmptmp/")
+        os.system("mkdir "+tmpDir)
 
     #figure out the FH date
     if inDir[-1]!="/":
@@ -67,8 +69,8 @@ def Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN):
         #is tar.gz?, uncompress
         if string.find(file,".tar.gz")!=-1:
             if REALRUN:
-                os.system("tar -xzf "+inDir+file +" -C tmptmp/")
-                dataDir = "tmptmp/"+os.listdir("tmptmp/")[0]+"/"
+                os.system("tar -xzf "+inDir+file +" -C "+tmpDir)
+                dataDir = tmpDir +os.listdir(tmpDir)[0]+"/"
             break
     #make sure there is data
     if REALRUN and (dataDir =="" or (not os.path.exists(dataDir))):
@@ -105,7 +107,7 @@ def Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN):
     #stable
     if PATHPATTERN== "Pathway_Paradigm_mRNA.":
         suffix="PDMarray"
-        J["shortTitle"]="Paradigm.mRNA_array"
+        J["shortTitle"]="Paradigm.mRNA"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") PARADIGM inference activity (array mRNA)"
         J[":dataSubType"]="PARADIGM"
         J["gain"]=1.0
@@ -136,7 +138,7 @@ def Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN):
     J["redistribution"]= True
     J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
     J["dataProducer"]= "TCGA FIREHOSE pipeline"
-    J["url"]= "http://gdac.broadinstitute.org/runs/analyses__"+FHdate[0:4]+"_"+FHdate[4:6]+"_"+FHdate[6:8]+"/data/"+cancer+"/"+FHdate[0:8]+"/gdac.broadinstitute.org_"+cancer+"."+PATHPATTERN+"Level_4."+FHdate+".0.0.tar.gz"
+    J["url"]= "http://gdac.broadinstitute.org/runs/analyses__"+FHdate[0:4]+"_"+FHdate[4:6]+"_"+FHdate[6:8]+"/data/"+cancer+"/"+FHdate[0:8]+"/"
     J["version"]= datetime.date.today().isoformat()
     J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
     
@@ -148,7 +150,7 @@ def Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN):
                           " gene activity level inferred using the PARADIGM method on gene expression data from Agilent array alone."
     if PATHPATTERN== "Pathway_Paradigm_mRNA_And_Copy_Number.":
         J["description"]= "Broad FireHose automated run results of TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+")"+\
-                          " gene activity level inferred using the PARADIGM method on copy number data alone."
+                          " gene activity level inferred using the PARADIGM method by integrating Agilent array mRNA data and copy number data."
     if PATHPATTERN=="Pathway_Paradigm_RNASeq.":
         J["description"]= "Broad FireHose automated run results of TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+")"+\
                           " gene activity level inferred using the PARADIGM method on RNAseq data alone."
@@ -156,8 +158,7 @@ def Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN):
         J["description"]= "Broad FireHose automated run results of TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+")"+\
                           " gene activity level inferred using the PARADIGM method by integrating RNAseq and copy number data."
 
-    J["description"] = J["description"] +" PARADIGM (PMID 20529912) is pathway analysis method to infer tumor sample-specific genetic activities by incorporating curated pathway interactions as well as integrating diverse types of genomic data, such as gene expression and copy number data. The pathways used in this analysis are from <a href=\"http://pid.nci.nih.gov/\" target=\"_blank\"><u>NCI pathway interaction database</u></a>."+\
-                       " Genes are mapped onto the human genome coordinates using cgData HUGO probeMap."
+    J["description"] = J["description"] +" PARADIGM (PMID 20529912) is pathway analysis method to infer tumor sample-specific genetic activities by incorporating curated pathway interactions as well as integrating diverse types of genomic data. The pathways used in this analysis are from <a href=\"http://pid.nci.nih.gov/\" target=\"_blank\"><u>NCI pathway interaction database</u></a>."
 
     J["description"] = J["description"] +"<br><br>"+TCGAUtil.clinDataDesc
         
@@ -183,7 +184,7 @@ def Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN):
 
 def cleanGarbage(garbageDirs):
     for dir in garbageDirs:
-        os.system("rm -rf dir")
+        os.system("rm -rf "+ dir+"*")
     return
 
 def process(infile, outfile,cancer):

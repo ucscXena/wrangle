@@ -254,6 +254,13 @@ def flattenEachSampleMap(sMap, bookDic):
         cMatrix = oldCMatrix
         return 0
 
+    #code to remove blacklist samples and all its descendants
+    badList= badListSelfAndDescendants (sMap, bookDic)
+    if badList!=[]:
+        #remove badList samples
+        finalClinMatrix.removeRows(badList, True)
+        print "after remove badList", finalClinMatrix.getROWnum()
+        
     #identify empty features
     badFeatures= finalClinMatrix.badCols()
     if badFeatures:
@@ -297,12 +304,13 @@ def flattenEachSampleMap(sMap, bookDic):
         #clinicalFeature fillin short and long titles
         finalClinFeature.fillInTitles()
         #clinicalFeature fillin priority visibility
-        VIS_limit=4
-        #bad code for exceptions
-        if sMap.getName() in ["TCGA.BRCA.sampleMap","TCGA.LUAD.sampleMap"]:
-            VIS_limit=5
-        finalClinFeature.fillInPriorityVisibility(VIS_limit)
 
+        #vis exceptions
+        VIS_limit=4
+        if bookDic[sMap.getName()].has_key("VIS"):
+            VIS_limit= bookDic[sMap.getName()]["VIS"]
+        finalClinFeature.fillInPriorityVisibility(VIS_limit)
+        
         finalClinFeature.setFeatureShortTitle("_PATIENT","_PATIENT_ID")
         finalClinFeature.setFeatureLongTitle("_PATIENT","_PATIENT_ID")
         finalClinFeature.setFeatureShortTitle("_INTEGRATION","_SAMPLE_ID")
@@ -394,12 +402,51 @@ def cpGenomicEachSample(REALRUN, outDir, bookDic, sMap):
             oHandle=open(outfile,"w")
             oHandle.write( json.dumps( J, indent=-1 ) )
             oHandle.close()
-            
+
             if REALRUN:
-                os.system("cp "+path+" "+dataPackageDir+"/")
+                #code to remove blacklist samples and all its descendants
+                badList= badListSelfAndDescendants (sMap, bookDic)
+                if badList==[]:
+                    os.system("cp "+path+" "+dataPackageDir+"/")
+                else:
+                    if J['type']=="genomicMatrix":
+                        goodCols=["1"]
+                        badCols=[]
+                        fin =open (path,'r')
+                        samples = string.split(string.strip(fin.readline()),"\t")
+                        fin.close()
+                        for i in range(1,len(samples)):
+                            if samples[i] not in badList:
+                                goodCols.append(str(i+1))
+                            else:
+                                badCols.append(str(i+1))
+                        if badCols==[]:
+                            os.system("cp "+path+" "+dataPackageDir+"/")
+                        else:
+                            #print badCols
+                            s = string.join(goodCols,",")
+                            os.system("cut -f "+s+" "+path+" > "+dataPackageDir+"/"+os.path.basename(path))
+                    if J['type']=="genomicSegment":
+                        s = "grep -v "+badList[0]+" "+path
+                        for i in range (1,len(badList)):
+                            s= s+" | grep -v "+ badList[i]
+                        s =s +" > " +dataPackageDir+"/"+os.path.basename(path)
+                        os.system(s)
     return
 
-
+def badListSelfAndDescendants (sMap, bookDic):
+    #code to remove blacklist samples and all its descendants
+    badList=[]
+    if bookDic[sMap.getName()].has_key("blacklist"):
+        badSamples = bookDic[sMap.getName()]["blacklist"]
+        badList= badSamples[:]
+        for badSample in badSamples:
+            des = sMap.getDescendants(badSample)
+            for sample in des:
+                if sample not in badSamples:
+                    badList.append(sample)
+    return badList
+    
 def cpProbeMaps(REALRUN,outDir,bookDic, sMap):
     dataPackageDir = outDir + sampleMapBaseName(sMap)
     for name in collectProbeMapBelongToSampleMap(bookDic, sMap.getName()):

@@ -87,6 +87,7 @@ def downloadBundle(inDir, PROBEMAP, testVersionOnly):
 
         dG= makeDate(gVersion)
         dC= makeDate(cVersion)
+        version= gVersion
         if dG<dC:
             version = cVersion
         else:
