@@ -238,7 +238,7 @@ featurePriority={
              "neoplasm_histologic_grade":"2",
              "":""
              },
-    "ECSA": {"sample_type":"1",
+    "ESCA": {"sample_type":"1",
              "":""
              },
     "DLBC": {"sample_type":"1",
@@ -251,9 +251,9 @@ featurePriority={
              "":""    
              },
     "HNSC": {"sample_type":"1",
-             "tumor_stage":"2",
-             "age_at_initial_pathologic_diagnosis":"3",
-             "days_to_last_known_alive":"4",
+             "hpv_status_by_p16_testing":"2",
+             "hpv_status_by_ish_testing":"3",
+             "gender":"4",
              "":""    
              },
     "KIRC": {"sample_type":"1",
@@ -299,13 +299,21 @@ featurePriority={
            "":""    
            },
     "PRAD": {"sample_type":"1",
-             "":""    
+             "primary_gleason_grade":"2",
+             "residual_tumor":"3",
+             "overall_gleason_score":"4",
+             "psa_result_most_recent":"5"
              },
     "READ": {"braf_gene_analysis_result":"1.0",
              "kras_mutation_found":"1.1",
              "CIMP":"1.2",
              "mononucleotide_and_dinucleotide_marker_panel_analysis_status":"1.3",
              "hypermutation":"1.4",
+             "":""
+             },
+    "SARC": {"sample_type":"1",
+             "histological_type":"2",
+             "age_at_initial_pathologic_diagnosis":"3",
              "":""
              },
     "SKCM": {"sample_type":"1",
@@ -347,6 +355,8 @@ featurePriority={
 
 
 clinDataDesc ="The accompanied clinical data are downloaded from TCGA data coordination center. They are the patient, sample, follow up, biospecimen tumor sample, and auxiliary clinical information. Names of the clinical fields were \"curated\" by UCSC to be more readable."
+
+clinDataDescBRCA="There are now clinical features from the Supplemental table 1 from the Nature 2012 paper (pubmed:23000897) including HER2, PR and ER status as well as PAM50 calls based off the Agilent 244K custom gene expression microarrays. We have also included preliminary PAM50 calls based on the Illumina HiSeq RNA Sequencing platform from the TCGA Analysis Working Group (AWG). Note that these calls are not final and are subject to change."
 
 def is_barcode (id):
     if len(id)<12:

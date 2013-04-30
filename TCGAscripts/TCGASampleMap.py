@@ -117,5 +117,18 @@ def TCGASampleMap (dir, outDir, cancer,log, REALRUN):
         J["version"]= datetime.date.today().isoformat()
         J["cgDataVersion"]=1
         J[":integrationId"]=intName
+        #special code
+        if J['name'] in ["TCGA.BRCA.sampleMap","TCGA.LUAD.sampleMap","TCGA.PRAD.sampleMap"]:
+            J["VIS"]=5
+        #blackList in PAAD
+        if J['name'] in ["TCGA.PAAD.sampleMap"]:
+            J["blacklist"]= [ "TCGA-FQ-6551",
+                              "TCGA-FQ-6552",
+                              "TCGA-FQ-6553",
+                              "TCGA-FQ-6554",
+                              "TCGA-FQ-6555",
+                              "TCGA-FQ-6558",
+                              "TCGA-FQ-6559"]
+            
         oHandle.write( json.dumps( J, indent=-1 ) )
     return

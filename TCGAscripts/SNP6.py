@@ -323,7 +323,7 @@ def processMageTab (dic,file,P):
 
 def cleanGarbage(garbageDirs):
     for dir in garbageDirs:
-        os.system("rm -rf dir")
+        os.system("rm -rf "+ dir+"*")
     return
 
 def process(samples,cancer,infile,flog, mapping,fout):
