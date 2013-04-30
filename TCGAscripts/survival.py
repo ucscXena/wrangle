@@ -57,7 +57,17 @@ def survival (dir,cancer,tag):
                 if r!=True:
                     print "Fail to merge"
                     return False
+    if tag!=cancer:
+        survivalMatrix= ClinicalMatrixNew(None,"clinical_"+cancer+"_survival_"+tag)
+    else:
+        survivalMatrix= ClinicalMatrixNew(None,"clinical_"+cancer+"_survival")
 
+    rO= overallSurvival (dir, finalClinMatrix, survivalMatrix, tag, cancer)
+    rR = RFS (dir, finalClinMatrix, survivalMatrix, tag, cancer)
+    if rO or rR:
+        output (dir, finalClinMatrix,survivalMatrix, tag, cancer)
+    
+def overallSurvival (dir, finalClinMatrix, survivalMatrix, tag, cancer):
     cols = finalClinMatrix.getCOLs()
     found =0
     for col in cols:
@@ -89,13 +99,11 @@ def survival (dir,cancer,tag):
             print "found days_to_last_followup"
             break
 
-    if tag!=cancer:
-        survivalMatrix= ClinicalMatrixNew(None,"clinical_"+cancer+"_survival_"+tag)
-    else:
-        survivalMatrix= ClinicalMatrixNew(None,"clinical_"+cancer+"_survival")
     survivalMatrix.addNewRows(finalClinMatrix.getROWs(),{})
     survivalMatrix.addOneColWithSameValue("_TIME_TO_EVENT","")
     survivalMatrix.addOneColWithSameValue("_EVENT","")
+    #survivalMatrix.addOneColWithSameValue("_OVERALL_SURVIVAL","")
+    #survivalMatrix.addOneColWithSameValue("_OVERALL_SURVIVAL_IND","")
 
     for id in finalClinMatrix.getROWs():
         #_EVENT         #_TIME_TO_EVENT
@@ -108,6 +116,8 @@ def survival (dir,cancer,tag):
                 foundD =1
                 survivalMatrix.setDATA(id,"_EVENT","1")
                 survivalMatrix.setDATA(id,"_TIME_TO_EVENT",d)
+                #survivalMatrix.setDATA(id,"_OVERALL_SURVIVAL_IND","1")
+                #survivalMatrix.setDATA(id,"_OVERALL_SURVIVAL",d)
                 continue
             except:
                 # bad data no days_to_death for DECEASED
@@ -132,6 +142,87 @@ def survival (dir,cancer,tag):
             if foundL:# and foundL!="0":
                 survivalMatrix.setDATA(id,"_EVENT","0")
                 survivalMatrix.setDATA(id,"_TIME_TO_EVENT",foundL)
+                #survivalMatrix.setDATA(id,"_OVERALL_SURVIVAL_IND","0")
+                #survivalMatrix.setDATA(id,"_OVERALL_SURVIVAL",foundL)
+    return 1
+
+def RFS  (dir, finalClinMatrix, survivalMatrix, tag, cancer):
+    cols = finalClinMatrix.getCOLs()
+    found =0
+    for col in cols:
+        if col=="days_to_new_tumor_event_after_initial_treatment":
+            found =1
+            break
+    if not found:
+        print "no RFS info, can not compute _TIME_TO_EVENT _EVENT"
+        return 0
+    
+    foundDeath=0
+    for col in cols:
+        if col=="days_to_death":
+            foundDeath =1
+            break
+    foundAlive=0
+    for col in cols:
+        if col=="days_to_last_known_alive":
+            foundAlive =1
+            print "found days_to_last_known_alive"
+            break
+    foundFollowup=0
+    for col in cols:
+        if col=="days_to_last_followup":
+            foundFollowup =1
+            print "found days_to_last_followup"
+            break
+
+    survivalMatrix.addOneColWithSameValue("_RFS","")
+    survivalMatrix.addOneColWithSameValue("_RFS_IND","")
+
+    for id in finalClinMatrix.getROWs():
+        #_EVENT         #_TIME_TO_EVENT
+        v = finalClinMatrix.getDATA(id, "days_to_new_tumor_event_after_initial_treatment")
+        if v!="":
+            d = finalClinMatrix.getDATA(id,"days_to_new_tumor_event_after_initial_treatment")
+            try:
+                int(d)
+                survivalMatrix.setDATA(id,"_RFS_IND","1")
+                survivalMatrix.setDATA(id,"_RFS",d)
+                continue
+            except:
+                # bad data no days_to_death for DECEASED
+                continue
+        if v=="":
+            foundL =0
+            if foundAlive:
+                d = finalClinMatrix.getDATA(id,"days_to_last_known_alive") 
+                try:
+                    int(d)
+                    foundL =d
+                except:
+                    pass
+            if foundFollowup:
+                d = finalClinMatrix.getDATA(id,"days_to_last_followup") 
+                try:
+                    int(d)
+                    if d>foundL:
+                        foundL=d
+                except:
+                    pass
+            if foundDeath:
+                d = finalClinMatrix.getDATA(id,"days_to_death") 
+                try:
+                    int(d)
+                    if d>foundL:
+                        foundL=d
+                except:
+                    pass
+            if foundL:# and foundL!="0":
+                survivalMatrix.setDATA(id,"_RFS_IND","0")
+                survivalMatrix.setDATA(id,"_RFS",foundL)
+    return 1
+                
+        
+def output (dir, finalClinMatrix, survivalMatrix, tag, cancer):
     if tag!=cancer:
         fout=open(dir+"clinical_survival_"+tag,'w')
     else:
@@ -146,7 +237,7 @@ def survival (dir,cancer,tag):
     J["dataProducer"]= "UCSC"
     J["version"]= datetime.date.today().isoformat()
     J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
-    J["wrangling_procedure"]= "_EVENT from vital_status 0=no_event=LIVING 1=event=DECEASED; _TIME_TO_EVENT=days_to_death when _EVENT=1; _TIME_TO_EVENT=max(days_to_last_followup, days_to_last_known_alive) when _EVENT=0"
+    J["wrangling_procedure"]= "_EVENT from vital_status 0=no_event=LIVING 1=event=DECEASED; _TIME_TO_EVENT=days_to_death when _EVENT=1; _TIME_TO_EVENT=max(days_to_last_followup, days_to_last_known_alive) when _EVENT=0;  _RFS_IND 1=if there is days_to_new_tumor_event_after_initial_treatment information 0=otherwise; _RFS=days_to_new_tumor_event_after_initial_treatment or max (days_to_death, days_to_last_followup, days_to_last_known_alive"
     J["name"]=survivalMatrix.getName()
     J["type"]= "clinicalMatrix"
     J[":sampleMap"]="TCGA."+cancer+".sampleMap"
@@ -164,13 +255,33 @@ def survival (dir,cancer,tag):
     else:
         cFfile =dir+"clinical_survival_clinicalFeature"
     fout = open(cFfile,"w")
-    fout.write("_EVENT\tshortTitle\t_EVENT\n")
-    fout.write("_EVENT\tlongTitle\t_EVENT 0=censor(no_event) 1=event; derived from vital_status\n")
+    """
+    fout.write("_OVERALL_SURVIVAL_IND\tshortTitle\toverall survivial indicator\n")
+    fout.write("_OVERALL_SURVIVAL_IND\tlongTitle\t_OS_IND overall survivial indicator 0=censor (no_event) 1=event; derived from vital_status\n")
+    fout.write("_OVERALL_SURVIVAL_IND\tvalueType\tcategory\n")
+
+    fout.write("_OVERALL_SURVIVAL\tshortTitle\tOVERALL SURVIVAL\n")
+    fout.write("_OVERALL_SURVIVAL\tlongTitle\t_OS overall survival; =days_to_death (if deceased); =max(days_to_last_known_alive,days_to_last_followup) (if living)\n")
+    fout.write("_OVERALL_SURVIVAL\tvalueType\tfloat\n")
+    """
+    
+    fout.write("_EVENT\tshortTitle\toverall survivial indicator\n")
+    fout.write("_EVENT\tlongTitle\t_EVENT overall survivial indicator 0=censor (no_event) 1=event; derived from vital_status\n")
     fout.write("_EVENT\tvalueType\tcategory\n")
 
     fout.write("_TIME_TO_EVENT\tshortTitle\tOVERALL SURVIVAL\n")
     fout.write("_TIME_TO_EVENT\tlongTitle\t_TIME_TO_EVENT overall survival; =days_to_death (if deceased); =max(days_to_last_known_alive,days_to_last_followup) (if living)\n")
     fout.write("_TIME_TO_EVENT\tvalueType\tfloat\n")
+
+
+    fout.write("_RFS_IND\tshortTitle\trecurrent free survival indicator\n")
+    fout.write("_RFS_IND\tlongTitle\t_RFS_IND recurrent free survival indicator\n")
+    fout.write("_RFS_IND\tvalueType\tcategory\n")
+
+    fout.write("_RFS\tshortTitle\tRECURRENT FREE SURVIVAL\n")
+    fout.write("_RFS\tlongTitle\t_RFS recurrent free survival; =days_to_new_tumor_event_after_initial_treatment (event occured); =max(days_to_last_known_alive,days_to_last_followup, days_to_death) (no event)\n")
+    fout.write("_RFS\tvalueType\tfloat\n")
+
     fout.close()
 
     if tag!=cancer:
@@ -186,3 +297,4 @@ def survival (dir,cancer,tag):
         fout=open(dir+"clinical_survival_clinicalFeature.json",'w')
     fout.write( json.dumps( cFJ, indent=-1 ) )
     fout.close()
+
