@@ -16,7 +16,7 @@ $FIREHOSEDATE_ana_version
 0	0	OneOff	OneOffClinical	/data/TCGA/tcgaDataOneOff/Clinical/*/	$TMP
 
 #DCC data
-0	1	Clinical	ClinicalPublicBioTab	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/bcr/biotab/clin/	$TMP
+1	1	Clinical	ClinicalPublicBioTab	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/bcr/biotab/clin/	$TMP
 
 
 0	0	AgilentGeneExp	AgilentG4502A_07_3	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/unc.edu/agilentg4502a_07_3/transcriptome/	$TMP
@@ -26,20 +26,20 @@ $FIREHOSEDATE_ana_version
 0	0	Methylation	humanmethylation27	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/jhu-usc.edu/humanmethylation27/methylation/	$TMP
 0	0	Methylation	humanmethylation450	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/jhu-usc.edu/humanmethylation450/methylation/	$TMP
 
-0	1	RNAseq	illuminahiseq_rnaseqV2_unc	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/unc.edu/illuminahiseq_rnaseqv2/rnaseqv2/	$TMP
+0	0	RNAseq	illuminahiseq_rnaseqV2_unc	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/unc.edu/illuminahiseq_rnaseqv2/rnaseqv2/	$TMP
 #0	0	RNAseq	illuminahiseq_rnaseqV2_exon_unc	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/unc.edu/illuminahiseq_rnaseqv2/rnaseqv2/	$TMP
 
-0	1	RNAseq	illuminaga_rnaseqV2_unc	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/unc.edu/illuminaga_rnaseqv2/rnaseqv2/	$TMP
-#0	1	RNAseq	illuminaga_rnaseqV2_exon_unc	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/unc.edu/illuminaga_rnaseqv2/rnaseqv2/	$TMP
+0	0	RNAseq	illuminaga_rnaseqV2_unc	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/unc.edu/illuminaga_rnaseqv2/rnaseqv2/	$TMP
+#0	0	RNAseq	illuminaga_rnaseqV2_exon_unc	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/unc.edu/illuminaga_rnaseqv2/rnaseqv2/	$TMP
 
 0	0	RNAseq	illuminaga_rnaseq_bcgsc	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/bcgsc.ca/illuminaga_rnaseq/rnaseq/	$TMP
-0	1	RNAseq	illuminahiseq_rnaseq_bcgsc	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/bcgsc.ca/illuminahiseq_rnaseq/rnaseq/	$TMP
+0	0	RNAseq	illuminahiseq_rnaseq_bcgsc	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/bcgsc.ca/illuminahiseq_rnaseq/rnaseq/	$TMP
 
 0	0	SNP6	SNP6	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/broad.mit.edu/genome_wide_snp_6/snp/	$TMP
 
 
 #mutation data
-1	0	mutationMatrix	mutationMatrix	/inside/home/cline/projects/PanCancer/mutationMatrices/*_cleaned_filtered.txt	$TMP
+0	0	mutationMatrix	mutationMatrix	/inside/home/cline/projects/PanCancer/mutationMatrices/*_cleaned_filtered.txt	$TMP
 
 #sampleMap
 0	1	TCGASampleMap	TCGASampleMap	$TMP*/	$TMP

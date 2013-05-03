@@ -245,6 +245,20 @@ class ClinicalFeatureNew():
         self.__FEATUREs.append(newName)
         self.__FEATUREs.remove(oldName)
 
+    def replicateFeatureName(self, oldName, newName):
+        if oldName ==newName:
+            return
+        if newName in self.__FEATUREs:
+            return
+        if oldName not in self.__FEATUREs:
+            return
+
+        print oldName
+        self.__DATA[newName]=copy.deepcopy(self.__DATA[oldName])
+        #self.__DATA.pop(oldName)
+        self.__FEATUREs.append(newName)
+        #self.__FEATUREs.remove(oldName)
+
     def checkFeatureWithMatrix(self,cMa):
         cMaFeatures = cMa.getCOLs()
         removeF=[]

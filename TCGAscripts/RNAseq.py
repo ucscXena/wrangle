@@ -360,13 +360,21 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     J["description"]=""
     if string.find(namesuffix, "exon")==-1:
         J[":probeMap"]= "hugo"
-        J["shortTitle"]="Gene Expression ("+suffix+")"
-        J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression ("+suffix+")"
+        if cancer != "OV":
+            J["shortTitle"]="Gene Expression ("+suffix+")"
+            J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression ("+suffix+")"
+        else:
+            if dataProducer =="University of North Carolina TCGA genome characterization center":
+                J["shortTitle"]="Gene Expression ("+suffix+" UNC)"
+                J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression ("+suffix+" UNC)"
+            else:
+                J["shortTitle"]="Gene Expression ("+suffix+" BC)"
+                J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression ("+suffix+" BC)"
+                
         J["notes"]= "the probeMap should be tcgaGAF, but untill the probeMap is made, we will have to use hugo for the short term, however probably around 10% of the gene symbols are not HUGO names, but ENTRE genes"
         J["description"]= J["description"] +"The dataset shows TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression."+ \
                           " The gene expression profile was measured experimentally using the "+platformTitle+" by the "+ dataProducer +"." + \
                           " Level 3 interpreted level data was downloaded from TCGA data coordination center. This dataset shows the gene-level transcription estimates, "
-        
     else:
         J[":probeMap"]= "unc_RNAseq_exon"
         J["shortTitle"]="Exon Expression ("+suffix+")"

@@ -48,7 +48,8 @@ class ClinicalMatrixNew():
                 print "WARNING, feature name is modified", d, "new name:", new_d
                 # modify ClinF if exist
                 if ClinF:
-                    ClinF.replaceFeatureName(d, new_d)
+                    #ClinF.replaceFeatureName(d, new_d)
+                    ClinF.replicateFeatureName(d, new_d)
                 d =new_d
                 
             #do not use _PATIENT

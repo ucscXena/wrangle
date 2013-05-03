@@ -57,6 +57,11 @@ def survival (dir,cancer,tag):
                 if r!=True:
                     print "Fail to merge"
                     return False
+
+    #identify empty features
+    badFeatures= finalClinMatrix.badCols()
+    print "remove features", badFeatures
+        
     if tag!=cancer:
         survivalMatrix= ClinicalMatrixNew(None,"clinical_"+cancer+"_survival_"+tag)
     else:
@@ -148,13 +153,13 @@ def overallSurvival (dir, finalClinMatrix, survivalMatrix, tag, cancer):
 
 def RFS  (dir, finalClinMatrix, survivalMatrix, tag, cancer):
     cols = finalClinMatrix.getCOLs()
-    found =0
+    found=0
     for col in cols:
-        if col=="days_to_new_tumor_event_after_initial_treatment":
+        if col=="person_neoplasm_cancer_status":
             found =1
             break
     if not found:
-        print "no RFS info, can not compute _TIME_TO_EVENT _EVENT"
+        print "no RFS info, can not compute _RFS, _RFS_ind"
         return 0
     
     foundDeath=0
@@ -178,20 +183,34 @@ def RFS  (dir, finalClinMatrix, survivalMatrix, tag, cancer):
     survivalMatrix.addOneColWithSameValue("_RFS","")
     survivalMatrix.addOneColWithSameValue("_RFS_IND","")
 
+    minGood=0
     for id in finalClinMatrix.getROWs():
         #_EVENT         #_TIME_TO_EVENT
-        v = finalClinMatrix.getDATA(id, "days_to_new_tumor_event_after_initial_treatment")
-        if v!="":
-            d = finalClinMatrix.getDATA(id,"days_to_new_tumor_event_after_initial_treatment")
-            try:
-                int(d)
-                survivalMatrix.setDATA(id,"_RFS_IND","1")
-                survivalMatrix.setDATA(id,"_RFS",d)
-                continue
-            except:
-                # bad data no days_to_death for DECEASED
-                continue
-        if v=="":
+        foundD=0
+        d = finalClinMatrix.getDATA(id, "days_to_new_tumor_event_after_initial_treatment")
+        try:
+            int(d)
+            foundD =d 
+            minGood= minGood+1
+        except:
+            # bad data no days_to_death for DECEASED
+            pass
+        d = finalClinMatrix.getDATA(id,"days_to_tumor_recurrence")
+        try:
+            int(d)
+            if d > foundD:
+                foundD=d
+                minGood=minGood+1
+        except:
+            # bad data no days_to_death for DECEASED
+            pass
+
+        if foundD:
+            survivalMatrix.setDATA(id,"_RFS_IND","1")
+            survivalMatrix.setDATA(id,"_RFS",foundD)
+
+        # if person_neoplasm_cancer_status = TUMOR FREE and no new tumor is detected above
+        elif string.upper(finalClinMatrix.getDATA(id,"person_neoplasm_cancer_status")) =="TUMOR FREE":
             foundL =0
             if foundAlive:
                 d = finalClinMatrix.getDATA(id,"days_to_last_known_alive") 
@@ -216,9 +235,12 @@ def RFS  (dir, finalClinMatrix, survivalMatrix, tag, cancer):
                         foundL=d
                 except:
                     pass
-            if foundL:# and foundL!="0":
+            if foundL:
                 survivalMatrix.setDATA(id,"_RFS_IND","0")
                 survivalMatrix.setDATA(id,"_RFS",foundL)
+                
+    if minGood<5:
+        survivalMatrix.removeCols(["_RFS","_RFS_IND"])
     return 1
                 
         
@@ -237,7 +259,7 @@ def output (dir, finalClinMatrix, survivalMatrix, tag, cancer):
     J["dataProducer"]= "UCSC"
     J["version"]= datetime.date.today().isoformat()
     J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
-    J["wrangling_procedure"]= "_EVENT from vital_status 0=no_event=LIVING 1=event=DECEASED; _TIME_TO_EVENT=days_to_death when _EVENT=1; _TIME_TO_EVENT=max(days_to_last_followup, days_to_last_known_alive) when _EVENT=0;  _RFS_IND 1=if there is days_to_new_tumor_event_after_initial_treatment information 0=otherwise; _RFS=days_to_new_tumor_event_after_initial_treatment or max (days_to_death, days_to_last_followup, days_to_last_known_alive"
+    J["wrangling_procedure"]= "_EVENT from vital_status 0=no_event=LIVING 1=event=DECEASED; _TIME_TO_EVENT=days_to_death when _EVENT=1; _TIME_TO_EVENT=max(days_to_last_followup, days_to_last_known_alive) when _EVENT=0;  _RFS_IND 1=if there is days_to_new_tumor_event_after_initial_treatment or days_to_tumor_recurrenc information 0=otherwise and with person_neoplasm_status=TUMOR FREE; _RFS=max(days_to_new_tumor_event_after_initial_treatment, days_to_tumor_recurrence)"
     J["name"]=survivalMatrix.getName()
     J["type"]= "clinicalMatrix"
     J[":sampleMap"]="TCGA."+cancer+".sampleMap"
@@ -270,16 +292,16 @@ def output (dir, finalClinMatrix, survivalMatrix, tag, cancer):
     fout.write("_EVENT\tvalueType\tcategory\n")
 
     fout.write("_TIME_TO_EVENT\tshortTitle\tOVERALL SURVIVAL\n")
-    fout.write("_TIME_TO_EVENT\tlongTitle\t_TIME_TO_EVENT overall survival; =days_to_death (if deceased); =max(days_to_last_known_alive,days_to_last_followup) (if living)\n")
+    fout.write("_TIME_TO_EVENT\tlongTitle\t_TIME_TO_EVENT overall survival; =days_to_death (if deceased); =max(days_to_last_known_alive, days_to_last_followup) (if living)\n")
     fout.write("_TIME_TO_EVENT\tvalueType\tfloat\n")
 
 
     fout.write("_RFS_IND\tshortTitle\trecurrent free survival indicator\n")
-    fout.write("_RFS_IND\tlongTitle\t_RFS_IND recurrent free survival indicator\n")
+    fout.write("_RFS_IND\tlongTitle\t_RFS_IND recurrent free survival indicator 1=new tumor; 0=otherwise and TUMOR FREE\n")
     fout.write("_RFS_IND\tvalueType\tcategory\n")
 
     fout.write("_RFS\tshortTitle\tRECURRENT FREE SURVIVAL\n")
-    fout.write("_RFS\tlongTitle\t_RFS recurrent free survival; =days_to_new_tumor_event_after_initial_treatment (event occured); =max(days_to_last_known_alive,days_to_last_followup, days_to_death) (no event)\n")
+    fout.write("_RFS\tlongTitle\t_RFS recurrent free survival; =max(days_to_new_tumor_event_after_initial_treatment, days_to_tumor_recurrence) (if event); =overall survival (if no event) \n")
     fout.write("_RFS\tvalueType\tfloat\n")
 
     fout.close()

@@ -219,19 +219,16 @@ featurePriority={
              "PR Status_nature2012":"4",
              "HER2 Final Status_nature2012":"5"
              },
-    "COAD": {"braf_gene_analysis_result":"1",
-             "kras_mutation_found":"2",
-             "CIMP":"3",
-             "mononucleotide_and_dinucleotide_marker_panel_analysis_status":"4",
-             "hypermutation":"5",
+    "COAD": {"sample_type":"1",
+             "mononucleotide_and_dinucleotide_marker_panel_analysis_status":"2",
+             "histological_type":"3",
+             "CIMP":"4",
              "":""
              },
-    "COADREAD":{"tissue_source_site":"1.0",
-                "hypermutation":"1.1",
-                "braf_gene_analysis_result":"1.2",
-                "kras_mutation_found":"1.3",
-                "CIMP":"1.4",
-                "mononucleotide_and_dinucleotide_marker_panel_analysis_status":"1.5",
+    "COADREAD":{"sample_type":"1",
+                "mononucleotide_and_dinucleotide_marker_panel_analysis_status":"2",
+                "histological_type":"3",
+                "CIMP":"4",
                 "":""
                 },
     "CESC": {"sample_type":"1",
@@ -275,9 +272,9 @@ featurePriority={
              },
     "LGG":  {"sample_type":"1",
              "histological_type":"2",
-             "histologic_classification":"3",
+             "neoplasm_histologic_grade":"3",
              "days_to_last_followup":"4",
-             "":""    
+             "":""
              },
     "LUAD": {"sample_type":"1",
              "Expression_Subtype":"2",
@@ -299,21 +296,20 @@ featurePriority={
            "":""    
            },
     "PRAD": {"sample_type":"1",
-             "primary_gleason_grade":"2",
+             "gleason_score":"2",
              "residual_tumor":"3",
-             "overall_gleason_score":"4",
-             "psa_result_most_recent":"5"
+             "psa_value":"4"
              },
-    "READ": {"braf_gene_analysis_result":"1.0",
-             "kras_mutation_found":"1.1",
-             "CIMP":"1.2",
-             "mononucleotide_and_dinucleotide_marker_panel_analysis_status":"1.3",
-             "hypermutation":"1.4",
+    "READ": {"sample_type":"1",
+             "mononucleotide_and_dinucleotide_marker_panel_analysis_status":"2",
+             "histological_type":"3",
+             "CIMP":"4",
              "":""
              },
     "SARC": {"sample_type":"1",
              "histological_type":"2",
              "age_at_initial_pathologic_diagnosis":"3",
+             "gender":"4",
              "":""
              },
     "SKCM": {"sample_type":"1",
@@ -321,6 +317,7 @@ featurePriority={
              "":""    
              },
     "STAD": {"sample_type":"1",
+             "mononucleotide_and_dinucleotide_marker_panel_analysis_status":"2",
              "":""    
              },
     "THCA": {"sample_type":"1",

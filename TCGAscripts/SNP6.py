@@ -1,4 +1,4 @@
-import string, os, sys, glob
+mport string, os, sys, glob
 import json,datetime
 
 LEVEL="Level_3"
@@ -256,7 +256,7 @@ def makeJSON(oHandle,cancer,lastMageTab,inDir,noCNV,type):
     J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
                 
     #change description
-    J["gain"]=1.2
+    J["gain"]=1
     J["PLATFORM"]= "SNP6"
     J["wrangling_procedure"]= "Level_3 data download from TCGA DCC, processed at UCSC into cgData repository"
 
