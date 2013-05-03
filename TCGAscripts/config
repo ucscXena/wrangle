@@ -16,7 +16,7 @@ $FIREHOSEDATE_ana_version
 0	0	OneOff	OneOffClinical	/data/TCGA/tcgaDataOneOff/Clinical/*/	$TMP
 
 #DCC data
-1	1	Clinical	ClinicalPublicBioTab	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/bcr/biotab/clin/	$TMP
+0	1	Clinical	ClinicalPublicBioTab	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/bcr/biotab/clin/	$TMP
 
 
 0	0	AgilentGeneExp	AgilentG4502A_07_3	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/unc.edu/agilentg4502a_07_3/transcriptome/	$TMP
@@ -40,6 +40,12 @@ $FIREHOSEDATE_ana_version
 
 #mutation data
 0	0	mutationMatrix	mutationMatrix	/inside/home/cline/projects/PanCancer/mutationMatrices/*_cleaned_filtered.txt	$TMP
+
+#PANCAN
+1	1	pancan	pancan_DNAmethyl	/data/TCGA/tcgaDataOneOff/Clinical/*/DNA_meth_PanCan_Clusters_syn1809634_clean	$TMP
+
+#PANCAN individual cancer
+0	0	/inside/home/cline/projects/PanCancer/subtypeCalls/DnaMethylation/*.txt	$TMP
 
 #sampleMap
 0	1	TCGASampleMap	TCGASampleMap	$TMP*/	$TMP
