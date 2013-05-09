@@ -118,7 +118,7 @@ def TCGASampleMap (dir, outDir, cancer,log, REALRUN):
         J["cgDataVersion"]=1
         J[":integrationId"]=intName
         #special code
-        if J['name'] in ["TCGA.BRCA.sampleMap","TCGA.LUAD.sampleMap","TCGA.PRAD.sampleMap"]:
+        if J['name'] in ["TCGA.BRCA.sampleMap","TCGA.LUAD.sampleMap"]:
             J["VIS"]=5
         #blackList in PAAD
         if J['name'] in ["TCGA.PAAD.sampleMap"]:

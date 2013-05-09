@@ -35,6 +35,9 @@ def Pathway_Paradigm_RNASeq_And_Copy_Number (inDir, outDir, cancer,flog, REALRUN
     Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN)
 
 def Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN):
+    if string.find(string.upper(cancer),"PANCAN")!=-1:
+        return
+    
     garbage=[tmpDir]
     if os.path.exists(tmpDir ):
         os.system("rm -rf "+ tmpDir+"*")

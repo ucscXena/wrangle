@@ -231,7 +231,7 @@ def flattenEachSampleMap(sMap, bookDic):
     # collect all genomic data
     keepSamples  = getAllGenomicIds(sMap, bookDic)
 
-    """
+
     # removing rows without genomic data from  clinical data matrix due to mysql enum limitation
     # should remove this step after the display functionality is done better, currently cgb clinical data range in feature control panel shows the full range of clinical data without checking if the specific track/dataset has the full value range.
     print "genomic sample count", len(keepSamples)
@@ -240,7 +240,7 @@ def flattenEachSampleMap(sMap, bookDic):
         print "fail to remove extra rows"
     else:
         print "after keeping sample with genomic data", finalClinMatrix.getROWnum()
-    """
+
         
     #add to the clinical matrix any samples with genomic data but no clinical data
     emptyData={}
@@ -297,7 +297,6 @@ def flattenEachSampleMap(sMap, bookDic):
     #final clinicalFeature
     if finalClinFeature:
         finalClinFeature.removeFeatures(badFeatures)
-        
         finalClinFeature.cleanState()
         finalClinFeature.checkFeatureWithMatrix(finalClinMatrix)
         #clinicalFeature fillin ValueType

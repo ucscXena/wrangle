@@ -11,6 +11,9 @@ from CGDataUtil import *
 tmpDir = "tmptmp/"
 
 def CopyNumber_Gistic2 (inDir, outDir, cancer,flog,REALRUN):
+    if string.find(string.upper(cancer),"PANCAN")!=-1:
+        return
+        
     garbage=[tmpDir]
     if os.path.exists( tmpDir ):
         os.system("rm -rf "+tmpDir+"*")

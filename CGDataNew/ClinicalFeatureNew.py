@@ -131,6 +131,13 @@ class ClinicalFeatureNew():
         else:
             return None
 
+    def getStateOrderRelax(self, feature):
+        if feature in self.__FEATUREs:
+            if self.__DATA[feature].has_key("stateOrderRelax"):
+                return self.__DATA[feature]["stateOrderRelax"]
+        else:
+            return None
+
     def getFeatureSameAs(self,feature):
         if feature in self.__FEATUREs:
             if self.__DATA[feature].has_key("sameAs"):
@@ -222,7 +229,7 @@ class ClinicalFeatureNew():
             self.__DATA.pop(feature)
             self.__FEATUREs.remove(feature)
             self.__FEATURE=self.__FEATURE-1
-
+            
     def removeFeatures(self, features):
         for feature in features:
             if feature not in self.__FEATUREs:
@@ -304,6 +311,8 @@ class ClinicalFeatureNew():
 
                     #strict version
                     else:
+                        print feature,"not relax"
+                        print self.__DATA[feature]
                         # remove extra from clinicalFeature
                         for state in states:
                             if state not in cMaStates:
@@ -493,6 +502,8 @@ class ClinicalFeatureNew():
                 fout.write(feature+"\tpriority\t"+self.__DATA[feature]["priority"]+"\n")
             if self.__DATA[feature].has_key("visibility"):
                 fout.write(feature+"\tvisibility\t"+self.__DATA[feature]["visibility"]+"\n")
+            if self.__DATA[feature].has_key("stateOrderRelax"):
+                fout.write(feature+"\tstateOrderRelax\t"+self.__DATA[feature]["stateOrderRelax"]+"\n")
             if self.__DATA[feature].has_key("sameAs"):
                 fout.write(feature+"\tsameAs\t"+self.__DATA[feature]["sameAs"]+"\n")
         fout.close()
