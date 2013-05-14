@@ -29,13 +29,6 @@ def cgWalk(dir, ignore):
                 else:
                     print "json file size 0", root+"/"+file
                     return 0
-            
-            if not os.path.exists(root+"/"+base):
-                if ignore:
-                    continue
-                else:
-                    print "data file does not exist", root+"/"+base
-                    return 0
 
             """
             #file is ascii
@@ -52,8 +45,17 @@ def cgWalk(dir, ignore):
             J = json.loads(open(root+"/"+base+".json").read())
             J['path']= root+"/"+base
             name = J['name']
-            type = J["type"]
-            
+            if not J.has_key('type'):
+                J['type']=None
+
+
+            if J['type']!=None and not os.path.exists(root+"/"+base):
+                if ignore:
+                    continue
+                else:
+                    print "data file does not exist", root+"/"+base
+                    return 0
+
             #json checking if valid
             if bookDic.has_key(name):
                 print "CRITICAL ERROR already has this name in repo", name

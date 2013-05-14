@@ -108,9 +108,8 @@ def flattenEachSampleMap(sMap, bookDic):
             #get matrix obj
             path = obj['path']
             name = obj['name']
-
             cMatrix = ClinicalMatrixNew(path,name,False, clinFeature)
-            
+
             if finalClinMatrix==None:
                 finalClinMatrix= cMatrix
                 
@@ -231,7 +230,6 @@ def flattenEachSampleMap(sMap, bookDic):
     # collect all genomic data
     keepSamples  = getAllGenomicIds(sMap, bookDic)
 
-
     # removing rows without genomic data from  clinical data matrix due to mysql enum limitation
     # should remove this step after the display functionality is done better, currently cgb clinical data range in feature control panel shows the full range of clinical data without checking if the specific track/dataset has the full value range.
     print "genomic sample count", len(keepSamples)
@@ -240,7 +238,6 @@ def flattenEachSampleMap(sMap, bookDic):
         print "fail to remove extra rows"
     else:
         print "after keeping sample with genomic data", finalClinMatrix.getROWnum()
-
         
     #add to the clinical matrix any samples with genomic data but no clinical data
     emptyData={}
@@ -256,7 +253,8 @@ def flattenEachSampleMap(sMap, bookDic):
         print "Fail to validate"
         cMatrix = oldCMatrix
         return 0
-
+    # end of collecting all genomic data
+    
     #code to remove blacklist samples and all its descendants
     badList= badListSelfAndDescendants (sMap, bookDic)
     if badList!=[]:
@@ -264,8 +262,20 @@ def flattenEachSampleMap(sMap, bookDic):
         finalClinMatrix.removeRows(badList, True)
         print "after remove badList", finalClinMatrix.getROWnum()
         
-    #identify empty features
-    badFeatures= finalClinMatrix.badCols()
+    #identify empty features 
+    badFeatures= finalClinMatrix.findBadColsNotRemove()
+    finalBadFeatures=[]
+    for feature in badFeatures:
+        #get short label
+        shortTitle = finalClinFeature.getShortTitle(feature)
+        if shortTitle[:19]!="_DEPRECATED_FEATURE":
+            finalBadFeatures.append(feature)
+        else:
+            print shortTitle,"not remove"
+
+    #remove bad features
+    finalClinMatrix.removeCols(finalBadFeatures)
+    
     if badFeatures:
         print "remove features", badFeatures
 
@@ -282,7 +292,8 @@ def flattenEachSampleMap(sMap, bookDic):
         intId = IntegrationId(intName,fin)
         intList = intId.getList()
     finalClinMatrix.addColIntegration(sMap,intList)
-            
+    
+                
     # final ClinFeature json
     if finalClinFeatureJSON==None:
         jsonName=  trackName_fix(sampleMapBaseName(sMap)+"_clinicalFeature")
@@ -296,7 +307,7 @@ def flattenEachSampleMap(sMap, bookDic):
 
     #final clinicalFeature
     if finalClinFeature:
-        finalClinFeature.removeFeatures(badFeatures)
+        finalClinFeature.removeFeatures(finalBadFeatures)
         finalClinFeature.cleanState()
         finalClinFeature.checkFeatureWithMatrix(finalClinMatrix)
         #clinicalFeature fillin ValueType
@@ -317,7 +328,7 @@ def flattenEachSampleMap(sMap, bookDic):
         finalClinFeature.setFeatureLongTitle("_PATIENT","_PATIENT_ID")
         finalClinFeature.setFeatureShortTitle("_INTEGRATION","_SAMPLE_ID")
         finalClinFeature.setFeatureLongTitle("_INTEGRATION","_SAMPLE_ID")
-
+                    
     print sampleMap,finalClinMatrix.getROWnum()
     return finalClinMatrix,finalClinMatrixJSON, finalClinFeature, finalClinFeatureJSON
 

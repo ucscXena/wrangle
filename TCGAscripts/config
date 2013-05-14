@@ -13,10 +13,10 @@ $FIREHOSEDATE_ana_version
 0	1	CopyNumber_Gistic2	CopyNumber_Gistic2	/inside/depot/tcgafiles/tcga4yeo/other/gdacs/gdacbroad/firehose/analyses__$FIREHOSEDATE_ana/*/$FIREHOSEDATE_ana_version/	$TMP
 
 #One Off
-0	0	OneOff	OneOffClinical	/data/TCGA/tcgaDataOneOff/Clinical/*/	$TMP
+1	0	OneOff	OneOffClinical	/data/TCGA/tcgaDataOneOff/Clinical/*/	$TMP
 
 #DCC data
-0	1	Clinical	ClinicalPublicBioTab	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/bcr/biotab/clin/	$TMP
+0	0	Clinical	ClinicalPublicBioTab	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/bcr/biotab/clin/	$TMP
 
 
 0	0	AgilentGeneExp	AgilentG4502A_07_3	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/unc.edu/agilentg4502a_07_3/transcriptome/	$TMP
@@ -42,16 +42,18 @@ $FIREHOSEDATE_ana_version
 0	0	mutationMatrix	mutationMatrix	/inside/home/cline/projects/PanCancer/mutationMatrices/*_cleaned_filtered.txt	$TMP
 
 #PANCAN subtype
-1	1	pancan	pancan_DNAmethyl	/data/TCGA/tcgaDataOneOff/Clinical/*/DNA_meth_PanCan_Clusters_syn1809634_clean	$TMP
-1	1	pancan	pancan_icluster	/data/TCGA/tcgaDataOneOff/Clinical/*/icluster.k25_syn1729611_clean	$TMP
-1	1	pancan	individual_DNAmethyl	/inside/home/cline/projects/PanCancer/subtypeCalls/DnaMethylation/*.txt	$TMP
-1	1	pancan	individual_miRNA	/data/TCGA/tcgaDataOneOff/Clinical/PANCAN/miRNAsubtypeIndividual_syn1688309_clean/*.mirnaseq.cluster.txt	$TMP
+0	1	pancan	pancan_DNAmethyl	/data/TCGA/tcgaDataOneOff/Clinical/*/DNA_meth_PanCan_Clusters_syn1809634_clean	$TMP
+0	1	pancan	pancan_icluster	/data/TCGA/tcgaDataOneOff/Clinical/*/icluster.k25_syn1729611_clean	$TMP
+0	1	pancan	pancan_PARADIGM	/data/TCGA/tcgaDataOneOff/Clinical/*/PARADIGM_ConsensusClusters_syn1807620_clean	$TMP
+0	1	pancan	pancan_UNC_RANseq	/data/TCGA/tcgaDataOneOff/Clinical/*/UNC_RNAseq_PanCan12.3602-corrected-v3.Subtypes.K16_syn1715753_clean	$TMP
+0	1	pancan	pancan_RPPA	/data/TCGA/tcgaDataOneOff/Clinical/*/PanCan11_RBN_SimpleCluster_syn1756922_clean	$TMP
+0	1	pancan	pancan_CNA_named	/data/TCGA/tcgaDataOneOff/Clinical/*/SCNA_Cluster_table_syn1712130_clean	$TMP
+0	1	pancan	individual_DNAmethyl	/data/TCGA/tcgaDataOneOff/Clinical/PANCAN/DnaMethylation_syn1701558_clean/*.txt	$TMP
+0	1	pancan	individual_miRNA	/data/TCGA/tcgaDataOneOff/Clinical/PANCAN/miRNAsubtypeIndividual_syn1688309_clean/*.mirnaseq.cluster.txt	$TMP
 
-1	1	pancan	pancan_PARADIGM	/data/TCGA/tcgaDataOneOff/Clinical/*/PARADIGM_ConsensusClusters_syn1807620_clean	$TMP
-1	1	pancan	pancan_UNC_RANseq	/data/TCGA/tcgaDataOneOff/Clinical/*/UNC_RNAseq_PanCan12.3602-corrected-v3.Subtypes.K16_syn1715753_clean	$TMP
-1	1	pancan	pancan_RPPA	/data/TCGA/tcgaDataOneOff/Clinical/*/PanCan11_RBN_SimpleCluster_syn1756922_clean	$TMP
-1	1	pancan	pancan_CNA_named	/data/TCGA/tcgaDataOneOff/Clinical/*/SCNA_Cluster_table_syn1712130_clean	$TMP
 
+#getting previous release clinical data
+0	1	oldClin	oldClin	/data/cancerGenomeData/cgDataFreeze2013-03-02/public/TCGA/*/	$TMP
 
 #sampleMap
 0	1	TCGASampleMap	TCGASampleMap	$TMP*/	$TMP

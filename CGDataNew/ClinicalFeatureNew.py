@@ -5,7 +5,6 @@ import re
 from CGDataUtil import *
 
 class ClinicalFeatureNew():
-
     def __init__ (self, rFHandle,name):
         # return emptySelf if fail to initiate
         self.__name=""
@@ -491,7 +490,7 @@ class ClinicalFeatureNew():
                 if self.__DATA[feature].has_key("state"):
                     for state in self.__DATA[feature]["state"]:
                         fout.write(feature+"\tstate\t"+str(state)+"\n")
-                if self.__DATA[feature].has_key("stateOrder"):
+                if self.__DATA[feature].has_key("stateOrder") and len(self.__DATA[feature]["stateOrder"]) >0:
                     fout.write(feature+"\tstateOrder\t")
                     for item in self.__DATA[feature]["stateOrder"][:-1]:
                         fout.write("\""+item+"\",")

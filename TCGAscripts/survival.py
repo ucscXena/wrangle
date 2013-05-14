@@ -58,10 +58,6 @@ def survival (dir,cancer,tag):
                     print "Fail to merge"
                     return False
 
-    #identify empty features
-    badFeatures= finalClinMatrix.badCols()
-    print "remove features", badFeatures
-        
     if tag!=cancer:
         survivalMatrix= ClinicalMatrixNew(None,"clinical_"+cancer+"_survival_"+tag)
     else:
@@ -140,7 +136,7 @@ def overallSurvival (dir, finalClinMatrix, survivalMatrix, tag, cancer):
                 d = finalClinMatrix.getDATA(id,"days_to_last_followup") 
                 try:
                     int(d)
-                    if d>foundL:
+                    if int(d)>int(foundL):
                         foundL=d
                 except:
                     pass
@@ -155,90 +151,51 @@ def RFS  (dir, finalClinMatrix, survivalMatrix, tag, cancer):
     cols = finalClinMatrix.getCOLs()
     found=0
     for col in cols:
-        if col=="person_neoplasm_cancer_status":
+        if col=="new_tumor_event_after_initial_treatment":
             found =1
             break
     if not found:
-        print "no RFS info, can not compute _RFS, _RFS_ind"
+        print "no new_tumor_event_after_initial_treatment info, can not compute _RFS, _RFS_ind"
         return 0
     
-    foundDeath=0
-    for col in cols:
-        if col=="days_to_death":
-            foundDeath =1
-            break
-    foundAlive=0
-    for col in cols:
-        if col=="days_to_last_known_alive":
-            foundAlive =1
-            print "found days_to_last_known_alive"
-            break
-    foundFollowup=0
-    for col in cols:
-        if col=="days_to_last_followup":
-            foundFollowup =1
-            print "found days_to_last_followup"
-            break
-
     survivalMatrix.addOneColWithSameValue("_RFS","")
     survivalMatrix.addOneColWithSameValue("_RFS_IND","")
 
     minGood=0
     for id in finalClinMatrix.getROWs():
-        #_EVENT         #_TIME_TO_EVENT
-        foundD=0
-        d = finalClinMatrix.getDATA(id, "days_to_new_tumor_event_after_initial_treatment")
-        try:
-            int(d)
-            foundD =d 
-            minGood= minGood+1
-        except:
-            # bad data no days_to_death for DECEASED
-            pass
-        d = finalClinMatrix.getDATA(id,"days_to_tumor_recurrence")
-        try:
-            int(d)
-            if d > foundD:
-                foundD=d
-                minGood=minGood+1
-        except:
-            # bad data no days_to_death for DECEASED
-            pass
+        v = finalClinMatrix.getDATA(id, "new_tumor_event_after_initial_treatment")
+        if v=="YES":
+            foundD=0
+            d = finalClinMatrix.getDATA(id,"days_to_new_tumor_event_after_initial_treatment")
+            try:
+                int(d)
+                foundD = int(d)
+            except:
+                pass
 
-        if foundD:
-            survivalMatrix.setDATA(id,"_RFS_IND","1")
-            survivalMatrix.setDATA(id,"_RFS",foundD)
+            d = finalClinMatrix.getDATA(id,"days_to_tumor_recurrence")
+            try:
+                int(d)
+                if int(d) > foundD:
+                    foundD = int(d)
+            except:
+                pass
 
-        # if person_neoplasm_cancer_status = TUMOR FREE and no new tumor is detected above
-        elif string.upper(finalClinMatrix.getDATA(id,"person_neoplasm_cancer_status")) =="TUMOR FREE":
-            foundL =0
-            if foundAlive:
-                d = finalClinMatrix.getDATA(id,"days_to_last_known_alive") 
-                try:
-                    int(d)
-                    foundL =d
-                except:
-                    pass
-            if foundFollowup:
-                d = finalClinMatrix.getDATA(id,"days_to_last_followup") 
-                try:
-                    int(d)
-                    if d>foundL:
-                        foundL=d
-                except:
-                    pass
-            if foundDeath:
-                d = finalClinMatrix.getDATA(id,"days_to_death") 
-                try:
-                    int(d)
-                    if d>foundL:
-                        foundL=d
-                except:
-                    pass
-            if foundL:
+            if foundD >0:
+                survivalMatrix.setDATA(id,"_RFS_IND","1")
+                survivalMatrix.setDATA(id,"_RFS",str(foundD))
+                minGood= minGood+1
+                continue
+
+        elif v=="NO":
+            d = survivalMatrix.getDATA(id,"_TIME_TO_EVENT") 
+            try:
+                int(d)
                 survivalMatrix.setDATA(id,"_RFS_IND","0")
-                survivalMatrix.setDATA(id,"_RFS",foundL)
-                
+                survivalMatrix.setDATA(id,"_RFS",d)
+            except:
+                continue
+
     if minGood<5:
         survivalMatrix.removeCols(["_RFS","_RFS_IND"])
     return 1
@@ -297,7 +254,7 @@ def output (dir, finalClinMatrix, survivalMatrix, tag, cancer):
 
 
     fout.write("_RFS_IND\tshortTitle\trecurrent free survival indicator\n")
-    fout.write("_RFS_IND\tlongTitle\t_RFS_IND recurrent free survival indicator 1=new tumor; 0=otherwise and TUMOR FREE\n")
+    fout.write("_RFS_IND\tlongTitle\t_RFS_IND recurrent free survival indicator 1=new tumor; 0=otherwise; derived from days_to_new_tumor_event_after_initial_treatment\n")
     fout.write("_RFS_IND\tvalueType\tcategory\n")
 
     fout.write("_RFS\tshortTitle\tRECURRENT FREE SURVIVAL\n")

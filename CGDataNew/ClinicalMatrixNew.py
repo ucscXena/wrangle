@@ -510,6 +510,17 @@ class ClinicalMatrixNew():
         self.removeCols(badCols)
         return badCols
 
+
+    def findBadColsNotRemove(self):
+        badCols=[]
+        for col in self.__COLs:
+            states =self.getColStates (col)
+            if len(states) ==0:
+                badCols.append(col)
+            elif len(states)==1 and states[0]=="":
+                badCols.append(col)
+        return badCols
+
     #repalce value in the whole matrix
     def replaceValue(self, old, new):
         for sample in self.__ROWs:

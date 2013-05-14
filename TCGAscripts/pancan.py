@@ -139,6 +139,14 @@ def individual_subtype (dir, outDir, cancer,log, REALRUN, featureName,dataProduc
     fout.write(featureName+"\tshortTitle\t"+shortTitle+"\n")
     fout.write(featureName+"\tlongTitle\t"+longTitle+"\n")
     fout.write(featureName+"\tvalueType\tcategory\n")
+
+
+    if TCGAUtil.featurePriority.has_key(cancer):
+        if TCGAUtil.featurePriority[cancer].has_key(featureName):
+            priority= TCGAUtil.featurePriority[cancer][featureName]
+            fout.write(featureName+"\tpriority\t"+str(priority)+"\n")
+            fout.write(featureName+"\tvisibility\ton\n")
+                
     fout.close()
     
     #clinical feature json
@@ -211,7 +219,13 @@ def pancan_subtype (dir, outDir, cancer,log, REALRUN, featureName,dataProducer, 
             
         else:
             pass
-        
+
+        if TCGAUtil.featurePriority.has_key(cancer):
+            if TCGAUtil.featurePriority[cancer].has_key(featureName):
+                priority= TCGAUtil.featurePriority[cancer][featureName]
+                fout.write(featureName+"\tpriority\t"+str(priority)+"\n")
+                fout.write(featureName+"\tvisibility\ton\n")
+                
         #clinical feature json
         fout= open(outDir+cancerDir+"/"+outfile+"_clinicalFeature.json",'w')
         JC={}

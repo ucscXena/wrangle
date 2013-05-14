@@ -170,8 +170,6 @@ featureStateOrder={
                                             ['MX', 'M0', 'M1', 'M1a', 'M1b']},
     "histological_type":{"LGG":
                          ["Oligodendroglioma","Oligoastrocytoma","Astrocytoma"]},
-    "neoplasm_histologic_grade":{"ALL":
-                                 ["GX","GB","G1","G2","G3","G4"]},
     "sample_type":{"ALL":
                    ["Primary Tumor","Primary solid Tumor",
                    "Primary Blood Derived Cancer - Peripheral Blood",
@@ -211,7 +209,9 @@ featureStateOrder={
 
 featurePriority={
     "BLCA": {"sample_type":"1",
-             "":""    
+             "neoplasm_histologic_grade":"2",
+             "gleason_score":"3",
+             "gender":"4"
              },
     "BRCA": {"sample_type":"1",
              "PAM50 mRNA_nature2012":"2",
@@ -222,59 +222,52 @@ featurePriority={
     "COAD": {"sample_type":"1",
              "mononucleotide_and_dinucleotide_marker_panel_analysis_status":"2",
              "histological_type":"3",
-             "CIMP":"4",
-             "":""
+             "CIMP":"4"
              },
     "COADREAD":{"sample_type":"1",
                 "mononucleotide_and_dinucleotide_marker_panel_analysis_status":"2",
                 "histological_type":"3",
-                "CIMP":"4",
-                "":""
+                "CIMP":"4"
                 },
     "CESC": {"sample_type":"1",
-             "neoplasm_histologic_grade":"2",
-             "":""
+             "neoplasm_histologic_grade":"2"
              },
-    "ESCA": {"sample_type":"1",
-             "":""
+    "ESCA": {"sample_type":"1"
              },
-    "DLBC": {"sample_type":"1",
-             "":""
+    "DLBC": {"sample_type":"1"
              },
     "GBM":  {"sample_type":"1",
              "GeneExp_Subtype":"2",
              "G_CIMP_STATUS":"3",
-             "CDE_survival_time":"4",
-             "":""    
+             "_PANCAN_DNAMethyl_PANCAN_C18":"4"
              },
     "HNSC": {"sample_type":"1",
              "hpv_status_by_p16_testing":"2",
              "hpv_status_by_ish_testing":"3",
-             "gender":"4",
-             "":""    
+             "gender":"4"
+             },
+    "KICH": {"sample_type":"1",
+             "person_neoplasm_cancer_status":"2"
              },
     "KIRC": {"sample_type":"1",
-             "":""    
+             "person_neoplasm_cancer_status":"2"
              },
     "KIRP": {"sample_type":"1",
-             "":""    
+             "person_neoplasm_cancer_status":"2"
              },
     "LIHC": {"sample_type":"1",
              "neoplasm_histologic_grade":"2",
-             "ajcc_tumor_stage_code":"3",
-             "":""    
              },
     "LAML": {"sample_type_id":"1",
              "acute_myeloid_leukemia_calgb_cytogenetics_risk_category":"2",
-             "gender":"3",
-             "age_at_initial_pathologic_diagnosis":"4",
-             "":""    
+             "_PANCAN_DNAMethyl_LAML":"3",
+             "_PANCAN_mirna_LAML":"4",
+             "cytogenetic_abnormality":"5"
              },
     "LGG":  {"sample_type":"1",
              "histological_type":"2",
              "neoplasm_histologic_grade":"3",
-             "days_to_last_followup":"4",
-             "":""
+             "days_to_new_tumor_event_after_initial_treatment":"4"
              },
     "LUAD": {"sample_type":"1",
              "Expression_Subtype":"2",
@@ -283,17 +276,16 @@ featurePriority={
              "tobacco_smoking_history_indicator":"5"
              },
     "LUSC": {"sample_type":"1",
-             "":""    
+             "_PANCAN_icluster_PANCAN_K25":"2",
+             "_PANCAN_DNAMethyl_PANCAN_C18":"3",
+             "_PANCAN_UNC_RNAseq_PANCAN_K16":"4"
              },
-    "KICH": {"sample_type":"1",
-             "":""    
+    "KICH": {"sample_type":"1"
              },
     "OV": {"sample_type":"1",
-           "neoplasm_histologic_grade":"2",
-           "":"" 
+           "neoplasm_histologic_grade":"2"
            },
-    "PAAD": {"sample_type":"1",
-           "":""    
+    "PAAD": {"sample_type":"1"
            },
     "PRAD": {"sample_type":"1",
              "gleason_score":"2",
@@ -303,53 +295,39 @@ featurePriority={
     "READ": {"sample_type":"1",
              "mononucleotide_and_dinucleotide_marker_panel_analysis_status":"2",
              "histological_type":"3",
-             "CIMP":"4",
-             "":""
+             "CIMP":"4"
              },
     "SARC": {"sample_type":"1",
              "histological_type":"2",
              "age_at_initial_pathologic_diagnosis":"3",
-             "gender":"4",
-             "":""
+             "gender":"4"
              },
     "SKCM": {"sample_type":"1",
-             "gender":"2",
-             "":""    
+             "gender":"2"
              },
     "STAD": {"sample_type":"1",
-             "mononucleotide_and_dinucleotide_marker_panel_analysis_status":"2",
-             "":""    
+             "mononucleotide_and_dinucleotide_marker_panel_analysis_status":"2"
              },
-    "THCA": {"sample_type":"1",
-             "":""    
+    "THCA": {"sample_type":"1"
              },
     "UCEC": {"sample_type":"1",
-             "mononucleotide_and_dinucleotide_marker_panel_analysis_status":"2",
-             "":""
+             "mononucleotide_and_dinucleotide_marker_panel_analysis_status":"2"
              },
-    "ACC":{"sample_type":"1",
-             "":""    
+    "ACC":{"sample_type":"1"
              },
-    "LCLL":{"sample_type":"1",
-             "":""    
+    "LCLL":{"sample_type":"1"
+            },
+    "LCML":{"sample_type":"1"
              },
-    "LCML":{"sample_type":"1",
-             "":""    
-             },
-    "MESO":{"sample_type":"1",
-             "":""    
-             },
-    "MISC":{"sample_type":"1",
-             "":""    
-             },
-    "PCPG":{"sample_type":"1",
-             "":""    
-             },
-    "UCS":{"sample_type":"1",
-             "":""    
-             }
+    "MESO":{"sample_type":"1"
+            },
+    "MISC":{"sample_type":"1"
+            },
+    "PCPG":{"sample_type":"1"
+            },
+    "UCS":{"sample_type":"1"
+           }
     }
-
 
 clinDataDesc ="The accompanied clinical data are downloaded from TCGA data coordination center. They are the patient, sample, follow up, biospecimen tumor sample, and auxiliary clinical information. Names of the clinical fields were \"curated\" by UCSC to be more readable."
 

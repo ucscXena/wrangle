@@ -27,7 +27,7 @@ def TCGASampleMap (dir, outDir, cancer,log, REALRUN):
     aliquote_dic =TCGAUtil.uuid_Aliquot_all()
     sample_dic =TCGAUtil.uuid_Sample_all()
     
-    #missingMaps
+    #missingMaps --- actually this is all the maps
     for map in missingMaps:
         print map
         print missingMaps[map]
@@ -117,9 +117,15 @@ def TCGASampleMap (dir, outDir, cancer,log, REALRUN):
         J["version"]= datetime.date.today().isoformat()
         J["cgDataVersion"]=1
         J[":integrationId"]=intName
+
+        #add info for old clinical data
+        if os.path.exists( outDir+cancer+"/oldClin.json" ):
+            J[':oldClin']=cancer+"_oldClin" 
+
         #special code
-        if J['name'] in ["TCGA.BRCA.sampleMap","TCGA.LUAD.sampleMap"]:
+        if TCGAUtil.featurePriority.has_key(cancer) and len(TCGAUtil.featurePriority[cancer])>=5:
             J["VIS"]=5
+        
         #blackList in PAAD
         if J['name'] in ["TCGA.PAAD.sampleMap"]:
             J["blacklist"]= [ "TCGA-FQ-6551",
@@ -131,4 +137,6 @@ def TCGASampleMap (dir, outDir, cancer,log, REALRUN):
                               "TCGA-FQ-6559"]
             
         oHandle.write( json.dumps( J, indent=-1 ) )
+
+        
     return

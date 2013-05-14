@@ -9,17 +9,18 @@ sys.path.insert(0,"../CGDataNew")
 from ClinicalMatrixNew import *
 from CGDataUtil import *
 from survival import *
+from ClinicalFeatureNew import *
 
 #https://tcga-data.nci.nih.gov/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/brca/bcr/biotab/clin/
 #/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/bcr/biotab/clin/
 
-tmpDir="tmptmp/"
+tmpDir="tmpTry/"
 
 def ClinicalPublicBioTab(inDir, outDir, cancer,flog,REALRUN):
     PATHPATTERN= ""
-    Clinical(inDir, outDir, cancer,flog,PATHPATTERN)
+    Clinical(inDir, outDir, cancer,flog,PATHPATTERN,REALRUN)
     
-def Clinical(inDir, outDir, cancer,flog,PATHPATTERN):
+def Clinical(inDir, outDir, cancer,flog,PATHPATTERN, REALRUN):
     garbage=[tmpDir]
     if os.path.exists( tmpDir ):
         os.system("rm -rf "+tmpDir+"*")
@@ -27,43 +28,29 @@ def Clinical(inDir, outDir, cancer,flog,PATHPATTERN):
         os.system("mkdir "+tmpDir)
 
     os.system("wget -r -l1 -H -nd -P"+ tmpDir +" -erobots=off  https://tcga-data.nci.nih.gov/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/"+ string.lower(cancer) +"/bcr/biotab/clin/")
-    dataDir=tmpDir
-    
-    """
-    #single file in dir mode, uncompress to files
-    dataDir =""
 
-    for file in os.listdir(inDir):
-        #find the file
-        if string.find(file,PATHPATTERN)!=-1 and string.find(file,"md5")==-1:
-            pass
-        else:
-            continue
-        
-        #is tar.gz?, uncompress 
-        if string.find(file,".tar.gz")!=-1:
-            os.system("tar -xzf "+inDir+file +" -C tmptmp/") 
-            dataDir ="tmptmp/"
-            break
-    """
+    dataDir=tmpDir
             
     #make sure there is data
-    if dataDir =="" or not os.path.exists(dataDir):
+    if REALRUN and (dataDir =="" or not os.path.exists(dataDir)):
         cleanGarbage(garbage)
         return
 
-    process(inDir, outDir, dataDir, cancer,flog,PATHPATTERN, cancer)
-    survival(outDir+cancer+"/", cancer, cancer)
+    process(inDir, outDir, dataDir, cancer,flog,PATHPATTERN, cancer,REALRUN)
+    if REALRUN:
+        survival(outDir+cancer+"/", cancer, cancer)
 
     if cancer in ["COAD","READ"]:
         deriveCancer="COADREAD"
-        process(inDir, outDir, dataDir, deriveCancer,flog,PATHPATTERN,  cancer)
-        survival(outDir+deriveCancer+"/", deriveCancer, cancer)
+        process(inDir, outDir, dataDir, deriveCancer,flog,PATHPATTERN,  cancer,REALRUN)
+        if REALRUN:
+            survival(outDir+deriveCancer+"/", deriveCancer, cancer)
+
     cleanGarbage(garbage)
     return
 
 
-def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN,  originCancer):
+def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN,  originCancer,REALRUN):
     #print status
     print cancer, __name__
     
@@ -91,7 +78,24 @@ def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN,  originCancer):
                 # the auxillary, biospecimen_tumor_sample file does not start with clin
                 if cgFileName[0:9] != "clinical_":
                     cgFileName="clinical_"+cgFileName
-                    
+
+                outfile = outDir+cancer+"/"+cgFileName
+                cFfile =outfile+"_clinicalFeature"
+
+                if not REALRUN:
+                    if os.path.exists (cFfile):
+                        tmpClinFeature= ClinicalFeatureNew(cFfile,"tmpName")
+                        features= tmpClinFeature.getFeatures()
+                        for feature in features:
+                            if TCGAUtil.featurePriority.has_key(cancer):
+                                if TCGAUtil.featurePriority[cancer].has_key(feature):
+                                    priority= TCGAUtil.featurePriority[cancer][feature]
+                                    tmpClinFeature.setFeaturePriority(feature, priority)
+                        fout= open(cFfile,'w')    
+                        tmpClinFeature.store(fout)
+                        fout.close()
+                        continue
+                
                 infile = dataDir+file
                 #infile often row read has fewer fields than the fieldnames sequence
                 # use csv.DictReader and Writer to fix this
@@ -113,7 +117,7 @@ def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN,  originCancer):
                         os.system("rm "+infile)
                         print followUpV, currentFollowUpV
                         continue
-                outfile = outDir+cancer+"/"+cgFileName
+
 
                 #clinicalMatrix
                 if pattern =="biospecimen_tumor_sample":
@@ -170,7 +174,7 @@ def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN,  originCancer):
                 oHandle.close()
 
                 #clinicalFeature
-                cFfile =outfile+"_clinicalFeature"
+                    
                 fout = open(cFfile,"w")
                 cFeatures = clinMatrix.getCOLs()
                 for feature in cFeatures:
@@ -210,7 +214,7 @@ def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN,  originCancer):
                             fout.write(feature+"\tpriority\t"+str(priority)+"\n")
                             fout.write(feature+"\tvisibility\ton\n")
                             
-                    if feature in ["gender","age_at_initial_pathologic_diagnosis","days_to_last_followup","days_to_last_known_alive","sample_type","mononucleotide_and_dinucleotide_marker_panel_analysis_status","cancer type","tumor_necrosis_percent","tumor_nuclei_percent"]:
+                    if feature in ["gender","age_at_initial_pathologic_diagnosis","days_to_last_followup","days_to_last_known_alive","sample_type","mononucleotide_and_dinucleotide_marker_panel_analysis_status","tumor_necrosis_percent","tumor_nuclei_percent"]:
                         fout.write(feature+"\tvisibility\ton\n")
                 fout.close()
 
