@@ -40,6 +40,28 @@ def pancan_icluster (dir, outDir, cancer,log, REALRUN):
         fin.close()
     pancan_subtype (dir, outDir, cancer,log, REALRUN, featureName,dataProducer, shortTitle, longTitle, maxSubtype , code)
 
+def pancan_mutation (dir, outDir, cancer,log, REALRUN):
+    #print status
+    print cancer, sys._getframe().f_code.co_name
+
+    featureName="_PANCAN_mutation_PANCAN_K"
+    shortTitle="PANCAN mutation"
+    longTitle="_PANCAN mutation subtype k=19 (syn1868708)"
+    maxSubtype=19
+    dataProducer="https://www.synapse.org/#!Synapse:syn1868708"
+    
+    filepath= dir
+    code=None
+    if os.path.exists(filepath+".json"):
+        fin = open(filepath+".json",'r')
+        J = json.loads(fin.read())
+        if J.has_key("code"):
+            code= J["code"]
+        if J.has_key("stateOrder"):
+            maxSubtype = J["stateOrder"]
+        fin.close()
+    pancan_subtype (dir, outDir, cancer,log, REALRUN, featureName,dataProducer, shortTitle, longTitle, maxSubtype , code)
+
 def pancan_PARADIGM (dir, outDir, cancer,log, REALRUN):
     #print status
     print cancer, sys._getframe().f_code.co_name

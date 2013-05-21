@@ -37,7 +37,7 @@ $FIREHOSEDATE_ana_version
 
 0	0	SNP6	SNP6	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/broad.mit.edu/genome_wide_snp_6/snp/	$TMP
 
-1	0	RPPA	RPPA	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/mdanderson.org/mda_rppa_core/protein_exp/	$TMP
+0	0	RPPA	RPPA	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/mdanderson.org/mda_rppa_core/protein_exp/	$TMP
 
 #mutation data
 0	0	mutationMatrix	mutationMatrix	/inside/home/cline/projects/PanCancer/mutationMatrices/*_cleaned_filtered.txt	$TMP
@@ -51,6 +51,9 @@ $FIREHOSEDATE_ana_version
 0	1	pancan	pancan_UNC_RANseq	/data/TCGA/tcgaDataOneOff/Clinical/*/UNC_RNAseq_PanCan12.3602-corrected-v3.Subtypes.K16_syn1715753_clean	$TMP
 0	1	pancan	pancan_RPPA	/data/TCGA/tcgaDataOneOff/Clinical/*/PanCan11_RBN_SimpleCluster_syn1756922_clean	$TMP
 0	1	pancan	pancan_CNA_named	/data/TCGA/tcgaDataOneOff/Clinical/*/SCNA_Cluster_table_syn1712130_clean	$TMP
+1	1	pancan	pancan_mutation	/data/TCGA/tcgaDataOneOff/Clinical/*/mutation_syn1868708_clean	$TMP
+
+
 0	1	pancan	individual_DNAmethyl	/data/TCGA/tcgaDataOneOff/Clinical/PANCAN/DnaMethylation_syn1701558_clean/*.txt	$TMP
 0	1	pancan	individual_miRNA	/data/TCGA/tcgaDataOneOff/Clinical/PANCAN/miRNAsubtypeIndividual_syn1688309_clean/*.mirnaseq.cluster.txt	$TMP
 
