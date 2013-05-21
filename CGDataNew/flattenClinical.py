@@ -256,6 +256,7 @@ def flattenEachSampleMap(sMap, bookDic):
     # end of collecting all genomic data
     
     #code to remove blacklist samples and all its descendants
+
     badList= badListSelfAndDescendants (sMap, bookDic)
     if badList!=[]:
         #remove badList samples
@@ -286,7 +287,7 @@ def flattenEachSampleMap(sMap, bookDic):
             
     # add _INTEGRATION col
     intList=[]
-    if bookDic[sampleMap].has_key(":integrationId"):
+    if bookDic.has_key(sampleMap) and bookDic[sampleMap].has_key(":integrationId"):
         intName=bookDic[sampleMap][":integrationId"]
         fin= open(bookDic[intName]["path"],"r")
         intId = IntegrationId(intName,fin)
@@ -320,7 +321,7 @@ def flattenEachSampleMap(sMap, bookDic):
 
         #vis exceptions
         VIS_limit=4
-        if bookDic[sMap.getName()].has_key("VIS"):
+        if bookDic.has_key(sMap.getName()) and bookDic[sMap.getName()].has_key("VIS"):
             VIS_limit= bookDic[sMap.getName()]["VIS"]
         finalClinFeature.fillInPriorityVisibility(VIS_limit)
         
@@ -450,7 +451,7 @@ def cpGenomicEachSample(REALRUN, outDir, bookDic, sMap):
 def badListSelfAndDescendants (sMap, bookDic):
     #code to remove blacklist samples and all its descendants
     badList=[]
-    if bookDic[sMap.getName()].has_key("blacklist"):
+    if bookDic.has_key(sMap.getName()) and bookDic[sMap.getName()].has_key("blacklist"):
         badSamples = bookDic[sMap.getName()]["blacklist"]
         badList= badSamples[:]
         for badSample in badSamples:

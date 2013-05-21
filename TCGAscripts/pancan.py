@@ -10,11 +10,11 @@ def pancan_DNAmethyl (dir, outDir, cancer,log, REALRUN):
     #print status
     print cancer, sys._getframe().f_code.co_name
 
-    featureName="_PANCAN_DNAMethyl_PANCAN_C18"
+    featureName="_PANCAN_DNAMethyl_PANCAN"
     shortTitle="PANCAN DNA methylation"
-    longTitle="_PANCAN DNA methylation subtype k=18 (syn1807207)"
-    maxSubtype=18
-    dataProducer="https://www.synapse.org/#!Synapse:syn1807207"
+    longTitle="_PANCAN DNA methylation subtype k=19 (syn1875816)"
+    maxSubtype=19
+    dataProducer="https://www.synapse.org/#!Synapse:1875816"
     
     pancan_subtype (dir, outDir, cancer,log, REALRUN, featureName,dataProducer, shortTitle, longTitle, maxSubtype)
 
@@ -22,13 +22,23 @@ def pancan_icluster (dir, outDir, cancer,log, REALRUN):
     #print status
     print cancer, sys._getframe().f_code.co_name
 
-    featureName="_PANCAN_icluster_PANCAN_K25"
+    featureName="_PANCAN_icluster_PANCAN_K28"
     shortTitle="PANCAN iCluster"
-    longTitle="_PANCAN iCluster subtype k=25 (syn1729611)"
+    longTitle="_PANCAN iCluster subtype k=28 (syn1869809)"
     maxSubtype=25
-    dataProducer="https://www.synapse.org/#!Synapse:syn1729611"
+    dataProducer="https://www.synapse.org/#!Synapse:syn1869809"
     
-    pancan_subtype (dir, outDir, cancer,log, REALRUN, featureName,dataProducer, shortTitle, longTitle, maxSubtype)
+    filepath= dir
+    code=None
+    if os.path.exists(filepath+".json"):
+        fin = open(filepath+".json",'r')
+        J = json.loads(fin.read())
+        if J.has_key("code"):
+            code= J["code"]
+        if J.has_key("stateOrder"):
+            maxSubtype = J["stateOrder"]
+        fin.close()
+    pancan_subtype (dir, outDir, cancer,log, REALRUN, featureName,dataProducer, shortTitle, longTitle, maxSubtype , code)
 
 def pancan_PARADIGM (dir, outDir, cancer,log, REALRUN):
     #print status
@@ -36,10 +46,10 @@ def pancan_PARADIGM (dir, outDir, cancer,log, REALRUN):
 
     featureName="_PANCAN_PARADIGM_ConsensusClusters_PANCAN_K12"
     shortTitle="PANCAN PARADIGM"
-    longTitle="_PANCAN PARADIGM subtype k=12 (syn1807620)"
+    longTitle="_PANCAN PARADIGM subtype k=12 (syn1807631)"
     maxSubtype=12
-    dataProducer="https://www.synapse.org/#!Synapse:syn1807620"
-    
+    dataProducer="https://www.synapse.org/#!Synapse:synn1807631"
+
     pancan_subtype (dir, outDir, cancer,log, REALRUN, featureName,dataProducer, shortTitle, longTitle, maxSubtype)
 
 def pancan_UNC_RANseq (dir, outDir, cancer,log, REALRUN):
@@ -51,8 +61,41 @@ def pancan_UNC_RANseq (dir, outDir, cancer,log, REALRUN):
     longTitle="_PANCAN RNAseq subtype k=16 (syn1715753)"
     maxSubtype=16
     dataProducer="https://www.synapse.org/#!Synapse:syn1715753"
-    
-    pancan_subtype (dir, outDir, cancer,log, REALRUN, featureName,dataProducer, shortTitle, longTitle, maxSubtype)
+
+    filepath= dir
+    code=None
+    if os.path.exists(filepath+".json"):
+        fin = open(filepath+".json",'r')
+        J = json.loads(fin.read())
+        if J.has_key("code"):
+            code= J["code"]
+        if J.has_key("stateOrder"):
+            maxSubtype = J["stateOrder"]
+        fin.close()
+    pancan_subtype (dir, outDir, cancer,log, REALRUN, featureName,dataProducer, shortTitle, longTitle, maxSubtype , code)
+
+
+def pancan_cluster_of_cluster (dir, outDir, cancer,log, REALRUN):
+    #print status
+    print cancer, sys._getframe().f_code.co_name
+
+    featureName="_PANCAN_Cluster_Cluster_PANCAN_K16"
+    shortTitle="PANCAN Cluster"
+    longTitle="_PANCAN Cluster of Clusters subtype k=16 (syn1869790)"
+    maxSubtype=16
+    dataProducer="https://www.synapse.org/#!Synapse:syn1869790"
+
+    filepath= dir
+    code=None
+    if os.path.exists(filepath+".json"):
+        fin = open(filepath+".json",'r')
+        J = json.loads(fin.read())
+        if J.has_key("code"):
+            code= J["code"]
+        if J.has_key("stateOrder"):
+            maxSubtype = J["stateOrder"]
+        fin.close()
+    pancan_subtype (dir, outDir, cancer,log, REALRUN, featureName,dataProducer, shortTitle, longTitle, maxSubtype , code)
 
 def pancan_RPPA (dir, outDir, cancer,log, REALRUN):
     #print status
@@ -73,11 +116,19 @@ def  pancan_CNA_named (dir, outDir, cancer,log, REALRUN):
     featureName="_PANCAN_CNA_PANCAN_K8"
     shortTitle="PANCAN CNA"
     longTitle="_PANCAN copy number abnormality subtype named_k8_clusters (syn1712130)"
-    maxSubtype = ["BRCA-LUAD+","COAD-READ","GBM","High","Iq","Kirc+","Quiet","Squamous"]
     dataProducer="https://www.synapse.org/#!Synapse:syn1712130"
     
-    pancan_subtype (dir, outDir, cancer,log, REALRUN, featureName,dataProducer, shortTitle, longTitle, maxSubtype)
-
+    filepath= dir
+    code=None
+    if os.path.exists(filepath+".json"):
+        fin = open(filepath+".json",'r')
+        J = json.loads(fin.read())
+        if J.has_key("code"):
+            code= J["code"]
+        if J.has_key("stateOrder"):
+            maxSubtype = J["stateOrder"]
+        fin.close()
+    pancan_subtype (dir, outDir, cancer,log, REALRUN, featureName,dataProducer, shortTitle, longTitle, maxSubtype,code)
 
 def individual_DNAmethyl (dir, outDir, cancer,log, REALRUN):
     #print status
@@ -100,7 +151,6 @@ def individual_miRNA (dir, outDir, cancer,log, REALRUN):
     longTitle="_"+cancer+" microRNA subtype (syn1688309)"
     dataProducer="https://www.synapse.org/#!Synapse:syn1688309"
     individual_subtype (dir, outDir, cancer,log, REALRUN, featureName,dataProducer, shortTitle, longTitle)
-
 
    
 def individual_subtype (dir, outDir, cancer,log, REALRUN, featureName,dataProducer, shortTitle, longTitle):
@@ -161,7 +211,7 @@ def individual_subtype (dir, outDir, cancer,log, REALRUN, featureName,dataProduc
     return
 
 
-def pancan_subtype (dir, outDir, cancer,log, REALRUN, featureName,dataProducer, shortTitle, longTitle,maxSubtype):
+def pancan_subtype (dir, outDir, cancer,log, REALRUN, featureName,dataProducer, shortTitle, longTitle,maxSubtype, dic=None):
     filepath=dir
     if not os.path.exists(filepath) or not os.access(filepath,os.R_OK):
         return
@@ -176,7 +226,12 @@ def pancan_subtype (dir, outDir, cancer,log, REALRUN, featureName,dataProducer, 
         #data
         fin= open(filepath,'r')
         fin.readline()
-        fout.write(fin.read())
+        if dic ==None:
+            fout.write(fin.read())
+        else:
+            for line in fin.readlines():
+                id,cluster= string.split(string.strip(line),"\t")
+                fout.write(id+"\t"+dic[cluster]+"\n")
         fout.close()
         fin.close()
 

@@ -208,6 +208,8 @@ def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN,  originCancer,REAL
                             for state in stateOrder:
                                 fout.write(feature+"\tstate\t"+state+"\n")
                             fout.write(feature+"\tstateOrder\t\""+string.join(stateOrder,"\",\"")+"\"\n")
+                        if feature=="sample_type":
+                            fout.write(feature+"\tstateOrderRelax\ttrue\n")
                     if TCGAUtil.featurePriority.has_key(cancer):
                         if TCGAUtil.featurePriority[cancer].has_key(feature):
                             priority= TCGAUtil.featurePriority[cancer][feature]

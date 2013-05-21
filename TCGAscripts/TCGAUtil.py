@@ -171,26 +171,27 @@ featureStateOrder={
     "histological_type":{"LGG":
                          ["Oligodendroglioma","Oligoastrocytoma","Astrocytoma"]},
     "sample_type":{"ALL":
-                   ["Primary Tumor","Primary solid Tumor",
-                   "Primary Blood Derived Cancer - Peripheral Blood",
-                   "Primary Blood Derived Cancer - Bone Marrow",
-                   "Recurrent Tumor",
-                   "Recurrent Solid Tumor",
-                   "Recurrent Blood Derived Cancer - Peripheral Blood",
-                   "Recurrent Blood Derived Cancer - Bone Marrow",
-                   "Additional - New Primary",
-                   "Metastatic",
-                   "Additional Metastatic", 
-                   "Human Tumor Original Cells", 
-                   "Blood Derived Normal",
-                   "Solid Tissue Normal",
-                   "Buccal Cell Normal",
-                   "EBV Immortalized Normal",
-                   "Bone Marrow Normal",
-                   "Cell Lines",
-                   "Primary Xenograft Tissue",
-                   "Cell Line Derived Xenograft Tissue",
-                   "Control Analyte"]},
+                   ["Primary Tumor",
+                    "Primary solid Tumor",
+                    "Primary Blood Derived Cancer - Peripheral Blood",
+                    "Primary Blood Derived Cancer - Bone Marrow",
+                    "Recurrent Tumor",
+                    "Recurrent Solid Tumor",
+                    "Recurrent Blood Derived Cancer - Peripheral Blood",
+                    "Recurrent Blood Derived Cancer - Bone Marrow",
+                    "Additional - New Primary",
+                    "Metastatic",
+                    "Additional Metastatic", 
+                    "Human Tumor Original Cells", 
+                    "Blood Derived Normal",
+                    "Solid Tissue Normal",
+                    "Buccal Cell Normal",
+                    "EBV Immortalized Normal",
+                    "Bone Marrow Normal",
+                    "Cell Lines",
+                    "Primary Xenograft Tissue",
+                    "Cell Line Derived Xenograft Tissue",
+                    "Control Analyte"]},
     "tobacco_smoking_history_indicator":{"LUSC":
                                          ["Lifelong Non-smoker",
                                          "Current reformed smoker for > 15 years",
@@ -225,12 +226,14 @@ featurePriority={
              "CIMP":"4"
              },
     "COADREAD":{"sample_type":"1",
-                "mononucleotide_and_dinucleotide_marker_panel_analysis_status":"2",
-                "histological_type":"3",
+                "cancer_type":"2",
+                "mononucleotide_and_dinucleotide_marker_panel_analysis_status":"3",
                 "CIMP":"4"
                 },
     "CESC": {"sample_type":"1",
-             "neoplasm_histologic_grade":"2"
+             "neoplasm_histologic_grade":"2",
+             "histological_type":"3",
+             "_TIME_TO_EVENT":"4"
              },
     "ESCA": {"sample_type":"1"
              },
@@ -250,7 +253,8 @@ featurePriority={
              "person_neoplasm_cancer_status":"2"
              },
     "KIRC": {"sample_type":"1",
-             "person_neoplasm_cancer_status":"2"
+             "neoplasm_histologic_grade":"2",
+             "person_neoplasm_cancer_status":"3"
              },
     "KIRP": {"sample_type":"1",
              "person_neoplasm_cancer_status":"2"
@@ -311,7 +315,8 @@ featurePriority={
     "THCA": {"sample_type":"1"
              },
     "UCEC": {"sample_type":"1",
-             "mononucleotide_and_dinucleotide_marker_panel_analysis_status":"2"
+             "mononucleotide_and_dinucleotide_marker_panel_analysis_status":"2",
+             "neoplasm_histologic_grade":"3"
              },
     "ACC":{"sample_type":"1"
              },

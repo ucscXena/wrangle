@@ -6,6 +6,7 @@ sys.path.insert(0,"../CGDataNew")
 from ClinicalMatrixNew import *
 from CGDataUtil import *
 from CGDataLib import *
+import  TCGAUtil
 
 def survival (dir,cancer,tag):
     if tag!= cancer:
@@ -252,6 +253,19 @@ def output (dir, finalClinMatrix, survivalMatrix, tag, cancer):
     fout.write("_TIME_TO_EVENT\tlongTitle\t_TIME_TO_EVENT overall survival; =days_to_death (if deceased); =max(days_to_last_known_alive, days_to_last_followup) (if living)\n")
     fout.write("_TIME_TO_EVENT\tvalueType\tfloat\n")
 
+    feature= "_EVENT"
+    if TCGAUtil.featurePriority.has_key(cancer):
+        if TCGAUtil.featurePriority[cancer].has_key(feature):
+            priority= TCGAUtil.featurePriority[cancer][feature]
+            fout.write(feature+"\tpriority\t"+str(priority)+"\n")
+            fout.write(feature+"\tvisibility\ton\n")
+
+    feature= "_TIME_TO_EVENT"
+    if TCGAUtil.featurePriority.has_key(cancer):
+        if TCGAUtil.featurePriority[cancer].has_key(feature):
+            priority= TCGAUtil.featurePriority[cancer][feature]
+            fout.write(feature+"\tpriority\t"+str(priority)+"\n")
+            fout.write(feature+"\tvisibility\ton\n")
 
     fout.write("_RFS_IND\tshortTitle\trecurrent free survival indicator\n")
     fout.write("_RFS_IND\tlongTitle\t_RFS_IND recurrent free survival indicator 1=new tumor; 0=otherwise; derived from days_to_new_tumor_event_after_initial_treatment\n")
@@ -261,6 +275,19 @@ def output (dir, finalClinMatrix, survivalMatrix, tag, cancer):
     fout.write("_RFS\tlongTitle\t_RFS recurrent free survival; =max(days_to_new_tumor_event_after_initial_treatment, days_to_tumor_recurrence) (if event); =overall survival (if no event) \n")
     fout.write("_RFS\tvalueType\tfloat\n")
 
+    feature= "_RFS"
+    if TCGAUtil.featurePriority.has_key(cancer):
+        if TCGAUtil.featurePriority[cancer].has_key(feature):
+            priority= TCGAUtil.featurePriority[cancer][feature]
+            fout.write(feature+"\tpriority\t"+str(priority)+"\n")
+            fout.write(feature+"\tvisibility\ton\n")
+
+    feature= "_RFS_IND"
+    if TCGAUtil.featurePriority.has_key(cancer):
+        if TCGAUtil.featurePriority[cancer].has_key(feature):
+            priority= TCGAUtil.featurePriority[cancer][feature]
+            fout.write(feature+"\tpriority\t"+str(priority)+"\n")
+            fout.write(feature+"\tvisibility\ton\n")
     fout.close()
 
     if tag!=cancer:

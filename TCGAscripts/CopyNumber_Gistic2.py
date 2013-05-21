@@ -103,7 +103,7 @@ def CopyNumber_Gistic2 (inDir, outDir, cancer,flog,REALRUN):
         J["redistribution"]= True
         J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
         J["dataProducer"]= "TCGA FIREHOSE pipeline"        
-        J["url"]= "http://gdac.broadinstitute.org/runs/analyses__"+FHdate[0:4]+"_"+FHdate[4:6]+"_"+FHdate[6:8]+"/data/"+cancer+"/"+FHdate[0:8]+"/gdac.broadinstitute.org_"+cancer+".CopyNumber_Gistic2.Level_4."+FHdate+".0.0.tar.gz"
+        J["url"]= "http://gdac.broadinstitute.org/runs/analyses__"+FHdate[0:4]+"_"+FHdate[4:6]+"_"+FHdate[6:8]+"/data/"+cancer+"/"+FHdate[0:8]+"/"
         J["version"]= datetime.date.today().isoformat()
         J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
                 
