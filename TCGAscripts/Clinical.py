@@ -1,6 +1,7 @@
 import string, os, sys
 import json,datetime
 import csv
+import datetime
 
 PATHPATTERN ="clinical"
 
@@ -40,8 +41,11 @@ def Clinical(inDir, outDir, cancer,flog,PATHPATTERN, REALRUN):
     if REALRUN:
         survival(outDir+cancer+"/", cancer, cancer)
 
-    if cancer in ["COAD","READ"]:
-        deriveCancer="COADREAD"
+    if cancer in ["COAD","READ","LUAD","LUSC"]:
+        if cancer in ["COAD","READ"]:
+            deriveCancer="COADREAD"
+        if cancer in ["LUAD","LUSC"]:
+            deriveCancer="LUNG"
         process(inDir, outDir, dataDir, deriveCancer,flog,PATHPATTERN,  cancer,REALRUN)
         if REALRUN:
             survival(outDir+deriveCancer+"/", deriveCancer, cancer)
@@ -91,6 +95,21 @@ def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN,  originCancer,REAL
                                 if TCGAUtil.featurePriority[cancer].has_key(feature):
                                     priority= TCGAUtil.featurePriority[cancer][feature]
                                     tmpClinFeature.setFeaturePriority(feature, priority)
+                                    tmpClinFeature.setFeatureVisibility(feature, "on")
+                                    
+                            stateOrder=None
+                            if TCGAUtil.featureStateOrder.has_key(feature):
+                                if TCGAUtil.featureStateOrder[feature].has_key(cancer):
+                                    stateOrder = TCGAUtil.featureStateOrder[feature][cancer]
+                                if TCGAUtil.featureStateOrder[feature].has_key("ALL"):
+                                    stateOrder = TCGAUtil.featureStateOrder[feature]["ALL"]
+                                print stateOrder
+                            if stateOrder:
+                                tmpClinFeature.setFeatureValueType(feature,"category")
+                                tmpClinFeature.setFeatureStates(feature,stateOrder)
+                                tmpClinFeature.setFeatureStateOrder(feature,stateOrder)
+                                tmpClinFeature.setFeatureStateOrderRelax(feature,"true")
+
                         fout= open(cFfile,'w')    
                         tmpClinFeature.store(fout)
                         fout.close()
@@ -110,9 +129,11 @@ def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN,  originCancer,REAL
                 os.system("cp .tmp "+infile)
                 print pattern
                 if pattern=="clinical_follow_up":
+                    print file
                     if currentFollowUpV == followUpV:
-                        cleanupFollowUpFile(infile, ".tmp")
-                        os.system("cp .tmp "+infile)
+                        if cancer ==originCancer:
+                            cleanupFollowUpFile(infile, ".tmp")
+                            os.system("cp .tmp "+infile)
                     else:
                         os.system("rm "+infile)
                         print followUpV, currentFollowUpV
@@ -165,7 +186,12 @@ def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN,  originCancer,REAL
                 clinMatrix.replaceValue("[Not Evaluated]","")
                 clinMatrix.replaceValue("[Unknown]","")
                 clinMatrix.replaceValue("[]","")
+                clinMatrix.replaceValue("LUNG","Lung") #stupid BCR
+                clinMatrix.replaceValue("MSS|MSS","MSS") #stupid BCR
 
+                #if cancer != originCancer:
+                #    clinMatrix.addOneColWithSameValue("cohort",originCancer)
+                    
                 oHandle = open(outfile,"w")
                 if pattern =="biospecimen_tumor_sample":
                     clinMatrix.storeSkip1stCol(oHandle, validation=True)
@@ -208,8 +234,9 @@ def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN,  originCancer,REAL
                             for state in stateOrder:
                                 fout.write(feature+"\tstate\t"+state+"\n")
                             fout.write(feature+"\tstateOrder\t\""+string.join(stateOrder,"\",\"")+"\"\n")
-                        if feature=="sample_type":
+                            #if feature=="sample_type":
                             fout.write(feature+"\tstateOrderRelax\ttrue\n")
+                            
                     if TCGAUtil.featurePriority.has_key(cancer):
                         if TCGAUtil.featurePriority[cancer].has_key(feature):
                             priority= TCGAUtil.featurePriority[cancer][feature]
@@ -311,7 +338,16 @@ def cleanGarbage(garbageDirs):
 def cleanupFollowUpFile(infile, outfile):
     fin = open(infile,'U')
     patients={}
-    fin.readline()
+    header =string.split(string.strip(fin.readline()),"\t")
+    col_date_of_form_completion=-1
+    col_days_to_last_followup =-1
+    flagPatientsForSurvival=[]
+    for i in range (0,len(header)):
+        if header[i]=="date_of_form_completion":
+            col_date_of_form_completion=i
+        if header[i]=="days_to_last_followup":
+            col_days_to_last_followup =i
+
     for line in fin.readlines():
         data = string.split(line,'\t')
         sample= data[0]
@@ -322,16 +358,35 @@ def cleanupFollowUpFile(infile, outfile):
         else:
             findex=0
         if not patients.has_key(patient):
-            patients[patient]=findex
-        elif findex > patients[patient]:
-            patients[patient]=findex            
+            patients[patient]=[findex,data]
+        elif findex > patients[patient][0]:
+            #check sanity that the followup data makes sense, if not , set flag
+            if col_date_of_form_completion != -1 and col_days_to_last_followup !=-1:
+                old_date_of_form_completion = patients[patient][1][col_date_of_form_completion]
+                new_date_of_form_completion = data[col_date_of_form_completion]
+                delta_form = days_delta  (old_date_of_form_completion,new_date_of_form_completion)
+                #if delta_form == None:
+                #    flagPatientsForSurvival.append(patient)
+
+                old_days_to_last_followup = patients[patient][1][col_days_to_last_followup]
+                new_days_to_last_followup = data[col_days_to_last_followup]
+
+                try:
+                    delta_followup = int(new_days_to_last_followup) - int(old_days_to_last_followup)
+                    if abs(delta_followup-delta_form) > 365:
+                        #the patient need to be flagged for survival analysis, suspicious dates on followup
+                        flagPatientsForSurvival.append(patient)
+                except:
+                    continue
+            patients[patient]=[findex,data]
+            
     fin.close()
     
     fin = open(infile,'U')
     fout= open(outfile,'w')
-    fout.write(fin.readline())
+    fout.write(string.strip(fin.readline())+"\tFlagForSurvivalAnalysis\n" )
     for line in fin.readlines():
-        data = string.split(line,'\t')
+        data = string.split(string.strip(line),'\t')
         sample= data[0]
         parts= string.split(sample,"-")
         patient = string.join(parts[0:3],"-")
@@ -339,9 +394,33 @@ def cleanupFollowUpFile(infile, outfile):
             findex=int(parts[3][1:])
         else:
             findex=0
-        if findex == patients[patient]:
-            fout.write(patient+"\t"+string.join(data[1:],"\t"))
+        if findex == patients[patient][0]:
+            if patient not in flagPatientsForSurvival:
+                fout.write(patient+"\t"+string.join(data[1:],"\t")+"\t\n")
+            else:
+                fout.write(patient+"\t"+string.join(data[1:],"\t")+"\tFLAG\n")
     fout.close()
+
+def days_delta  (old_date_of_form_completion,new_date_of_form_completion):
+    y,m,d =string.split(old_date_of_form_completion,"-")
+    y = int(y)
+    m = int (m)
+    d=int (d)
+    if d==0:
+        d=1
+
+    dold = datetime.date(y,m,d)
+    
+    y,m,d =string.split(new_date_of_form_completion,"-")
+    y = int(y)
+    m = int (m)
+    d=int (d)
+    if d==0:
+        d=1
+    dnew = datetime.date(y,m,d)
+    
+    days_delta = (dnew-dold).days
+    return days_delta
 
 def uuid_2_barcode (clinMatrix,uuidcol,mapDic,flog): #convert uuid to barcode, if uuid not found, remove the sample
     rows= clinMatrix.getROWs()

@@ -8,7 +8,7 @@ import TCGAUtil
 sys.path.insert(0,"../CGDataNew")
 from CGDataUtil import *
 
-tmpDir = "tmptmp/"
+tmpDir = "tmpTry/"
 
 def CopyNumber_Gistic2 (inDir, outDir, cancer,flog,REALRUN):
     if string.find(string.upper(cancer),"PANCAN")!=-1:

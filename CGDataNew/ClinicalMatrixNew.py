@@ -45,7 +45,7 @@ class ClinicalMatrixNew():
             #fix col
             new_d= col_fix(d)
             if new_d!=d:
-                print "WARNING, feature name is modified", d, "new name:", new_d
+                #print "WARNING, feature name is modified", d, "new name:", new_d
                 # modify ClinF if exist
                 if ClinF:
                     #ClinF.replaceFeatureName(d, new_d)
@@ -299,7 +299,8 @@ class ClinicalMatrixNew():
                     if self.__DATA[sample][col] in ["",None]:
                         self.__DATA[sample][col]=aCMatrix.getDATA(sample,col)
                     else:
-                        print "WARNING use old matrix",sample,col,self.__name,"old:",self.__DATA[sample][col],"new:",aCMatrix.getDATA(sample,col), "choose:", self.__DATA[sample][col]
+                        pass
+                        #print "WARNING use old matrix",sample,col,self.__name,"old:",self.__DATA[sample][col],"new:",aCMatrix.getDATA(sample,col), "choose:", self.__DATA[sample][col]
                         
         # load uniq col aCMatrix data to self
         for sample in aCMatrix.getROWs():

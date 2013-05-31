@@ -199,6 +199,16 @@ class ClinicalFeatureNew():
         self.__DATA[feature]["stateOrder"]= stateOrder
         return True
 
+    def setFeatureStateOrderRelax(self, feature, bvalue):
+        if feature not in self.__FEATUREs:
+            self.__DATA[feature]={}
+        if self.__DATA[feature]["valueType"] not in ["category"]:
+            return False
+        if bvalue not in ["true"]:
+            return False
+        self.__DATA[feature]["stateOrderRelax"]= bvalue
+        return True
+
     def cleanState(self):
         removeF =[]
         for feature in self.__FEATUREs:

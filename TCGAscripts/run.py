@@ -1,44 +1,10 @@
 import sys,os,string, glob
-import httplib
-from urlparse import urljoin, urlparse
-from bs4 import BeautifulSoup
-import base64
 
 print "python run.py configfile logfile"
 print
 
-class OpenHTTP:
-    def __init__(self, user=None, passwd=None):
-        self.handle = None
-        self.server = None
-        self.user = user
-        self.passwd = passwd
-    
-    def urlopen(self, path):
-        u = urlparse(path)
-        if self.handle is None or u.netloc != self.server:
-            self.handle = httplib.HTTPSConnection(u.netloc)        
-        self.handle.putrequest('GET', u.path)
-        if self.user is not None:
-             auth = 'Basic ' + (base64.encodestring(self.user + ':' + self.passwd)).strip()
-             self.handle.putheader('Authorization', auth )
-        self.handle.endheaders()     
-        return self.handle.getresponse()
-
-def FHdate ():
-    fin=open("/data/TCGA/TCGA_login.dat",'r')
-    id,pwd = string.split(string.strip(fin.readline()),":")
-    opener = OpenHTTP(id,pwd)
-    url = "https://tcga-data-secure.nci.nih.gov/tcgafiles/tcga4yeo/other/gdacs/gdacbroad/LATEST_RUN"
-    doc = string.split(opener.urlopen(url).read(),"\n")
-    FHdate=doc[1]
-    if len(FHdate)!=10:
-        sys.stderr.write( "Error: parsing FH last run filed\n" )
-        sys.exit()
-    return FHdate
-
 def FHANAdate():
-    l=string.strip(os.popen("/inside/home/jzhu/tmp/firehose_get -r |grep analyses |tail -n 1").read())
+    l=string.strip(os.popen("/inside/home/jzhu/scripts/firehose_get -r |grep analyses |tail -n 1").read())
     return l[10:]
 
 def FHANAdateVersion():
@@ -57,9 +23,6 @@ for line in fin.readlines():
             k = string.strip(k)
             v = string.strip(v)
         else:
-            if data=="$FIREHOSEDATE_data":
-                k=data
-                v= FHdate()
             if data=="$FIREHOSEDATE_ana":
                 k=data
                 v=FHANAdate()
@@ -96,13 +59,15 @@ for line in fin.readlines():
                 outDir= string.replace(outDir, k, v)
             
         pattern= string.split(inDir,"*")
+
         for dir in glob.glob(inDir):
             cancer =dir
             for p in pattern:
                 cancer =string.replace(cancer,p,"")
             cancer=string.upper(cancer)
-            if cancer not in ["BRCA"]:
-                continue
+
+#            if cancer not in ["LUNG"]:
+#                continue
 
             if run:
                 m = __import__(module)

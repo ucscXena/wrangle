@@ -37,6 +37,7 @@ cancerOfficial={
     "KIRP":"kidney renal papillary cell carcinoma",
     "LIHC":"liver hepatocellular carcinoma",
     "LUAD":"lung adenocarcinoma",
+    "LUNG":"lung cancer",
     "LUSC":"lung squamous cell carcinoma",
     "DLBC":"lymphoid neoplasm diffuse large B-cell lymphoma",
     "LNNH":"lymphoid neoplasm non-Hodgkins lymphoma",
@@ -75,6 +76,7 @@ cancerHumanReadable={
     "KIRP":"Kidney Papillary Cell Carcinoma",
     "LIHC":"Liver Cancer",
     "LUAD":"Lung Adenocarcinoma",
+    "LUNG":"Lung Cancer",
     "LUSC":"Lung Squamous Cell Carcinoma",
     "DLBC":"Large B-cell Lymphoma",
     "LNNH":"Non-Hodgkins Lymphoma",
@@ -113,6 +115,7 @@ cancerGroupTitle={
     "KIRP":"kidney papillary cell carcinoma",
     "LIHC":"liver hepatocellular carcinoma",
     "LUAD":"lung adenocarcinoma",
+    "LUNG":"lung cancer",
     "LUSC":"lung squamous cell carcinoma",
     "DLBC":"diffuse large B-cell lymphoma",
     "LNNH":"non-Hodgkins lymphoma",
@@ -192,19 +195,13 @@ featureStateOrder={
                     "Primary Xenograft Tissue",
                     "Cell Line Derived Xenograft Tissue",
                     "Control Analyte"]},
-    "tobacco_smoking_history_indicator":{"LUSC":
-                                         ["Lifelong Non-smoker",
-                                         "Current reformed smoker for > 15 years",
-                                         "Current reformed smoker for < or = 15 years",
-                                         "Current smoker"],
-                                         "LUAD":
-                                         ["Lifelong Non-smoker",
-                                         "Current reformed smoker for > 15 years",
-                                         "Current reformed smoker for < or = 15 years",
-                                         "Current smoker"]
+    "tobacco_smoking_history":{"ALL":["Lifelong Non-smoker",
+                                                "Current reformed smoker for > 15 years",
+                                                "Current reformed smoker for < or = 15 years",
+                                                "Current smoker"]
                                          },
-    "vital_status":{"ALL":
-                    ["LIVING","DECEASED"]},
+    "vital_status":{"ALL": ["LIVING","DECEASED"]},
+    "mononucleotide_and_dinucleotide_marker_panel_analysis_status": {"ALL": [ "MSI-H", "MSI-L", "Indeterminate","MSS"]},
     "":""
     }
 
@@ -226,7 +223,7 @@ featurePriority={
              "CIMP":"4"
              },
     "COADREAD":{"sample_type":"1",
-                "cancer_type":"2",
+                "cohort":"2",
                 "mononucleotide_and_dinucleotide_marker_panel_analysis_status":"3",
                 "CIMP":"4"
                 },
@@ -242,7 +239,7 @@ featurePriority={
     "GBM":  {"sample_type":"1",
              "GeneExp_Subtype":"2",
              "G_CIMP_STATUS":"3",
-             "_PANCAN_DNAMethyl_PANCAN_C18":"4"
+             "_PANCAN_DNAMethyl_PANCAN":"4"
              },
     "HNSC": {"sample_type":"1",
              "hpv_status_by_p16_testing":"2",
@@ -277,12 +274,17 @@ featurePriority={
              "Expression_Subtype":"2",
              "EGFR":"3",
              "KRAS":"4",
-             "tobacco_smoking_history_indicator":"5"
+             "tobacco_smoking_history":"5"
+             },
+    "LUNG": {"sample_type":"1",
+             "cohort":"2",
+             "_PANCAN_UNC_RNAseq_PANCAN_K16":"3",
+             "_PANCAN_DNAMethyl_PANCAN":"4"
              },
     "LUSC": {"sample_type":"1",
-             "_PANCAN_icluster_PANCAN_K25":"2",
-             "_PANCAN_DNAMethyl_PANCAN_C18":"3",
-             "_PANCAN_UNC_RNAseq_PANCAN_K16":"4"
+             "_PANCAN_UNC_RNAseq_PANCAN_K16":"2",
+             "_PANCAN_DNAMethyl_PANCAN":"3",
+             "tobacco_smoking_history":"4"
              },
     "KICH": {"sample_type":"1"
              },
@@ -310,7 +312,8 @@ featurePriority={
              "gender":"2"
              },
     "STAD": {"sample_type":"1",
-             "mononucleotide_and_dinucleotide_marker_panel_analysis_status":"2"
+             "mononucleotide_and_dinucleotide_marker_panel_analysis_status":"2",
+             "neoplasm_histologic_grade":"3"
              },
     "THCA": {"sample_type":"1"
              },

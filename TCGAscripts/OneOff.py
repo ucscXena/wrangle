@@ -12,8 +12,12 @@ from CGDataUtil import *
 #/data/TCGA/tcgaDataOneOff/*/
 
 def OneOffClinical(inDir, outDir, cancer,flog,REALRUN):
+    deriveCancer=""
     if cancer in ["COAD","READ"]:
         deriveCancer="COADREAD"
+    if cancer in ["LUAD","LUSC"]:
+        deriveCancer="LUNG"
+    if deriveCancer!="":
         process (inDir,outDir,deriveCancer,flog,PATHPATTERN,cancer)
     process (inDir,outDir,cancer,flog,PATHPATTERN,cancer)
 
@@ -98,8 +102,8 @@ def process (inDir,outDir,cancer,flog,PATHPATTERN,originCancer):
         clinMatrix.replaceValue("[]","")
         clinMatrix.replaceValue("Not Tested","")
 
-        if cancer != originCancer:
-            clinMatrix.addOneColWithSameValue("cancer type",originCancer)
+        #if cancer != originCancer:
+        #    clinMatrix.addOneColWithSameValue("cohort",originCancer)
 
         #json file processing (validation)
         fjson= open(infile+".json","U")

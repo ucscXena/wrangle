@@ -16,13 +16,23 @@ def pancan_DNAmethyl (dir, outDir, cancer,log, REALRUN):
     maxSubtype=19
     dataProducer="https://www.synapse.org/#!Synapse:1875816"
     
-    pancan_subtype (dir, outDir, cancer,log, REALRUN, featureName,dataProducer, shortTitle, longTitle, maxSubtype)
+    filepath= dir
+    code=None
+    if os.path.exists(filepath+".json"):
+        fin = open(filepath+".json",'r')
+        J = json.loads(fin.read())
+        if J.has_key("code"):
+            code= J["code"]
+        if J.has_key("stateOrder"):
+            maxSubtype = J["stateOrder"]
+        fin.close()
+    pancan_subtype (dir, outDir, cancer,log, REALRUN, featureName,dataProducer, shortTitle, longTitle, maxSubtype , code)
 
 def pancan_icluster (dir, outDir, cancer,log, REALRUN):
     #print status
     print cancer, sys._getframe().f_code.co_name
 
-    featureName="_PANCAN_icluster_PANCAN_K28"
+    featureName="_PANCAN_icluster_PANCAN"
     shortTitle="PANCAN iCluster"
     longTitle="_PANCAN iCluster subtype k=28 (syn1869809)"
     maxSubtype=25
@@ -44,10 +54,10 @@ def pancan_mutation (dir, outDir, cancer,log, REALRUN):
     #print status
     print cancer, sys._getframe().f_code.co_name
 
-    featureName="_PANCAN_mutation_PANCAN_K"
+    featureName="_PANCAN_mutation_PANCAN"
     shortTitle="PANCAN mutation"
-    longTitle="_PANCAN mutation subtype k=19 (syn1868708)"
-    maxSubtype=19
+    longTitle="_PANCAN mutation subtype k=14 (syn1868708)"
+    maxSubtype=14
     dataProducer="https://www.synapse.org/#!Synapse:syn1868708"
     
     filepath= dir
@@ -101,11 +111,11 @@ def pancan_cluster_of_cluster (dir, outDir, cancer,log, REALRUN):
     #print status
     print cancer, sys._getframe().f_code.co_name
 
-    featureName="_PANCAN_Cluster_Cluster_PANCAN_K16"
+    featureName="_PANCAN_Cluster_Cluster_PANCAN"
     shortTitle="PANCAN Cluster"
-    longTitle="_PANCAN Cluster of Clusters subtype k=16 (syn1869790)"
-    maxSubtype=16
-    dataProducer="https://www.synapse.org/#!Synapse:syn1869790"
+    longTitle="_PANCAN Cluster of Clusters subtype k=13 (syn1889916)"
+    maxSubtype=13
+    dataProducer="https://www.synapse.org/#!Synapse:syn1889916"
 
     filepath= dir
     code=None
@@ -123,13 +133,23 @@ def pancan_RPPA (dir, outDir, cancer,log, REALRUN):
     #print status
     print cancer, sys._getframe().f_code.co_name
 
-    featureName="_PANCAN_RBN_PANCAN_K8"
+    featureName="_PANCAN_RPPA_PANCAN_K8"
     shortTitle="PANCAN RPPA"
     longTitle="_PANCAN RPPA subtype k=8 (syn1756922)"
     maxSubtype=8
     dataProducer="https://www.synapse.org/#!Synapse:syn1756922"
     
-    pancan_subtype (dir, outDir, cancer,log, REALRUN, featureName,dataProducer, shortTitle, longTitle, maxSubtype)
+    filepath= dir
+    code=None
+    if os.path.exists(filepath+".json"):
+        fin = open(filepath+".json",'r')
+        J = json.loads(fin.read())
+        if J.has_key("code"):
+            code= J["code"]
+        if J.has_key("stateOrder"):
+            maxSubtype = J["stateOrder"]
+        fin.close()
+    pancan_subtype (dir, outDir, cancer,log, REALRUN, featureName,dataProducer, shortTitle, longTitle, maxSubtype , code)
 
 def  pancan_CNA_named (dir, outDir, cancer,log, REALRUN):
     #print status
@@ -241,7 +261,6 @@ def pancan_subtype (dir, outDir, cancer,log, REALRUN, featureName,dataProducer, 
     for cancerDir in os.listdir(outDir):
         outfile = featureName
         fout= open(outDir+cancerDir+"/"+outfile,'w')
-
         #header
         fout.write("sample\t"+featureName+"\n")
         
@@ -297,9 +316,9 @@ def pancan_subtype (dir, outDir, cancer,log, REALRUN, featureName,dataProducer, 
         else:
             pass
 
-        if TCGAUtil.featurePriority.has_key(cancer):
-            if TCGAUtil.featurePriority[cancer].has_key(featureName):
-                priority= TCGAUtil.featurePriority[cancer][featureName]
+        if TCGAUtil.featurePriority.has_key(cancerDir):
+            if TCGAUtil.featurePriority[cancerDir].has_key(featureName):
+                priority= TCGAUtil.featurePriority[cancerDir][featureName]
                 fout.write(featureName+"\tpriority\t"+str(priority)+"\n")
                 fout.write(featureName+"\tvisibility\ton\n")
                 

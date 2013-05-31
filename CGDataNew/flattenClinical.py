@@ -269,7 +269,10 @@ def flattenEachSampleMap(sMap, bookDic):
     for feature in badFeatures:
         #get short label
         shortTitle = finalClinFeature.getShortTitle(feature)
-        if shortTitle[:19]!="_DEPRECATED_FEATURE":
+        if not shortTitle:
+            print feature,"remove"
+            finalBadFeatures.append(feature)
+        elif shortTitle[:19]!="_DEPRECATED_FEATURE":
             finalBadFeatures.append(feature)
         else:
             print shortTitle,"not remove"

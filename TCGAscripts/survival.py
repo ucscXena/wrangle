@@ -19,7 +19,10 @@ def survival (dir,cancer,tag):
     ignore=0
     bookDic=cgWalk(dir,ignore)
     sampleMaps = collectSampleMaps(bookDic)
+    missingMaps= collectMissingSampleMaps(bookDic)
     allMaps = sampleMaps.keys()
+    allMaps.extend(missingMaps.keys())
+
     if len(allMaps)!=1:
         print "ERROR"
         return 0
@@ -47,6 +50,8 @@ def survival (dir,cancer,tag):
             #get matrix obj
             path = obj['path']
             name = obj['name']
+            if string.find(name,"PANCAN")!=-1:
+                continue
             cMatrix = ClinicalMatrixNew(path,name)
             
             if finalClinMatrix==None:
@@ -125,6 +130,9 @@ def overallSurvival (dir, finalClinMatrix, survivalMatrix, tag, cancer):
                 # bad data no days_to_death for DECEASED
                 continue
         if v=="LIVING":
+            if finalClinMatrix.getDATA(id,"FlagForSurvivalAnalysis") =="FLAG":
+                print id,"FlagForSurvivalAnalysis"
+                continue
             foundL =0
             if foundAlive:
                 d = finalClinMatrix.getDATA(id,"days_to_last_known_alive") 
