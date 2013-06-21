@@ -54,7 +54,7 @@ def mutationMatrix (inDir, outDir, cancer,flog,REALRUN):
     J={}
     #stable
     J["cgDataVersion"]=1
-    J[":dataSubType"]="mutation"
+    J[":dataSubType"]="somaticMutation"
     J["redistribution"]= True
     J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
     J["dataProducer"]= dataProducer

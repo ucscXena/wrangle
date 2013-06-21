@@ -42,18 +42,73 @@ def runFlatten(inDir, outDir,REALRUN, SMAPNAME=None):
                 return 0
             fin.close()
         
-        r = flattenEachSampleMap(sMap,bookDic)
-        if r== False:
-            return 0
-        finalClinicalMatrix,finalClinicalMatrixJSON,finalClinFeature,finalClinFeatureJSON= r
-        if finalClinicalMatrix.getROWnum()!=0:
-            outputEachSampleMapRelated(outDir, bookDic, sMap,
-                                       finalClinicalMatrix,finalClinicalMatrixJSON,
-                                       finalClinFeature,finalClinFeatureJSON,REALRUN)
-            cpGenomicEachSample(REALRUN, outDir, bookDic, sMap)
-
-            cpProbeMaps(REALRUN,outDir,bookDic,sMap)
+        if REALRUN in [0,1]:
+            r = flattenEachSampleMap(sMap,bookDic)
+            if r== False:
+                return 0
+            finalClinicalMatrix,finalClinicalMatrixJSON,finalClinFeature,finalClinFeatureJSON= r
+            if finalClinicalMatrix.getROWnum()!=0:
+                outputEachSampleMapRelated(outDir, bookDic, sMap,
+                                           finalClinicalMatrix,finalClinicalMatrixJSON,
+                                           finalClinFeature,finalClinFeatureJSON,REALRUN)
+        if REALRUN == -2:
+            finalClinFeature = flattenForClinicalFeature(sMap, bookDic)
+            outputForClinFeature(outDir,sMap, finalClinFeature)
+            
+        cpGenomicEachSample(REALRUN, outDir, bookDic, sMap)
+        cpProbeMaps(REALRUN,outDir,bookDic,sMap)
+            
     return 1
+
+def flattenForClinicalFeature(sMap, bookDic):
+    clinFeatures=[]
+    finalClinFeature=None
+    sampleMap = sMap.getName()
+    datasets = collectNamesBelongToSampleMap(bookDic, sampleMap)
+    for name in datasets:  
+        obj= bookDic[name]
+        if obj['type']=="clinicalMatrix":
+            clinFeature=None
+            #clinFeature obj
+            if obj.has_key(':clinicalFeature'):
+                path=  bookDic[obj[':clinicalFeature']]['path']
+                neme = bookDic[obj[':clinicalFeature']]['name']
+                clinFeature = ClinicalFeatureNew(path, name)
+
+            #get matrix obj
+            path = obj['path']
+            name = obj['name']
+            cMatrix = ClinicalMatrixNew(path,name,False, clinFeature)
+
+            if clinFeature:
+                clinFeatures.append(clinFeature)
+
+    fout = open(".tmp",'w')
+    fout.close()
+    for clinF in clinFeatures:
+        fout = open(".tmptmp",'w')
+        clinF.store(fout)
+        fout.close()
+        os.system("cat .tmptmp >> .tmp")
+    fin = open(".tmp",'r')
+    jsonName=  trackName_fix(sampleMapBaseName(sMap)+"_clinicalFeature")
+    finalClinFeature =ClinicalFeatureNew(fin,jsonName)
+    if not finalClinFeature.isValid():
+        print "final clinFeature file .tmp is invalid"
+        return 0
+    fin.close()
+
+    #vis exceptions
+    VIS_limit=4
+    if bookDic.has_key(sMap.getName()) and bookDic[sMap.getName()].has_key("VIS"):
+        VIS_limit= bookDic[sMap.getName()]["VIS"]
+    finalClinFeature.fillInPriorityVisibility(VIS_limit)
+    finalClinFeature.setFeatureShortTitle("_PATIENT","_PATIENT_ID")
+    finalClinFeature.setFeatureLongTitle("_PATIENT","_PATIENT_ID")
+    finalClinFeature.setFeatureShortTitle("_INTEGRATION","_SAMPLE_ID")
+    finalClinFeature.setFeatureLongTitle("_INTEGRATION","_SAMPLE_ID")
+    return finalClinFeature
+
 
 def flattenEachSampleMap(sMap, bookDic):
     sampleMap = sMap.getName()
@@ -88,13 +143,27 @@ def flattenEachSampleMap(sMap, bookDic):
                 datasetsOrdered.append(name)
             elif not obj.has_key('outOfDate') and  not obj.has_key('upToDate'):
                 datasetsOrdered.insert(0,name)
+                
+    upToDateSets={}
+    for name in datasets:  
+        obj= bookDic[name]
+        if obj['type']=="clinicalMatrix":
+            if obj.has_key('upToDate') :
+                upToDateSets[obj['upToDate']]=name
+    keys= upToDateSets.keys()
+    keys.sort()
+    for version in keys:
+        name = upToDateSets [version]
+        datasetsOrdered.insert(0,name)
 
+    """
     for name in datasets:  
         obj= bookDic[name]
         if obj['type']=="clinicalMatrix":
             if obj.has_key('upToDate') and obj['upToDate'] in ["yes", "Yes","YES"]:
                 datasetsOrdered.insert(0,name)
-
+    """
+            
     for name in datasetsOrdered:  
         obj= bookDic[name]
         if obj['type']=="clinicalMatrix":
@@ -336,10 +405,19 @@ def flattenEachSampleMap(sMap, bookDic):
     print sampleMap,finalClinMatrix.getROWnum()
     return finalClinMatrix,finalClinMatrixJSON, finalClinFeature, finalClinFeatureJSON
 
-
+def outputForClinFeature(outDir,sMap, finalClinFeature):
+    dataPackageDir = outDir + sampleMapBaseName(sMap)
+    #output clinicalFeature data by concatenation
+    targetfile = dataPackageDir+"/"+sampleMapBaseName(sMap)+"_clinicalFeature"
+    fout = open(targetfile,'w')
+    finalClinFeature.store(fout)
+    fout.close()
+        
 def outputEachSampleMapRelated(outDir, bookDic, sMap,
                                finalClinMatrix,finalClinMatrixJSON,
                                finalClinFeature,finalClinFeatureJSON,REALRUN):
+    if REALRUN ==-1:
+        return
     sampleMap = sMap.getName()
     if not os.path.exists( outDir ):
         os.makedirs( outDir )
@@ -395,6 +473,9 @@ def outputEachSampleMapRelated(outDir, bookDic, sMap,
         fout.close()
 
 def cpGenomicEachSample(REALRUN, outDir, bookDic, sMap):
+    if REALRUN==-2:
+        return
+    
     dataPackageDir = outDir + sampleMapBaseName(sMap)
     for name in  collectNamesBelongToSampleMap(bookDic, sMap.getName()):    
         J = bookDic[name]
@@ -420,6 +501,9 @@ def cpGenomicEachSample(REALRUN, outDir, bookDic, sMap):
             oHandle.write( json.dumps( J, indent=-1 ) )
             oHandle.close()
 
+            if REALRUN ==-1:
+                continue
+            
             if REALRUN:
                 #code to remove blacklist samples and all its descendants
                 badList= badListSelfAndDescendants (sMap, bookDic)
@@ -465,6 +549,9 @@ def badListSelfAndDescendants (sMap, bookDic):
     return badList
     
 def cpProbeMaps(REALRUN,outDir,bookDic, sMap):
+    if REALRUN in [-1,-2]:
+        return
+    
     dataPackageDir = outDir + sampleMapBaseName(sMap)
     for name in collectProbeMapBelongToSampleMap(bookDic, sMap.getName()):
         J = bookDic[name]

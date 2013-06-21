@@ -8,13 +8,9 @@ from CGDataUtil import *
 from CGDataLib import *
 import  TCGAUtil
 
-def survival (dir,cancer,tag):
-    if tag!= cancer:
-        os.system("rm "+dir+"clinical_survival_"+tag)
-        os.system("rm "+dir+"clinical_survival_"+tag+".json")
-    else:
-        os.system("rm "+dir+"clinical_survival")
-        os.system("rm "+dir+"clinical_survival.json")
+def survival (dir,cancer):
+    os.system("rm "+dir+"clinical_survival")
+    os.system("rm "+dir+"clinical_survival.json")
         
     ignore=0
     bookDic=cgWalk(dir,ignore)
@@ -38,13 +34,19 @@ def survival (dir,cancer,tag):
             elif not obj.has_key('outOfDate') and  not obj.has_key('upToDate'):
                 datasetsOrdered.insert(0,name)
                 
+    upToDateSets={}
     for name in datasets:  
         obj= bookDic[name]
         if obj['type']=="clinicalMatrix":
-            if obj.has_key('upToDate') and obj['upToDate'] in ["yes", "Yes","YES"]:
-                datasetsOrdered.insert(0,name)
+            if obj.has_key('upToDate') :
+                upToDateSets[obj['upToDate']]=name
+    keys= upToDateSets.keys()
+    keys.sort()
+    for version in keys:
+        name = upToDateSets [version]
+        datasetsOrdered.insert(0,name)
 
-    for name in datasetsOrdered:  
+    for name in datasetsOrdered:
         obj= bookDic[name]
         if obj['type']=="clinicalMatrix":
             #get matrix obj
@@ -64,17 +66,14 @@ def survival (dir,cancer,tag):
                     print "Fail to merge"
                     return False
 
-    if tag!=cancer:
-        survivalMatrix= ClinicalMatrixNew(None,"clinical_"+cancer+"_survival_"+tag)
-    else:
-        survivalMatrix= ClinicalMatrixNew(None,"clinical_"+cancer+"_survival")
+    survivalMatrix= ClinicalMatrixNew(None,"clinical_"+cancer+"_survival")
 
-    rO= overallSurvival (dir, finalClinMatrix, survivalMatrix, tag, cancer)
-    rR = RFS (dir, finalClinMatrix, survivalMatrix, tag, cancer)
+    rO= overallSurvival (dir, finalClinMatrix, survivalMatrix, cancer)
+    rR = RFS (dir, finalClinMatrix, survivalMatrix, cancer)
     if rO or rR:
-        output (dir, finalClinMatrix,survivalMatrix, tag, cancer)
+        output (dir, finalClinMatrix,survivalMatrix, cancer)
     
-def overallSurvival (dir, finalClinMatrix, survivalMatrix, tag, cancer):
+def overallSurvival (dir, finalClinMatrix, survivalMatrix, cancer):
     cols = finalClinMatrix.getCOLs()
     found =0
     for col in cols:
@@ -156,7 +155,7 @@ def overallSurvival (dir, finalClinMatrix, survivalMatrix, tag, cancer):
                 #survivalMatrix.setDATA(id,"_OVERALL_SURVIVAL",foundL)
     return 1
 
-def RFS  (dir, finalClinMatrix, survivalMatrix, tag, cancer):
+def RFS  (dir, finalClinMatrix, survivalMatrix, cancer):
     cols = finalClinMatrix.getCOLs()
     found=0
     for col in cols:
@@ -173,7 +172,7 @@ def RFS  (dir, finalClinMatrix, survivalMatrix, tag, cancer):
     minGood=0
     for id in finalClinMatrix.getROWs():
         v = finalClinMatrix.getDATA(id, "new_tumor_event_after_initial_treatment")
-        if v=="YES":
+        if v in ["YES","yes","Yes"]:
             foundD=0
             d = finalClinMatrix.getDATA(id,"days_to_new_tumor_event_after_initial_treatment")
             try:
@@ -196,7 +195,7 @@ def RFS  (dir, finalClinMatrix, survivalMatrix, tag, cancer):
                 minGood= minGood+1
                 continue
 
-        elif v=="NO":
+        elif v in ["NO","no","No"]:
             d = survivalMatrix.getDATA(id,"_TIME_TO_EVENT") 
             try:
                 int(d)
@@ -210,11 +209,8 @@ def RFS  (dir, finalClinMatrix, survivalMatrix, tag, cancer):
     return 1
                 
         
-def output (dir, finalClinMatrix, survivalMatrix, tag, cancer):
-    if tag!=cancer:
-        fout=open(dir+"clinical_survival_"+tag,'w')
-    else:
-        fout=open(dir+"clinical_survival",'w')
+def output (dir, finalClinMatrix, survivalMatrix, cancer):
+    fout=open(dir+"clinical_survival",'w')
     survivalMatrix.store(fout,True)
     fout.close()
 
@@ -238,23 +234,11 @@ def output (dir, finalClinMatrix, survivalMatrix, tag, cancer):
     J[":clinicalFeature"] = cFJ["name"]
 
     #clinicalFeature
-    if tag!=cancer:
-        cFfile =dir+"clinical_survival_clinicalFeature_"+tag
-    else:
-        cFfile =dir+"clinical_survival_clinicalFeature"
+    cFfile =dir+"clinical_survival_clinicalFeature"
     fout = open(cFfile,"w")
-    """
-    fout.write("_OVERALL_SURVIVAL_IND\tshortTitle\toverall survivial indicator\n")
-    fout.write("_OVERALL_SURVIVAL_IND\tlongTitle\t_OS_IND overall survivial indicator 0=censor (no_event) 1=event; derived from vital_status\n")
-    fout.write("_OVERALL_SURVIVAL_IND\tvalueType\tcategory\n")
-
-    fout.write("_OVERALL_SURVIVAL\tshortTitle\tOVERALL SURVIVAL\n")
-    fout.write("_OVERALL_SURVIVAL\tlongTitle\t_OS overall survival; =days_to_death (if deceased); =max(days_to_last_known_alive,days_to_last_followup) (if living)\n")
-    fout.write("_OVERALL_SURVIVAL\tvalueType\tfloat\n")
-    """
     
-    fout.write("_EVENT\tshortTitle\toverall survivial indicator\n")
-    fout.write("_EVENT\tlongTitle\t_EVENT overall survivial indicator 0=censor (no_event) 1=event; derived from vital_status\n")
+    fout.write("_EVENT\tshortTitle\toverall survival indicator\n")
+    fout.write("_EVENT\tlongTitle\t_EVENT overall survival indicator 0=censor (no_event) 1=event; derived from vital_status\n")
     fout.write("_EVENT\tvalueType\tcategory\n")
 
     fout.write("_TIME_TO_EVENT\tshortTitle\tOVERALL SURVIVAL\n")
@@ -275,12 +259,12 @@ def output (dir, finalClinMatrix, survivalMatrix, tag, cancer):
             fout.write(feature+"\tpriority\t"+str(priority)+"\n")
             fout.write(feature+"\tvisibility\ton\n")
 
-    fout.write("_RFS_IND\tshortTitle\trecurrent free survival indicator\n")
-    fout.write("_RFS_IND\tlongTitle\t_RFS_IND recurrent free survival indicator 1=new tumor; 0=otherwise; derived from days_to_new_tumor_event_after_initial_treatment\n")
+    fout.write("_RFS_IND\tshortTitle\trecurrence free survival indicator\n")
+    fout.write("_RFS_IND\tlongTitle\t_RFS_IND recurrence free survival indicator 1=new tumor; 0=otherwise; derived from days_to_new_tumor_event_after_initial_treatment\n")
     fout.write("_RFS_IND\tvalueType\tcategory\n")
 
-    fout.write("_RFS\tshortTitle\tRECURRENT FREE SURVIVAL\n")
-    fout.write("_RFS\tlongTitle\t_RFS recurrent free survival; =max(days_to_new_tumor_event_after_initial_treatment, days_to_tumor_recurrence) (if event); =overall survival (if no event) \n")
+    fout.write("_RFS\tshortTitle\tRECURRENCE FREE SURVIVAL\n")
+    fout.write("_RFS\tlongTitle\t_RFS recurrence free survival; =max(days_to_new_tumor_event_after_initial_treatment, days_to_tumor_recurrence) (if event); =overall survival (if no event) \n")
     fout.write("_RFS\tvalueType\tfloat\n")
 
     feature= "_RFS"
@@ -298,17 +282,11 @@ def output (dir, finalClinMatrix, survivalMatrix, tag, cancer):
             fout.write(feature+"\tvisibility\ton\n")
     fout.close()
 
-    if tag!=cancer:
-        fout=open(dir+"clinical_survival_"+tag+".json",'w')
-    else:
-        fout=open(dir+"clinical_survival.json",'w')
+    fout=open(dir+"clinical_survival.json",'w')
     fout.write( json.dumps( J, indent=-1 ) )
     fout.close()
 
-    if tag!=cancer:
-        fout=open(dir+"clinical_survival_clinicalFeature_"+tag+".json",'w')
-    else:
-        fout=open(dir+"clinical_survival_clinicalFeature.json",'w')
+    fout=open(dir+"clinical_survival_clinicalFeature.json",'w')
     fout.write( json.dumps( cFJ, indent=-1 ) )
     fout.close()
 

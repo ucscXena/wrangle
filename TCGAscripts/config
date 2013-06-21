@@ -32,7 +32,7 @@ $FIREHOSEDATE_ana_version
 0	1	RNAseq	illuminahiseq_rnaseq_bcgsc	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/bcgsc.ca/illuminahiseq_rnaseq/rnaseq/	$TMP
 
 0	1	SNP6	SNP6	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/broad.mit.edu/genome_wide_snp_6/snp/	$TMP
-0	1	RPPA	RPPA	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/mdanderson.org/mda_rppa_core/protein_exp/	$TMP
+0	0	RPPA	RPPA	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/mdanderson.org/mda_rppa_core/protein_exp/	$TMP
 
 
 #mutation data
@@ -46,7 +46,7 @@ $FIREHOSEDATE_ana_version
 
 0	1	pancan	pancan_UNC_RANseq	/data/TCGA/tcgaDataOneOff/Clinical/*/UNC_RNAseq_PanCan12.3602-corrected-v3.Subtypes.K16_syn1715753_clean	$TMP
 0	1	pancan	pancan_RPPA	/data/TCGA/tcgaDataOneOff/Clinical/*/PanCan11_RBN_SimpleCluster_syn1756922_clean	$TMP
-0	1	pancan	pancan_CNA_named	/data/TCGA/tcgaDataOneOff/Clinical/*/SCNA_Cluster_table_syn1712130_clean	$TMP
+1	1	pancan	pancan_CNA_named	/data/TCGA/tcgaDataOneOff/Clinical/*/SCNA_Cluster_table_syn1712130_K8_clean	$TMP
 0	1	pancan	pancan_mutation	/data/TCGA/tcgaDataOneOff/Clinical/*/mutation_syn1868708_clean	$TMP
 
 
@@ -62,7 +62,7 @@ $FIREHOSEDATE_ana_version
 0	1	cohort	cohort	/inside/home/jzhu/cgDataJing/scripts/data_flatten/public/TCGA/*	$TMP
 
 #merging LUAD and LUSC
-1	0	Merge	genomic	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
+0	0	Merge	genomic	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
 
 #sampleMap
 0	1	TCGASampleMap	TCGASampleMap	$TMP*/	$TMP

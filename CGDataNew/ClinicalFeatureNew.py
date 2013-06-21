@@ -150,12 +150,14 @@ class ClinicalFeatureNew():
     def setFeatureShortTitle(self, feature, shortTitle):
         if feature not in self.__FEATUREs:
             self.__DATA[feature]={}
+            self.__FEATUREs.append(feature)
         self.__DATA[feature]["shortTitle"]= shortTitle
         return True
     
     def setFeatureLongTitle(self, feature, longTitle):
         if feature not in self.__FEATUREs:
             self.__DATA[feature]={}
+            self.__FEATUREs.append(feature)
         self.__DATA[feature]["longTitle"]= longTitle
         return True
 
@@ -174,10 +176,11 @@ class ClinicalFeatureNew():
         return True
     
     def setFeatureValueType(self, feature, valueType):
-        if feature not in self.__FEATUREs:
-            self.__DATA[feature]={}
         if valueType not in ["category","float"]:
             return False
+        if feature not in self.__FEATUREs:
+            self.__DATA[feature]={}
+            self.__FEATUREs.append(feature)
         self.__DATA[feature]["valueType"]= valueType
         return True
 

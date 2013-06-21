@@ -156,7 +156,7 @@ def  pancan_CNA_named (dir, outDir, cancer,log, REALRUN):
     print cancer, sys._getframe().f_code.co_name
 
     featureName="_PANCAN_CNA_PANCAN_K8"
-    shortTitle="PANCAN CNA"
+    shortTitle="PANCAN CNA k=8"
     longTitle="_PANCAN copy number abnormality subtype named_k8_clusters (syn1712130)"
     dataProducer="https://www.synapse.org/#!Synapse:syn1712130"
     

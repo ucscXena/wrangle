@@ -25,7 +25,7 @@ cancerOfficial={
     "BLCA":"bladder urothelial carcinoma",
     "LGG":"brain lower grade glioma",
     "BRCA":"breast invasive carcinoma",
-    "CESC":"cervical/endocervical squamous cell carcinoma",
+    "CESC":"cervical squamous cell carcinoma and endocervical adenocarcinoma",
     "CNTL":"controls",
     "COAD":"colon adenocarcinoma",
     "COADREAD":"colon & rectum adenocarcinoma",
@@ -103,7 +103,7 @@ cancerGroupTitle={
     "BLCA":"bladder urothelial carcinoma",
     "LGG":"brain lower grade glioma",
     "BRCA":"breast invasive carcinoma",
-    "CESC":"cervical and endocervical SCC",
+    "CESC":"cervical & endocervical cancer",
     "CNTL":"controls",
     "COAD":"colon adenocarcinoma",
     "COADREAD":"colon & rectum adenocarcinoma",
@@ -207,8 +207,8 @@ featureStateOrder={
 
 featurePriority={
     "BLCA": {"sample_type":"1",
-             "neoplasm_histologic_grade":"2",
-             "gleason_score":"3",
+             "_PANCAN_UNC_RNAseq_PANCAN_K16":"2",
+             "neoplasm_histologic_grade":"3",
              "gender":"4"
              },
     "BRCA": {"sample_type":"1",

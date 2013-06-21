@@ -3,8 +3,6 @@ import json,datetime
 import csv
 import datetime
 
-PATHPATTERN ="clinical"
-
 import TCGAUtil
 sys.path.insert(0,"../CGDataNew")
 from ClinicalMatrixNew import *
@@ -39,7 +37,7 @@ def Clinical(inDir, outDir, cancer,flog,PATHPATTERN, REALRUN):
 
     process(inDir, outDir, dataDir, cancer,flog,PATHPATTERN, cancer,REALRUN)
     if REALRUN:
-        survival(outDir+cancer+"/", cancer, cancer)
+        survival(outDir+cancer+"/", cancer)
 
     if cancer in ["COAD","READ","LUAD","LUSC"]:
         if cancer in ["COAD","READ"]:
@@ -48,7 +46,7 @@ def Clinical(inDir, outDir, cancer,flog,PATHPATTERN, REALRUN):
             deriveCancer="LUNG"
         process(inDir, outDir, dataDir, deriveCancer,flog,PATHPATTERN,  cancer,REALRUN)
         if REALRUN:
-            survival(outDir+deriveCancer+"/", deriveCancer, cancer)
+            survival(outDir+deriveCancer+"/", deriveCancer)
 
     cleanGarbage(garbage)
     return
@@ -72,13 +70,9 @@ def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN,  originCancer,REAL
                 followUpV =0.0
                 cgFileName = string.replace(file,".txt","")
                 # the follow_up files has -vn.n version number
-                newCgFileName = re.sub(r'_v[1-9]+.[0-9]+','',cgFileName)
-                if newCgFileName != cgFileName:
+                if cgFileName!= re.sub(r'_v[1-9]+.[0-9]+','',cgFileName):
                     followUpV = float(string.split(cgFileName,"_")[3][1:])
-                    if followUpV > currentFollowUpV:
-                        currentFollowUpV = followUpV
-                    
-                cgFileName= newCgFileName
+
                 # the auxillary, biospecimen_tumor_sample file does not start with clin
                 if cgFileName[0:9] != "clinical_":
                     cgFileName="clinical_"+cgFileName
@@ -130,15 +124,9 @@ def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN,  originCancer,REAL
                 print pattern
                 if pattern=="clinical_follow_up":
                     print file
-                    if currentFollowUpV == followUpV:
-                        if cancer ==originCancer:
-                            cleanupFollowUpFile(infile, ".tmp")
-                            os.system("cp .tmp "+infile)
-                    else:
-                        os.system("rm "+infile)
-                        print followUpV, currentFollowUpV
-                        continue
-
+                    if cancer ==originCancer:
+                        cleanupFollowUpFile(infile, ".tmp")
+                        os.system("cp .tmp "+infile)
 
                 #clinicalMatrix
                 if pattern =="biospecimen_tumor_sample":
@@ -265,9 +253,9 @@ def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN,  originCancer,REAL
                         suffix = "clinPatient"+PATHPATTERN
                 if pattern =="clinical_follow_up":
                     if cancer != originCancer:
-                        suffix = "clinFollowup"+PATHPATTERN+originCancer
+                        suffix = cgFileName+originCancer
                     else:
-                        suffix = "clinFollowup"+PATHPATTERN
+                        suffix = cgFileName
                 if pattern =="auxiliary":
                     if cancer != originCancer:
                         suffix = "clinAuxiliary"+PATHPATTERN+originCancer
@@ -298,19 +286,6 @@ def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN,  originCancer,REAL
                 
                 #change cgData 
                 J["name"]="TCGA_"+cancer+"_"+suffix
-                name = trackName_fix(J['name'])
-                if name ==False:
-                    message = "bad object name, need fix otherwise break loader, too long "+J["name"]
-                    print message
-                    flog.write(message+"\n")
-                    return
-                elif not trackName_good(name+"_clinFeat"):
-                    message = "bad object name, need fix otherwise break loader, too long "+J["name"]+"-clinicalFeature"
-                    print message
-                    flog.write(message+"\n")
-                    return
-                else:
-                    J["name"]=name
 
                 cFJ["name"]=J["name"]+"_clinFeat"
                     
@@ -319,7 +294,10 @@ def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN,  originCancer,REAL
                 J[":sampleMap"]="TCGA."+cancer+".sampleMap"
                 J[":clinicalFeature"] = cFJ["name"]
                 if pattern =="clinical_follow_up":
-                    J["upToDate"]="Yes"
+                    if cancer != originCancer:
+                        J["upToDate"]=str(followUpV)+"_"+ originCancer  #"Yes"
+                    else:
+                        J["upToDate"]=str(followUpV)  #"Yes"
                 if pattern =="biospecimen_tumor_sample":
                     J["outOfDate"]="Yes"
                 oHandle.write( json.dumps( J, indent=-1 ) )
@@ -341,13 +319,16 @@ def cleanupFollowUpFile(infile, outfile):
     header =string.split(string.strip(fin.readline()),"\t")
     col_date_of_form_completion=-1
     col_days_to_last_followup =-1
+    col_days_to_new_tumor_event_after_initial_treatment =-1
     flagPatientsForSurvival=[]
     for i in range (0,len(header)):
         if header[i]=="date_of_form_completion":
             col_date_of_form_completion=i
         if header[i]=="days_to_last_followup":
             col_days_to_last_followup =i
-
+        if header[i]=="days_to_new_tumor_event_after_initial_treatment":
+            col_days_to_new_tumor_event_after_initial_treatment=i
+            
     for line in fin.readlines():
         data = string.split(line,'\t')
         sample= data[0]
@@ -365,8 +346,6 @@ def cleanupFollowUpFile(infile, outfile):
                 old_date_of_form_completion = patients[patient][1][col_date_of_form_completion]
                 new_date_of_form_completion = data[col_date_of_form_completion]
                 delta_form = days_delta  (old_date_of_form_completion,new_date_of_form_completion)
-                #if delta_form == None:
-                #    flagPatientsForSurvival.append(patient)
 
                 old_days_to_last_followup = patients[patient][1][col_days_to_last_followup]
                 new_days_to_last_followup = data[col_days_to_last_followup]
@@ -377,8 +356,31 @@ def cleanupFollowUpFile(infile, outfile):
                         #the patient need to be flagged for survival analysis, suspicious dates on followup
                         flagPatientsForSurvival.append(patient)
                 except:
+                    pass #contiue
+
+            if col_days_to_new_tumor_event_after_initial_treatment !=-1:
+                old_days_to_new_tumor_event_after_initial_treatment = patients[patient][1][col_days_to_new_tumor_event_after_initial_treatment]
+                new_days_to_new_tumor_event_after_initial_treatment = data[col_days_to_new_tumor_event_after_initial_treatment]
+                try:
+                    old_days_to_new_tumor_event_after_initial_treatment = int(old_days_to_new_tumor_event_after_initial_treatment)
+                except:
+                    patients[patient]=[findex,data]
                     continue
-            patients[patient]=[findex,data]
+
+                try:
+                    print old_days_to_new_tumor_event_after_initial_treatment, new_days_to_new_tumor_event_after_initial_treatment
+                    new_days_to_new_tumor_event_after_initial_treatment = int(new_days_to_new_tumor_event_after_initial_treatment)
+                    data[col_days_to_new_tumor_event_after_initial_treatment] = str(min(old_days_to_new_tumor_event_after_initial_treatment,new_days_to_new_tumor_event_after_initial_treatment))
+                    
+                except:
+                    data[col_days_to_new_tumor_event_after_initial_treatment] = str(old_days_to_new_tumor_event_after_initial_treatment)
+                print data[col_days_to_new_tumor_event_after_initial_treatment]
+                patients[patient]=[findex,data]
+                continue
+            else:
+                print "ERROR in col_days_to_new_tumor_event_after_initial_treatment"
+                sys.exit()
+
             
     fin.close()
     
