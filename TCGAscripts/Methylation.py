@@ -153,13 +153,22 @@ def humanmethylation (inDir, outDir, cancer,flog,PATHPATTERN,BETAOFFSET,REALRUN)
     J={}
     #stable
     suffix=PATHPATTERN
+    
     J["cgDataVersion"]=1
     if suffix =="HumanMethylation27":
         J["shortTitle"]="DNA Methylation (Methylation27)"
         namesuffix="hMethyl27"
+        
     if suffix =="HumanMethylation450":
         J["shortTitle"]="DNA Methylation (Methylation450)"
         namesuffix="hMethyl450" 
+
+    J["anatomical_origin"]= TCGA.anatomical_origin[cancer]
+    J["sample_type"]="tumor"
+    J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
+    J["cohort"] ="TCGA_"+cancer
+    J["label"]= cancer +" "+J["shortTitle"]
+
     J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") DNA methylation ("+suffix+")"
     J[":dataSubType"]="DNAMethylation"
     J["redistribution"]= True

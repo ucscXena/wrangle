@@ -333,7 +333,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     oHandle = open(outDir+cancer+"/"+cgFileName+".json","w")
     
     J={}
-    #stable
+    #stable    
     J["cgDataVersion"]=1
     J[":dataSubType"]="geneExp"
     J["redistribution"]= True
@@ -360,6 +360,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     J["description"]=""
     if string.find(namesuffix, "exon")==-1:
         J[":probeMap"]= "hugo"
+
         if cancer != "OV":
             J["shortTitle"]="Gene Expression ("+suffix+")"
             J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression ("+suffix+")"
@@ -377,6 +378,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
                           " Level 3 interpreted level data was downloaded from TCGA data coordination center. This dataset shows the gene-level transcription estimates, "
     else:
         J[":probeMap"]= "unc_RNAseq_exon"
+
         J["shortTitle"]="Exon Expression ("+suffix+")"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") exon expression ("+suffix+")"
         J["description"]= J["description"] +"The dataset shows TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") exon expression."+ \
@@ -405,7 +407,14 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     J["description"] = J["description"] +\
                        "<br><br>In order to more easily view the differential expression between samples, we set the default view to center each gene or exon to zero by independently subtracting the mean of the genomic location on the fly. Users can view the original non-normalized values by uncheck the \"Normalize\" option. For more information on how to use the cancer browser, please refer to the help page."
     J["description"] = J["description"] +"<br><br>"+TCGAUtil.clinDataDesc
-    
+
+
+    J["anatomical_origin"]= TCGA.anatomical_origin[cancer]
+    J["sample_type"]="tumor"
+    J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
+    J["cohort"] ="TCGA_"+cancer
+    J["label"]= cancer +" "+J["shortTitle"]
+
     #change cgData
     J["name"]="TCGA_"+cancer+"_exp_"+namesuffix
     name = trackName_fix(J['name'])

@@ -103,6 +103,11 @@ def TCGASampleMap (dir, outDir, cancer,log, REALRUN):
         oHandle = open(outDir+cancer+"/integrationID.json","w")
         J={}
         J['name']=intName
+
+        J["anatomical_origin"]= TCGA.anatomical_origin[cancer]
+        J["sample_type"]="tumor"
+        J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
+
         J["cgDataVersion"]=1
         J['type']="integrationId"
         J["version"]= datetime.date.today().isoformat()

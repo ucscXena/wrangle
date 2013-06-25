@@ -95,7 +95,46 @@ cancerHumanReadable={
     "MESO":"Mesothelioma",
     "MISC":"Miscellaneous",
     "PCPG":"Pheochromocytoma & Paraganglioma",
-    "UCS":"Uterine Cancer"
+    "UCS":"Uterine Sarcoma"
+    }
+
+anatomical_origin ={
+    "LAML":"Blood",
+    "BLCA":"Bladder",
+    "LGG":"Brain",
+    "BRCA":"Breast",
+    "CESC":"Cervix",
+    "CNTL":"",
+    "COAD":"Colon",
+    "COADREAD":"Colon and Rectum",
+    "ESCA":"Esophagus",
+    "GBM":"Brain",
+    "HNSC":"Head and Neck region",
+    "KICH":"Kidney",
+    "KIRC":"Kidney",
+    "KIRP":"Kidney",
+    "LIHC":"Liver",
+    "LUAD":"Lung",
+    "LUNG":"Lung",
+    "LUSC":"Lung",
+    "DLBC":"Blood",
+    "LNNH":"Blood",
+    "OV":"Ovary",
+    "PAAD":"Pancreas",
+    "PRAD":"Prostate",
+    "READ":"Rectum",
+    "SARC":"Soft tissue, Bone",
+    "SKCM":"Skin",
+    "STAD":"Stomach",
+    "THCA":"Thyroid Gland",
+    "UCEC":"Uterus",
+    "ACC":"Adrenal gland",
+    "LCLL":"Blood",
+    "LCML":"Blood",
+    "MESO":"Lining of body cavities",
+    "MISC":"",
+    "PCPG":"Paraganglia",
+    "UCS":"Uterine"
     }
 
 cancerGroupTitle={
@@ -134,7 +173,7 @@ cancerGroupTitle={
     "MESO":"mesothelioma",
     "MISC":"miscellaneous",
     "PCPG":"pheochromocytoma & paraganglioma",
-    "UCS":"uterine Cancer"
+    "UCS":"uterine sarcoma"
     }
 
 TCGASampleType={
@@ -315,11 +354,15 @@ featurePriority={
              "mononucleotide_and_dinucleotide_marker_panel_analysis_status":"2",
              "neoplasm_histologic_grade":"3"
              },
-    "THCA": {"sample_type":"1"
+    "THCA": {"sample_type":"1",
+             "pathologic_stage":"2",
+             "histological_type":"3",
+             "gender":"4"
              },
     "UCEC": {"sample_type":"1",
-             "mononucleotide_and_dinucleotide_marker_panel_analysis_status":"2",
-             "neoplasm_histologic_grade":"3"
+             "histological_type":"2",
+             "mononucleotide_and_dinucleotide_marker_panel_analysis_status":"3",
+             "neoplasm_histologic_grade":"4"
              },
     "ACC":{"sample_type":"1"
              },

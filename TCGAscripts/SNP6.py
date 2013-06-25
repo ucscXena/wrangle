@@ -255,6 +255,12 @@ def makeJSON(oHandle,cancer,lastMageTab,inDir,noCNV,type):
     J["version"]= datetime.date.today().isoformat()
     J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
                 
+    J["anatomical_origin"]= TCGA.anatomical_origin[cancer]
+    J["sample_type"]="tumor"
+    J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
+    J["cohort"] ="TCGA_"+cancer
+    J["label"]= cancer +" "+J["shortTitle"]
+    
     #change description
     J["gain"]=1
     J["PLATFORM"]= "SNP6"

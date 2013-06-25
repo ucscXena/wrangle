@@ -95,7 +95,8 @@ def CopyNumber_Gistic2 (inDir, outDir, cancer,flog,REALRUN):
         if pattern=="focal_data_by_genes":
             suffix="gistic2_focal"
             namesuffix="gistic2foc"
-            
+
+        
         J["cgDataVersion"]=1
         J["shortTitle"]="Copy Number ("+suffix+")"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") copy number "+suffix+" estimate"
@@ -107,12 +108,18 @@ def CopyNumber_Gistic2 (inDir, outDir, cancer,flog,REALRUN):
         J["version"]= datetime.date.today().isoformat()
         J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
                 
+        J["anatomical_origin"]= TCGA.anatomical_origin[cancer]
+        J["sample_type"]="tumor"
+        J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
+        J["cohort"] ="TCGA_"+cancer
+        J["label"]= cancer +" "+J["shortTitle"]
+
         #change description
         if suffix=="gistic2_thresholded":
             J["gain"]=0.5
         else:
             J["gain"]=0.8
-        J["PLATFORM"]= "Gistic2"
+
         J["wrangling_procedure"]= "FIREHOSE data download from TCGA DCC, processed at UCSC into cgData repository"
                 
         if pattern=="all_data_by_genes":
@@ -121,6 +128,7 @@ def CopyNumber_Gistic2 (inDir, outDir, cancer,flog,REALRUN):
                               " Copy number profile was measured experimentally using whole genome microarray at a TCGA genome characterization center. Subsequently, TCGA FIREHOSE pipeline applied GISTIC2 method to produce segmented CNV data, which was then mapped to genes to produce gene-level estimates."+\
                               " Genes are mapped onto the human genome coordinates using UCSC cgData HUGO probeMap."+\
                               " Reference to GISTIC2 method PMID:21527027."
+
 
         if pattern=="all_thresholded.by_genes":
             J["description"]= "The dataset shows TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+")"\

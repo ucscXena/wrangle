@@ -136,7 +136,13 @@ def Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN):
         J[":dataSubType"]="PARADIGM"
         J["gain"]=1.0
 
-                        
+
+    J["anatomical_origin"]= TCGA.anatomical_origin[cancer]
+    J["sample_type"]="tumor"
+    J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
+    J["cohort"] ="TCGA_"+cancer
+    J["label"]= cancer +" "+J["shortTitle"]
+    
     J["cgDataVersion"]=1
     J["redistribution"]= True
     J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
