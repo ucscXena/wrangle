@@ -156,7 +156,7 @@ def cgDataMergeJSON(J1, J2, name):
         elif J3[key]==J2[key]:
             pass
         else:
-            J3[key] = J3[key]+","+J2[key]
+            J3[key] = str(J3[key])+","+str(J2[key])
 
     J3['name']=name
     return J3
