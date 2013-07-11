@@ -70,13 +70,15 @@ def mutationMatrix (inDir, outDir, cancer,flog,REALRUN):
     J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") somatic mutation"
     J["gain"]=10
 
-    J["anatomical_origin"]= TCGA.anatomical_origin[cancer]
+    J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
     J["sample_type"]="tumor"
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
     J["cohort"] ="TCGA_"+cancer
     J["label"]= cancer +" "+J["shortTitle"]
+    J['domain']="TCGA"
+    J['owner']="TCGA"
     
-    J["description"]= "The dataset shows TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") somatic mutation data. Red color (=1) represents non-silent somatic mutations (nonsense, missense, frame-shift indels, splice site mutations, stop codon readthroughs) are identified in the protein coding region of a gene, and white color (=0) means that none of the above mutation calls are made in this gene for the specific sample. Somatic mutations calls (even on the same tumor DNA extract) are effected by many factors including library prep, sequencing process, reads mapping method, reference genome used, calling algorithms, and ad-hoc pre/postprocessing such as black list genes, target selection regions, and black list samples.  This dataset is the best effort made by the TCGA PANCANER analysis working group.  PANCAN mutation data can be downloade at the url site shown below."
+    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") somatic mutation data. Red color (=1) represents non-silent somatic mutations (nonsense, missense, frame-shift indels, splice site mutations, stop codon readthroughs) are identified in the protein coding region of a gene, and white color (=0) means that none of the above mutation calls are made in this gene for the specific sample.<br><br> Somatic mutations calls (even on the same tumor DNA extract) are effected by many factors including library prep, sequencing process, reads mapping method, reference genome used, calling algorithms, and ad-hoc pre/postprocessing such as black list genes, target selection regions, and black list samples.  This dataset is the best effort made by the TCGA PANCANER analysis working group.  PANCAN mutation data can be downloade at the url site shown below."
     J["description"] = J["description"] +"<br><br>"+TCGAUtil.clinDataDesc
     J["wrangling_procedure"]= "TCGA PANCAN strictly filtered maf files (file names: *_cleaned_filtered.maf) download from Synapse, processed into gene by sample matrix at UCSC into cgData repository"
 

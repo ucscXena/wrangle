@@ -56,7 +56,8 @@ cancerOfficial={
     "MESO":"mesothelioma",
     "MISC":"miscellaneous",
     "PCPG":"pheochromocytoma and paraganglioma",
-    "UCS":"uterine carcinosarcoma"
+    "UCS":"uterine carcinosarcoma",
+    "PANCAN":"pan-cancer"
     }
 
 cancerHumanReadable={
@@ -95,11 +96,12 @@ cancerHumanReadable={
     "MESO":"Mesothelioma",
     "MISC":"Miscellaneous",
     "PCPG":"Pheochromocytoma & Paraganglioma",
-    "UCS":"Uterine Sarcoma"
+    "UCS":"Uterine Carcinosarcoma",
+    "PANCAN":"Pan-Cancer"
     }
 
 anatomical_origin ={
-    "LAML":"Blood",
+    "LAML":"blood",
     "BLCA":"Bladder",
     "LGG":"Brain",
     "BRCA":"Breast",
@@ -117,8 +119,8 @@ anatomical_origin ={
     "LUAD":"Lung",
     "LUNG":"Lung",
     "LUSC":"Lung",
-    "DLBC":"Blood",
-    "LNNH":"Blood",
+    "DLBC":"Lymphatic tissue",
+    "LNNH":"Lymphatic tissue",
     "OV":"Ovary",
     "PAAD":"Pancreas",
     "PRAD":"Prostate",
@@ -134,7 +136,8 @@ anatomical_origin ={
     "MESO":"Lining of body cavities",
     "MISC":"",
     "PCPG":"Paraganglia",
-    "UCS":"Uterine"
+    "UCS":"Uterus",
+    "PANCAN":""
     }
 
 cancerGroupTitle={
@@ -173,7 +176,8 @@ cancerGroupTitle={
     "MESO":"mesothelioma",
     "MISC":"miscellaneous",
     "PCPG":"pheochromocytoma & paraganglioma",
-    "UCS":"uterine sarcoma"
+    "UCS":"uterine carcinosarcoma",
+    "PANCAN":"pan-cancer"
     }
 
 TCGASampleType={
@@ -262,9 +266,9 @@ featurePriority={
              "CIMP":"4"
              },
     "COADREAD":{"sample_type":"1",
-                "cohort":"2",
+                "_PANCAN_DNAMethyl_PANCAN":"2",
                 "mononucleotide_and_dinucleotide_marker_panel_analysis_status":"3",
-                "CIMP":"4"
+                "cohort":"4"
                 },
     "CESC": {"sample_type":"1",
              "neoplasm_histologic_grade":"2",
@@ -338,21 +342,24 @@ featurePriority={
              "psa_value":"4"
              },
     "READ": {"sample_type":"1",
-             "mononucleotide_and_dinucleotide_marker_panel_analysis_status":"2",
-             "histological_type":"3",
-             "CIMP":"4"
+             "histological_type":"2",
+             "_PANCAN_DNAMethyl_PANCAN":"3",
+             "mononucleotide_and_dinucleotide_marker_panel_analysis_status":"4"
              },
     "SARC": {"sample_type":"1",
              "histological_type":"2",
-             "age_at_initial_pathologic_diagnosis":"3",
+             "tumor_tissue_site":"3",
              "gender":"4"
              },
     "SKCM": {"sample_type":"1",
-             "gender":"2"
+             "postoperative_rx_tx":"2",
+             "melanoma_clark_level_value":"3",
+             "gender":"4"
              },
     "STAD": {"sample_type":"1",
              "mononucleotide_and_dinucleotide_marker_panel_analysis_status":"2",
-             "neoplasm_histologic_grade":"3"
+             "neoplasm_histologic_grade":"3",
+             "h_pylori_infection":"4"
              },
     "THCA": {"sample_type":"1",
              "pathologic_stage":"2",

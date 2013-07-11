@@ -104,10 +104,13 @@ def TCGASampleMap (dir, outDir, cancer,log, REALRUN):
         J={}
         J['name']=intName
 
-        J["anatomical_origin"]= TCGA.anatomical_origin[cancer]
+        J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
         J["sample_type"]="tumor"
         J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
-
+        J["cohort"] ="TCGA_"+cancer
+        J['domain']="TCGA"
+        J['owner']="TCGA"
+        
         J["cgDataVersion"]=1
         J['type']="integrationId"
         J["version"]= datetime.date.today().isoformat()
@@ -122,6 +125,13 @@ def TCGASampleMap (dir, outDir, cancer,log, REALRUN):
         J["version"]= datetime.date.today().isoformat()
         J["cgDataVersion"]=1
         J[":integrationId"]=intName
+
+        J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
+        J["sample_type"]="tumor"
+        J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
+        J["cohort"] ="TCGA_"+cancer
+        J['project']="TCGA"
+        J['owner']="TCGA"
 
         #add info for old clinical data
         if os.path.exists( outDir+cancer+"/oldClin.json" ):

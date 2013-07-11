@@ -139,19 +139,21 @@ def AgilentG4502A (inDir, outDir, cancer,flog,PATHPATTERN,REALRUN):
     J["version"]=  datetime.date.today().isoformat()
     J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
 
-    J["anatomical_origin"]= TCGA.anatomical_origin[cancer]
+    J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
     J["sample_type"]="tumor"
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
     J["cohort"] ="TCGA_"+cancer
     J["label"]= cancer +" "+J["shortTitle"]
+    J['domain']="TCGA"
+    J['owner']="TCGA"
     
     #change description
     J["gain"]=1.0
     J["colNormalization"]=True    
     J["PLATFORM"]= suffix
     J["wrangling_procedure"]= "Level_3 Data download from TCGA DCC, processed at UCSC into cgData repository"
-    J["description"]= "The dataset shows TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+")"\
-                      " gene expression data."+ \
+    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+")"\
+                      " gene expression data by agilent array.<br><br>"+ \
                       " The gene expression profile was measured experimentally using Agilent 244K custom gene expression "+string.upper(PATHPATTERN[7:])+" microarrays by the University of North Carolina TCGA genomic characterization center. "+\
                       " Level 3 interpreted level data was downloaded from TCGA data coordination center. This dataset shows the gene level transcription estimates (level 3 data), as in log2 lowess normalized ratio of sample signal to reference signal (cy5/cy3) collapsed by gene."+\
                       " Genes are mapped onto the human genome coordinates using UCSC cgData HUGO probeMap."+\

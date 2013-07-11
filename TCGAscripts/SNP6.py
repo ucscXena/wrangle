@@ -255,11 +255,13 @@ def makeJSON(oHandle,cancer,lastMageTab,inDir,noCNV,type):
     J["version"]= datetime.date.today().isoformat()
     J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
                 
-    J["anatomical_origin"]= TCGA.anatomical_origin[cancer]
+    J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
     J["sample_type"]="tumor"
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
     J["cohort"] ="TCGA_"+cancer
     J["label"]= cancer +" "+J["shortTitle"]
+    J['domain']="TCGA"
+    J['owner']="TCGA"
     
     #change description
     J["gain"]=1
@@ -267,9 +269,9 @@ def makeJSON(oHandle,cancer,lastMageTab,inDir,noCNV,type):
     J["wrangling_procedure"]= "Level_3 data download from TCGA DCC, processed at UCSC into cgData repository"
 
     if noCNV:
-        J["description"]= "The dataset shows TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") segmented copy number variation profile after removing common germline copy number variation."
+        J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") segmented copy number variation profile after removing common germline copy number variation.<br><br>"
     else:
-        J["description"]= "The dataset shows TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") segmented copy number variation profile."
+        J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") segmented copy number variation profile.<br><br>"
     J["description"]=J["description"]+" Copy number profile was measured experimentally using the Affymetrix Genome-Wide Human SNP Array 6.0 platform at the Broad TCGA genome characterization center. Raw copy numbers were estimated at each of the SNP and copy-number markers. <a href=\"http://www.ncbi.nlm.nih.gov/pubmed/15475419\" target=\"_blank\"><u>Circular binary segmentation</u></a> was then used to segment the copy number data. Segments are mapped to hg18 genome assembly at Broad."
     if noCNV:
         J["description"] = J["description"]+" A fixed set of common germline cnv probes were removed prior to segmentation."

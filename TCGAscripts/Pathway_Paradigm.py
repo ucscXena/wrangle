@@ -54,6 +54,7 @@ def Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN):
     #single file in dir mode, uncompress to dir
     dataDir =""
     lastDate=""
+    found =0
     for file in os.listdir(inDir):
         #find the file
         if string.find(file,PATHPATTERN)!=-1 and string.find(file,LEVEL)!=-1 and string.find(file,"md5")==-1:
@@ -71,10 +72,16 @@ def Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN):
         
         #is tar.gz?, uncompress
         if string.find(file,".tar.gz")!=-1:
+            found =1
             if REALRUN:
                 os.system("tar -xzf "+inDir+file +" -C "+tmpDir)
                 dataDir = tmpDir +os.listdir(tmpDir)[0]+"/"
             break
+
+    if not found:
+        print "not found"
+        return
+    
     #make sure there is data
     if REALRUN and (dataDir =="" or (not os.path.exists(dataDir))):
     #if dataDir =="" or (REALRUN and not os.path.exists(dataDir)):
@@ -101,10 +108,12 @@ def Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN):
     if REALRUN and foundfile =="":
         print "no file is found"
         sys.exit()
+
     cgFileName= PATHPATTERN[:-1]
     if REALRUN and foundfile!="":
         process(dataDir+foundfile,outDir+cancer+"/"+cgFileName,cancer)
 
+    
     oHandle = open(outDir+cancer+"/"+cgFileName+".json","w")
     J={}
     #stable
@@ -137,11 +146,13 @@ def Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN):
         J["gain"]=1.0
 
 
-    J["anatomical_origin"]= TCGA.anatomical_origin[cancer]
+    J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
     J["sample_type"]="tumor"
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
     J["cohort"] ="TCGA_"+cancer
     J["label"]= cancer +" "+J["shortTitle"]
+    J['domain']="TCGA"
+    J['owner']="TCGA"
     
     J["cgDataVersion"]=1
     J["redistribution"]= True
@@ -167,7 +178,7 @@ def Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN):
         J["description"]= "Broad FireHose automated run results of TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+")"+\
                           " gene activity level inferred using the PARADIGM method by integrating RNAseq and copy number data."
 
-    J["description"] = J["description"] +" PARADIGM (PMID 20529912) is pathway analysis method to infer tumor sample-specific genetic activities by incorporating curated pathway interactions as well as integrating diverse types of genomic data. The pathways used in this analysis are from <a href=\"http://pid.nci.nih.gov/\" target=\"_blank\"><u>NCI pathway interaction database</u></a>."
+    J["description"] = J["description"] +"<br><br>PARADIGM (PMID 20529912) is pathway analysis method to infer tumor sample-specific genetic activities by incorporating curated pathway interactions as well as integrating diverse types of genomic data. The pathways used in this analysis are from <a href=\"http://pid.nci.nih.gov/\" target=\"_blank\"><u>NCI pathway interaction database</u></a>."
 
     J["description"] = J["description"] +"<br><br>"+TCGAUtil.clinDataDesc
         

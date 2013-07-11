@@ -408,6 +408,8 @@ def flattenEachSampleMap(sMap, bookDic):
 def outputForClinFeature(outDir,sMap, finalClinFeature):
     dataPackageDir = outDir + sampleMapBaseName(sMap)
     #output clinicalFeature data by concatenation
+    if not os.path.exists( dataPackageDir ):
+        os.makedirs( dataPackageDir )
     targetfile = dataPackageDir+"/"+sampleMapBaseName(sMap)+"_clinicalFeature"
     fout = open(targetfile,'w')
     finalClinFeature.store(fout)
@@ -416,8 +418,9 @@ def outputForClinFeature(outDir,sMap, finalClinFeature):
 def outputEachSampleMapRelated(outDir, bookDic, sMap,
                                finalClinMatrix,finalClinMatrixJSON,
                                finalClinFeature,finalClinFeatureJSON,REALRUN):
-    if REALRUN ==-1:
+    if REALRUN not in [0,1]:
         return
+    
     sampleMap = sMap.getName()
     if not os.path.exists( outDir ):
         os.makedirs( outDir )
@@ -501,10 +504,7 @@ def cpGenomicEachSample(REALRUN, outDir, bookDic, sMap):
             oHandle.write( json.dumps( J, indent=-1 ) )
             oHandle.close()
 
-            if REALRUN ==-1:
-                continue
-            
-            if REALRUN:
+            if REALRUN == 1:
                 #code to remove blacklist samples and all its descendants
                 badList= badListSelfAndDescendants (sMap, bookDic)
                 if badList==[]:

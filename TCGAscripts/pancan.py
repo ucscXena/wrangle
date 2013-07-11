@@ -11,8 +11,8 @@ def pancan_DNAmethyl (dir, outDir, cancer,log, REALRUN):
     print cancer, sys._getframe().f_code.co_name
 
     featureName="_PANCAN_DNAMethyl_PANCAN"
-    shortTitle="PANCAN DNA methylation"
-    longTitle="_PANCAN DNA methylation subtype k=19 (syn1875816)"
+    shortTitle="PANCAN DNA hyper-methyl"
+    longTitle="_PANCAN DNA hyper-methylation subtype k=19 (syn1875816)"
     maxSubtype=19
     dataProducer="https://www.synapse.org/#!Synapse:1875816"
     
@@ -113,7 +113,7 @@ def pancan_cluster_of_cluster (dir, outDir, cancer,log, REALRUN):
 
     featureName="_PANCAN_Cluster_Cluster_PANCAN"
     shortTitle="PANCAN Cluster"
-    longTitle="_PANCAN Cluster of Clusters subtype k=13 (syn1889916)"
+    longTitle="_PANCAN Integrated Clusters subtype k=13 (syn1889916)"
     maxSubtype=13
     dataProducer="https://www.synapse.org/#!Synapse:syn1889916"
 

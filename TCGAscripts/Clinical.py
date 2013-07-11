@@ -368,7 +368,6 @@ def cleanupFollowUpFile(infile, outfile):
                     continue
 
                 try:
-                    print old_days_to_new_tumor_event_after_initial_treatment, new_days_to_new_tumor_event_after_initial_treatment
                     new_days_to_new_tumor_event_after_initial_treatment = int(new_days_to_new_tumor_event_after_initial_treatment)
                     data[col_days_to_new_tumor_event_after_initial_treatment] = str(min(old_days_to_new_tumor_event_after_initial_treatment,new_days_to_new_tumor_event_after_initial_treatment))
                     
@@ -376,10 +375,6 @@ def cleanupFollowUpFile(infile, outfile):
                     data[col_days_to_new_tumor_event_after_initial_treatment] = str(old_days_to_new_tumor_event_after_initial_treatment)
                 print data[col_days_to_new_tumor_event_after_initial_treatment]
                 patients[patient]=[findex,data]
-                continue
-            else:
-                print "ERROR in col_days_to_new_tumor_event_after_initial_treatment"
-                sys.exit()
 
             
     fin.close()
