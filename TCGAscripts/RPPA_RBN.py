@@ -13,8 +13,6 @@ tmpDir="tmptmp/"
 #/inside/home/cline/projects/PanCancer/mutationMatrices/*_RBN
 
 def RPPA_RBN (inDir, outDir, cancer,flog,REALRUN):
-    if string.find(cancer,"PANCAN") !=-1:
-        return
     print cancer, sys._getframe().f_code.co_name
     PATHPATTERN= "_RBN"
     namesuffix = "RPPA_RBN"
@@ -54,7 +52,7 @@ def RPPA_RBN (inDir, outDir, cancer,flog,REALRUN):
     J={}
     #stable
     J["cgDataVersion"]=1
-    J[":dataSubType"]="RPPA"
+    J[":dataSubType"]="protein"
     J["redistribution"]= True
     J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
     J["dataProducer"]= dataProducer

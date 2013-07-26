@@ -57,6 +57,7 @@ cancerOfficial={
     "MISC":"miscellaneous",
     "PCPG":"pheochromocytoma and paraganglioma",
     "UCS":"uterine carcinosarcoma",
+    "TGCT":"testicular germ cell tumor",
     "PANCAN":"pan-cancer"
     }
 
@@ -97,6 +98,7 @@ cancerHumanReadable={
     "MISC":"Miscellaneous",
     "PCPG":"Pheochromocytoma & Paraganglioma",
     "UCS":"Uterine Carcinosarcoma",
+    "TGCT":"Testicular Cancaer",
     "PANCAN":"Pan-Cancer"
     }
 
@@ -137,6 +139,7 @@ anatomical_origin ={
     "MISC":"",
     "PCPG":"Paraganglia",
     "UCS":"Uterus",
+    "TGCT":"Testis",
     "PANCAN":""
     }
 
@@ -177,6 +180,7 @@ cancerGroupTitle={
     "MISC":"miscellaneous",
     "PCPG":"pheochromocytoma & paraganglioma",
     "UCS":"uterine carcinosarcoma",
+    "TGCT":"testicular germ cell tumor",
     "PANCAN":"pan-cancer"
     }
 
@@ -383,6 +387,8 @@ featurePriority={
     "MISC":{"sample_type":"1"
             },
     "PCPG":{"sample_type":"1"
+            },
+    "TGCT":{"sample_type":"1"
             },
     "UCS":{"sample_type":"1"
            },
