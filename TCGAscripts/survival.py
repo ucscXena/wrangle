@@ -108,8 +108,8 @@ def overallSurvival (dir, finalClinMatrix, survivalMatrix, cancer):
     survivalMatrix.addNewRows(finalClinMatrix.getROWs(),{})
     survivalMatrix.addOneColWithSameValue("_TIME_TO_EVENT","")
     survivalMatrix.addOneColWithSameValue("_EVENT","")
-    #survivalMatrix.addOneColWithSameValue("_OVERALL_SURVIVAL","")
-    #survivalMatrix.addOneColWithSameValue("_OVERALL_SURVIVAL_IND","")
+    survivalMatrix.addOneColWithSameValue("_OS","")
+    survivalMatrix.addOneColWithSameValue("_OS_IND","")
 
     for id in finalClinMatrix.getROWs():
         #_EVENT         #_TIME_TO_EVENT
@@ -122,8 +122,8 @@ def overallSurvival (dir, finalClinMatrix, survivalMatrix, cancer):
                 foundD =1
                 survivalMatrix.setDATA(id,"_EVENT","1")
                 survivalMatrix.setDATA(id,"_TIME_TO_EVENT",d)
-                #survivalMatrix.setDATA(id,"_OVERALL_SURVIVAL_IND","1")
-                #survivalMatrix.setDATA(id,"_OVERALL_SURVIVAL",d)
+                survivalMatrix.setDATA(id,"_OS_IND","1")
+                survivalMatrix.setDATA(id,"_OS",d)
                 continue
             except:
                 # bad data no days_to_death for DECEASED
@@ -151,8 +151,8 @@ def overallSurvival (dir, finalClinMatrix, survivalMatrix, cancer):
             if foundL:# and foundL!="0":
                 survivalMatrix.setDATA(id,"_EVENT","0")
                 survivalMatrix.setDATA(id,"_TIME_TO_EVENT",foundL)
-                #survivalMatrix.setDATA(id,"_OVERALL_SURVIVAL_IND","0")
-                #survivalMatrix.setDATA(id,"_OVERALL_SURVIVAL",foundL)
+                survivalMatrix.setDATA(id,"_OS_IND","0")
+                survivalMatrix.setDATA(id,"_OS",foundL)
     return 1
 
 def RFS  (dir, finalClinMatrix, survivalMatrix, cancer):
@@ -221,7 +221,7 @@ def output (dir, finalClinMatrix, survivalMatrix, cancer):
     J["dataProducer"]= "UCSC"
     J["version"]= datetime.date.today().isoformat()
     J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
-    J["wrangling_procedure"]= "_EVENT from vital_status 0=no_event=LIVING 1=event=DECEASED; _TIME_TO_EVENT=days_to_death when _EVENT=1; _TIME_TO_EVENT=max(days_to_last_followup, days_to_last_known_alive) when _EVENT=0;  _RFS_IND 1=if there is days_to_new_tumor_event_after_initial_treatment or days_to_tumor_recurrenc information 0=otherwise and with person_neoplasm_status=TUMOR FREE; _RFS=max(days_to_new_tumor_event_after_initial_treatment, days_to_tumor_recurrence)"
+    J["wrangling_procedure"]= "https://groups.google.com/forum/?fromgroups#!topic/ucsc-cancer-genomics-browser/YvKnWZSsw1Q"
     J["name"]=survivalMatrix.getName()
     J["type"]= "clinicalMatrix"
     J[":sampleMap"]="TCGA."+cancer+".sampleMap"
@@ -238,13 +238,21 @@ def output (dir, finalClinMatrix, survivalMatrix, cancer):
     fout = open(cFfile,"w")
     
     fout.write("_EVENT\tshortTitle\toverall survival indicator\n")
-    fout.write("_EVENT\tlongTitle\t_EVENT overall survival indicator 0=censor (no_event) 1=event; derived from vital_status\n")
+    fout.write("_EVENT\tlongTitle\t_EVENT overall survival indicator 1=death 0=censor\n")
     fout.write("_EVENT\tvalueType\tcategory\n")
 
     fout.write("_TIME_TO_EVENT\tshortTitle\tOVERALL SURVIVAL\n")
-    fout.write("_TIME_TO_EVENT\tlongTitle\t_TIME_TO_EVENT overall survival; =days_to_death (if deceased); =max(days_to_last_known_alive, days_to_last_followup) (if living)\n")
+    fout.write("_TIME_TO_EVENT\tlongTitle\t_TIME_TO_EVENT overall survival\n")
     fout.write("_TIME_TO_EVENT\tvalueType\tfloat\n")
 
+    fout.write("_OS_IND\tshortTitle\toverall survival indicator\n")
+    fout.write("_OS_IND\tlongTitle\t_OS_IND overall survival indicator 1=death 0=censor\n")
+    fout.write("_OS_IND\tvalueType\tcategory\n")
+
+    fout.write("_OS\tshortTitle\tOVERALL SURVIVAL\n")
+    fout.write("_OS\tlongTitle\t_OS overall survival\n")
+    fout.write("_OS\tvalueType\tfloat\n")
+    
     feature= "_EVENT"
     if TCGAUtil.featurePriority.has_key(cancer):
         if TCGAUtil.featurePriority[cancer].has_key(feature):
@@ -260,11 +268,11 @@ def output (dir, finalClinMatrix, survivalMatrix, cancer):
             fout.write(feature+"\tvisibility\ton\n")
 
     fout.write("_RFS_IND\tshortTitle\trecurrence free survival indicator\n")
-    fout.write("_RFS_IND\tlongTitle\t_RFS_IND recurrence free survival indicator 1=new tumor; 0=otherwise; derived from days_to_new_tumor_event_after_initial_treatment\n")
+    fout.write("_RFS_IND\tlongTitle\t_RFS_IND recurrence free survival indicator 1=new tumor; 0=otherwise\n")
     fout.write("_RFS_IND\tvalueType\tcategory\n")
 
     fout.write("_RFS\tshortTitle\tRECURRENCE FREE SURVIVAL\n")
-    fout.write("_RFS\tlongTitle\t_RFS recurrence free survival; =max(days_to_new_tumor_event_after_initial_treatment, days_to_tumor_recurrence) (if event); =overall survival (if no event) \n")
+    fout.write("_RFS\tlongTitle\t_RFS recurrence free survival\n")
     fout.write("_RFS\tvalueType\tfloat\n")
 
     feature= "_RFS"

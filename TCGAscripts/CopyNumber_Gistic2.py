@@ -99,6 +99,7 @@ def CopyNumber_Gistic2 (inDir, outDir, cancer,flog,REALRUN):
         
         J["cgDataVersion"]=1
         J["shortTitle"]="Copy Number ("+suffix+")"
+        J["label"]= cancer +" copy number ("+suffix+")"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") copy number "+suffix+" estimate"
         J[":dataSubType"]="cna"
         J["redistribution"]= True
@@ -112,7 +113,6 @@ def CopyNumber_Gistic2 (inDir, outDir, cancer,flog,REALRUN):
         J["sample_type"]="tumor"
         J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
         J["cohort"] ="TCGA_"+cancer
-        J["label"]= cancer +" "+J["shortTitle"]
         J['domain']="TCGA"
         J['owner']="TCGA"
         
@@ -146,7 +146,7 @@ def CopyNumber_Gistic2 (inDir, outDir, cancer,flog,REALRUN):
                               " Genes were mapped onto the human genome coordinates using UCSC cgData HUGO probeMap."+\
                               " Reference to GISTIC2 method PMID:21527027."
 
-        J["description"] = J["description"] +"<br><br>"+TCGAUtil.clinDataDesc
+        #J["description"] = J["description"] +"<br><br>"+TCGAUtil.clinDataDesc
                 
         #change cgData
         J["name"]="TCGA_"+cancer+"_"+namesuffix

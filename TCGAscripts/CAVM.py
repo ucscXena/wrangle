@@ -5,8 +5,10 @@ sys.path.insert(0,"../CGDataNew")
 from SampleMapNew import *
 from CGDataLib import *
 import TCGAUtil
+from TCGASampleMap import *
+
 def CAVMid (dir, outDir, cancer,log, REALRUN):
-    print cancer, __name__
+    print cancer, sys._getframe().f_code.co_name
 
     ignore =1
     bookDic=cgWalk(dir,ignore)
@@ -35,8 +37,29 @@ def CAVMid (dir, outDir, cancer,log, REALRUN):
             obj=bookDic[name]
             if obj['type']=="clinicalMatrix":
                 outfile = outDir +os.path.basename(obj['path'])
-                os.system("cp "+obj['path']+" "+outfile)
+                fin = open(obj['path'],'r')
+                fout = open(outfile,'w')
+                fout.write(fin.readline())
+                samples =[]
+                for line in fin.readlines():
+                    sample =string.split(line,"\t")[0]
+                    if sample not in samples and sample !="":
+                        samples.append(sample)
+                        fout.write(line)
+                    else:
+                        print sample, obj['path']
+                fout.close()
+                
                 os.system("cp "+obj['path']+".json "+outfile+".json")
+
+                fin = open (outfile+".json",'r')
+                J=json.load(fin)
+                fin.close()
+                if J.has_key(":clinicalFeature"):
+                    cFobj= bookDic[J[":clinicalFeature"]]
+                    outfile = outDir +os.path.basename(cFobj['path'])
+                    os.system("cp "+cFobj['path']+" "+outfile)
+                    os.system("cp "+cFobj['path']+".json "+outfile+".json")
                 
             if obj['type']=="genomicMatrix":
                 fin =open(obj['path'],'U')
@@ -146,8 +169,9 @@ outDir="preFreezeCAVM/TCGA/"
 log=0
 
 REALRUN=0
-#1 include genomic data
+#1 genomic + clinical 
+#0 only clinical data 
 CAVMid (dir+cancer+"/", outDir+cancer+"/",cancer, log, REALRUN)
 
-REALRUN=1
-TCGASampleMap (dir, outDir, cancer,log, REALRUN):
+REALRUN=0
+TCGASampleMap (outDir + cancer+"/", outDir, cancer,log, REALRUN)

@@ -157,17 +157,19 @@ def humanmethylation (inDir, outDir, cancer,flog,PATHPATTERN,BETAOFFSET,REALRUN)
     J["cgDataVersion"]=1
     if suffix =="HumanMethylation27":
         J["shortTitle"]="DNA Methylation (Methylation27)"
+        J["label"]= cancer +" DNA methylation (Methylation27)"
+
         namesuffix="hMethyl27"
         
     if suffix =="HumanMethylation450":
         J["shortTitle"]="DNA Methylation (Methylation450)"
+        J["label"]= cancer +" DNA methylation (Methylation450)"
         namesuffix="hMethyl450" 
 
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
     J["sample_type"]="tumor"
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
     J["cohort"] ="TCGA_"+cancer
-    J["label"]= cancer +" "+J["shortTitle"]
     J['domain']="TCGA"
     J['owner']="TCGA"
     
@@ -204,7 +206,7 @@ def humanmethylation (inDir, outDir, cancer,flog,PATHPATTERN,BETAOFFSET,REALRUN)
         J["description"]= J["description"] +" Microarray probes are mapped onto the human genome coordinates using cgData probeMap derived from GEO GPL13534 record."
     J["description"]=J["description"]+" Here is a <a href=\"http://www.illumina.com/documents/products/appnotes/appnote_dna_methylation_analysis_infinium.pdf\" target=\"_blank\"><u>reference</u></a> to Illumina Infinium BeadChip DNA methylation platform beta value."
 
-    J["description"] = J["description"] +"<br><br>"+TCGAUtil.clinDataDesc
+    #J["description"] = J["description"] +"<br><br>"+TCGAUtil.clinDataDesc
     
     #change cgData
     J["name"]="TCGA_"+cancer+"_"+namesuffix

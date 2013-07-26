@@ -10,15 +10,15 @@ from CGDataUtil import *
 
 tmpDir="tmptmp/"
 
-#/inside/home/cline/projects/PanCancer/mutationMatrices/*_cleaned_filtered.txt
+#/inside/home/cline/projects/PanCancer/mutationMatrices/*_RBN
 
-def mutationMatrix (inDir, outDir, cancer,flog,REALRUN):
+def RPPA_RBN (inDir, outDir, cancer,flog,REALRUN):
     if string.find(cancer,"PANCAN") !=-1:
         return
     print cancer, sys._getframe().f_code.co_name
-    PATHPATTERN= "_cleaned_filtered.txt"
-    namesuffix = "mutation"
-    dataProducer = "TCGA PANCAN"
+    PATHPATTERN= "_RBN"
+    namesuffix = "RPPA_RBN"
+    dataProducer = "MDACC"
 
     garbage=[tmpDir]
 
@@ -50,11 +50,11 @@ def mutationMatrix (inDir, outDir, cancer,flog,REALRUN):
         os.system("cp "+file +" "+outDir+cancer+"/"+cgFileName)
 
     oHandle = open(outDir+cancer+"/"+cgFileName+".json","w")
-    
+
     J={}
     #stable
     J["cgDataVersion"]=1
-    J[":dataSubType"]="somaticMutation"
+    J[":dataSubType"]="RPPA"
     J["redistribution"]= True
     J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
     J["dataProducer"]= dataProducer
@@ -62,14 +62,13 @@ def mutationMatrix (inDir, outDir, cancer,flog,REALRUN):
     J[":sampleMap"]="TCGA."+cancer+".sampleMap"
     
     #multiple dirs
-    J["url"]="https://www.synapse.org/#!Synapse:syn1729383"
+    J["url"]="https://www.synapse.org/#!Synapse:syn1759392"
     J["version"]= datetime.date.today().isoformat()
     J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
-    J[":probeMap"]= "hugo"
-    J["shortTitle"]="Mutation"
-    J["label"]= cancer +" mutation"
-    J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") somatic mutation"
-    J["gain"]=10
+    J[":probeMap"]= "md_anderson_antibodies"
+    J["shortTitle"]="Protein (RBN)"
+    J["label"]= cancer +" protein (RBN)"
+    J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") reverse phase protein array (replicate-base normalization)"
 
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
     J["sample_type"]="tumor"
@@ -78,9 +77,9 @@ def mutationMatrix (inDir, outDir, cancer,flog,REALRUN):
     J['domain']="TCGA"
     J['owner']="TCGA"
     
-    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") somatic mutation data. Red color (=1) represents non-silent somatic mutations (nonsense, missense, frame-shift indels, splice site mutations, stop codon readthroughs) are identified in the protein coding region of a gene, and white color (=0) means that none of the above mutation calls are made in this gene for the specific sample.<br><br> Somatic mutations calls (even on the same tumor DNA extract) are effected by many factors including library prep, sequencing process, reads mapping method, reference genome used, calling algorithms, and ad-hoc pre/postprocessing such as black list genes, target selection regions, and black list samples.  This dataset is the best effort made by the TCGA PANCANER analysis working group.  PANCAN mutation data can be downloade at the url site shown below."
-    #J["description"] = J["description"] +"<br><br>"+TCGAUtil.clinDataDesc
-    J["wrangling_procedure"]= "TCGA PANCAN strictly filtered maf files (file names: *_cleaned_filtered.maf) download from Synapse, processed into gene by sample matrix at UCSC into cgData repository"
+    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") protein expression data for 131 proteins, measured by RPPA (reverse phase protein array) technology. These data have been normalized by RBN (replicate-base normalization) method developed by MDACC. Details: https://www.synapse.org/#!Synapse:syn1750330.<br><br>"
+
+    J["wrangling_procedure"]= "Data download from https://www.synapse.org/#!Synapse:syn1759392, processed into antibody by sample matrix at UCSC into cgData repository"
 
     #change cgData
     J["name"]="TCGA_"+cancer+"_"+namesuffix

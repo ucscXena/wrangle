@@ -363,14 +363,17 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
 
         if cancer != "OV":
             J["shortTitle"]="Gene Expression ("+suffix+")"
-            J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression ("+suffix+")"
+            J["label"]= cancer +" "+"gene expression ("+suffix+")"
+            J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression by RNAseq ("+suffix+")"
         else:
             if dataProducer =="University of North Carolina TCGA genome characterization center":
                 J["shortTitle"]="Gene Expression ("+suffix+" UNC)"
-                J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression ("+suffix+" UNC)"
+                J["label"]= cancer +" "+"gene expression ("+suffix+" UNC)"
+                J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression by RNAseq ("+suffix+" UNC)"
             else:
                 J["shortTitle"]="Gene Expression ("+suffix+" BC)"
-                J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression ("+suffix+" BC)"
+                J["label"]= cancer +" "+"gene expression ("+suffix+" BC)"
+                J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression by RNAseq ("+suffix+" BC)"
                 
         J["notes"]= "the probeMap should be tcgaGAF, but untill the probeMap is made, we will have to use hugo for the short term, however probably around 10% of the gene symbols are not HUGO names, but ENTRE genes"
         J["description"]= J["description"] +"TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression by RNAseq.<br><br>"+ \
@@ -380,7 +383,8 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
         J[":probeMap"]= "unc_RNAseq_exon"
 
         J["shortTitle"]="Exon Expression ("+suffix+")"
-        J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") exon expression ("+suffix+")"
+        J["label"]= cancer +" "+"exon expression ("+suffix+")"
+        J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") exon expression by RNAseq ("+suffix+")"
         J["description"]= J["description"] +"TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") exon expression by RNAseq.<br><br>"+ \
                           " The exon expression profile was measured experimentally using the "+platformTitle+" by the "+ dataProducer +"." + \
                           " Level 3 interpreted level data was downloaded from TCGA data coordination center. This dataset shows the exon-level transcription estimates, "
@@ -406,14 +410,13 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
         
     J["description"] = J["description"] +\
                        "<br><br>In order to more easily view the differential expression between samples, we set the default view to center each gene or exon to zero by independently subtracting the mean of the genomic location on the fly. Users can view the original non-normalized values by uncheck the \"Normalize\" option. For more information on how to use the cancer browser, please refer to the help page."
-    J["description"] = J["description"] +"<br><br>"+TCGAUtil.clinDataDesc
+    #J["description"] = J["description"] +"<br><br>"+TCGAUtil.clinDataDesc
 
 
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
     J["sample_type"]="tumor"
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
     J["cohort"] ="TCGA_"+cancer
-    J["label"]= cancer +" "+J["shortTitle"]
     J['domain']="TCGA"
     J['owner']="TCGA"
     

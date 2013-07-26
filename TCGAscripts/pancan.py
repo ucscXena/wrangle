@@ -196,6 +196,9 @@ def individual_miRNA (dir, outDir, cancer,log, REALRUN):
 
    
 def individual_subtype (dir, outDir, cancer,log, REALRUN, featureName,dataProducer, shortTitle, longTitle):
+    if cancer =="PANCAN":
+        return
+    
     filepath=dir
 
     if not os.path.exists(filepath) or not os.access(filepath,os.R_OK):

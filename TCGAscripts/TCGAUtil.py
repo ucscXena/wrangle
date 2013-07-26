@@ -245,6 +245,7 @@ featureStateOrder={
                                          },
     "vital_status":{"ALL": ["LIVING","DECEASED"]},
     "mononucleotide_and_dinucleotide_marker_panel_analysis_status": {"ALL": [ "MSI-H", "MSI-L", "Indeterminate","MSS"]},
+    "neoplasm_histologic_grade": {"ALL" :["Low Grade","High Grade" ]},
     "":""
     }
 
@@ -384,7 +385,17 @@ featurePriority={
     "PCPG":{"sample_type":"1"
             },
     "UCS":{"sample_type":"1"
-           }
+           },
+    "UCEC": {"sample_type":"1",
+             "cohort":"2",
+             "_PANCAN_UNC_RNAseq_PANCAN_K16":"3",
+             "_PANCAN_DNAMethyl_PANCAN":"4"
+             },
+    "PANCAN": {"sample_type":"1",
+               "cohort":"2",
+               "_PANCAN_UNC_RNAseq_PANCAN_K16":"3",
+               "gender":"4"
+             }
     }
 
 clinDataDesc ="The accompanied clinical data are downloaded from TCGA data coordination center. They are the patient, sample, follow up, biospecimen tumor sample, and auxiliary clinical information. Names of the clinical fields were \"curated\" by UCSC to be more readable."

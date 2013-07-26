@@ -175,6 +175,7 @@ def RPPA (inDir, outDir, cancer, flog,REALRUN):
     J["wrangling_procedure"]= "Level_3 Data (file names: *.protein_expression.*) download from TCGA DCC, and processed at UCSC into cgData repository"
     J["gain"]=1.0
     J["shortTitle"]="Protein"
+    J["label"]= cancer +" protein"
     J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") reverse phase protein array"
     
     J[":probeMap"]= "md_anderson_antibodies"
@@ -183,17 +184,12 @@ def RPPA (inDir, outDir, cancer, flog,REALRUN):
     J["sample_type"]="tumor"
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
     J["cohort"] ="TCGA_"+cancer
-    J["label"]= cancer +" "+J["shortTitle"]
     J['domain']="TCGA"
     J['owner']="TCGA"
     
-    #change description
     J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") protein expression by reverse phase protein array (RPPA).<br><br> The data was generated and processed at the MD Anderson Cancer Center TCGA proteome characterization center RPPA core. Level 3 interpreted level data was downloaded from TCGA data coordination center.<br><br>"
-
-    J["description"] = J["description"] + "Data normalization from the MDACC RPPA core: <a href=\"https://tcga-data.nci.nih.gov/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/"+string.lower(cancer)+"/cgcc/mdanderson.org/mda_rppa_core/protein_exp/mdanderson.org_"+cancer+".MDA_RPPA_Core.Level_3.1.0.0/DESCRIPTION.txt\" target=\"_blank\"><u>description</u></a>."
     
-
-    J["description"] = J["description"] +"<br><br>"+TCGAUtil.clinDataDesc
+    J["description"] = J["description"] + "Data normalization from the MDACC RPPA core: <a href=\"https://tcga-data.nci.nih.gov/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/"+string.lower(cancer)+"/cgcc/mdanderson.org/mda_rppa_core/protein_exp/mdanderson.org_"+cancer+".MDA_RPPA_Core.Level_3.1.0.0/DESCRIPTION.txt\" target=\"_blank\"><u>description</u></a>.<br>"
     
     #change cgData
     J["name"]="TCGA_"+cancer+"_RPPA"

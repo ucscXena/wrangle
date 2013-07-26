@@ -120,6 +120,7 @@ def Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN):
     if PATHPATTERN== "Pathway_Paradigm_mRNA.":
         suffix="PDMarray"
         J["shortTitle"]="Paradigm.mRNA (Firehose)"
+        J["label"]= cancer +" paradigm.mRNA (Firehose)"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") PARADIGM inference activity (array mRNA)"
         J[":dataSubType"]="PARADIGM"
         J["gain"]=1.0
@@ -127,6 +128,7 @@ def Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN):
     if PATHPATTERN== "Pathway_Paradigm_mRNA_And_Copy_Number.":
         suffix="PDMarrayCNV"
         J["shortTitle"]="Paradigm.mRNA+CNV (Firehose)"
+        J["label"]= cancer +" paradigm.mRNA+CNV (Firehose)"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") PARADIGM inference activity (array mRNA + CNV)"
         J[":dataSubType"]="PARADIGM"
         J["gain"]=1.0
@@ -134,6 +136,7 @@ def Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN):
     if PATHPATTERN== "Pathway_Paradigm_RNASeq.":
         suffix="PDMRNAseq"
         J["shortTitle"]="Paradigm.RNAseq (Firehose)"
+        J["label"]= cancer +" paradigm.RNAseq (Firehose)"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") PARADIGM inference activity (RNAseq)"
         J[":dataSubType"]="PARADIGM"
         J["gain"]=1.0
@@ -141,6 +144,7 @@ def Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN):
     if PATHPATTERN=="Pathway_Paradigm_RNASeq_And_Copy_Number.":
         suffix="PDMRNAseqCNV"
         J["shortTitle"]="Paradigm.RNAseq+CNV (Firehose)"
+        J["label"]= cancer +" paradigm.RNAseq+CNV (Firehose)"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") PARADIGM inference activity (RNAseq + CNV)"
         J[":dataSubType"]="PARADIGM"
         J["gain"]=1.0
@@ -150,7 +154,6 @@ def Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN):
     J["sample_type"]="tumor"
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
     J["cohort"] ="TCGA_"+cancer
-    J["label"]= cancer +" "+J["shortTitle"]
     J['domain']="TCGA"
     J['owner']="TCGA"
     
@@ -180,7 +183,7 @@ def Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN):
 
     J["description"] = J["description"] +"<br><br>PARADIGM (PMID 20529912) is pathway analysis method to infer tumor sample-specific genetic activities by incorporating curated pathway interactions as well as integrating diverse types of genomic data. The pathways used in this analysis are from <a href=\"http://pid.nci.nih.gov/\" target=\"_blank\"><u>NCI pathway interaction database</u></a>."
 
-    J["description"] = J["description"] +"<br><br>"+TCGAUtil.clinDataDesc
+    #J["description"] = J["description"] +"<br><br>"+TCGAUtil.clinDataDesc
         
     #change cgData
     J["name"]="TCGA_"+cancer+"_"+suffix

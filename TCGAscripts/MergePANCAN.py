@@ -25,53 +25,108 @@ def Mutation (dir,outDir, cancer,flog,REALRUN):
     processMutation (filename, dir,outDir, cancer,flog, REALRUN)
 
 
-def cohort (dir,outDir, cancer,flog,REALRUN):
+def clin (dir,outDir, cancer,flog,REALRUN):
     if cancer !="PANCAN":
         return
-    print cancer, sys._getframe().f_code.co_name
-    filename = "cohort"
-    doAve=0
-    processCohort (filename, dir,outDir, cancer,flog, REALRUN)
 
-def processCohort (filename, dir,outDir, cancer,flog, REALRUN):
+    print cancer, sys._getframe().f_code.co_name
+    filename = "_clinicalMatrix"
+    doAve=0
+    processClin (filename, dir,outDir, cancer,flog, REALRUN)
+
+def processClin (filename, dir,outDir, CANCER,flog, REALRUN):
     inFiles ={}
-    for cancer in os.listdir(outDir):
+    print os.path.dirname(dir)
+    for cancer in os.listdir(os.path.dirname(dir)):
         if cancer in ["LUNG","COADREAD","PANCAN"]:
             continue
-    
-        cancerDir= outDir+ cancer
-        cancerFile = cancerDir+"/"+filename
+
+        cancerDir= os.path.dirname(dir)  + "/"+cancer
+        cancerFile = cancerDir+"/"+cancer+filename
         if not os.path.exists(cancerFile):
             continue
 
         inFiles[cancer]= cancerFile
 
-    cancer="PANCAN"
-    outfile  = outDir+"/"+cancer+"/"+filename+"_PANCAN" 
-    foutPANCAN = open(outfile,'w')
-    foutPANCAN.write("sample\tcohort\n")
-    
-    if REALRUN:
-        keys = inFiles.keys()
-        for key in keys:
-            fin = open(inFiles[key],'r')
-            fin.readline()
-            foutPANCAN.write(fin.read())
-            fin.close()
-        foutPANCAN.close()
+    features=["sample_type","gender","cohort","age_at_initial_pathologic_diagnosis",
+              "_OS","_OS_IND","_RFS","_RFS_IND","_EVENT","_TIME_TO_EVENT"]
+        
+    for feature in features:
+        if REALRUN:
+            outfile  = outDir+"/"+CANCER+"/"+feature+"_PANCAN"
+            foutPANCAN = open(outfile,'w')
+            foutPANCAN.write("sample\t"+feature+"\n")
+            
+            keys = inFiles.keys()
+            os.system("rm -f tmp")
+            samples=[]
+            for key in keys:
+                file = inFiles[key]
+                fin = open(file,'r')
+                POS = 0
+                data = string.split(fin.readline()[:-1],"\t")
+                for i in range (0,len(data)):
+                    if data[i] == feature:
+                       POS=i
+                       break
+                if POS==0:
+                    continue
+                for line in fin.readlines():
+                    data = string.split(line[:-1],"\t")
+                    sample=data[-1]
+                    if sample not in samples and sample!="":
+                        samples.append(sample)
+                        foutPANCAN.write(data[-1]+"\t"+data[POS]+"\n")
+            foutPANCAN.close()
 
-    J={}
-    fin= open(inFiles[keys[0]]+".json","r")
-    J= json.loads(fin.read())
-    fin.close()
+        outfile  = outDir+"/"+CANCER+"/"+feature+"_PANCAN.json"
+        fout =open(outfile,'w')
 
-    fout= open(outfile+".json","w")
-    J["name"]= "TCGA_PANCAN_cohort"
-    J[":sampleMap"]="TCGA."+cancer+".sampleMap"
-    
-    fout.write(json.dumps(J,indent=-1))
-    fout.close()
-    
+        J={}
+        J['name']=feature+"_PANCAN"
+        J['type']="clinicalMatrix"
+        J[":sampleMap"]="TCGA."+CANCER+".sampleMap"
+
+        if TCGAUtil.featurePriority.has_key(CANCER):
+            featureConfig=0
+            cfout =open(outDir+"/"+CANCER+"/"+feature+"_PANCAN_clinFeature","w")
+            
+            if TCGAUtil.featurePriority[CANCER].has_key(feature):
+                featureConfig=1
+                priority= TCGAUtil.featurePriority[CANCER][feature]
+                cfout.write(feature+"\tpriority\t"+str(priority)+"\n")
+                cfout.write(feature+"\tvisibility\ton\n")
+
+            stateOrder=None
+            if TCGAUtil.featureStateOrder.has_key(feature):
+                if TCGAUtil.featureStateOrder[feature].has_key(CANCER):
+                    featureConfig=1
+                    stateOrder = TCGAUtil.featureStateOrder[feature][CANCER]
+                if TCGAUtil.featureStateOrder[feature].has_key("ALL"):
+                    featureConfig=1
+                    stateOrder = TCGAUtil.featureStateOrder[feature]["ALL"]
+            if stateOrder:
+                cfout.write(feature+"\tvalueType\tcategory\n")
+                for state in stateOrder:
+                    cfout.write(feature+"\tstate\t"+state+"\n")
+
+                cfout.write(feature+"\tstateOrder\t\""+string.join(stateOrder,"\",\"")+"\"\n")
+                cfout.write(feature+"\tstateOrderRelax\ttrue\n")
+            cfout.close()
+            
+            if  featureConfig:
+                cfJ ={}
+                cfJ["name"]= J['name']+"_clinFeature"
+                cfJ["type"]="clinicalFeature"
+                cfout=open(outDir+"/"+CANCER+"/"+feature+"_PANCAN_clinFeature.json","w")
+                cfout.write(json.dumps(cfJ,indent=-1))
+                cfout.close()
+                
+                J[":clinicalFeature"]= cfJ["name"]
+                
+        fout.write(json.dumps(J,indent=-1))
+        fout.close()
+        
 def processMutation (filename, dir,outDir, cancer,flog, REALRUN):
     inFiles ={}
     outFiles={}

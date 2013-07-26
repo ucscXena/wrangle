@@ -127,7 +127,8 @@ def AgilentG4502A (inDir, outDir, cancer,flog,PATHPATTERN,REALRUN):
     suffix=PATHPATTERN
     J["cgDataVersion"]=1
     J["shortTitle"]="Gene Expression ("+suffix+")"
-    J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression ("+suffix+")"
+    J["label"]= cancer +" gene expression ("+suffix+")"
+    J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression ("+suffix+" array)"
     J[":dataSubType"]="geneExp"
     J["redistribution"]= True
     J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
@@ -143,7 +144,6 @@ def AgilentG4502A (inDir, outDir, cancer,flog,PATHPATTERN,REALRUN):
     J["sample_type"]="tumor"
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
     J["cohort"] ="TCGA_"+cancer
-    J["label"]= cancer +" "+J["shortTitle"]
     J['domain']="TCGA"
     J['owner']="TCGA"
     
@@ -159,7 +159,7 @@ def AgilentG4502A (inDir, outDir, cancer,flog,PATHPATTERN,REALRUN):
                       " Genes are mapped onto the human genome coordinates using UCSC cgData HUGO probeMap."+\
                       "<br><br>In order to more easily view the differential gene expression between samples, we set the default view to be gene-level normalized by independently subtracting the mean of the genomic location on the fly. Users can view the original non-normalized values by uncheck the \"Normalize\" option. For more information on how to use the cancer browser, please refer to the help page."
     
-    J["description"] = J["description"] +"<br><br>"+TCGAUtil.clinDataDesc
+    #J["description"] = J["description"] +"<br><br>"+TCGAUtil.clinDataDesc
     
     #change cgData
     J["name"]="TCGA_"+cancer+"_"+string.replace(suffix,"Agilent","")
