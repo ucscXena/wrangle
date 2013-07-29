@@ -280,6 +280,7 @@ def processRNA (filename, dir,outDir, cancer,flog, REALRUN):
                 if line =="":
                     end =1
                     inFiles[key] = fin.name
+                    fout =outFiles[key]
                     outFiles[key] = fout.name
                     continue
                 
@@ -292,6 +293,7 @@ def processRNA (filename, dir,outDir, cancer,flog, REALRUN):
                     n= n+1
                     total=total + data[i]
                 dataDic[key]=data
+
             if end:
                 break
             if n==0:
