@@ -57,7 +57,7 @@ def downloadBundle(inDir, PROBEMAP, testVersionOnly):
     bookDic={}
     ignore=0
     bookDic=cgWalk(dir,ignore)
-    if not bookDic :
+    if bookDic ==0:
         print "repo has problem"
         return 1
 
@@ -138,13 +138,13 @@ def downloadBundle(inDir, PROBEMAP, testVersionOnly):
         else:
             path = bookDic[dataset]['path']
         os.system("cp "+ path +" "+outDir+subdir)
-        os.system("cp "+ path +".json "+outDir+subdir)
+        #os.system("cp "+ path +".json "+outDir+subdir)  # not distributing curated meta-data
         
         #sampleMap
         sampleMap = bookDic[dataset][':sampleMap']
         path = bookDic[sampleMap]['path']
         os.system("cp "+ path +" "+outDir+ subdir)
-        os.system("cp "+ path +".json "+outDir + subdir)
+        #os.system("cp "+ path +".json "+outDir + subdir) # not distributing curated meta-data
 
 
         #clinicalMatrix

@@ -69,11 +69,16 @@ class ClinicalMatrixNew():
             if ignoreCol==[] and len(data[1:]) != self.__COL:
                 print "WARNING detected bad line sample=",data[0]
                 print len(data[1:]), self.__COL, len(ignoreCol)
-                continue
-
+                for i in range (0, self.__COL-len(data[1:])):
+                    data.append("")
+                print "Fix", len(data[1:]), self.__COL, len(ignoreCol)
+                
             if ignoreCol!=[]  and len(data[1:]) != self.__COL+len(ignoreCol):
                 print "WARNING detected bad line sample=",data[0]
                 print len(data[1:]), self.__COL, len(ignoreCol)
+                for i in range (0, self.__COL+len(ignoreCol) -len(data[1:])):
+                    data.append("")
+                print "Fix", len(data[1:]), self.__COL+len(ignoreCol), len(ignoreCol)
                 continue
             
             for i in range(0,len(data)):

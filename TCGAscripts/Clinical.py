@@ -176,6 +176,12 @@ def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN,  originCancer,REAL
                 clinMatrix.replaceValue("[]","")
                 clinMatrix.replaceValue("LUNG","Lung") #stupid BCR
                 clinMatrix.replaceValue("MSS|MSS","MSS") #stupid BCR
+                clinMatrix.replaceValue("Alive","LIVING") #stupid BCR
+                clinMatrix.replaceValue("ALIVE","LIVING") #stupid BCR
+                clinMatrix.replaceValue("alive","LIVING") #stupid BCR
+                clinMatrix.replaceValue("Dead","DECEASED") #stupid BCR
+                clinMatrix.replaceValue("DEAD","DECEASED") #stupid BCR
+                clinMatrix.replaceValue("dead","DECEASED") #stupid BCR
 
                 #if cancer != originCancer:
                 #    clinMatrix.addOneColWithSameValue("cohort",originCancer)

@@ -25,7 +25,13 @@ def runFlatten(inDir, outDir,REALRUN, SMAPNAME=None):
         if SMAPNAME and SMAPNAME!=sampleMap:
             print "skip", sampleMap
             continue
+
         print sampleMap
+        path = bookDic[sampleMap]['path']
+        if os.path.abspath(path) =="/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/PANCAN/TCGA.PANCAN.sampleMap":
+            print "ignore "+path
+            continue
+            
         if sampleMap in missingMaps:
             #construct an empty sampleMap
             sMap = SampleMapNew(None,sampleMap)
@@ -33,7 +39,6 @@ def runFlatten(inDir, outDir,REALRUN, SMAPNAME=None):
             changed = checkIdsAllIn(sMap, bookDic)
             #build connection
         else:
-            path = bookDic[sampleMap]['path']
             name = bookDic[sampleMap]['name']
             fin = open(path,'r')
             sMap = SampleMapNew(fin,name)
