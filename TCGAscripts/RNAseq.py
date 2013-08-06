@@ -302,20 +302,21 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
                 
                 c=c+1
                 #print c
-                process(dataMatrix,tmpSamples,sample,genes, cancer,infile,flog, valuePOS,LOG2,500)
-                if (c % 500)==0:
-                    tmpout="tmp_"+ str(int(c/500.0))
-                    files.append(tmpout)
+                process(dataMatrix,tmpSamples,sample,genes, cancer,infile,flog, valuePOS,LOG2,250)
+                if (c % 250)==0:
+                    tmpout="tmp_"+ str(int(c/250.0))
                     r =outputMatrix(dataMatrix, tmpSamples, genes, oldgenes, tmpout, flog)
                     if r:
                         GOOD=0
+                        
                     dataMatrix=[]
                     tmpSamples={}
                     oldgenes=copy.deepcopy(genes)
                     genes ={}
+                    files.append(tmpout)
                     
-        if (c % 500)!=0:
-            tmpout= "tmp_"+ str(int(c/500.0)+1)
+        if (c % 250)!=0:
+            tmpout= "tmp_"+ str(int(c/250.0)+1)
             files.append(tmpout)
             r= outputMatrix(dataMatrix, tmpSamples, genes, oldgenes,tmpout, flog)
             if r:
@@ -325,11 +326,11 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
         outfile = outDir+cancer+"/"+cgFileName
         if GOOD:
             os.system("paste -d \'\' "+string.join(files," ")+" > "+ outfile)
-        else:
-            sys.exit()
         for file in files:
-            os.system("rm "+ file)
-        
+            os.system("rm "+ file)        
+        if not GOOD:
+            sys.exit()
+            
     oHandle = open(outDir+cancer+"/"+cgFileName+".json","w")
     
     J={}
@@ -418,6 +419,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
     J["cohort"] ="TCGA_"+cancer
     J['domain']="TCGA"
+    J['tags']="cancer" 
     J['owner']="TCGA"
     
     #change cgData
@@ -478,7 +480,7 @@ def outputMatrix(dataMatrix, samples, genes, oldgenes,outfile, flog):
             return 1
         for gene in genes:
             if genes[gene]!=oldgenes[gene]:
-                print "ERROR gene length is different",gene
+                print "ERROR gene order is different",gene
                 return 1
             
     fout = open(outfile,"w")

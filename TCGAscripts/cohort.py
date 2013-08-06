@@ -8,9 +8,10 @@ import TCGAUtil
 
 def cohort (inDir, outDir, cancer, flog,REALRUN):
     #print status
-    print cancer, sys._getframe().f_code.co_name
     if cancer in ["COADREAD","LUNG","PANCAN"]:
         return
+
+    print cancer, sys._getframe().f_code.co_name
         
     print inDir
     print outDir
@@ -39,14 +40,6 @@ def cohort (inDir, outDir, cancer, flog,REALRUN):
         samples =[]
         for name in missingMaps[map]:
             obj=bookDic[name]
-            if obj['type']=="clinicalMatrix":
-                fin = open(obj['path'],'r')
-                fin.readline()
-                for line in fin.readlines():
-                    sample =string.split(line,"\t")[0]
-                    if sample not in samples and sample !="":
-                        samples.append(sample)
-                fin.close()
                 
             if obj['type']=="genomicMatrix":
                 fin =open(obj['path'],'U')
@@ -62,14 +55,16 @@ def cohort (inDir, outDir, cancer, flog,REALRUN):
         for sample in samples:
             #TCGA uuid handling
             uuid =sample
+            TCGAbarcode =""
             if uuid[0:4]!="TCGA": 
                 if aliquote_dic.has_key(string.lower(uuid)):
                     TCGAbarcode = aliquote_dic[string.lower(uuid)]
-                    uuid = TCGAbarcode
                 else:
-                    print uuid
+                    TCGAbarcode =  uuid
+            else:
+                TCGAbarcode = sample
 
-            intID= TCGAUtil.barcode_IntegrationId(uuid)
+            intID= TCGAUtil.barcode_IntegrationId(TCGAbarcode)
             if intID == None: # ids is on patient level above integration level
                 continue 
             if not intDic.has_key(intID):
@@ -77,6 +72,7 @@ def cohort (inDir, outDir, cancer, flog,REALRUN):
 
         outfile = outDir+cancer+"/cohort"
         fout =open(outfile,"w")
+        fout.write("sample\tcohort\n")
         for intId in intDic:
             fout.write(intId+"\t"+cancer+"\n")
         fout.close()

@@ -168,10 +168,9 @@ dir="preFreeze/TCGA/"
 outDir="preFreezeCAVM/TCGA/"
 log=0
 
-REALRUN=0
+REALRUN=1
 #1 genomic + clinical 
 #0 only clinical data 
 CAVMid (dir+cancer+"/", outDir+cancer+"/",cancer, log, REALRUN)
 
-REALRUN=0
 TCGASampleMap (outDir + cancer+"/", outDir, cancer,log, REALRUN)

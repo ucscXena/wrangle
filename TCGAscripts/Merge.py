@@ -1,6 +1,7 @@
 import string, os, sys
 import json,datetime
 import csv
+import filecmp
 
 sys.path.insert(0,"../CGDataNew")
 from ClinicalMatrixNew import *
@@ -36,6 +37,8 @@ def genomic (dir,outDir, cancer,flog,REALRUN):
                   ""
                   ]:
         
+        if file !="RPPA":
+            continue
         type=""
         if file =="RPPA":
             type="RPPA"
@@ -44,8 +47,11 @@ def genomic (dir,outDir, cancer,flog,REALRUN):
         if cancer =="COADREAD" and file in ["Gistic2_CopyNumber_Gistic2_all_data_by_genes",
                                             "Gistic2_CopyNumber_Gistic2_all_thresholded.by_genes",
                                             "Gistic2_CopyNumber_Gistic2_focal_data_by_genes",
-                                            "mutation"]:
+                                            "mutation"]:            
             continue
+        if cancer =="LUNG" and file in ["HumanMethylation450"]:
+            continue
+
         process (outDir, cancer, c1, c2, file, REALRUN,type)
         
 def process (outDir, cancer, c1, c2, file, REALRUN,type):
@@ -61,12 +67,16 @@ def process (outDir, cancer, c1, c2, file, REALRUN,type):
     if type == "RPPA": #test file is the same
         os.system("cut -f 1 "+c1file +" >tmp1")
         os.system("cut -f 1 "+c2file +" >tmp2")
-        os.environ['SAME']="0"
-        os.system("SAME=`diff tmp1 tmp2 |wc -l`;")
+        SAME = filecmp.cmp("tmp1", "tmp2")
 
-        if os.environ['SAME']!="0":
+        if not SAME:
+            print "RPPA files are not the same"
+            if os.path.exists(outDir+cancer+"/"+file):
+                os.system("rm "+outDir+cancer+"/"+file)
+            if os.path.exists(outDir+cancer+"/"+file+".json"):
+                os.system("rm "+outDir+cancer+"/"+file+".json")
             return
-
+        
     if os.path.exists(c1file) and os.path.exists(c2file):
         if REALRUN:
             if type !="SNP6_genomicSegment":
@@ -93,7 +103,8 @@ def process (outDir, cancer, c1, c2, file, REALRUN,type):
         J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
         J["cohort"] ="TCGA_"+cancer
         J["label"]= cancer +" "+Jinput["shortTitle"]
-        J['domain']="TCGA" 
+        J['domain']="TCGA"
+        J['tags']="cancer" 
         J['owner']="TCGA"
         
         if Jinput.has_key("gain"):

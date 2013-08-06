@@ -32,6 +32,7 @@ def clin (dir,outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
     filename = "_clinicalMatrix"
     doAve=0
+    dir = "/inside/home/jzhu/cgDataJing/scripts/data_flatten/public/TCGA/"
     processClin (filename, dir,outDir, cancer,flog, REALRUN)
 
 def processClin (filename, dir,outDir, CANCER,flog, REALRUN):
@@ -205,6 +206,7 @@ def processMutation (filename, dir,outDir, cancer,flog, REALRUN):
     J["sample_type"]="tumor"
     J["cohort"] ="TCGA_"+cancer
     J['domain']="TCGA"
+    J['tags']="cancer" 
     J['owner']="TCGA"
     J[":sampleMap"]="TCGA."+cancer+".sampleMap"
     J["groupTitle"]= "TCGA "+TCGAUtil.cancerGroupTitle[cancer]
