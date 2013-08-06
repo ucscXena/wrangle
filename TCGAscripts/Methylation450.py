@@ -23,6 +23,7 @@ def humanmethylation450 (inDir, outDir, cancer,flog,REALRUN):
         
 def humanmethylation (inDir, outDir, cancer,flog,PATHPATTERN,BETAOFFSET,REALRUN):
     garbage=["tmptmp/"]
+    os.system("rm -rf tmp_*")
     if os.path.exists( "tmptmp/" ):
         os.system("rm -rf tmptmp/*")
     else:
@@ -124,7 +125,11 @@ def humanmethylation (inDir, outDir, cancer,flog,PATHPATTERN,BETAOFFSET,REALRUN)
                 pattern =PATHPATTERN
                 if string.find(file,pattern)!=-1:
                     infile = rootDir+dataDir+"/"+file
-                    c = process(c, dataMatrix,allSamples,tmpSamples, probes, cancer,infile,flog, BETA_POS,BETAOFFSET,100)
+                    new_c = process(c, dataMatrix,allSamples,tmpSamples, probes, cancer,infile,flog, BETA_POS,BETAOFFSET,100)
+                    #skip
+                    if new_c == c:
+                        continue
+                    c = new_c
                     if (c % 100)==0:
                         tmpout="tmp_"+ str(int(c/100.0))
                         files.append(tmpout)
@@ -297,7 +302,7 @@ def outputMatrix(dataMatrix, samples, probes, oldprobes,outfile, flog):
     #compare probes and oldprobes:
     if oldprobes!={}:
         if len(probes)!=len(oldprobes):
-            print "ERROR probes total length is different"
+            print "ERROR probes total length is different", len(probes), len(oldprobes), samples
             return 1
         for probe in probes:
             if probes[probe]!=oldprobes[probe]:
