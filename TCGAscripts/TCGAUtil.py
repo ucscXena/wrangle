@@ -103,7 +103,7 @@ cancerHumanReadable={
     }
 
 anatomical_origin ={
-    "LAML":"blood",
+    "LAML":"White blood cell",
     "BLCA":"Bladder",
     "LGG":"Brain",
     "BRCA":"Breast",

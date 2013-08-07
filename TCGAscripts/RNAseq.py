@@ -101,7 +101,7 @@ def illuminahiseq_rnaseq_bcgsc  (inDir, outDir, cancer, flog,REALRUN):
 
 def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataProducer,REALRUN,clean):
     garbage=[tmpDir]
-
+    os.system("rm -rf tmp_*")
     if os.path.exists( tmpDir ):
         if clean:
             os.system("rm -rf "+tmpDir+"*")
@@ -496,7 +496,8 @@ def outputMatrix(dataMatrix, samples, genes, oldgenes,outfile, flog):
         for sample in samples:
             value = dataMatrix[genes[gene]][samples[sample]]
             if value !="":
-                fout.write("\t"+str(value))
+                value = "%.4f" % (float(value))
+                fout.write("\t"+value)
             else:
                 fout.write("\tNA")
         fout.write("\n")
