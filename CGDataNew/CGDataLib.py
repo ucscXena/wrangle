@@ -29,7 +29,6 @@ def cgWalk(dir, ignore):
                 else:
                     print "json file size 0", root+"/"+file
                     return 0
-
             """
             #file is ascii
             command ="file "+root+"/"+base

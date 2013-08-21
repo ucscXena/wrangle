@@ -307,7 +307,7 @@ featurePriority={
     "LIHC": {"sample_type":"1",
              "neoplasm_histologic_grade":"2",
              },
-    "LAML": {"sample_type_id":"1",
+    "LAML": {"sample_type":"1",
              "acute_myeloid_leukemia_calgb_cytogenetics_risk_category":"2",
              "_PANCAN_DNAMethyl_LAML":"3",
              "_PANCAN_mirna_LAML":"4",

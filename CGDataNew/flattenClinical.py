@@ -6,7 +6,7 @@ from ClinicalFeatureNew  import *
 from IntegrationId  import *
 from CGDataUtil import *
 
-def runFlatten(inDir, outDir,REALRUN, SMAPNAME=None):
+def runFlatten(inDir, outDir,REALRUN, onlyGenomicSamples, SMAPNAME=None):
     dir = inDir
     bookDic={}
     sampleMaps={}
@@ -48,7 +48,7 @@ def runFlatten(inDir, outDir,REALRUN, SMAPNAME=None):
             fin.close()
         
         if REALRUN in [0,1]:
-            r = flattenEachSampleMap(sMap,bookDic)
+            r = flattenEachSampleMap(sMap,bookDic,onlyGenomicSamples)
             if r== False:
                 return 0
             finalClinicalMatrix,finalClinicalMatrixJSON,finalClinFeature,finalClinFeatureJSON= r
@@ -110,12 +110,14 @@ def flattenForClinicalFeature(sMap, bookDic):
     finalClinFeature.fillInPriorityVisibility(VIS_limit)
     finalClinFeature.setFeatureShortTitle("_PATIENT","_PATIENT_ID")
     finalClinFeature.setFeatureLongTitle("_PATIENT","_PATIENT_ID")
+    finalClinFeature.setFeatureValueType("_PATIENT","category")
     finalClinFeature.setFeatureShortTitle("_INTEGRATION","_SAMPLE_ID")
     finalClinFeature.setFeatureLongTitle("_INTEGRATION","_SAMPLE_ID")
+    finalClinFeature.setFeatureValueType("_INTEGRATION","category")
     return finalClinFeature
 
 
-def flattenEachSampleMap(sMap, bookDic):
+def flattenEachSampleMap(sMap, bookDic,onlyGenomicSamples):
     sampleMap = sMap.getName()
 
     jsonName= trackName_fix(sampleMapBaseName(sMap)+"_clinicalMatrix")
@@ -192,6 +194,7 @@ def flattenEachSampleMap(sMap, bookDic):
 
             #merge final and cMatrix
             if finalClinMatrix != cMatrix:
+                print "name=",cMatrix.getName()
                 r = finalClinMatrix.addNewCols(cMatrix,validation=True)
                 if r!=True:
                     print "Fail to merge"
@@ -306,12 +309,13 @@ def flattenEachSampleMap(sMap, bookDic):
 
     # removing rows without genomic data from  clinical data matrix due to mysql enum limitation
     # should remove this step after the display functionality is done better, currently cgb clinical data range in feature control panel shows the full range of clinical data without checking if the specific track/dataset has the full value range.
-    print "genomic sample count", len(keepSamples)
-    success= finalClinMatrix.onlyKeepRows(keepSamples)
-    if not success:
-        print "fail to remove extra rows"
-    else:
-        print "after keeping sample with genomic data", finalClinMatrix.getROWnum()
+    if onlyGenomicSamples:
+        print "genomic sample count", len(keepSamples)
+        success= finalClinMatrix.onlyKeepRows(keepSamples)
+        if not success:
+            print "fail to remove extra rows"
+        else:
+            print "after keeping sample with genomic data", finalClinMatrix.getROWnum()
         
     #add to the clinical matrix any samples with genomic data but no clinical data
     emptyData={}
@@ -340,17 +344,21 @@ def flattenEachSampleMap(sMap, bookDic):
     #identify empty features 
     badFeatures= finalClinMatrix.findBadColsNotRemove()
     finalBadFeatures=[]
-    for feature in badFeatures:
-        #get short label
-        shortTitle = finalClinFeature.getShortTitle(feature)
-        if not shortTitle:
-            print feature,"remove"
-            finalBadFeatures.append(feature)
-        elif shortTitle[:19]!="_DEPRECATED_FEATURE":
-            finalBadFeatures.append(feature)
-        else:
-            print shortTitle,"not remove"
 
+    if finalClinFeature:
+        for feature in badFeatures:
+            #get short label
+            shortTitle = finalClinFeature.getShortTitle(feature)
+            if not shortTitle:
+                print feature,"remove"
+                finalBadFeatures.append(feature)
+            elif shortTitle[:19]!="_DEPRECATED_FEATURE":
+                finalBadFeatures.append(feature)
+            else:
+                print shortTitle,"not remove"
+    else:
+        finalBadFeatures =badFeatures[:]
+        
     #remove bad features
     finalClinMatrix.removeCols(finalBadFeatures)
     
@@ -404,9 +412,11 @@ def flattenEachSampleMap(sMap, bookDic):
         
         finalClinFeature.setFeatureShortTitle("_PATIENT","_PATIENT_ID")
         finalClinFeature.setFeatureLongTitle("_PATIENT","_PATIENT_ID")
+        finalClinFeature.setFeatureValueType("_PATIENT","category")
         finalClinFeature.setFeatureShortTitle("_INTEGRATION","_SAMPLE_ID")
         finalClinFeature.setFeatureLongTitle("_INTEGRATION","_SAMPLE_ID")
-                    
+        finalClinFeature.setFeatureValueType("_INTEGRATION","category")
+        
     print sampleMap,finalClinMatrix.getROWnum()
     return finalClinMatrix,finalClinMatrixJSON, finalClinFeature, finalClinFeatureJSON
 

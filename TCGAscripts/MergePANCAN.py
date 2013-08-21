@@ -210,9 +210,21 @@ def processMutation (filename, dir,outDir, cancer,flog, REALRUN):
     J['owner']="TCGA"
     J[":sampleMap"]="TCGA."+cancer+".sampleMap"
     J["groupTitle"]= "TCGA "+TCGAUtil.cancerGroupTitle[cancer]
-    
-    J["primary_disease"]="cancer"
-    J["anatomical_origin"]= ""
+
+            
+    if cancer!="PANCAN":
+        J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
+        J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
+    else:
+        J["primary_disease"]="cancer"
+        J["anatomical_origin"]=""
+        origin =[]
+        for value in TCGAUtil.anatomical_origin.values():
+            if value =="":
+                continue
+            if value not in origin:
+                origin.append(value)
+        J["tags"]= string.join(origin,", ")
         
     fout.write(json.dumps(J,indent=-1))
     fout.close()
@@ -363,7 +375,15 @@ def processRNA (filename, dir,outDir, cancer,flog, REALRUN):
             J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
         else:
             J["primary_disease"]="cancer"
-            J["anatomical_origin"]= ""
+            J["anatomical_origin"]=""
+            origin =[]
+            for value in TCGAUtil.anatomical_origin.values():
+                if value =="":
+                    continue
+                if value not in origin:
+                    origin.append(value)
+            J["tags"]= string.join(origin,", ")
+
             J["url"]="https://tcga-data.nci.nih.gov/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/"
             J["name"]= "TCGA_PANCAN_exp_HiSeqV2_PANCAN"
         fout.write(json.dumps(J,indent=-1))

@@ -37,8 +37,6 @@ def genomic (dir,outDir, cancer,flog,REALRUN):
                   ""
                   ]:
         
-        if file !="RPPA":
-            continue
         type=""
         if file =="RPPA":
             type="RPPA"

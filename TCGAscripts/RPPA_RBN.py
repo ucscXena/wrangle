@@ -68,12 +68,24 @@ def RPPA_RBN (inDir, outDir, cancer,flog,REALRUN):
     J["label"]= cancer +" protein (RBN)"
     J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") reverse phase protein array (replicate-base normalization)"
 
-    J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
     J["sample_type"]="tumor"
-    J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
+    if cancer !="PANCAN":
+        J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
+        J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
+        J['tags']="cancer" 
+    else:
+        J["primary_disease"] = "cancer"
+        J["anatomical_origin"]= ""
+        origin =[]
+        for value in TCGAUtil.anatomical_origin.values():
+            if value =="":
+                continue
+            if value not in origin:
+                origin.append(value)
+        J["tags"]= string.join(origin,", ")
+        
     J["cohort"] ="TCGA_"+cancer
     J['domain']="TCGA"
-    J['tags']="cancer" 
     J['owner']="TCGA"
     
     J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") protein expression data for 131 proteins, measured by RPPA (reverse phase protein array) technology. These data have been normalized by RBN (replicate-base normalization) method developed by MDACC. Details: https://www.synapse.org/#!Synapse:syn1750330.<br><br>"

@@ -97,7 +97,6 @@ class ClinicalMatrixNew():
             else:
                 print "WARNING detected duplicate sample", sample, rFHandle,name
                 continue
-
             
             countIgnore=0
 

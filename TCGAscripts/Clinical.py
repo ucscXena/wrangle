@@ -135,7 +135,7 @@ def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN,  originCancer,REAL
                     FirstColAuto = False
                 clinMatrix = ClinicalMatrixNew(infile, "foo", FirstColAuto)
 
-                clinMatrix.removeCols(["ethnicity","race","jewish_origin"])
+                clinMatrix.removeCols(["ethnicity","race","jewish_origin","patient_id"])
 
                 if pattern =="biospecimen_tumor_sample":
                     clinMatrix.removeCols(["vial_number"])
