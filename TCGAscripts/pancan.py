@@ -180,7 +180,19 @@ def individual_DNAmethyl (dir, outDir, cancer,log, REALRUN):
     shortTitle= cancer+ " DNA methylation"
     longTitle="_"+cancer+" DNA methylation subtype (syn1701558)"
     dataProducer="https://www.synapse.org/#!Synapse:syn1701558"
-    individual_subtype (dir, outDir, cancer,log, REALRUN, featureName,dataProducer, shortTitle, longTitle)
+
+    filepath= dir
+    code=None
+    if os.path.exists(filepath+".json"):
+        fin = open(filepath+".json",'r')
+        J = json.loads(fin.read())
+        if J.has_key("code"):
+            code= J["code"]
+        if J.has_key("stateOrder"):
+            maxSubtype = J["stateOrder"]
+        fin.close()
+
+    individual_subtype (dir, outDir, cancer,log, REALRUN, featureName,dataProducer, shortTitle, longTitle, code)
     
 def individual_miRNA (dir, outDir, cancer,log, REALRUN):
     #print status
@@ -192,10 +204,22 @@ def individual_miRNA (dir, outDir, cancer,log, REALRUN):
     shortTitle= cancer+ " mirna"
     longTitle="_"+cancer+" microRNA subtype (syn1688309)"
     dataProducer="https://www.synapse.org/#!Synapse:syn1688309"
-    individual_subtype (dir, outDir, cancer,log, REALRUN, featureName,dataProducer, shortTitle, longTitle)
+
+    filepath= dir
+    code=None
+    if os.path.exists(filepath+".json"):
+        fin = open(filepath+".json",'r')
+        J = json.loads(fin.read())
+        if J.has_key("code"):
+            code= J["code"]
+        if J.has_key("stateOrder"):
+            maxSubtype = J["stateOrder"]
+        fin.close()
+
+    individual_subtype (dir, outDir, cancer,log, REALRUN, featureName,dataProducer, shortTitle, longTitle, code)
 
    
-def individual_subtype (dir, outDir, cancer,log, REALRUN, featureName,dataProducer, shortTitle, longTitle):
+def individual_subtype (dir, outDir, cancer,log, REALRUN, featureName,dataProducer, shortTitle, longTitle, dic):
     if cancer =="PANCAN":
         return
     
@@ -213,7 +237,14 @@ def individual_subtype (dir, outDir, cancer,log, REALRUN, featureName,dataProduc
     #data
     fin= open(filepath,'r')
     fin.readline()
-    fout.write(fin.read())
+
+    if dic ==None:
+        fout.write(fin.read())
+    else:
+        for line in fin.readlines():
+            id,cluster= string.split(string.strip(line),"\t")
+            fout.write(id+"\t"+dic[cluster]+"\n")
+    
     fout.close()
     fin.close()
 

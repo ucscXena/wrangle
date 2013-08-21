@@ -35,8 +35,8 @@ inDir ="data/lincs/"
 outDir ="data_flatten/lincs/"
 r = runFlatten(inDir, outDir,REALRUN,None)
 
-inDir ="data/public/OSHUBaylorLBL/"
-outDir ="data_flatten/public/OSHUBaylorLBL/"
+inDir ="data/public/OHSUBaylorLBL/"
+outDir ="data_flatten/public/OHSUBaylorLBL/"
 r = runFlatten(inDir, outDir,REALRUN,None)
 
 inDir ="data/public/other/"

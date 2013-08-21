@@ -1,17 +1,23 @@
-FREEZE=cgDataFreeze2012-12-21
+DATE=2013-08-21
 
-rsync -avL --exclude '*~' --exclude 'public/TCGA' --exclude 'probeMap' data/* /inside/depot/cancerGenomeFreeze/$FREEZE/
+FREEZE=cgDataFreeze$DATE
 
-rsync -avL --exclude '*~' data_flatten/probeMap /inside/depot/cancerGenomeFreeze/$FREEZE/
+python scriptRepoStats.py 
 
-rsync -avL --exclude '*~' data_flatten/stat* /inside/depot/cancerGenomeFreeze/$FREEZE/
+mv statReport data_flatten/statReport_$DATE
 
-rsync -avL --exclude '*~' data_flatten/public/TCGA /inside/depot/cancerGenomeFreeze/$FREEZE/public/
+rsync -avL --exclude '*~' --exclude 'public/TCGA' --exclude 'probeMap' data/* /data/cancerGenomeData/$FREEZE/
 
-chmod -R a-wx+X /inside/depot/cancerGenomeFreeze/$FREEZE/
+rsync -avL --exclude '*~' data_flatten/probeMap /data/cancerGenomeData/$FREEZE/
 
-chgrp -R cancer /inside/depot/cancerGenomeFreeze/$FREEZE/
+rsync -avL --exclude '*~' data_flatten/stat* /data/cancerGenomeData/$FREEZE/
 
-cp -pR /inside/depot/cancerGenomeFreeze/$FREEZE/ /data/cancerGenomeData/
+rsync -avL --exclude '*~' data_flatten/public/TCGA /data/cancerGenomeData/$FREEZE/public/
 
 chmod -R a-wx+X /data/cancerGenomeData/$FREEZE/
+
+chgrp -R cancer /data/cancerGenomeData/$FREEZE/
+
+rm -f /data/cancerGenomeData/cgDataFreezeLatest 
+
+ln -sf /data/cancerGenomeData/$FREEZE /data/cancerGenomeData/cgDataFreezeLatest

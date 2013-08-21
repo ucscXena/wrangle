@@ -78,8 +78,7 @@ $FIREHOSEDATE_ana_version
 
 
 
-
 #PANCAN dataset done after new data compiled
-#1	1	MergePANCAN	clin	/inside/home/jzhu/cgDataJing/scripts/data_flatten/public/TCGA/*	$TMP
+#1	1	MergePANCAN	clin	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
 
 

@@ -5,7 +5,15 @@ os.sys.path.insert(0, os.path.dirname(__file__)+"../CGDataNew")
 
 from flattenClinical import *
 
-REALRUN =1
+onlyGenomicSamples =1
+# 1 (default) only keep genomicSamples
+# 0 keep all samples mentioned in both clinical and genomic data files
+
+REALRUN = -1
+#1 : full
+#0 : clinical data only, full json
+# -1: only copy genomic JSON
+# -2: only clinical feature data
 
 parser = optparse.OptionParser()
 parser.add_option("--inDir", action="store", type="string", dest="inDir")
@@ -34,6 +42,6 @@ if inDir[-1]!="/":
 
 if outDir[-1]!="/":
     outDir = outDir +"/"
-    
-r = runFlatten(inDir, outDir,REALRUN, options.sampleMap)
+
+r = runFlatten(inDir, outDir,REALRUN, onlyGenomicSamples, options.sampleMap)
 

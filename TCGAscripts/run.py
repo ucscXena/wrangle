@@ -66,8 +66,8 @@ for line in fin.readlines():
                 cancer =string.replace(cancer,p,"")
             cancer=string.upper(cancer)
 
-#            if cancer not in ["COADREAD"]:
-#                continue
+            if cancer not in ["LAML"]:
+                continue
 
             if run:
                 m = __import__(module)
