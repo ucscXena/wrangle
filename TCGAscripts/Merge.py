@@ -47,8 +47,6 @@ def genomic (dir,outDir, cancer,flog,REALRUN):
                                             "Gistic2_CopyNumber_Gistic2_focal_data_by_genes",
                                             "mutation"]:            
             continue
-        if cancer =="LUNG" and file in ["HumanMethylation450"]:
-            continue
 
         process (outDir, cancer, c1, c2, file, REALRUN,type)
         

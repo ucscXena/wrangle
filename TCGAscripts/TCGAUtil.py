@@ -208,6 +208,10 @@ TCGASampleType={
 
 valueType={
     "patient_id":"category",
+    "sample_type_id":"category",
+    "_OS_IND":"category",
+    "_RFS_IND":"category",
+    "_EVENT":"category",
     "":""
     }
 
@@ -255,7 +259,7 @@ featureStateOrder={
 
 featurePriority={
     "BLCA": {"sample_type":"1",
-             "_PANCAN_UNC_RNAseq_PANCAN_K16":"2",
+             "_PANCAN_Cluster_Cluster_PANCAN":"2",
              "neoplasm_histologic_grade":"3",
              "gender":"4"
              },
@@ -316,7 +320,7 @@ featurePriority={
     "LGG":  {"sample_type":"1",
              "histological_type":"2",
              "neoplasm_histologic_grade":"3",
-             "days_to_new_tumor_event_after_initial_treatment":"4"
+             "_TIME_TO_EVENT":"4"
              },
     "LUAD": {"sample_type":"1",
              "Expression_Subtype":"2",

@@ -104,6 +104,9 @@ def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN,  originCancer,REAL
                                 tmpClinFeature.setFeatureStateOrder(feature,stateOrder)
                                 tmpClinFeature.setFeatureStateOrderRelax(feature,"true")
 
+                            if TCGAUtil.valueType.has_key(feature):
+                                tmpClinFeature.setFeatureValueType(feature,TCGAUtil.valueType[feature])
+
                         fout= open(cFfile,'w')    
                         tmpClinFeature.store(fout)
                         fout.close()

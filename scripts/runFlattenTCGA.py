@@ -43,5 +43,4 @@ if inDir[-1]!="/":
 if outDir[-1]!="/":
     outDir = outDir +"/"
     
-r = runFlatten(inDir, outDir,REALRUN, options.sampleMap)
-
+r = runFlatten(inDir, outDir,REALRUN, onlyGenomicSamples, options.sampleMap)

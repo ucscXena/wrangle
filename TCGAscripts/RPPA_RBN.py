@@ -53,7 +53,6 @@ def RPPA_RBN (inDir, outDir, cancer,flog,REALRUN):
     #stable
     J["cgDataVersion"]=1
     J[":dataSubType"]="protein"
-    J["redistribution"]= True
     J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
     J["dataProducer"]= dataProducer
     J["type"]= "genomicMatrix" 
@@ -69,10 +68,12 @@ def RPPA_RBN (inDir, outDir, cancer,flog,REALRUN):
     J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") reverse phase protein array (replicate-base normalization)"
 
     J["sample_type"]="tumor"
+    J["redistribution"]= True
     if cancer !="PANCAN":
         J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
         J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
-        J['tags']="cancer" 
+        J['tags']="cancer"
+            
     else:
         J["primary_disease"] = "cancer"
         J["anatomical_origin"]= ""
@@ -83,7 +84,7 @@ def RPPA_RBN (inDir, outDir, cancer,flog,REALRUN):
             if value not in origin:
                 origin.append(value)
         J["tags"]= string.join(origin,", ")
-        
+
     J["cohort"] ="TCGA_"+cancer
     J['domain']="TCGA"
     J['owner']="TCGA"

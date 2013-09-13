@@ -50,10 +50,12 @@ def downloadBundle(inDir, PROBEMAP, testVersionOnly):
     if secureDir in ["probemap","common"]:
         return 0
     #dir related to security    
-    if secureDir not in ["gray","ispy","pancreas","public","su2c","lincs"]:  #,"tcga"]:
+    if secureDir not in ["gray","ispy","pancreas","public","su2c","lincs","cavm"]:  #,"tcga"]:
         print "wrong security dir", secureDir
         return 1
-    
+    if secureDir =="cavm":
+        secureDir = "public"
+
     bookDic={}
     ignore=0
     bookDic=cgWalk(dir,ignore)
@@ -138,13 +140,13 @@ def downloadBundle(inDir, PROBEMAP, testVersionOnly):
         else:
             path = bookDic[dataset]['path']
         os.system("cp "+ path +" "+outDir+subdir)
-        #os.system("cp "+ path +".json "+outDir+subdir)  # not distributing curated meta-data
+        os.system("cp "+ path +".json "+outDir+subdir)  
         
         #sampleMap
         sampleMap = bookDic[dataset][':sampleMap']
         path = bookDic[sampleMap]['path']
         os.system("cp "+ path +" "+outDir+ subdir)
-        #os.system("cp "+ path +".json "+outDir + subdir) # not distributing curated meta-data
+        os.system("cp "+ path +".json "+outDir + subdir)
 
 
         #clinicalMatrix

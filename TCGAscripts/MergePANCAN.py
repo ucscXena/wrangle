@@ -49,10 +49,11 @@ def processClin (filename, dir,outDir, CANCER,flog, REALRUN):
 
         inFiles[cancer]= cancerFile
 
-    features=["sample_type","gender","cohort","age_at_initial_pathologic_diagnosis",
+    features=["sample_type","sample_type_id","gender","cohort","age_at_initial_pathologic_diagnosis",
               "_OS","_OS_IND","_RFS","_RFS_IND","_EVENT","_TIME_TO_EVENT"]
         
     for feature in features:
+        print feature
         if REALRUN:
             outfile  = outDir+"/"+CANCER+"/"+feature+"_PANCAN"
             foutPANCAN = open(outfile,'w')
@@ -61,6 +62,7 @@ def processClin (filename, dir,outDir, CANCER,flog, REALRUN):
             keys = inFiles.keys()
             os.system("rm -f tmp")
             samples=[]
+
             for key in keys:
                 file = inFiles[key]
                 fin = open(file,'r')
@@ -72,6 +74,7 @@ def processClin (filename, dir,outDir, CANCER,flog, REALRUN):
                        break
                 if POS==0:
                     continue
+                #print file, POS
                 for line in fin.readlines():
                     data = string.split(line[:-1],"\t")
                     sample=data[-1]
@@ -88,7 +91,7 @@ def processClin (filename, dir,outDir, CANCER,flog, REALRUN):
         J['type']="clinicalMatrix"
         J[":sampleMap"]="TCGA."+CANCER+".sampleMap"
 
-        if TCGAUtil.featurePriority.has_key(CANCER):
+        if TCGAUtil.featurePriority.has_key(CANCER) or TCGAUtil.valueType.has_key(feature):
             featureConfig=0
             cfout =open(outDir+"/"+CANCER+"/"+feature+"_PANCAN_clinFeature","w")
             
@@ -113,6 +116,11 @@ def processClin (filename, dir,outDir, CANCER,flog, REALRUN):
 
                 cfout.write(feature+"\tstateOrder\t\""+string.join(stateOrder,"\",\"")+"\"\n")
                 cfout.write(feature+"\tstateOrderRelax\ttrue\n")
+
+            if TCGAUtil.valueType.has_key(feature):
+                featureConfig=1
+                cfout.write(feature+"\tvalueType\tcategory\n")
+                
             cfout.close()
             
             if  featureConfig:
@@ -202,7 +210,6 @@ def processMutation (filename, dir,outDir, cancer,flog, REALRUN):
         mutationJSON(J,cancer)
 
     J['dataProducer']="UCSC Cancer Browser team"
-    J["redistribution"]= False
     J["sample_type"]="tumor"
     J["cohort"] ="TCGA_"+cancer
     J['domain']="TCGA"
@@ -352,7 +359,6 @@ def processRNA (filename, dir,outDir, cancer,flog, REALRUN):
 
         J['name']= J['name']+"_PANCAN"
         J['dataProducer']="UCSC Cancer Browser team"
-        J["redistribution"]= False
         J["sample_type"]="tumor"
         J["cohort"] ="TCGA_"+cancer
         J['domain']="TCGA"
