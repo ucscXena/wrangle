@@ -1,0 +1,23 @@
+REALRUN=0
+
+python convertCAVM.py --inDir=data_flatten/ispy/ --outDir=CAVM/ispy/ --CAVM=1 --TCGA=0 --REALRUN=$REALRUN
+
+python convertCAVM.py --inDir=data_flatten/fake-tcga/ --outDir=CAVM/fake-tcga/ --CAVM=1 --TCGA=0 --REALRUN=$REALRUN
+
+python convertCAVM.py --inDir=data_flatten/gray/BCCL/ --outDir=CAVM/gray/ --CAVM=1 --TCGA=0 --REALRUN=$REALRUN --MAPID=0
+python convertCAVM.py --inDir=data_flatten/gray/gray2009_OVcellLines_gray/ --outDir=CAVM/gray/ --CAVM=1 --TCGA=0 --REALRUN=$REALRUN
+
+python convertCAVM.py --inDir=data_flatten/pancreas/ --outDir=CAVM/pancreas/ --CAVM=1 --TCGA=0 --REALRUN=$REALRUN
+
+python convertCAVM.py --inDir=data_flatten/su2c/su2cBreast/ --outDir=CAVM/su2c/su2cBreast/ --CAVM=1 --TCGA=0 --REALRUN=$REALRUN 
+python convertCAVM.py --inDir=data_flatten/su2c/su2cBreast/labTrack/ --outDir=CAVM/su2c/su2cBreast/ --CAVM=1 --TCGA=0 --REALRUN=$REALRUN --MAPID=0
+
+python convertCAVM.py --inDir=data_flatten/su2c/su2cEpigenetics/ --outDir=CAVM/su2c/su2cEpigenetics/ --CAVM=1 --TCGA=0 --REALRUN=$REALRUN --MAPID=0
+
+python convertCAVM.py --inDir=data_flatten/su2c/su2cPancreas/ --outDir=CAVM/su2c/su2cPancreas/ --CAVM=1 --TCGA=0 --REALRUN=$REALRUN --MAPID=0 
+
+python convertCAVM.py --inDir=data_flatten/public/other/  --outDir=CAVM/public/other/ --CAVM=1 --TCGA=0 --REALRUN=$REALRUN
+
+python convertCAVM.py --inDir=data_flatten/public/OHSUBaylorLBL/  --outDir=CAVM/public/OHSUBaylorLBL/ --CAVM=1 --TCGA=0 --REALRUN=$REALRUN --MAPID=0
+
+python convertCAVM.py --inDir=data_flatten/public/TCGA/  --outDir=CAVM/public/TCGA/ --CAVM=1 --TCGA=1 --REALRUN=$REALRUN
