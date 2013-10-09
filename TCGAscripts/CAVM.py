@@ -36,6 +36,8 @@ def CAVMid (dir, outDir, cancer,log, REALRUN):
             intDic={}
             obj=bookDic[name]
             if obj['type']=="clinicalMatrix":
+                if REALRUN ==-1:
+                    continue
                 outfile = outDir +os.path.basename(obj['path'])
                 fin = open(obj['path'],'r')
                 fout = open(outfile,'w')
@@ -75,7 +77,7 @@ def CAVMid (dir, outDir, cancer,log, REALRUN):
 
                 os.system("cp "+obj['path']+".json "+outfile+".json")
 
-                if not REALRUN:
+                if REALRUN !=1:
                     continue
                           
                 for sample in samples:
@@ -168,9 +170,10 @@ dir="preFreeze/TCGA/"
 outDir="preFreezeCAVM/TCGA/"
 log=0
 
-REALRUN=0
+REALRUN= -1
 #1 genomic + clinical 
-#0 only clinical data 
+#0 only clinical data
+# -1: only genomic json
 CAVMid (dir+cancer+"/", outDir+cancer+"/",cancer, log, REALRUN)
 
 TCGASampleMap (outDir + cancer+"/", outDir, cancer,log, REALRUN)

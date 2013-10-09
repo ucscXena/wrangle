@@ -99,9 +99,14 @@ def process (inDir,outDir,cancer,flog,PATHPATTERN,originCancer):
         clinMatrix.replaceValue("[Not Requested]","")
         clinMatrix.replaceValue("[Completed]","")
         clinMatrix.replaceValue("[Pending]","")
-        clinMatrix.replaceValue("[]","")
         clinMatrix.replaceValue("Not Tested","")
-
+        clinMatrix.replaceValue("[]","")
+        clinMatrix.replaceValue(",\"","")
+        clinMatrix.replaceValue("\"","")
+        clinMatrix.replaceValue("'","")
+        clinMatrix.replaceValue("`","")
+        clinMatrix.replaceValue("|","")
+        
         #if cancer != originCancer:
         #    clinMatrix.addOneColWithSameValue("cohort",originCancer)
 

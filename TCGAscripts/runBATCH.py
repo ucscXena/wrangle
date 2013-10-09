@@ -1,8 +1,4 @@
 import sys,os,string, glob
-#import httplib
-#from urlparse import urljoin, urlparse
-#from bs4 import BeautifulSoup
-#import base64
 
 print "python run.py configfile logfile"
 print
@@ -63,13 +59,13 @@ for line in fin.readlines():
                 outDir= string.replace(outDir, k, v)
             
         pattern= string.split(inDir,"*")
+
         for dir in glob.glob(inDir):
             cancer =dir
             for p in pattern:
                 cancer =string.replace(cancer,p,"")
             cancer=string.upper(cancer)
-            if string.find(cancer,"PANCAN")!=-1:
-                continue
+
             if run:
                 m = __import__(module)
                 func = getattr(m,function)

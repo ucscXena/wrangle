@@ -32,8 +32,11 @@ def TCGASampleMap (dir, outDir, cancer,log, REALRUN):
         print map
         print missingMaps[map]
         sMap =SampleMapNew(None,map)
+
         samples =[]
         for name in missingMaps[map]:
+            if REALRUN !=1:
+                continue
             obj=bookDic[name]
             if obj['type']=="genomicMatrix":
                 fin =open(obj['path'],'U')
@@ -54,6 +57,8 @@ def TCGASampleMap (dir, outDir, cancer,log, REALRUN):
         intName= map+".integrationID"
         integrationID=IntegrationId(intName)
         for sample in samples:
+            if REALRUN !=1:
+                continue
             #TCGA uuid handling
             if sample[0:4]!="TCGA": 
                 if aliquote_dic.has_key(string.lower(sample)):
@@ -91,13 +96,16 @@ def TCGASampleMap (dir, outDir, cancer,log, REALRUN):
             os.makedirs( outDir )
         if not os.path.exists( outDir +cancer+"/"):
                 os.makedirs( outDir+cancer+"/" )
-        oHandle = open(outDir+cancer+"/"+map,"w")
-        sMap.store(oHandle)
+
+        if REALRUN == 1:
+            oHandle = open(outDir+cancer+"/"+map,"w")
+            sMap.store(oHandle)
 
         #output integrationID
-        oHandle = open(outDir+cancer+"/integrationID","w")
-        integrationID.store(oHandle)
-        oHandle.close()
+        if REALRUN ==1:
+            oHandle = open(outDir+cancer+"/integrationID","w")
+            integrationID.store(oHandle)
+            oHandle.close()
         
         #output integrationID json
         oHandle = open(outDir+cancer+"/integrationID.json","w")
@@ -106,7 +114,11 @@ def TCGASampleMap (dir, outDir, cancer,log, REALRUN):
 
         J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
         J["sample_type"]="tumor"
-        J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
+        if cancer !="PANCAN":
+            J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
+        else:
+            J["primary_disease"]="cancer"
+            
         J["cohort"] ="TCGA_"+cancer
         J['domain']="TCGA"
         J['owner']="TCGA"
@@ -119,19 +131,11 @@ def TCGASampleMap (dir, outDir, cancer,log, REALRUN):
         
         #output json
         oHandle = open(outDir+cancer+"/"+map+".json","w")
-        J={}
         J['name']=map
         J['type']="sampleMap"
         J["version"]= datetime.date.today().isoformat()
         J["cgDataVersion"]=1
         J[":integrationId"]=intName
-
-        J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
-        J["sample_type"]="tumor"
-        J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
-        J["cohort"] ="TCGA_"+cancer
-        J['project']="TCGA"
-        J['owner']="TCGA"
 
         #add info for old clinical data
         if os.path.exists( outDir+cancer+"/oldClin.json" ):

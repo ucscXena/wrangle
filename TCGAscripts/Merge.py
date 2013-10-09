@@ -100,9 +100,11 @@ def process (outDir, cancer, c1, c2, file, REALRUN,type):
         J["cohort"] ="TCGA_"+cancer
         J["label"]= cancer +" "+Jinput["shortTitle"]
         J['domain']="TCGA"
-        J['tags']="cancer" 
+        J['tags']=["cancer"]
         J['owner']="TCGA"
-        
+
+        if Jinput.has_key("gdata_tags"):
+            J["gdata_tags"]= Jinput["gdata_tags"]
         if Jinput.has_key("gain"):
             J["gain"]= Jinput["gain"]
         if Jinput.has_key("colNormalization"):

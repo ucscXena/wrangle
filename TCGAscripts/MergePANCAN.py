@@ -213,7 +213,7 @@ def processMutation (filename, dir,outDir, cancer,flog, REALRUN):
     J["sample_type"]="tumor"
     J["cohort"] ="TCGA_"+cancer
     J['domain']="TCGA"
-    J['tags']="cancer" 
+    J['tags']=["cancer"] 
     J['owner']="TCGA"
     J[":sampleMap"]="TCGA."+cancer+".sampleMap"
     J["groupTitle"]= "TCGA "+TCGAUtil.cancerGroupTitle[cancer]
@@ -231,7 +231,7 @@ def processMutation (filename, dir,outDir, cancer,flog, REALRUN):
                 continue
             if value not in origin:
                 origin.append(value)
-        J["tags"]= string.join(origin,", ")
+        J["tags"]= J["tags"]+origin
         
     fout.write(json.dumps(J,indent=-1))
     fout.close()
@@ -375,7 +375,7 @@ def processRNA (filename, dir,outDir, cancer,flog, REALRUN):
                           " This dataset shows the mean-normalized gene-level transcription estimates."
         J["wrangling_procedure"]="Level_3 Data (file names: *.rsem.genes.normalized_results) download from TCGA DCC, log2(x+1) transformed, normalized across all TCGA cancer cohorts, and deposited into UCSC cgData repository"
         J['gain'] = 0.5
-        
+
         if cancer!="PANCAN":
             J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
             J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
@@ -388,8 +388,8 @@ def processRNA (filename, dir,outDir, cancer,flog, REALRUN):
                     continue
                 if value not in origin:
                     origin.append(value)
-            J["tags"]= string.join(origin,", ")
 
+            J["tags"]= J["tags"]+origin
             J["url"]="https://tcga-data.nci.nih.gov/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/"
             J["name"]= "TCGA_PANCAN_exp_HiSeqV2_PANCAN"
         fout.write(json.dumps(J,indent=-1))

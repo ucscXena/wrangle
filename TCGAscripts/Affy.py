@@ -171,8 +171,9 @@ def Affy (inDir, outDir, cancer,flog,REALRUN):
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
     J["cohort"] ="TCGA_"+cancer
     J['domain']="TCGA"
-    J['tags']="cancer"
+    J['tags']=["cancer"]
     J['owner']="TCGA"
+    J['gdata_tags'] =["transcription"]
     
     #change description
     J["gain"]=1.0

@@ -165,18 +165,20 @@ def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN,  originCancer,REAL
                 clinMatrix.replaceValue("[NULL]","")
                 clinMatrix.replaceValue("[Null]","")
                 clinMatrix.replaceValue("[NA]","")
-                clinMatrix.replaceValue("[Not Available]|","")
                 clinMatrix.replaceValue("[Not Available]","")
-                clinMatrix.replaceValue("[Not Reported]","")
-                clinMatrix.replaceValue("[Not Applicable]|","")
                 clinMatrix.replaceValue("[Not Applicable]","")
+                clinMatrix.replaceValue("[Unknown]","")
+                clinMatrix.replaceValue("[Not Reported]","")
                 clinMatrix.replaceValue("[Not Requested]","")
+                clinMatrix.replaceValue("[Not Evaluated]","")
                 clinMatrix.replaceValue("[Completed]","")
                 clinMatrix.replaceValue("[Pending]","")
                 clinMatrix.replaceValue("Not Tested","")
-                clinMatrix.replaceValue("[Not Evaluated]","")
-                clinMatrix.replaceValue("[Unknown]","")
                 clinMatrix.replaceValue("[]","")
+                clinMatrix.replaceValue(",\"","")
+                clinMatrix.replaceValue("\"","")
+                clinMatrix.replaceValue("'","")
+                clinMatrix.replaceValue("`","")
                 clinMatrix.replaceValue("LUNG","Lung") #stupid BCR
                 clinMatrix.replaceValue("MSS|MSS","MSS") #stupid BCR
                 clinMatrix.replaceValue("Alive","LIVING") #stupid BCR
@@ -185,6 +187,8 @@ def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN,  originCancer,REAL
                 clinMatrix.replaceValue("Dead","DECEASED") #stupid BCR
                 clinMatrix.replaceValue("DEAD","DECEASED") #stupid BCR
                 clinMatrix.replaceValue("dead","DECEASED") #stupid BCR
+                clinMatrix.replaceValue("|","")
+
 
                 #if cancer != originCancer:
                 #    clinMatrix.addOneColWithSameValue("cohort",originCancer)

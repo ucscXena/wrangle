@@ -181,7 +181,7 @@ cancerGroupTitle={
     "PCPG":"pheochromocytoma & paraganglioma",
     "UCS":"uterine carcinosarcoma",
     "TGCT":"testicular germ cell tumor",
-    "PANCAN":"pan-cancer"
+    "PANCAN":"Pan-Cancer"
     }
 
 TCGASampleType={
@@ -218,6 +218,10 @@ valueType={
 featureStateOrder={
     "er_level_cell_percentage_category":{"BRCA":
                                          ["<10%","10-19%","20-29%","30-39%","40-49%","50-59%","60-69%","70-79%","80-89%","90-99%"]},
+    "breast_carcinoma_estrogen_receptor_status":{"BRCA":
+                                                 ["Negative", "Indeterminate",  "Positive"]},
+    "breast_carcinoma_progesterone_receptor_status":{"BRCA":
+                                                 ["Negative", "Indeterminate",  "Positive"]},
     "her2_erbb_pos_finding_cell_percent_category":{"BRCA":
                                                    ["<10%","10-19%","20-29%","30-39%","40-49%","50-59%","60-69%","70-79%","80-89%","90-99%"]},
     "distant_metastasis_pathologic_spread":{"ALL":
