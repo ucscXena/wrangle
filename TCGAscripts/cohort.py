@@ -108,6 +108,8 @@ def cohort (inDir, outDir, cancer, flog,REALRUN):
     J[":sampleMap"]="TCGA."+cancer+".sampleMap"
     if withClinF:
         J[":clinicalFeature"]=  "TCGA_"+ cancer+"_cohort_clinFeat"
+
+    outfile = outDir+cancer+"/cohort"
     oHandle = open(outfile +".json","w")
     oHandle.write( json.dumps( J, indent=-1 ) )
     oHandle.close()

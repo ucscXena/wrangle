@@ -22,24 +22,27 @@ def genomic (dir,outDir, cancer,flog,REALRUN):
         c1 ="COAD"
         c2 ="READ"
 
-    for file in [ "HiSeqV2",
-                  "HiSeqV2_exon",
-                  "AgilentG4502A_07_3",
-                  "Gistic2_CopyNumber_Gistic2_all_data_by_genes",
-                  "Gistic2_CopyNumber_Gistic2_all_thresholded.by_genes",
-                  "Gistic2_CopyNumber_Gistic2_focal_data_by_genes",
-                  "HumanMethylation27",
-                  "HumanMethylation450",
-                  "mutation",
-                  "RPPA",
-                  #"SNP6_genomicSegment",
-                  #"SNP6_nocnv_genomicSegment",
-                  ""
-                  ]:
+    for file in [
+        "mutation",
+        "HiSeqV2",
+        "HiSeqV2_exon",
+        "AgilentG4502A_07_3",
+        "Gistic2_CopyNumber_Gistic2_all_data_by_genes",
+        "Gistic2_CopyNumber_Gistic2_all_thresholded.by_genes",
+        "Gistic2_CopyNumber_Gistic2_focal_data_by_genes",
+        "HumanMethylation27",
+        "HumanMethylation450",
+        "RPPA",
+        #"SNP6_genomicSegment",
+        #"SNP6_nocnv_genomicSegment",
+        ""
+        ]:
         
         type=""
         if file =="RPPA":
             type="RPPA"
+        if file =="mutation":
+            type="mutation"
         if file=="SNP6_genomicSegment" or file =="SNP6_nocnv_genomicSegment":
             type="SNP6_genomicSegment"
         if cancer =="COADREAD" and file in ["Gistic2_CopyNumber_Gistic2_all_data_by_genes",
@@ -49,7 +52,9 @@ def genomic (dir,outDir, cancer,flog,REALRUN):
             continue
 
         process (outDir, cancer, c1, c2, file, REALRUN,type)
-        
+        return
+
+
 def process (outDir, cancer, c1, c2, file, REALRUN,type):
     if file =="":
         return
@@ -60,20 +65,20 @@ def process (outDir, cancer, c1, c2, file, REALRUN,type):
     c1file = c1dir+file
     c2file = c2dir+file
 
-    if type == "RPPA": #test file is the same
+    if type in ["RPPA","mutation"]: #test file is the same
         os.system("cut -f 1 "+c1file +" >tmp1")
         os.system("cut -f 1 "+c2file +" >tmp2")
         SAME = filecmp.cmp("tmp1", "tmp2")
 
         if not SAME:
-            print "RPPA files are not the same"
-            if os.path.exists(outDir+cancer+"/"+file):
-                os.system("rm "+outDir+cancer+"/"+file)
-            if os.path.exists(outDir+cancer+"/"+file+".json"):
-                os.system("rm "+outDir+cancer+"/"+file+".json")
-            return
+            print "files are not the same"
+        os.system("sort "+c1file +" >tmp1")
+        os.system("sort "+c2file +" >tmp2")
+        os.system("join -t$'\t' -1 1 -2 1 tmp1 tmp2 > tmp3")
+        os.system("grep sample tmp3 > "+ outDir+cancer+"/"+file)
+        os.system("grep -v sample tmp3 >> "+ outDir+cancer+"/"+file)
         
-    if os.path.exists(c1file) and os.path.exists(c2file):
+    elif os.path.exists(c1file) and os.path.exists(c2file):
         if REALRUN:
             if type !="SNP6_genomicSegment":
                 os.system("cut -f 2- "+c2file +" >tmp")
@@ -85,86 +90,85 @@ def process (outDir, cancer, c1, c2, file, REALRUN,type):
                 gMoutput = outDir+cancer+"/"+string.replace(file,"_genomicSegment","")
                 os.system("python seg2matrix/segToMatrix.py "+outfile +" seg2matrix/refGene_hg18 "+ gMoutput)
 
+    J={}
+    iHandle =open(c1file+".json","r")
+    Jinput= json.loads(iHandle.read())
+    J[":dataSubType"]=  Jinput[":dataSubType"]
+    J["version"]=  Jinput["version"]
+    J["type"]=  Jinput["type"]
+    J["cgDataVersion"]=     Jinput["cgDataVersion"]
+    J["shortTitle"]= cancer +" "+Jinput["shortTitle"]
+    J[":probeMap"]=Jinput[":probeMap"]
+    J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
+    J["sample_type"]=["tumor"]
+    J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
+    J["cohort"] ="TCGA_"+cancer
+    J['domain']="TCGA"
+    J['tags']=["cancer"]
+    J['owner']="TCGA"
+
+    if Jinput.has_key("gdata_tags"):
+        J["gdata_tags"]= Jinput["gdata_tags"]
+    if Jinput.has_key("gain"):
+        J["gain"]= Jinput["gain"]
+    if Jinput.has_key("colNormalization"):
+        J["colNormalization"]= Jinput["colNormalization"]
+        
+    s= Jinput ["longTitle"]
+    s = string.replace(s,"("+c1+")","("+cancer+")")
+    s = string.replace(s,TCGAUtil.cancerOfficial[c1],TCGAUtil.cancerOfficial[cancer])
+    J["longTitle"]=s
+
+    s=Jinput["description"]
+    s = string.replace(s,"("+c1+")","("+cancer+")")
+    s = string.replace(s,TCGAUtil.cancerOfficial[c1],TCGAUtil.cancerOfficial[cancer])
+    J["description"]= "The dataset is combined from TCGA "+ TCGAUtil.cancerOfficial[c1]+" and "+ TCGAUtil.cancerOfficial[c2]+" datasets. "+ s
+    J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
+    J[":sampleMap"]="TCGA."+cancer+".sampleMap"
+
+    s = Jinput["name"]
+    s = string.replace(s,c1,cancer)
+    J["name"]=s
+    output = open(outDir+cancer+"/"+file+".json","w")
+    output.write(json.dumps(J,indent=-1))
+    output.close()
+
+    if type =="SNP6_genomicSegment":
         J={}
-        iHandle =open(c1file+".json","r")
+        cfile = c1dir+gMoutput+".matrix.json"
+        iHandle =open(cfile+".json","r")
         Jinput= json.loads(iHandle.read())
         J[":dataSubType"]=  Jinput[":dataSubType"]
         J["version"]=  Jinput["version"]
         J["type"]=  Jinput["type"]
         J["cgDataVersion"]=     Jinput["cgDataVersion"]
-        J["shortTitle"]= Jinput ["shortTitle"]
-        J[":probeMap"]=Jinput[":probeMap"]
-        J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
-        J["sample_type"]="tumor"
-        J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
-        J["cohort"] ="TCGA_"+cancer
-        J["label"]= cancer +" "+Jinput["shortTitle"]
-        J['domain']="TCGA"
-        J['tags']=["cancer"]
-        J['owner']="TCGA"
-
-        if Jinput.has_key("gdata_tags"):
-            J["gdata_tags"]= Jinput["gdata_tags"]
+        J["shortTitle"]= cancer +" "+Jinput["shortTitle"]
+        J[":probeMap"]=string.replace(Jinput[":probeMap"],c1,cancer)
+        
         if Jinput.has_key("gain"):
             J["gain"]= Jinput["gain"]
-        if Jinput.has_key("colNormalization"):
-            J["colNormalization"]= Jinput["colNormalization"]
         
         s= Jinput ["longTitle"]
-        s = string.replace(s,"("+c1+")","("+cancer+")")
+        s = string.replace(s,c1,cancer)
         s = string.replace(s,TCGAUtil.cancerOfficial[c1],TCGAUtil.cancerOfficial[cancer])
         J["longTitle"]=s
-
-        s=Jinput["description"]
-        s = string.replace(s,"("+c1+")","("+cancer+")")
-        s = string.replace(s,TCGAUtil.cancerOfficial[c1],TCGAUtil.cancerOfficial[cancer])
-        J["description"]= "The dataset is combined from TCGA "+ TCGAUtil.cancerOfficial[c1]+" and "+ TCGAUtil.cancerOfficial[c2]+" datasets. "+ s
         J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
         J[":sampleMap"]="TCGA."+cancer+".sampleMap"
 
         s = Jinput["name"]
         s = string.replace(s,c1,cancer)
         J["name"]=s
-        output = open(outDir+cancer+"/"+file+".json","w")
+        output = open(outDir+cancer+"/"+gMoutput+".matrix.json","w")
         output.write(json.dumps(J,indent=-1))
         output.close()
 
-        if type =="SNP6_genomicSegment":
-            J={}
-            cfile = c1dir+gMoutput+".matrix.json"
-            iHandle =open(cfile+".json","r")
-            Jinput= json.loads(iHandle.read())
-            J[":dataSubType"]=  Jinput[":dataSubType"]
-            J["version"]=  Jinput["version"]
-            J["type"]=  Jinput["type"]
-            J["cgDataVersion"]=     Jinput["cgDataVersion"]
-            J["shortTitle"]= Jinput ["shortTitle"]
-            J[":probeMap"]=string.replace(Jinput[":probeMap"],c1,cancer)
-        
-            if Jinput.has_key("gain"):
-                J["gain"]= Jinput["gain"]
-        
-            s= Jinput ["longTitle"]
-            s = string.replace(s,c1,cancer)
-            s = string.replace(s,TCGAUtil.cancerOfficial[c1],TCGAUtil.cancerOfficial[cancer])
-            J["longTitle"]=s
-            J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
-            J[":sampleMap"]="TCGA."+cancer+".sampleMap"
-
-            s = Jinput["name"]
-            s = string.replace(s,c1,cancer)
-            J["name"]=s
-            output = open(outDir+cancer+"/"+gMoutput+".matrix.json","w")
-            output.write(json.dumps(J,indent=-1))
-            output.close()
-
-            J={}
-            cfile = c1dir+gMoutput+".probeMap.json"
-            iHandle =open(cfile+".json","r")
-            Jinput= json.loads(iHandle.read())
-            J=Jinput
-            J["name"]=string.replace(J["name"],c1, cancer)
-            output = open(outDir+cancer+"/"+gMoutput+".probeMap.json","w")
-            output.write(json.dumps(J,indent=-1))
-            output.close()
+        J={}
+        cfile = c1dir+gMoutput+".probeMap.json"
+        iHandle =open(cfile+".json","r")
+        Jinput= json.loads(iHandle.read())
+        J=Jinput
+        J["name"]=string.replace(J["name"],c1, cancer)
+        output = open(outDir+cancer+"/"+gMoutput+".probeMap.json","w")
+        output.write(json.dumps(J,indent=-1))
+        output.close()
     return

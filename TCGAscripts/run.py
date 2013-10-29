@@ -66,7 +66,7 @@ for line in fin.readlines():
                 cancer =string.replace(cancer,p,"")
             cancer=string.upper(cancer)
 
-            if cancer not in ["LAML"]:
+            if cancer not in ["KIRP"]:
                 continue
 
             if run:

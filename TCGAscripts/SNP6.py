@@ -239,26 +239,25 @@ def makeJSON(oHandle,cancer,lastMageTab,inDir,noCNV,type):
     #stable
     J["cgDataVersion"]=1
     if noCNV:
-        J["shortTitle"]="Copy Number (delete germline cnv)"
-        J["label"]= cancer +" copy number (delete germline cnv)"
+        J["shortTitle"]= cancer +" copy number (delete germline cnv)"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") segmented copy number (delete germline cnv)"
     else:
-        J["shortTitle"]="Copy Number"
-        J["label"]= cancer +" copy number"
+        J["shortTitle"]= cancer +" copy number"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") segmented copy number"
     J[":dataSubType"]="cna"
     J["redistribution"]= True
     J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
-    #J["priority"]= TCGAUtil.browserPriority[cancer]
 
     J["dataProducer"]= "Broad Institute of MIT and Harvard University cancer genomic characterization center"
     J["url"]=TCGAUtil.remoteBase \
               +string.replace(inDir,TCGAUtil.localBase,"")
     J["version"]= datetime.date.today().isoformat()
     J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
-                
+
+    J["label"] = J["shortTitle"]
+    
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
-    J["sample_type"]="tumor"
+    J["sample_type"]=["tumor"]
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
     J["cohort"] ="TCGA_"+cancer
     J['domain']="TCGA"

@@ -32,7 +32,6 @@ def illuminahiseq_rnaseqV2_unc (inDir, outDir, cancer,flog,REALRUN):
     dataProducer = "University of North Carolina TCGA genome characterization center"
     clean =0
     geneRPKM (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN, clean)
-
     return
 
 def illuminahiseq_rnaseqV2_exon_unc (inDir, outDir, cancer,flog,REALRUN):
@@ -101,7 +100,7 @@ def illuminahiseq_rnaseq_bcgsc  (inDir, outDir, cancer, flog,REALRUN):
 
 def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataProducer,REALRUN,clean):
     garbage=[tmpDir]
-    os.system("rm -rf tmp_*")
+    os.system("rm -rf tmp_*") 
     if os.path.exists( tmpDir ):
         if clean:
             os.system("rm -rf "+tmpDir+"*")
@@ -245,7 +244,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
 
                 p=len(allSamples)
                 allSamples[sample]=p
-
+                    
         c=0
         dataMatrix=[]
         tmpSamples={}
@@ -294,6 +293,8 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
                     
                 if sample=="":
                     continue
+                if sample in tmpSamples: #duplicated samples
+                    continue
                 if sample not in allSamples:
                     continue
 
@@ -326,8 +327,8 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
         outfile = outDir+cancer+"/"+cgFileName
         if GOOD:
             os.system("paste -d \'\' "+string.join(files," ")+" > "+ outfile)
-        for file in files:
-            os.system("rm "+ file)        
+        for file in files: 
+            os.system("rm "+ file) 
         if not GOOD:
             sys.exit()
             
@@ -363,17 +364,14 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
         J[":probeMap"]= "hugo"
 
         if cancer != "OV":
-            J["shortTitle"]="Gene Expression ("+suffix+")"
-            J["label"]= cancer +" "+"gene expression ("+suffix+")"
+            J["shortTitle"]= cancer +" "+"gene expression ("+suffix+")"
             J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression by RNAseq ("+suffix+")"
         else:
             if dataProducer =="University of North Carolina TCGA genome characterization center":
-                J["shortTitle"]="Gene Expression ("+suffix+" UNC)"
-                J["label"]= cancer +" "+"gene expression ("+suffix+" UNC)"
+                J["shortTitle"]= cancer +" "+"gene expression ("+suffix+" UNC)"
                 J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression by RNAseq ("+suffix+" UNC)"
             else:
-                J["shortTitle"]="Gene Expression ("+suffix+" BC)"
-                J["label"]= cancer +" "+"gene expression ("+suffix+" BC)"
+                J["shortTitle"]= cancer +" "+"gene expression ("+suffix+" BC)"
                 J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression by RNAseq ("+suffix+" BC)"
                 
         J["notes"]= "the probeMap should be tcgaGAF, but untill the probeMap is made, we will have to use hugo for the short term, however probably around 10% of the gene symbols are not HUGO names, but ENTRE genes"
@@ -383,8 +381,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     else:
         J[":probeMap"]= "unc_RNAseq_exon"
 
-        J["shortTitle"]="Exon Expression ("+suffix+")"
-        J["label"]= cancer +" "+"exon expression ("+suffix+")"
+        J["shortTitle"]= cancer +" "+"exon expression ("+suffix+")"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") exon expression by RNAseq ("+suffix+")"
         J["description"]= J["description"] +"TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") exon expression by RNAseq.<br><br>"+ \
                           " The exon expression profile was measured experimentally using the "+platformTitle+" by the "+ dataProducer +"." + \
@@ -413,9 +410,9 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
                        "<br><br>In order to more easily view the differential expression between samples, we set the default view to center each gene or exon to zero by independently subtracting the mean of the genomic location on the fly. Users can view the original non-normalized values by uncheck the \"Normalize\" option. For more information on how to use the cancer browser, please refer to the help page."
     #J["description"] = J["description"] +"<br><br>"+TCGAUtil.clinDataDesc
 
-
+    J["label"] = J["shortTitle"] 
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
-    J["sample_type"]="tumor"
+    J["sample_type"]=["tumor"]
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
     J["cohort"] ="TCGA_"+cancer
     J['domain']="TCGA"
@@ -449,6 +446,7 @@ def process(dataMatrix,samples, sample,genes, cancer,infile,flog, valuePOS, LOG2
         hugo = data[0]
         value= data[valuePOS]
         hugo = string.split(hugo,"|")[0]
+
         if hugo=="?":
             continue
 
@@ -467,9 +465,11 @@ def process(dataMatrix,samples, sample,genes, cancer,infile,flog, valuePOS, LOG2
                     value = ""
                 else:
                     value = math.log10(float(value+1))/math.log10(2)
+
             x=genes[hugo]
             y=samples[sample]
             dataMatrix[x][y]=value
+            
     fin.close()
     return 
 

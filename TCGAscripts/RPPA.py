@@ -174,14 +174,13 @@ def RPPA (inDir, outDir, cancer, flog,REALRUN):
     J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
     J["wrangling_procedure"]= "Level_3 Data (file names: *.protein_expression.*) download from TCGA DCC, and processed at UCSC into cgData repository"
     J["gain"]=1.0
-    J["shortTitle"]="Protein"
-    J["label"]= cancer +" protein"
+    J["shortTitle"]= cancer +" protein"
     J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") reverse phase protein array"
     
     J[":probeMap"]= "md_anderson_antibodies"
 
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
-    J["sample_type"]="tumor"
+    J["sample_type"]=["tumor"]
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
     J["cohort"] ="TCGA_"+cancer
     J['domain']="TCGA"

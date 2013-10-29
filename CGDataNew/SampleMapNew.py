@@ -127,7 +127,7 @@ class SampleMapNew():
         if id in integrationList:
             return id
         parent = self.getParent(id)
-        if parent=="":
+        if parent=="" or parent ==None:
             return ""
         else:
             return self.getIntegrationId(parent, integrationList)

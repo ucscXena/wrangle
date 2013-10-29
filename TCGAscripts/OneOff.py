@@ -116,8 +116,8 @@ def process (inDir,outDir,cancer,flog,PATHPATTERN,originCancer):
         fjson.close()
         if cancer != originCancer:
             J['name'] = J['name'] +"_"+originCancer
-            J[":sampleMap"]="TCGA."+cancer+".sampleMap"
-            
+
+        J[":sampleMap"]="TCGA."+cancer+".sampleMap"
         name = trackName_fix(J['name'])
         if name ==False:
             message = "bad object name, need fix otherwise break loader, too long "+J["name"]

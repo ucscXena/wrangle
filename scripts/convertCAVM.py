@@ -62,11 +62,11 @@ def convertCAVM (inDir, outD ,REALRUN, CAVM, TCGA, MAPID=1):
         for name in sampleMaps[sampleMap]:
             obj=bookDic[name]
             if obj['type']=="clinicalMatrix":
-                if REALRUN ==-1:
+                if REALRUN != 0 and  REALRUN !=1:
                     continue
                 
                 outfile = outDir +os.path.basename(obj['path'])
-                fin = open(obj['path'],'r')
+                fin = open(obj['path'],'U')
                 fout = open(outfile,'w')
                 fout.write(fin.readline())
 
@@ -85,7 +85,7 @@ def convertCAVM (inDir, outD ,REALRUN, CAVM, TCGA, MAPID=1):
                             fout.write(string.join(string.split(line[:-1],"\t")[1:-1],"\t")+"\t"+sample)
                         fout.write("\n")
                 fout.close()
-                integrationList = samples[:]
+                integrationList = copy.deepcopy(samples)
                 
                 #JSON
                 fin = open (obj['path']+".json",'r')
@@ -113,33 +113,17 @@ def convertCAVM (inDir, outD ,REALRUN, CAVM, TCGA, MAPID=1):
                     for sample in samples:
                         fout.write(sample+"\t"+sample+"\n")
                     fout.close()
-                
+
         for name in sampleMaps[sampleMap]:
             obj=bookDic[name]
             if obj['type']=="genomicSegment":
-                path= obj['path']
-                os.system("cp "+path+" "+outDir+os.path.basename(path))
-                os.system("cp "+path+".json "+outDir+os.path.basename(path)+".json")
+                if REALRUN ==1:
+                    path= obj['path']
+                    os.system("cp "+path+" "+outDir+os.path.basename(path))
+                    os.system("cp "+path+".json "+outDir+os.path.basename(path)+".json")
                 
             if obj['type']=="genomicMatrix":
-                # need to find it out if there are more than one sample map to each _INTEGRATION ID
-                roots={}
-                findDup=0
-                fin =open(obj['path'],'U')
-                samples =string.split(fin.readline()[:-1],"\t")[1:]
-                for i in range(0,len(samples)):
-                    sample = samples[i]
-                    if sample =="":
-                        print name, "has bad empty sample id"
-                        sys.exit()
-                    root = sMap.getIntegrationId(sample,integrationList)
-                    if roots.has_key(root):
-                        roots[root].append(i)
-                        findDup=1
-                    else:
-                        roots[root]=[i]
-                fin.close()
-
+                print obj['name']
                 #JSON
                 outfile = outDir +os.path.basename(obj['path'])
                 fin = open (obj['path']+".json",'r')
@@ -154,42 +138,77 @@ def convertCAVM (inDir, outD ,REALRUN, CAVM, TCGA, MAPID=1):
 
                 if J.has_key('anatomical_origin'):
                     sMapJ['anatomical_origin']=J['anatomical_origin']
-                    if CAVM:
-                        J.pop('anatomical_origin')
                 if J.has_key('primary_disease'):
                     sMapJ['primary_disease']=J['primary_disease']
-                    if CAVM:
-                        J.pop('primary_disease') 
                 if J.has_key('domain'):
                     sMapJ['domain']=J['domain']
-                    if CAVM:
-                        J.pop('domain') 
                 if J.has_key('sample_type'):
                     sMapJ['sample_type']=J['sample_type']
-                    if CAVM:
-                        J.pop('sample_type')
                 if J.has_key('tags'):
                     sMapJ['tags']=J['tags']
-                    if CAVM:
-                        J.pop('tags')
 
+                    
+                #to check if there are duplication in the probe ids
+                #process = os.popen("r=$(cut -f 1  "+obj['path']+" | more +2 | sort |uniq -c | sed -e 's/ *//' -e 's/ /\t/' | sort -n |cut -f 1 |sort -un|tail -n 1); if [ $r -ne \"1\" ]; then echo $r ; fi")
+                #r = process.read()
+                #if r:
+                    #print string.strip(r), obj['path']
+
+                
+                if REALRUN != 1:
+                    continue
+                
+                #probemap for genomic segment
                 if J.has_key(':genomicSegment'):
                     probeMap = bookDic[J[':probeMap']]['path']
                     os.system("cp "+probeMap+" "+outDir+os.path.basename(probeMap))
                     os.system("cp "+probeMap+".json "+outDir+os.path.basename(probeMap)+".json")
-                    
-                if REALRUN != 1:
-                    continue
 
+                # need to find it out if there are more than one sample map to each _INTEGRATION ID
+                roots={}
+                findDup=0
                 fin =open(obj['path'],'U')
-                fout=open(outfile, 'w')
+                samples =string.split(fin.readline()[:-1],"\t")[1:]
+                for i in range(0,len(samples)):
+                    sample = samples[i]
+                    if sample =="":
+                        print name, "has bad empty sample id"
+                        sys.exit()
+                    root = sMap.getIntegrationId(sample,integrationList)
+                    if not root:
+                        root = sample
+                    if roots.has_key(root):
+                        roots[root].append(i)
+                        findDup=1
+                    else:
+                        roots[root]=[i]
+                fin.close()
+
+                #need to figure out if there are duplication in the probe ids
+                findDupProbe=[]
+                process = os.popen("r=$(cut -f 1  "+obj['path']+" | more +2 | sort |uniq -c | sed -e 's/ *//' -e 's/ /\t/' | sort -n |cut -f 1 |sort -un|tail -n 1); if [ $r -ne \"1\" ]; then echo $r ; fi")
+                r = process.read()
+                if r:
+                    print string.strip(r), obj['path']
+                    process = os.popen("cut -f 1  "+obj['path']+" | more +2 | sort |uniq -c | sed -e 's/ *//' -e 's/ /\t/' | sort -n |  grep -vP ^1'\t' | cut -f 2 |sort")
+                    r = process.read()
+                    list = string.split(r,"\n")
+                    print len(list)
+                    for probe in list:
+                        findDupProbe.append(probe)
+                        
                 #genomic data no dup
-                if findDup ==0:
+                fout=open(outfile ,'w')
+                fin =open(obj['path'],'U')
+                if findDup ==0 and findDupProbe ==[]:
                     data =string.split(fin.readline()[:-1],"\t")
                     samples= data[1:]
                     fout.write(data[0])
                     for sample in samples:
-                        fout.write('\t'+sMap.getIntegrationId(sample,integrationList))
+                        root = sMap.getIntegrationId(sample,integrationList)
+                        if not root:
+                            root = sample
+                        fout.write('\t'+root)
                     fout.write('\n')
 
                     if TCGA:
@@ -207,7 +226,7 @@ def convertCAVM (inDir, outD ,REALRUN, CAVM, TCGA, MAPID=1):
                             fout.write(line)
                         fin.close()
                         fout.close()
-                    
+
                 #genomic data with dup
                 else:
                     print "genomic with dup",obj['path']
@@ -216,13 +235,24 @@ def convertCAVM (inDir, outD ,REALRUN, CAVM, TCGA, MAPID=1):
                     for root in roots:
                         fout.write('\t'+root)
                     fout.write('\n')
+
+                    dupDic ={}
                     while 1:
+                        duplist=[]
                         line = fin.readline()[:-1]
                         if line =="":
                             break
+
                         data = string.split(line,"\t")
-                        fout.write(data[0])
+                                                
+                        if data[0] not in findDupProbe:
+                            fout.write(data[0])                            
+                        else:
+                            if data[0] not in dupDic:
+                                dupDic[data[0]]=[]
+
                         values =data[1:]
+                        
                         for root in roots:
                             if len(roots[root])!=1:
                                 total="NA"
@@ -253,10 +283,45 @@ def convertCAVM (inDir, outD ,REALRUN, CAVM, TCGA, MAPID=1):
                                         average = values[roots[root][0]]
                                     except:
                                         average="NA"
-                            fout.write('\t'+average)
-                        fout.write('\n')
+                            if data[0] not in findDupProbe:
+                                fout.write('\t'+average)
+                            else:
+                                duplist.append(average)
+                        if data[0] not in findDupProbe:
+                            fout.write('\n')
+                        else:
+                            dupDic[data[0]].append(duplist[:])
+                            
+                    if dupDic!={}:
+                        for probe in dupDic:
+                            fout.write(probe)
+                            k = len (dupDic[probe][0])
+                            valList=[]
+                            nList=[]
+                            for i in range (0,k):
+                                valList.append("NA")
+                                nList.append(0)
+                            
+                            for list in dupDic[probe]:
+                                for i in range (0,k):
+                                    try:
+                                        float(list[i])
+                                        if valList [i]=="NA":
+                                            valList[i]=float(list[i])
+                                        else:
+                                            valList[i] =valList[i] +float(list[i])
+                                        nList[i]=nList[i]+1
+                                    except:
+                                        pass
+                            for i in range (0,k):
+                                try:
+                                    float(valList[i])
+                                    fout.write("\t"+str(float(valList[i])/nList[i]))
+                                except:
+                                    fout.write("\tNA")
+                            fout.write("\n")
+                    fin.close()
                     fout.close()
-                    
                 
         #sampleMap json #cgData1
         if not CAVM:
@@ -290,9 +355,9 @@ def printUsage():
     print "          --CAVM=1 (for CAVM stype cgData)"
     print "          --TCGA=0 (input data is not TCGA data)"
     print "          --TCGA=1 (intput data is TCGA data, skip checking NaNs)"
-    print "          --REALRUN=0 (full)"
-    print "          --REALRUN=1 (clinical data probeMap genomicSegment only, full json, skip genomic data )"
-    print "          --REALRUN=-1 (probeMap genomicSegment only, full genomic json, skip genomic data )"
+    print "          --REALRUN=1 (full)"
+    print "          --REALRUN=0 (clinical data probeMap only, full json, skip genomic data, genomic segment data)"
+    print "          --REALRUN=-1 (full genomic json only, skip all genomic data and clinical data)"
     print
     print " options: "
     print "          --MAPID=0 (do not change genomic id)"

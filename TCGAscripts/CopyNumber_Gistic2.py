@@ -98,8 +98,8 @@ def CopyNumber_Gistic2 (inDir, outDir, cancer,flog,REALRUN):
 
         
         J["cgDataVersion"]=1
-        J["shortTitle"]="Copy Number ("+suffix+")"
-        J["label"]= cancer +" copy number ("+suffix+")"
+        J["shortTitle"]=cancer +" copy number ("+suffix+")"
+        J["label"] = J["shortTitle"] 
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") copy number "+suffix+" estimate"
         J[":dataSubType"]="cna"
         J["redistribution"]= True
@@ -110,7 +110,7 @@ def CopyNumber_Gistic2 (inDir, outDir, cancer,flog,REALRUN):
         J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
                 
         J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
-        J["sample_type"]="tumor"
+        J["sample_type"]=["tumor"]
         J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
         J["cohort"] ="TCGA_"+cancer
         J['domain']="TCGA"
@@ -162,7 +162,7 @@ def CopyNumber_Gistic2 (inDir, outDir, cancer,flog,REALRUN):
             
         J[":probeMap"]= "hugo"
         J["type"]= "genomicMatrix" 
-        J[":sampleMap"]="TCGA."+cancer+".sampleMap"
+        J[":sampleMap"]="TCGA."+cancer+".sampleMap" 
                 
         oHandle.write( json.dumps( J, indent=-1 ) )
         oHandle.close()

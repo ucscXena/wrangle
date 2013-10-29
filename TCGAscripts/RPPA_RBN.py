@@ -63,11 +63,11 @@ def RPPA_RBN (inDir, outDir, cancer,flog,REALRUN):
     J["version"]= datetime.date.today().isoformat()
     J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
     J[":probeMap"]= "md_anderson_antibodies"
-    J["shortTitle"]="Protein (RBN)"
-    J["label"]= cancer +" protein (RBN)"
+    J["shortTitle"]= cancer +" protein (RBN)"
     J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") reverse phase protein array (replicate-base normalization)"
-
-    J["sample_type"]="tumor"
+    J["label"] = J["shortTitle"]
+    
+    J["sample_type"]=["tumor"]
     J["redistribution"]= True
     J['tags']=["cancer"]
     

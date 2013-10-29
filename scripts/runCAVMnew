@@ -1,6 +1,6 @@
-REALRUN=0
+REALRUN=-1
 
-python convertCAVM.py --inDir=data_flatten/ispy/ --outDir=CAVM/ispy/ --CAVM=1 --TCGA=0 --REALRUN=$REALRUN
+#python convertCAVM.py --inDir=data_flatten/ispy/ --outDir=CAVM/ispy/ --CAVM=1 --TCGA=0 --REALRUN=$REALRUN
 
 python convertCAVM.py --inDir=data_flatten/fake-tcga/ --outDir=CAVM/fake-tcga/ --CAVM=1 --TCGA=0 --REALRUN=$REALRUN
 

@@ -32,7 +32,7 @@ $FIREHOSEDATE_ana_version
 1	1	Clinical	ClinicalPublicBioTab	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/bcr/biotab/clin/	$TMP
 
 #mutation data oneoff
-1	1	mutationMatrix	mutationMatrix	/data/TCGA/tcgaDataOneOff/Genomic/PANCAN/*_cleaned_filtered.txt	$TMP
+1	1	mutationMatrix	mutationMatrix	/data/TCGA/tcgaDataOneOff/Genomic/PANCAN/*_cleaned_filtered.maf	$TMP
 
 #RBN RPPA oneoff
 1	1	RPPA_RBN	RPPA_RBN	/data/TCGA/tcgaDataOneOff/Genomic/PANCAN/*_RBN	$TMP
@@ -69,9 +69,6 @@ $FIREHOSEDATE_ana_version
 
 #PANCAN dataset both PANCAN and individual cancer
 1	1	MergePANCAN	RNAseq	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
-
-#PANCAN dataset only PANCAN
-1	1	MergePANCAN	Mutation	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
 
 #sampleMap
 1	1	TCGASampleMap	TCGASampleMap	$TMP*/	$TMP

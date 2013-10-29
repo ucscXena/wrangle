@@ -168,12 +168,12 @@ def humanmethylation (inDir, outDir, cancer,flog,PATHPATTERN,BETAOFFSET,REALRUN)
     J["cgDataVersion"]=1
         
     if suffix =="HumanMethylation450":
-        J["shortTitle"]="DNA Methylation (Methylation450)"
-        J["label"]= cancer +" DNA methylation (Methylation450)"
+        J["shortTitle"]= cancer +" DNA methylation (Methylation450)"
         namesuffix="hMethyl450" 
 
+    J["label"] = J["shortTitle"] 
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
-    J["sample_type"]="tumor"
+    J["sample_type"]=["tumor"]
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
     J["cohort"] ="TCGA_"+cancer
     J['domain']="TCGA"
@@ -245,7 +245,7 @@ def process(c, dataMatrix,allSamples, samples, probes, cancer,infile,flog, BETA_
     line = fin.readline()
 
     sample = string.split(line[:-1],"\t")[BETA_POS]
-    if sample in allSamples:
+    if sample in allSamples or sample in samples:
         fin.close()
         message =  "ERROR duplicated sample = "+ sample+ " " +cancer+" "+ __name__
         flog.write(message+"\n")

@@ -10,15 +10,13 @@ from CGDataUtil import *
 
 tmpDir="tmpTry/"
 
-#/inside/home/cline/projects/PanCancer/mutationMatrices/*_cleaned_filtered.txt
+#/inside/home/cline/projects/PanCancer/mutationMatrices/*_cleaned_filtered.maf
 
 def mutationMatrix (inDir, outDir, cancer,flog,REALRUN):
-    if string.find(cancer,"PANCAN") !=-1:
-        return
     print cancer, sys._getframe().f_code.co_name
-    PATHPATTERN= "_cleaned_filtered.txt"
+    PATHPATTERN= "_cleaned_filtered.maf"
     namesuffix = "mutation"
-    dataProducer = "TCGA PANCAN"
+    dataProducer = "TCGA PANCAN AWG"
 
     garbage=[tmpDir]
 
@@ -47,7 +45,14 @@ def mutationMatrix (inDir, outDir, cancer,flog,REALRUN):
     cgFileName= namesuffix 
 
     if REALRUN:
-        os.system("cp "+file +" "+outDir+cancer+"/"+cgFileName)
+        print file, cancer, outDir+cancer+"/"+cgFileName
+        fgene=open("/data/TCGA/tcgaDataOneOff/Genomic/PANCAN/genes",'r')
+        allGenes=[]
+        for gene in string.split(fgene.read(),"\n"):
+            allGenes.append(string.strip(gene))
+        fgene.close()
+        #cut -f 1,9,16 brca_cleaned_filtered.maf |grep $GENE
+        process (file, cancer, outDir+cancer+"/"+cgFileName, allGenes)
 
     oHandle = open(outDir+cancer+"/"+cgFileName+".json","w")
     
@@ -66,18 +71,31 @@ def mutationMatrix (inDir, outDir, cancer,flog,REALRUN):
     J["version"]= datetime.date.today().isoformat()
     J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
     J[":probeMap"]= "hugo"
-    J["shortTitle"]="Mutation"
-    J["label"]= cancer +" mutation"
+    J["shortTitle"]= cancer +" mutation"
     J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") somatic mutation"
     J["gain"]=10
-
-    J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
-    J["sample_type"]="tumor"
-    J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
+    
+    J["label"] = J["shortTitle"] 
+    J["sample_type"]=["tumor"]
     J["cohort"] ="TCGA_"+cancer
     J['domain']="TCGA"
     J['tags']=["cancer"]
     J['owner']="TCGA"
+
+    if cancer!="PANCAN":
+        J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
+        J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
+    else:
+        J["primary_disease"]="cancer"
+        J["anatomical_origin"]=""
+        origin =[]
+        for value in TCGAUtil.anatomical_origin.values():
+            if value =="":
+                continue
+            if value not in origin:
+                origin.append(value)
+        J["tags"]= J["tags"]+origin
+
     
     J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") somatic mutation data. Red color (=1) represents non-silent somatic mutations (nonsense, missense, frame-shift indels, splice site mutations, stop codon readthroughs) are identified in the protein coding region of a gene, and white color (=0) means that none of the above mutation calls are made in this gene for the specific sample.<br><br> Somatic mutations calls (even on the same tumor DNA extract) are effected by many factors including library prep, sequencing process, reads mapping method, reference genome used, calling algorithms, and ad-hoc pre/postprocessing such as black list genes, target selection regions, and black list samples.  This dataset is the best effort made by the TCGA PANCANER analysis working group.  PANCAN mutation data can be downloade at the url site shown below."
     #J["description"] = J["description"] +"<br><br>"+TCGAUtil.clinDataDesc
@@ -99,3 +117,65 @@ def mutationMatrix (inDir, outDir, cancer,flog,REALRUN):
     
     return
 
+def process (file, cancer, outfile, allGenes):
+    fin =open(file, 'r')
+    fin.readline()
+    
+    typeDic={
+        "Nonsense_Mutation":1,
+        "Frame_Shift_Del":2,
+        "Frame_Shift_Ins":3,
+        "Splice_Site":4,
+        "Missense_Mutation":5,
+        "Nonstop_Mutation":6,
+        "In_Frame_Del":7, ##
+        "In_Frame_Ins":8, ##
+        "RNA":9,
+        "Silent":10 ##
+        }
+        
+    samples=[]
+    genes=[]
+    dic={}
+    for gene in allGenes:
+        dic[gene]={}
+        
+    c=0
+    for line in fin.readlines():
+        #cut -f 1,9,16 brca_cleaned_filtered.maf |grep $GENE
+        c = c+1
+        if c % 500 ==0:
+            print c
+        data =string.split(line[:-1],'\t')
+        gene = data[0]
+        mtype = typeDic[data[8]]
+        sample = data[15]
+        if sample not in samples:
+            samples.append(sample)
+        if gene not in genes:
+            genes.append(gene)
+        if gene not in dic:
+            dic[gene]={}
+        if sample not in dic[gene]:
+            dic[gene][sample]=mtype
+        else:
+            if mtype < dic[gene][sample]:
+                dic[gene][sample]=mtype
+    fin.close()
+
+    print len(genes), len(dic)
+    fout=open(outfile,'w')
+    fout.write("sample\t"+string.join(samples,"\t")+"\n")
+    for gene in dic:
+        fout.write(gene)
+        for sample in samples:
+            try:
+                mtype = dic[gene][sample]
+                if mtype not in [7,8,10]:
+                    fout.write("\t1")
+                else:
+                    fout.write("\t0")
+            except:
+                fout.write("\t0")
+        fout.write("\n")
+    fout.close()

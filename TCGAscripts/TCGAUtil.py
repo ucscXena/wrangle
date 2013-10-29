@@ -181,7 +181,7 @@ cancerGroupTitle={
     "PCPG":"pheochromocytoma & paraganglioma",
     "UCS":"uterine carcinosarcoma",
     "TGCT":"testicular germ cell tumor",
-    "PANCAN":"Pan-Cancer"
+    "PANCAN":" Pan-Cancer"
     }
 
 TCGASampleType={
