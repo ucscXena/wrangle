@@ -179,6 +179,7 @@ def RPPA (inDir, outDir, cancer, flog,REALRUN):
     
     J[":probeMap"]= "md_anderson_antibodies"
 
+    J["label"] = J["shortTitle"] 
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
     J["sample_type"]=["tumor"]
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
