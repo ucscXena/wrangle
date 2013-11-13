@@ -1,18 +1,19 @@
-DATE=2013-09-10
+DATE=2013-10-30
 
 FREEZE=cgDataFreeze$DATE
 
 python scriptRepoStats.py 
 
-mv statReport data_flatten/statReport_$DATE
+cp statReport data_flatten/statReport_$DATE
+mv statReport CAVMold/statReport_$DATE
 
-rsync -avL --exclude '*~' --exclude 'public/TCGA' --exclude 'probeMap' data/* /data/cancerGenomeData/$FREEZE/
+rsync -avL --exclude '*~' --exclude 'probeMap' CAVMold/* /data/cancerGenomeData/$FREEZE/
 
 rsync -avL --exclude '*~' data_flatten/probeMap /data/cancerGenomeData/$FREEZE/
 
 rsync -avL --exclude '*~' data_flatten/stat* /data/cancerGenomeData/$FREEZE/
 
-rsync -avL --exclude '*~' data_flatten/public/TCGA /data/cancerGenomeData/$FREEZE/public/
+#rsync -avL --exclude '*~' data_flatten/public/TCGA /data/cancerGenomeData/$FREEZE/public/
 
 chmod -R a-wx+X /data/cancerGenomeData/$FREEZE/
 

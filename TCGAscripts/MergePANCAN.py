@@ -210,7 +210,7 @@ def processMutation (filename, dir,outDir, cancer,flog, REALRUN):
         mutationJSON(J,cancer)
 
     J['dataProducer']="UCSC Cancer Browser team"
-    J["sample_type"]="tumor"
+    J["sample_type"]=["tumor"]
     J["cohort"] ="TCGA_"+cancer
     J['domain']="TCGA"
     J['tags']=["cancer"] 
@@ -239,7 +239,8 @@ def processMutation (filename, dir,outDir, cancer,flog, REALRUN):
 
 def mutationJSON(J, cancer):
     J['name']= "TCGA_PANCAN_mutation"
-    J["label"]= cancer +" mutation"
+    J["shortTitle"]= cancer +" mutation"
+    J["label"] = J["shortTitle"] 
     J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+" somatic mutation"
     J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" somatic mutation. Red color (=1) represents non-silent somatic mutations (nonsense, missense, frame-shift indels, splice site mutations, stop codon readthroughs) are identified in the protein coding region of a gene, and white color (=0) means that none of the above mutation calls are made in this gene for the specific sample."
     J["wrangling_procedure"]="Data is combined from all TCGA cohorts and deposited into UCSC cgData repository"
@@ -363,12 +364,11 @@ def processRNA (filename, dir,outDir, cancer,flog, REALRUN):
         J["cohort"] ="TCGA_"+cancer
         J['domain']="TCGA"
         J['owner']="TCGA"
-        J["label"]= cancer +" "+J["shortTitle"]
         J[":sampleMap"]="TCGA."+cancer+".sampleMap"
         J["groupTitle"]= "TCGA "+TCGAUtil.cancerGroupTitle[cancer]
         
-        J['shortTitle']="Gene Expression (pancan normalized)"
-        J["label"]= key+" gene expression (pancan normalized)"
+        J['shortTitle']=key+" gene expression (pancan normalized)"
+        J["label"] = J["shortTitle"] 
         J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression by RNAseq (IlluminaHiSeq), pancan normalized"
         J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression by RNAseq, mean-normalized across all TCGA cohorts.<br><br>"+ \
                           " The gene expression profile was measured experimentally using the "+J['PLATFORM']+" by the "+ J['dataProducer'] +"." + \

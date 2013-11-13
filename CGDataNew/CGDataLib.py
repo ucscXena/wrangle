@@ -52,6 +52,8 @@ def cgWalk(dir, ignore):
                 if ignore:
                     continue
                 else:
+                    if J['type']=="cohort":
+                        continue
                     print "data file does not exist", root+"/"+base
                     return 0
 

@@ -64,7 +64,7 @@ def convertCAVM (inDir, outD ,REALRUN, CAVM, TCGA, MAPID=1):
             if obj['type']=="clinicalMatrix":
                 if REALRUN != 0 and  REALRUN !=1:
                     continue
-                
+
                 outfile = outDir +os.path.basename(obj['path'])
                 fin = open(obj['path'],'U')
                 fout = open(outfile,'w')
@@ -106,20 +106,37 @@ def convertCAVM (inDir, outD ,REALRUN, CAVM, TCGA, MAPID=1):
                     os.system("cp "+cFobj['path']+".json "+outfile+".json")
 
                 
-                #sampleMap data #cgData 1
+                #sampleMap data mapping information #cgData 1
                 if not CAVM:
+                    os.system("cp "+ bookDic[sampleMap]['path'] +" "+outDir+"sampleMap")
+                    """
                     outfile = outDir +"sampleMap"
                     fout=open(outfile,'w')
                     for sample in samples:
                         fout.write(sample+"\t"+sample+"\n")
                     fout.close()
-
+                    """
+                    
         for name in sampleMaps[sampleMap]:
             obj=bookDic[name]
             if obj['type']=="genomicSegment":
                 if REALRUN ==1:
                     path= obj['path']
-                    os.system("cp "+path+" "+outDir+os.path.basename(path))
+                    rootDic={}
+                    fin =open(path,'r')
+                    fout =open(outDir+os.path.basename(path),'w')
+                    for line in fin.readlines():
+                        data = string.split(line,'\t')
+                        sample =data[0]
+                        if rootDic.has_key(sample):
+                            root = rootDic[sample]
+                        else:
+                            root = sMap.getIntegrationId(sample,integrationList)
+                            rootDic[sample]=root
+                        fout.write(root+"\t"+string.join(data[1:],'\t'))
+                    fin.close()
+                    fout.close()
+
                     os.system("cp "+path+".json "+outDir+os.path.basename(path)+".json")
                 
             if obj['type']=="genomicMatrix":

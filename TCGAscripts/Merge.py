@@ -23,7 +23,6 @@ def genomic (dir,outDir, cancer,flog,REALRUN):
         c2 ="READ"
 
     for file in [
-        "mutation",
         "HiSeqV2",
         "HiSeqV2_exon",
         "AgilentG4502A_07_3",
@@ -41,8 +40,6 @@ def genomic (dir,outDir, cancer,flog,REALRUN):
         type=""
         if file =="RPPA":
             type="RPPA"
-        if file =="mutation":
-            type="mutation"
         if file=="SNP6_genomicSegment" or file =="SNP6_nocnv_genomicSegment":
             type="SNP6_genomicSegment"
         if cancer =="COADREAD" and file in ["Gistic2_CopyNumber_Gistic2_all_data_by_genes",
@@ -52,7 +49,7 @@ def genomic (dir,outDir, cancer,flog,REALRUN):
             continue
 
         process (outDir, cancer, c1, c2, file, REALRUN,type)
-        return
+    return
 
 
 def process (outDir, cancer, c1, c2, file, REALRUN,type):
@@ -65,13 +62,15 @@ def process (outDir, cancer, c1, c2, file, REALRUN,type):
     c1file = c1dir+file
     c2file = c2dir+file
 
-    if type in ["RPPA","mutation"]: #test file is the same
+    if type in ["RPPA"]: #test file is the same
         os.system("cut -f 1 "+c1file +" >tmp1")
         os.system("cut -f 1 "+c2file +" >tmp2")
         SAME = filecmp.cmp("tmp1", "tmp2")
 
         if not SAME:
             print "files are not the same"
+            return
+        
         os.system("sort "+c1file +" >tmp1")
         os.system("sort "+c2file +" >tmp2")
         os.system("join -t$'\t' -1 1 -2 1 tmp1 tmp2 > tmp3")
@@ -97,7 +96,10 @@ def process (outDir, cancer, c1, c2, file, REALRUN,type):
     J["version"]=  Jinput["version"]
     J["type"]=  Jinput["type"]
     J["cgDataVersion"]=     Jinput["cgDataVersion"]
-    J["shortTitle"]= cancer +" "+Jinput["shortTitle"]
+    s= Jinput["shortTitle"]
+    s = string.replace(s,c1,cancer)
+    J["shortTitle"]= s
+    J["label"] = J["shortTitle"] 
     J[":probeMap"]=Jinput[":probeMap"]
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
     J["sample_type"]=["tumor"]
@@ -142,7 +144,10 @@ def process (outDir, cancer, c1, c2, file, REALRUN,type):
         J["version"]=  Jinput["version"]
         J["type"]=  Jinput["type"]
         J["cgDataVersion"]=     Jinput["cgDataVersion"]
-        J["shortTitle"]= cancer +" "+Jinput["shortTitle"]
+        s= Jinput["shortTitle"]
+        s = string.replace(s,c1,cancer)
+        J["shortTitle"]= s
+        J["label"] = J["shortTitle"] 
         J[":probeMap"]=string.replace(Jinput[":probeMap"],c1,cancer)
         
         if Jinput.has_key("gain"):

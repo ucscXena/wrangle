@@ -194,7 +194,7 @@ def Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN):
         J["name"]=name
         J[":probeMap"]= "paradigmPathwayV1Probe"
         J["type"]= "genomicMatrix" 
-        J[":sampleaMp"]="TCGA."+cancer+".sampleMap"
+        J[":sampleMap"]="TCGA."+cancer+".sampleMap"
                 
         oHandle.write( json.dumps( J, indent=-1 ) )
         oHandle.close()

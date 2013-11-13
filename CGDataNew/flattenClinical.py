@@ -495,7 +495,7 @@ def cpGenomicEachSample(REALRUN, outDir, bookDic, sMap):
         return
     
     dataPackageDir = outDir + sampleMapBaseName(sMap)
-    for name in  collectNamesBelongToSampleMap(bookDic, sMap.getName()):    
+    for name in  collectNamesBelongToSampleMap(bookDic, sMap.getName()):
         J = bookDic[name]
         if J['type'] not in [ "clinicalMatrix","sampleMap"]:
             path = J['path']
