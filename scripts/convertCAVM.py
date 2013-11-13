@@ -58,17 +58,25 @@ def convertCAVM (inDir, outD ,REALRUN, CAVM, TCGA, MAPID=1):
         
         #integration list
         integrationList =[]
-
+        rootDic={}
+        clinFile =""
+        clinMatrix = None
+        
         for name in sampleMaps[sampleMap]:
             obj=bookDic[name]
             if obj['type']=="clinicalMatrix":
                 if REALRUN != 0 and  REALRUN !=1:
                     continue
 
-                outfile = outDir +os.path.basename(obj['path'])
+                if clinMatrix != None:
+                    print "only one clinical matrix is allowed"
+                    sys.exit()
+                    
+                clinFile = outDir +os.path.basename(obj['path'])
                 fin = open(obj['path'],'U')
-                fout = open(outfile,'w')
-                fout.write(fin.readline())
+                fout = open(clinFile,'w')
+                line = fin.readline()
+                fout.write(line)
 
                 samples =[]
                 for line in fin.readlines():
@@ -94,7 +102,7 @@ def convertCAVM (inDir, outD ,REALRUN, CAVM, TCGA, MAPID=1):
                 J['cohort']=J[':sampleMap']
                 if CAVM:
                     J.pop(':sampleMap') 
-                fout=open(outfile+".json",'w')
+                fout=open(clinFile+".json",'w')
                 fout.write(json.dumps (J, indent=-1))
                 fout.close()
 
@@ -104,25 +112,20 @@ def convertCAVM (inDir, outD ,REALRUN, CAVM, TCGA, MAPID=1):
                     outfile = outDir +os.path.basename(cFobj['path'])
                     os.system("cp "+cFobj['path']+"  "+outfile)
                     os.system("cp "+cFobj['path']+".json "+outfile+".json")
-
                 
                 #sampleMap data mapping information #cgData 1
                 if not CAVM:
                     os.system("cp "+ bookDic[sampleMap]['path'] +" "+outDir+"sampleMap")
-                    """
-                    outfile = outDir +"sampleMap"
-                    fout=open(outfile,'w')
-                    for sample in samples:
-                        fout.write(sample+"\t"+sample+"\n")
-                    fout.close()
-                    """
-                    
+
+                #only expect one clinical matrix
+                clinMatrix= ClinicalMatrixNew(clinFile, "clinMatrix")
+                break
+                
         for name in sampleMaps[sampleMap]:
             obj=bookDic[name]
             if obj['type']=="genomicSegment":
                 if REALRUN ==1 :
                     path= obj['path']
-                    rootDic={}
                     fin =open(path,'r')
                     fout =open(outDir+os.path.basename(path),'w')
                     for line in fin.readlines():
@@ -132,6 +135,8 @@ def convertCAVM (inDir, outD ,REALRUN, CAVM, TCGA, MAPID=1):
                             root = rootDic[sample]
                         else:
                             root = sMap.getIntegrationId(sample,integrationList)
+                            if not root:
+                                root = sample
                             rootDic[sample]=root
                         fout.write(root+"\t"+string.join(data[1:],'\t'))
                     fin.close()
@@ -163,24 +168,11 @@ def convertCAVM (inDir, outD ,REALRUN, CAVM, TCGA, MAPID=1):
                     sMapJ['sample_type']=J['sample_type']
                 if J.has_key('tags'):
                     sMapJ['tags']=J['tags']
-
-                    
-                #to check if there are duplication in the probe ids
-                #process = os.popen("r=$(cut -f 1  "+obj['path']+" | more +2 | sort |uniq -c | sed -e 's/ *//' -e 's/ /\t/' | sort -n |cut -f 1 |sort -un|tail -n 1); if [ $r -ne \"1\" ]; then echo $r ; fi")
-                #r = process.read()
-                #if r:
-                    #print string.strip(r), obj['path']
-
                 
-                if REALRUN != 1:
-                    continue
+                # add to clinMatrix the id mappings
+                mappingCol= "_GENOMIC_ID_"+obj['name']
+                clinMatrix.addOneColWithSameValue(mappingCol,"")
                 
-                #probemap for genomic segment
-                if J.has_key(':genomicSegment'):
-                    probeMap = bookDic[J[':probeMap']]['path']
-                    os.system("cp "+probeMap+" "+outDir+os.path.basename(probeMap))
-                    os.system("cp "+probeMap+".json "+outDir+os.path.basename(probeMap)+".json")
-
                 # need to find it out if there are more than one sample map to each _INTEGRATION ID
                 roots={}
                 findDup=0
@@ -191,15 +183,40 @@ def convertCAVM (inDir, outD ,REALRUN, CAVM, TCGA, MAPID=1):
                     if sample =="":
                         print name, "has bad empty sample id"
                         sys.exit()
-                    root = sMap.getIntegrationId(sample,integrationList)
-                    if not root:
-                        root = sample
+                    if rootDic.has_key(sample):
+                        root = rootDic[sample]
+                    else:
+                        root = sMap.getIntegrationId(sample,integrationList)
+                        if not root:
+                            root = sample
+                        rootDic[sample]=root
+
+                    genomic_Id= clinMatrix.getDATA(root, mappingCol)
+                    if genomic_Id is None or genomic_Id =="":
+                        clinMatrix.setDATA(root, mappingCol,sample)
+                    else:
+                        genomic_Id = string.split(genomic_Id,",")
+                        if sample not in genomic_Id:
+                            genomic_Id.append(sample)
+                            genomic_Id= string.join(genomic_Id,',')
+                            #print sample, genomic_Id
+                            clinMatrix.setDATA(root, mappingCol,genomic_Id)
+                            
                     if roots.has_key(root):
                         roots[root].append(i)
                         findDup=1
                     else:
                         roots[root]=[i]
                 fin.close()
+
+                if REALRUN != 1:
+                    continue
+                
+                #probemap for genomic segment
+                if J.has_key(':genomicSegment'):
+                    probeMap = bookDic[J[':probeMap']]['path']
+                    os.system("cp "+probeMap+" "+outDir+os.path.basename(probeMap))
+                    os.system("cp "+probeMap+".json "+outDir+os.path.basename(probeMap)+".json")
 
                 #need to figure out if there are duplication in the probe ids
                 findDupProbe=[]
@@ -222,9 +239,13 @@ def convertCAVM (inDir, outD ,REALRUN, CAVM, TCGA, MAPID=1):
                     samples= data[1:]
                     fout.write(data[0])
                     for sample in samples:
-                        root = sMap.getIntegrationId(sample,integrationList)
-                        if not root:
-                            root = sample
+                        if rootDic.has_key(sample):
+                            root = rootDic[sample]
+                        else:
+                            root = sMap.getIntegrationId(sample,integrationList)
+                            if not root:
+                                root = sample
+                            rootDic[sample]=root
                         fout.write('\t'+root)
                     fout.write('\n')
 
@@ -340,6 +361,11 @@ def convertCAVM (inDir, outD ,REALRUN, CAVM, TCGA, MAPID=1):
                     fin.close()
                     fout.close()
                 
+        #final clinical matrix output
+        if REALRUN == 0 or  REALRUN ==1:
+            fout= open(clinFile,'w')
+            clinMatrix.store(fout)
+    
         #sampleMap json #cgData1
         if not CAVM:
             outfile = outDir +"sampleMap.json"

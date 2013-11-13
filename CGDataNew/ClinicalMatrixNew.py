@@ -53,9 +53,11 @@ class ClinicalMatrixNew():
                 d =new_d
                 
             #do not use _PATIENT
+            """
             if d in ["_PATIENT","_INTEGRATION"]:
                 ignoreCol.append(i)
                 continue
+            """
             self.__COLs.append(d)
 
                 
@@ -354,6 +356,7 @@ class ClinicalMatrixNew():
         
     def addColRoot(self, sampleMap):
         ColRoot ="_PATIENT"
+        self.removeCols([ColRoot])
         if ColRoot not in self.__COLs:
             self.__COL= self.__COL+1
             self.__COLs.append(ColRoot)
@@ -364,6 +367,7 @@ class ClinicalMatrixNew():
 
     def addColIntegration(self, sampleMap,integrationList):
         ColInt ="_INTEGRATION"
+        self.removeCols([ColRoot])
         if ColInt not in self.__COLs:
             self.__COL= self.__COL+1
             self.__COLs.append(ColInt)
