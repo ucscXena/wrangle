@@ -120,7 +120,7 @@ def convertCAVM (inDir, outD ,REALRUN, CAVM, TCGA, MAPID=1):
         for name in sampleMaps[sampleMap]:
             obj=bookDic[name]
             if obj['type']=="genomicSegment":
-                if REALRUN ==1:
+                if REALRUN ==1 :
                     path= obj['path']
                     rootDic={}
                     fin =open(path,'r')

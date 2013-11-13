@@ -170,7 +170,7 @@ def downloadBundle(inDir, PROBEMAP, testVersionOnly):
         #md5
         currdir = os.path.abspath(os.path.curdir)
         os.chdir(outDir+subdir)
-        os.system("md5sum * > md5.txt")
+        os.system("md5sum * | sed s/'  '/'\t'/ > md5.txt") 
         os.chdir(currdir)
         
         #tar.gz
