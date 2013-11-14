@@ -120,7 +120,7 @@ def convertCAVM (inDir, outD ,REALRUN, CAVM, TCGA, MAPID=1):
                 #only expect one clinical matrix
                 clinMatrix= ClinicalMatrixNew(clinFile, "clinMatrix")
                 break
-                
+
         for name in sampleMaps[sampleMap]:
             obj=bookDic[name]
             if obj['type']=="genomicSegment":
@@ -142,7 +142,7 @@ def convertCAVM (inDir, outD ,REALRUN, CAVM, TCGA, MAPID=1):
                     fin.close()
                     fout.close()
 
-                    os.system("cp "+path+".json "+outDir+os.path.basename(path)+".json")
+                os.system("cp "+path+".json "+outDir+os.path.basename(path)+".json")
                 
             if obj['type']=="genomicMatrix":
                 print obj['name']
@@ -169,6 +169,9 @@ def convertCAVM (inDir, outD ,REALRUN, CAVM, TCGA, MAPID=1):
                 if J.has_key('tags'):
                     sMapJ['tags']=J['tags']
                 
+                if REALRUN != 1 and REALRUN !=0:
+                    continue
+
                 # add to clinMatrix the id mappings
                 mappingCol= "_GENOMIC_ID_"+obj['name']
                 clinMatrix.addOneColWithSameValue(mappingCol,"")
