@@ -95,5 +95,5 @@ def process(dir):
         fout.write(json.dumps(J,indent=-1,sort_keys=True))
         fout.close()
             
-dir="data_flatten/public/TCGA/"
+dir="data_flatten/lincs/"
 process(dir)

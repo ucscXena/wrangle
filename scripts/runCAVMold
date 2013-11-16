@@ -1,4 +1,4 @@
-REALRUN=-1
+REALRUN=0
 
 python convertCAVM.py --inDir=data_flatten/ispy/ --outDir=CAVMold/ispy/ --CAVM=0 --TCGA=0 --REALRUN=$REALRUN
 
@@ -19,5 +19,9 @@ python convertCAVM.py --inDir=data_flatten/su2c/su2cPancreas/ --outDir=CAVMold/s
 python convertCAVM.py --inDir=data_flatten/public/other/  --outDir=CAVMold/public/other/ --CAVM=0 --TCGA=0 --REALRUN=$REALRUN
 
 python convertCAVM.py --inDir=data_flatten/public/OHSUBaylorLBL/  --outDir=CAVMold/public/OHSUBaylorLBL/ --CAVM=0 --TCGA=0 --REALRUN=$REALRUN --MAPID=0
+
+python convertCAVM.py --inDir=data_flatten/lincs/LINCS_kinome/  --outDir=CAVMold/lincs/ --CAVM=0 --TCGA=0 --REALRUN=$REALRUN
+
+python convertCAVM.py --inDir=data_flatten/lincs/lincs.rppa/  --outDir=CAVMold/lincs/ --CAVM=0 --TCGA=0 --MAPID=0 --REALRUN=$REALRUN
 
 python convertCAVM.py --inDir=data_flatten/public/TCGA/  --outDir=CAVMold/public/TCGA/ --CAVM=0 --TCGA=1 --REALRUN=$REALRUN
