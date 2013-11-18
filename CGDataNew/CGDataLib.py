@@ -22,7 +22,6 @@ def cgWalk(dir, ignore):
             if file[-5:]!= ".json":
                 continue
             base =file [:-5]
-            
             if os.path.getsize(root+"/"+file) ==0:
                 if ignore:
                     continue

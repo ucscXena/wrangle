@@ -55,7 +55,7 @@ def convertCAVM (inDir, outD ,REALRUN, CAVM, TCGA, MAPID=1):
         fin = open(bookDic[sampleMap]['path']+".json",'r')
         sMapJ = json.loads(fin.read())
         fin.close()
-        
+
         #integration list
         integrationList =[]
         rootDic={}
@@ -124,8 +124,8 @@ def convertCAVM (inDir, outD ,REALRUN, CAVM, TCGA, MAPID=1):
         for name in sampleMaps[sampleMap]:
             obj=bookDic[name]
             if obj['type']=="genomicSegment":
+                path= obj['path']
                 if REALRUN ==1 :
-                    path= obj['path']
                     fin =open(path,'r')
                     fout =open(outDir+os.path.basename(path),'w')
                     for line in fin.readlines():
@@ -364,6 +364,7 @@ def convertCAVM (inDir, outD ,REALRUN, CAVM, TCGA, MAPID=1):
                     fin.close()
                     fout.close()
                 
+
         #final clinical matrix output
         if REALRUN == 0 or  REALRUN ==1:
             fout= open(clinFile,'w')
