@@ -242,7 +242,7 @@ def output (dir, finalClinMatrix, survivalMatrix, cancer):
     fout.write("_EVENT\tvalueType\tcategory\n")
 
     fout.write("_TIME_TO_EVENT\tshortTitle\tOVERALL SURVIVAL\n")
-    fout.write("_TIME_TO_EVENT\tlongTitle\t_TIME_TO_EVENT overall survival\n")
+    fout.write("_TIME_TO_EVENT\tlongTitle\t_TIME_TO_EVENT overall survival in days\n")
     fout.write("_TIME_TO_EVENT\tvalueType\tfloat\n")
 
     fout.write("_OS_IND\tshortTitle\toverall survival indicator\n")
@@ -250,7 +250,7 @@ def output (dir, finalClinMatrix, survivalMatrix, cancer):
     fout.write("_OS_IND\tvalueType\tcategory\n")
 
     fout.write("_OS\tshortTitle\tOVERALL SURVIVAL\n")
-    fout.write("_OS\tlongTitle\t_OS overall survival\n")
+    fout.write("_OS\tlongTitle\t_OS overall survival in days\n")
     fout.write("_OS\tvalueType\tfloat\n")
     
     feature= "_EVENT"
@@ -272,7 +272,7 @@ def output (dir, finalClinMatrix, survivalMatrix, cancer):
     fout.write("_RFS_IND\tvalueType\tcategory\n")
 
     fout.write("_RFS\tshortTitle\tRECURRENCE FREE SURVIVAL\n")
-    fout.write("_RFS\tlongTitle\t_RFS recurrence free survival\n")
+    fout.write("_RFS\tlongTitle\t_RFS recurrence free survival in days\n")
     fout.write("_RFS\tvalueType\tfloat\n")
 
     feature= "_RFS"

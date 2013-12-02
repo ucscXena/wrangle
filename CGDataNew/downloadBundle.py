@@ -146,8 +146,8 @@ def downloadBundle(inDir, PROBEMAP, testVersionOnly):
         #sampleMap
         sampleMap = bookDic[dataset][':sampleMap']
         path = bookDic[sampleMap]['path']
-        os.system("cp "+ path +" "+outDir+ subdir)
-        os.system("cp "+ path +".json "+outDir + subdir)
+        os.system("cp "+ path +" "+outDir+ subdir + "sampleMap")
+        os.system("cp "+ path +".json "+outDir + subdir +"sampleMap.json")
 
 
         #clinicalMatrix
@@ -156,16 +156,16 @@ def downloadBundle(inDir, PROBEMAP, testVersionOnly):
                 continue
             print "clinicalMatrix=", bookDic[clinDataset]['name']
             path=bookDic[clinDataset]['path']
-            os.system("cp "+ path +" "+outDir+ subdir)
-            os.system("cp "+ path +".json "+outDir + subdir)
+            os.system("cp "+ path +" "+outDir+ subdir +"clinical_data")
+            os.system("cp "+ path +".json "+outDir + subdir +"clinical_data.json")
 
             #clinicalFeature
             if bookDic[clinDataset].has_key(":clinicalFeature"):
                 print "clinicalFeature=", bookDic[clinDataset][":clinicalFeature"]
                 name = bookDic[clinDataset][":clinicalFeature"]
                 path = bookDic[name]['path']
-                os.system("cp "+ path +" "+outDir+ subdir)
-                os.system("cp "+ path +".json "+outDir + subdir)
+                os.system("grep -v priority "+ path +" | grep -v visibility > "+outDir+ subdir +"clinical_data_dictionary")
+                os.system("cp "+ path +".json "+outDir + subdir +"clinical_data_dictionary.json")
 
         #md5
         currdir = os.path.abspath(os.path.curdir)

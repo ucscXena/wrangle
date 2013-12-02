@@ -404,7 +404,7 @@ def printUsage():
     print "          --TCGA=1 (intput data is TCGA data, skip checking NaNs)"
     print "          --REALRUN=1 (full)"
     print "          --REALRUN=0 (clinical data probeMap only, full json, skip genomic data, genomic segment data)"
-    print "          --REALRUN=-1 (full genomic json only, skip all genomic data and clinical data)"
+    print "          --REALRUN=-1 (full json, skip all genomic data and clinical data)"
     print
     print " options: "
     print "          --MAPID=0 (do not change genomic id)"
