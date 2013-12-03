@@ -180,7 +180,7 @@ def Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN):
 
     J["description"] = J["description"] +"<br><br>PARADIGM (PMID 20529912) is pathway analysis method to infer tumor sample-specific genetic activities by incorporating curated pathway interactions as well as integrating diverse types of genomic data. The pathways used in this analysis are from <a href=\"http://pid.nci.nih.gov/\" target=\"_blank\"><u>NCI pathway interaction database</u></a>."
 
-    #J["description"] = J["description"] +"<br><br>"+TCGAUtil.clinDataDesc
+    J["description"] = J["description"] +"<br><br>"
         
     #change cgData
     J["name"]="TCGA_"+cancer+"_"+suffix

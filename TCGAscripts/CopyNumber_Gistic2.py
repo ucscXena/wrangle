@@ -147,7 +147,7 @@ def CopyNumber_Gistic2 (inDir, outDir, cancer,flog,REALRUN):
                               " Genes were mapped onto the human genome coordinates using UCSC cgData HUGO probeMap."+\
                               " Reference to GISTIC2 method PMID:21527027."
 
-        #J["description"] = J["description"] +"<br><br>"+TCGAUtil.clinDataDesc
+        J["description"] = J["description"] +"<br><br>"
                 
         #change cgData
         J["name"]="TCGA_"+cancer+"_"+namesuffix

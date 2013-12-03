@@ -187,7 +187,7 @@ def Affy (inDir, outDir, cancer,flog,REALRUN):
                       " Genes are mapped onto the human genome coordinates using UCSC cgData HUGO probeMap."+\
                        "<br><br>In order to more easily view the differential gene expression between samples, we set the default view to center each gene to zero by independently subtracting the mean of the genomic location on the fly. Users can view the original non-normalized values by uncheck the \"Normalize\" option. For more information on how to use the cancer browser, please refer to the help page."
     
-    #J["description"] = J["description"] +"<br><br>"+TCGAUtil.clinDataDesc
+    J["description"] = J["description"] +"<br><br>"
     
     #change cgData
     J["name"]="TCGA_"+cancer+"_exp_u133a"

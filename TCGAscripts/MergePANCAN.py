@@ -243,6 +243,8 @@ def mutationJSON(J, cancer):
     J["label"] = J["shortTitle"] 
     J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+" somatic mutation"
     J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" somatic mutation. Red color (=1) represents non-silent somatic mutations (nonsense, missense, frame-shift indels, splice site mutations, stop codon readthroughs) are identified in the protein coding region of a gene, and white color (=0) means that none of the above mutation calls are made in this gene for the specific sample."
+    J["description"] = J["description"] +"<br><br>"
+    
     J["wrangling_procedure"]="Data is combined from all TCGA cohorts and deposited into UCSC cgData repository"
     return
     

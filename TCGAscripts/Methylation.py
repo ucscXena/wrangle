@@ -205,7 +205,7 @@ def humanmethylation (inDir, outDir, cancer,flog,PATHPATTERN,BETAOFFSET,REALRUN)
         J["description"]= J["description"] +" Microarray probes are mapped onto the human genome coordinates using cgData probeMap derived from GEO GPL13534 record."
     J["description"]=J["description"]+" Here is a <a href=\"http://www.illumina.com/documents/products/appnotes/appnote_dna_methylation_analysis_infinium.pdf\" target=\"_blank\"><u>reference</u></a> to Illumina Infinium BeadChip DNA methylation platform beta value."
 
-    #J["description"] = J["description"] +"<br><br>"+TCGAUtil.clinDataDesc
+    J["description"] = J["description"] +"<br><br>"
     
     #change cgData
     J["name"]="TCGA_"+cancer+"_"+namesuffix

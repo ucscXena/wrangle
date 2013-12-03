@@ -278,7 +278,7 @@ def makeJSON(oHandle,cancer,lastMageTab,inDir,noCNV,type):
         J["description"] = J["description"]+" A fixed set of common germline cnv probes were removed prior to segmentation."
     J["description"]=J["description"]+" Reference to the algorithm used by Broad to produce the dataset: <a href =\"https://tcga-data.nci.nih.gov/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/"+string.lower(cancer)+"/cgcc/broad.mit.edu/genome_wide_snp_6/snp/broad.mit.edu_"+cancer+".Genome_Wide_SNP_6.mage-tab.1."+ str(lastMageTab)+".0/DESCRIPTION.txt\" target=\"_blank\"> <u>DCC description</u></a> and <a href=\"http://www.nature.com/nature/journal/vaop/ncurrent/suppinfo/nature07385.html\" target=\"_blank\"><u>nature 2008</u></a> ."
 
-    #J["description"] = J["description"] +"<br><br>"+TCGAUtil.clinDataDesc
+    J["description"] = J["description"] +"<br><br>"
                 
     #change cgData
     if type=="genomicSegment":
