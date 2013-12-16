@@ -367,7 +367,7 @@ class ClinicalMatrixNew():
 
     def addColIntegration(self, sampleMap,integrationList):
         ColInt ="_INTEGRATION"
-        self.removeCols([ColRoot])
+        self.removeCols([ColInt])
         if ColInt not in self.__COLs:
             self.__COL= self.__COL+1
             self.__COLs.append(ColInt)

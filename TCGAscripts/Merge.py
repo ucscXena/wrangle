@@ -32,6 +32,7 @@ def genomic (dir,outDir, cancer,flog,REALRUN):
         "HumanMethylation27",
         "HumanMethylation450",
         "RPPA",
+        "RPPA_RBN",
         #"SNP6_genomicSegment",
         #"SNP6_nocnv_genomicSegment",
         ""
@@ -106,7 +107,7 @@ def process (outDir, cancer, c1, c2, file, REALRUN,type):
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
     J["cohort"] ="TCGA_"+cancer
     J['domain']="TCGA"
-    J['tags']=["cancer"]
+    J['tags']=["cancer"]+ TCGAUtil.tags[cancer]
     J['owner']="TCGA"
 
     if Jinput.has_key("gdata_tags"):
