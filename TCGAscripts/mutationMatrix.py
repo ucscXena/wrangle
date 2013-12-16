@@ -79,7 +79,7 @@ def mutationMatrix (inDir, outDir, cancer,flog,REALRUN):
     J["sample_type"]=["tumor"]
     J["cohort"] ="TCGA_"+cancer
     J['domain']="TCGA"
-    J['tags']=["cancer"]
+    J['tags']=["cancer"]+ TCGAUtil.tags[cancer]
     J['owner']="TCGA"
 
     if cancer!="PANCAN":

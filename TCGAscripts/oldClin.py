@@ -10,10 +10,12 @@ def oldClin (inDir, outDir, cancer, flog,REALRUN):
     #print status
     print cancer, sys._getframe().f_code.co_name
 
-    preClinMatrix = previousClin(inDir,cancer)
-
+    real_cancer = string.replace(cancer,"TCGA.","")
+    real_cancer = string.replace(real_cancer,".SAMPLEMAP","")
+    preClinMatrix = previousClin(inDir,real_cancer)
+    
     preCOLs = preClinMatrix.getCOLs()
-    currentCOLs = currentClin(outDir+cancer, cancer)
+    currentCOLs = currentClin(outDir+real_cancer, real_cancer)
 
     preROWs = preClinMatrix.getROWs()
     oldClinMatrix= ClinicalMatrixNew(None,"clinical_"+cancer+"_oldClin")
@@ -26,7 +28,7 @@ def oldClin (inDir, outDir, cancer, flog,REALRUN):
                 oldClinMatrix.setDATA(row,col,preClinMatrix.getDATA(row,col))
 
     if oldClinMatrix.getCOLnum() >0:
-        output (outDir+cancer+"/", oldClinMatrix, cancer)
+        output (outDir+real_cancer+"/", oldClinMatrix, real_cancer)
 
 def output (dir, oldClinMatrix, cancer):
     #data output
@@ -74,7 +76,7 @@ def output (dir, oldClinMatrix, cancer):
     fout.close() 
     
 def previousClin (dir, cancer):
-    file =dir+cancer+"_clinicalMatrix"
+    file = dir +cancer+"_clinicalMatrix"
     preClinMatrix = ClinicalMatrixNew(file, "previous")
     return preClinMatrix
 

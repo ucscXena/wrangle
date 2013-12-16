@@ -69,7 +69,7 @@ def RPPA_RBN (inDir, outDir, cancer,flog,REALRUN):
     
     J["sample_type"]=["tumor"]
     J["redistribution"]= True
-    J['tags']=["cancer"]
+    J['tags']=["cancer"]+ TCGAUtil.tags[cancer]
     
     if cancer !="PANCAN":
         J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
@@ -89,8 +89,8 @@ def RPPA_RBN (inDir, outDir, cancer,flog,REALRUN):
     J['domain']="TCGA"
     J['owner']="TCGA"
     
-    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") protein expression data for 131 proteins, measured by RPPA (reverse phase protein array) technology. These data have been normalized by RBN (replicate-base normalization) method developed by MDACC. Details: https://www.synapse.org/#!Synapse:syn1750330.<br><br>"
-
+    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") protein expression data for 131 proteins, measured by RPPA (reverse phase protein array) technology. These data have been normalized by RBN (replicate-base normalization) method developed by MDACC. Details: https://www.synapse.org/#!Synapse:syn1750330."
+    J["description"] = J["description"] +"<br><br>"
     J["wrangling_procedure"]= "Data download from https://www.synapse.org/#!Synapse:syn1759392, processed into antibody by sample matrix at UCSC into cgData repository"
 
     #change cgData
