@@ -186,7 +186,7 @@ def RPPA (inDir, outDir, cancer, flog,REALRUN):
     J["cohort"] ="TCGA_"+cancer
     J['domain']="TCGA"
     J['owner']="TCGA"
-    J["tags"]=["cancer"]
+    J["tags"]=["cancer"]+ TCGAUtil.tags[cancer]
     
     J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") protein expression by reverse phase protein array (RPPA).<br><br> The data was generated and processed at the MD Anderson Cancer Center TCGA proteome characterization center RPPA core. Level 3 interpreted level data was downloaded from TCGA data coordination center.<br><br>"
     

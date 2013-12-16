@@ -172,9 +172,7 @@ def processMutation (filename, dir,outDir, cancer,flog, REALRUN):
         foutPANCAN.write("\n")
                 
         #data normalization per gene
-        lineN=0
         while 1:
-            lineN= lineN+1
             end=0
             for i in range (0,len(keys)):
                 fin = inFiles[keys[i]]
@@ -195,9 +193,6 @@ def processMutation (filename, dir,outDir, cancer,flog, REALRUN):
 
             foutPANCAN.write("\n")
 
-            print lineN
-            continue
-
     J={}
     fin= open(inFiles[keys[0]]+".json","r")
     J= json.loads(fin.read())
@@ -213,7 +208,7 @@ def processMutation (filename, dir,outDir, cancer,flog, REALRUN):
     J["sample_type"]=["tumor"]
     J["cohort"] ="TCGA_"+cancer
     J['domain']="TCGA"
-    J['tags']=["cancer"] 
+    J['tags']=["cancer"] + TCGAUtil.tags[cancer]
     J['owner']="TCGA"
     J[":sampleMap"]="TCGA."+cancer+".sampleMap"
     J["groupTitle"]= "TCGA "+TCGAUtil.cancerGroupTitle[cancer]
@@ -289,10 +284,7 @@ def processRNA (filename, dir,outDir, cancer,flog, REALRUN):
         foutPANCAN.write("\n")
                 
         #data normalization per gene
-        lineN=0
         while 1:
-            lineN= lineN+1
-
             dataDic={}
 
             n=0
@@ -342,9 +334,6 @@ def processRNA (filename, dir,outDir, cancer,flog, REALRUN):
 
             foutPANCAN.write("\n")
 
-            print lineN
-            continue
-
     keys.append("PANCAN")
     J={}
     for key in keys:
@@ -376,6 +365,7 @@ def processRNA (filename, dir,outDir, cancer,flog, REALRUN):
                           " The gene expression profile was measured experimentally using the "+J['PLATFORM']+" by the "+ J['dataProducer'] +"." + \
                           " This dataset shows the mean-normalized gene-level transcription estimates."
         J["wrangling_procedure"]="Level_3 Data (file names: *.rsem.genes.normalized_results) download from TCGA DCC, log2(x+1) transformed, normalized across all TCGA cancer cohorts, and deposited into UCSC cgData repository"
+        J['tags']=["cancer"] + TCGAUtil.tags[cancer]
         J['gain'] = 0.5
 
         if cancer!="PANCAN":

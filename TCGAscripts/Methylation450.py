@@ -168,7 +168,7 @@ def humanmethylation (inDir, outDir, cancer,flog,PATHPATTERN,BETAOFFSET,REALRUN)
     J["cgDataVersion"]=1
         
     if suffix =="HumanMethylation450":
-        J["shortTitle"]= cancer +" DNA methylation (Methylation450)"
+        J["shortTitle"]= cancer +" DNA methylation (Methylation450k)"
         namesuffix="hMethyl450" 
 
     J["label"] = J["shortTitle"] 
@@ -177,7 +177,7 @@ def humanmethylation (inDir, outDir, cancer,flog,PATHPATTERN,BETAOFFSET,REALRUN)
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
     J["cohort"] ="TCGA_"+cancer
     J['domain']="TCGA"
-    J['tags']=["cancer"]
+    J['tags']=["cancer"]+ TCGAUtil.tags[cancer]
     J['owner']="TCGA"
     
     J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") DNA methylation ("+suffix+")"
