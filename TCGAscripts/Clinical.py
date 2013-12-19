@@ -187,8 +187,6 @@ def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN,  originCancer,REAL
                 clinMatrix.replaceValue("Dead","DECEASED") #stupid BCR
                 clinMatrix.replaceValue("DEAD","DECEASED") #stupid BCR
                 clinMatrix.replaceValue("dead","DECEASED") #stupid BCR
-                clinMatrix.replaceValue("|","")
-
 
                 #if cancer != originCancer:
                 #    clinMatrix.addOneColWithSameValue("cohort",originCancer)
@@ -420,18 +418,21 @@ def days_delta  (old_date_of_form_completion,new_date_of_form_completion):
         d=1
 
     dold = datetime.date(y,m,d)
+    try:
+        y,m,d =string.split(new_date_of_form_completion,"-")
+        y = int(y)
+        m = int (m)
+        d=int (d)
+        if d==0:
+            d=1
+        dnew = datetime.date(y,m,d)
     
-    y,m,d =string.split(new_date_of_form_completion,"-")
-    y = int(y)
-    m = int (m)
-    d=int (d)
-    if d==0:
-        d=1
-    dnew = datetime.date(y,m,d)
-    
-    days_delta = (dnew-dold).days
-    return days_delta
+        days_delta = (dnew-dold).days
+        return days_delta
 
+    except:
+        return 0
+    
 def uuid_2_barcode (clinMatrix,uuidcol,mapDic,flog): #convert uuid to barcode, if uuid not found, remove the sample
     rows= clinMatrix.getROWs()
     removeSamples=[]

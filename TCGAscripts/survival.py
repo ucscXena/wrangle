@@ -173,23 +173,53 @@ def RFS  (dir, finalClinMatrix, survivalMatrix, cancer):
     for id in finalClinMatrix.getROWs():
         v = finalClinMatrix.getDATA(id, "new_tumor_event_after_initial_treatment")
         if v in ["YES","yes","Yes"]:
-            foundD=0
+            foundD=-1
             d = finalClinMatrix.getDATA(id,"days_to_new_tumor_event_after_initial_treatment")
-            try:
-                int(d)
-                foundD = int(d)
-            except:
-                pass
+            if d!= None:
+                # d might have "|"
+                d = string.split(d,"|")
+                foundDays= -1
+                for item in d: 
+                    try:
+                        int(item)
+                        if foundDays== -1:
+                            foundDays=int(item)
+                        else:
+                            if int(item) < foundDays:
+                                foundDays=int(item)
+                    except:
+                        pass
+
+                if foundDays!=-1:
+                   if foundD ==-1:
+                       foundD = foundDays
+                   else:
+                       if foundDays < foundD:
+                           foundD = foundDays
 
             d = finalClinMatrix.getDATA(id,"days_to_tumor_recurrence")
-            try:
-                int(d)
-                if int(d) > foundD:
-                    foundD = int(d)
-            except:
-                pass
+            if d!= None:
+                # d might have "|"
+                d = string.split(d,"|")
+                foundDays= -1
+                for item in d: 
+                    try:
+                        int(item)
+                        if foundDays== -1:
+                            foundDays=int(item)
+                        else:
+                            if int(item) < foundDays:
+                                foundDays=int(item)
+                    except:
+                        pass
+                if foundDays!=-1:
+                   if foundD ==-1:
+                       foundD = foundDays
+                   else:
+                       if foundDays < foundD:
+                           foundD = foundDays
 
-            if foundD >0:
+            if foundD !=-1:
                 survivalMatrix.setDATA(id,"_RFS_IND","1")
                 survivalMatrix.setDATA(id,"_RFS",str(foundD))
                 minGood= minGood+1

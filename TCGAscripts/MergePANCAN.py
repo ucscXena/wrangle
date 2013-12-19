@@ -379,7 +379,7 @@ def processRNA (filename, dir,outDir, cancer,flog, REALRUN):
                 if value =="":
                     continue
                 if value not in origin:
-                    origin.append(value)
+                    origin.extend(value)
 
             J["tags"]= J["tags"]+origin
             J["url"]="https://tcga-data.nci.nih.gov/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/"

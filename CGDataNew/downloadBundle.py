@@ -130,18 +130,20 @@ def downloadBundle(inDir, PROBEMAP, testVersionOnly):
                 continue
             path = probeMap['path']
             print "probeMap=", name, path
-            os.system("cp "+ path +" "+outDir+ subdir)
-            os.system("cp "+ path +".json "+outDir + subdir)
+            os.system("cp "+ path +" "+outDir+ subdir +"probe")
+            os.system("cp "+ path +".json "+outDir + subdir +"probe.json")
 
         #genomic data
         if bookDic[dataset].has_key(":genomicSegment"):
             dataset = bookDic[dataset][":genomicSegment"]
             path = bookDic[dataset]['path']
             type = bookDic[dataset]['type']
+            os.system("cp "+ path +" "+outDir+subdir + "genomicSegment")
+            os.system("cp "+ path +".json "+outDir+subdir+"genomicSegment.json")  
         else:
             path = bookDic[dataset]['path']
-        os.system("cp "+ path +" "+outDir+subdir)
-        os.system("cp "+ path +".json "+outDir+subdir)  
+            os.system("cp "+ path +" "+outDir+subdir + "genomicMatrix")
+            os.system("cp "+ path +".json "+outDir+subdir+"genomicMatrix.json")  
         
         #sampleMap
         sampleMap = bookDic[dataset][':sampleMap']
