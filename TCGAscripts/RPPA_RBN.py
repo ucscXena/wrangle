@@ -82,7 +82,7 @@ def RPPA_RBN (inDir, outDir, cancer,flog,REALRUN):
             if value =="":
                 continue
             if value not in origin:
-                origin.append(value)
+                origin.extend(value)
         J["tags"]= J["tags"]+origin
         
     J["cohort"] ="TCGA_"+cancer

@@ -9,26 +9,30 @@ import TCGAUtil
 def oldClin (inDir, outDir, cancer, flog,REALRUN):
     #print status
     print cancer, sys._getframe().f_code.co_name
-
-    real_cancer = string.replace(cancer,"TCGA.","")
-    real_cancer = string.replace(real_cancer,".SAMPLEMAP","")
+    
+    #real_cancer = string.replace(cancer,"TCGA.","")
+    #real_cancer = string.replace(real_cancer,".SAMPLEMAP","")
+    real_cancer =cancer
     preClinMatrix = previousClin(inDir,real_cancer)
     
     preCOLs = preClinMatrix.getCOLs()
     currentCOLs = currentClin(outDir+real_cancer, real_cancer)
 
+    
     preROWs = preClinMatrix.getROWs()
     oldClinMatrix= ClinicalMatrixNew(None,"clinical_"+cancer+"_oldClin")
     oldClinMatrix.addNewRows(preROWs, {})
 
+
     for col in preCOLs:
-        if col not in currentCOLs:
+        if col not in currentCOLs and col not in ["_PATIENT","_INTEGRATION"]:
             oldClinMatrix.addOneColWithSameValue(col,"")
             for row in preROWs:
                 oldClinMatrix.setDATA(row,col,preClinMatrix.getDATA(row,col))
 
     if oldClinMatrix.getCOLnum() >0:
         output (outDir+real_cancer+"/", oldClinMatrix, real_cancer)
+
 
 def output (dir, oldClinMatrix, cancer):
     #data output

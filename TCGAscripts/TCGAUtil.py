@@ -166,9 +166,9 @@ tags ={
     "KIRC":[],
     "KIRP":[],
     "LIHC":[],
-    "LUAD":[],
-    "LUNG":[],
-    "LUSC":[],
+    "LUAD":["non-small cell lung cancer"],
+    "LUNG":["non-small cell lung cancer"],
+    "LUSC":["non-small cell lung cancer"],
     "DLBC":[],
     "LNNH":[],
     "OV":[],
@@ -189,7 +189,7 @@ tags ={
     "UCS":[],
     "UVM":[],
     "TGCT":[],
-    "PANCAN":[]
+    "PANCAN":["non-small cell lung cancer","gastric cancer"]
     }
 
 cancerGroupTitle={
