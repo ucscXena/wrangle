@@ -543,8 +543,8 @@ class ClinicalMatrixNew():
         if feature not in self.__COLs:
             return
         for sample in self.__ROWs:
-            if string.find(self.__DATA[sample][feature],old)!=-1:
-                self.__DATA[sample][feature]=string.replace(self.__DATA[sample][feature],old,new)
+            if self.__DATA[sample][feature] == old:
+                self.__DATA[sample][feature]= new
         return
 
     def replaceColName(self,feature, newName):
