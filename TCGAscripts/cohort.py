@@ -74,7 +74,7 @@ def cohort (inDir, outDir, cancer, flog,REALRUN):
         fout =open(outfile,"w")
         fout.write("sample\tcohort\n")
         for intId in intDic:
-            fout.write(intId+"\t"+TCGAUtil.cancerHumanReadable[cancer]+"\n")
+            fout.write(intId+"\t"+"TCGA "+TCGAUtil.cancerHumanReadable[cancer]+"\n")
         fout.close()
 
     #clinFeature

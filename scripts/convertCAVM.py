@@ -31,10 +31,11 @@ def convertCAVM (inDir, outD ,REALRUN, CAVM, TCGA, MAPID=1):
             os.system("mkdir "+outDir)
 
         path = bookDic[sampleMap]['path']
+        """
         if string.find(os.path.abspath(path), "/inside/home/jzhu/cgDataJing/scripts/data_flatten/") ==-1:
             print "ignore "+path
             continue
-            
+        """    
         if sampleMap in missingMaps:
             #construct an empty sampleMap
             sMap = SampleMapNew(None,sampleMap)

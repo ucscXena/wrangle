@@ -9,12 +9,23 @@ LEVEL="Level_3"
 import TCGAUtil
 sys.path.insert(0,"../CGDataNew")
 from CGDataUtil import *
+from processRSEM2percentile import *
 
 tmpDir="tmptmp/"
 
 # /inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/unc.edu/illuminaga_rnaseq/rnaseq/
 # /inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/bcgsc.ca/illuminaga_rnaseqv2/rnaseqv2/
 # /inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/unc.edu/illuminahiseq_rnaseqv2/rnaseqv2/
+
+def illuminahiseq_rnaseqV2_unc_percentileRank (inDir, outDir, cancer,flog,REALRUN):
+    print cancer, sys._getframe().f_code.co_name
+    PATHPATTERN= "IlluminaHiSeq_RNASeqV2"
+    suffix     = "IlluminaHiSeq percentile"
+    namesuffix = "HiSeqV2_percentile"
+    dataProducer = "University of North Carolina TCGA genome characterization center"
+    clean = 1
+    geneRPKM (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN, clean)
+    return
 
 def illuminahiseq_rnaseqV2_unc (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
@@ -31,6 +42,14 @@ def illuminahiseq_rnaseqV2_unc (inDir, outDir, cancer,flog,REALRUN):
     namesuffix = "HiSeqV2_exon"
     dataProducer = "University of North Carolina TCGA genome characterization center"
     clean =0
+    geneRPKM (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN, clean)
+
+    print cancer, "IlluminaHiSeq percentile"
+    PATHPATTERN= "IlluminaHiSeq_RNASeqV2"
+    suffix     = "IlluminaHiSeq percentile"
+    namesuffix = "HiSeqV2_percentile"
+    dataProducer = "University of North Carolina TCGA genome characterization center"
+    clean = 0
     geneRPKM (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN, clean)
     return
 
@@ -95,7 +114,6 @@ def illuminahiseq_rnaseq_bcgsc  (inDir, outDir, cancer, flog,REALRUN):
     clean =1
     geneRPKM (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN, clean)
     return
-
 
 
 def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataProducer,REALRUN,clean):
@@ -268,6 +286,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
                         print "please check how to identify sample name"
                     valuePOS=3
                     LOG2=1
+                    RANK=0
                 #v2
                 pattern ="rsem.genes.normalized_results"
                 if string.find(file,pattern)!=-1 and string.find(namesuffix,"exon")==-1:
@@ -277,8 +296,13 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
                         sample = string.split(file,".")[2]
                     else:
                         print "please check how to identify sample name"
+                    if string.find(namesuffix,"percentile") !=-1: #generated percentileRANK based data
+                        RANK=1
+                    else:
+                        RANK=0
                     valuePOS=1
                     LOG2=1
+
                 #v2 exon from unc
                 pattern ="bt.exon_quantification" 
                 if string.find(file,pattern)!=-1 and string.find(namesuffix,"exon")!=-1:
@@ -290,7 +314,8 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
                         print "please check how to identify sample name"
                     valuePOS=3
                     LOG2=1
-                    
+                    RANK=0
+
                 if sample=="":
                     continue
                 if sample in tmpSamples: #duplicated samples
@@ -303,7 +328,11 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
                 
                 c=c+1
                 #print c
-                process(dataMatrix,tmpSamples,sample,genes, cancer,infile,flog, valuePOS,LOG2,250)
+                if RANK:
+                    process_percentileRANK(dataMatrix,tmpSamples,sample,genes, cancer,infile,flog, valuePOS,250)
+                else:
+                    process(dataMatrix,tmpSamples,sample,genes, cancer,infile,flog, valuePOS,LOG2,250)
+
                 if (c % 250)==0:
                     tmpout="tmp_"+ str(int(c/250.0))
                     r =outputMatrix(dataMatrix, tmpSamples, genes, oldgenes, tmpout, flog)
@@ -374,7 +403,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
                 J["shortTitle"]= cancer +" "+"gene expression ("+suffix+" BC)"
                 J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression by RNAseq ("+suffix+" BC)"
                 
-        J["notes"]= "the probeMap should be tcgaGAF, but untill the probeMap is made, we will have to use hugo for the short term, however probably around 10% of the gene symbols are not HUGO names, but ENTRE genes"
+        J["notes"]= "the probeMap is hugo for the short term, however probably around 10% of the gene symbols are not HUGO names, but ENTRE genes"
         J["description"]= J["description"] +"TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression by RNAseq.<br><br>"+ \
                           " The gene expression profile was measured experimentally using the "+platformTitle+" by the "+ dataProducer +"." + \
                           " Level 3 interpreted level data was downloaded from TCGA data coordination center. This dataset shows the gene-level transcription estimates, "
@@ -388,8 +417,13 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
                           " Level 3 interpreted level data was downloaded from TCGA data coordination center. This dataset shows the exon-level transcription estimates, "
         
     if PATHPATTERN in [ "IlluminaHiSeq_RNASeqV2","IlluminaGA_RNASeqV2"] and string.find(namesuffix, "exon")==-1:
-        J["description"] = J["description"] + "as in RSEM normalized count."
-        J["wrangling_procedure"]= "Level_3 Data (file names: *.rsem.genes.normalized_results) download from TCGA DCC, log2(x+1) transformed, and processed at UCSC into cgData repository"
+        if  string.find(namesuffix, "percentile")==-1:
+            J["description"] = J["description"] + "as in RSEM normalized count."
+            J["wrangling_procedure"]= "Level_3 Data (file names: *.rsem.genes.normalized_results) download from TCGA DCC, log2(x+1) transformed, and processed at UCSC into cgData repository"
+        else:
+            J["description"] = J["description"] + "as in RSEM normalized count, percentile ranked within each sample"
+            J["wrangling_procedure"]= "Level_3 Data (file names: *.rsem.genes.normalized_results) download from TCGA DCC, percentile ranked, and processed at UCSC into cgData repository"
+            
     elif PATHPATTERN in [ "IlluminaHiSeq_RNASeqV2","IlluminaGA_RNASeqV2"] and string.find(namesuffix, "exon")!=-1:
         J["description"] = J["description"] + "as in RPKM values (Reads Per Kilobase of exon model per Million mapped reads)."
         J["wrangling_procedure"]= "Level_3 Data (file names: *.exon_quantification.txt) download from TCGA DCC, log2(x+1) transformed, and processed at UCSC into cgData repository"
@@ -437,10 +471,9 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     return
 
 def process(dataMatrix,samples, sample,genes, cancer,infile,flog, valuePOS, LOG2, maxLength):
-    # one sample a file
+    # one sample a file  
     fin=open(infile,'U')    
     fin.readline()
-
     for line in fin.readlines():
         data =string.split(line[:-1],"\t")
         hugo = data[0]
@@ -464,13 +497,64 @@ def process(dataMatrix,samples, sample,genes, cancer,infile,flog, valuePOS, LOG2
                 if value<0:
                     value = ""
                 else:
-                    value = math.log10(float(value+1))/math.log10(2)
+                    value = math.log(float(value+1),2)
 
             x=genes[hugo]
             y=samples[sample]
             dataMatrix[x][y]=value
             
     fin.close()
+    return 
+
+def process_percentileRANK (dataMatrix,samples, sample,genes, cancer,infile,flog, valuePOS, maxLength):
+    # one sample a file  
+    fin=open(infile,'U')    
+    fin.readline()
+    for line in fin.readlines():
+        data =string.split(line[:-1],"\t")
+        hugo = data[0]
+        value= data[valuePOS]
+        hugo = string.split(hugo,"|")[0]
+
+        if hugo=="?":
+            continue
+
+        if hugo not in genes:
+            p=len(genes)
+            genes[hugo]=p
+            l=[]
+            for j in range (0,maxLength):
+                l.append("")    
+            dataMatrix.append(l)
+    fin.close()
+
+    #build data from file
+    dataDic={}
+    fin=open(infile,'U')    
+    fin.readline()
+    for line in fin.readlines():
+        data =string.split(line[:-1],"\t")
+        hugo = data[0]
+        value= data[valuePOS]
+        hugo = string.split(hugo,"|")[0]
+
+        if hugo=="?":
+            continue
+        try:
+            dataDic[hugo]=float(value)
+        except:
+            dataDic[hugo]="NA"
+    fin.close()
+
+    # percentileRANK data
+    dataRankDic = percentileRANK (dataDic) 
+
+    for hugo in dataRankDic:
+        x=genes[hugo]
+        y=samples[sample]
+        value= dataRankDic[hugo]
+        dataMatrix[x][y]=value
+
     return 
 
 def outputMatrix(dataMatrix, samples, genes, oldgenes,outfile, flog):

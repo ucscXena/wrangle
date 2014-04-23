@@ -5,6 +5,7 @@ print
 
 def FHANAdate():
     l=string.strip(os.popen("/inside/home/jzhu/scripts/firehose_get -r |grep analyses |tail -n 1").read())
+    #return "2013_05_23"
     return l[10:]
 
 def FHANAdateVersion():
@@ -66,8 +67,11 @@ for line in fin.readlines():
                 cancer =string.replace(cancer,p,"")
             cancer=string.upper(cancer)
 
-            if cancer not in ["KIRP"]:
-                continue
+            cancer = string.replace(cancer,"TCGA.","")
+            cancer = string.replace(cancer,".SAMPLEMAP","")
+
+#            if cancer not in ["BRCA"]:
+#                continue
 
             if run:
                 m = __import__(module)

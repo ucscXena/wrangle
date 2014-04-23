@@ -178,7 +178,7 @@ def downloadBundle(inDir, PROBEMAP, testVersionOnly):
         #tar.gz
         if not os.path.exists(tarballDir +secureDir):
             os.system("mkdir "+tarballDir +secureDir)
-        os.system("tar -czPf "+ tarballDir +"/"+subdir[:-1]+".tgz -C "+ outDir+secureDir+" "+targetdir)
+        os.system("tar -czPf "+ tarballDir +"/"+subdir[:-1]+".tar.gz -C "+ outDir+secureDir+" "+targetdir)
 
         if badVersion:
             print "bad version number detected"
