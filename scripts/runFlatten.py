@@ -37,6 +37,10 @@ if options.inDir==None or options.outDir ==None:
 inDir = options.inDir
 outDir =options.outDir
 
+if string.find(inDir, "~")!=-1 or string.find(outDir, "~")!=-1:
+    print "do not use ~ in path"
+    sys.exit()
+
 if inDir[-1]!="/":
     inDir = inDir +"/"
 
