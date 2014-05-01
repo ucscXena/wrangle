@@ -421,7 +421,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
             J["description"] = J["description"] + "as in RSEM normalized count."
             J["wrangling_procedure"]= "Level_3 Data (file names: *.rsem.genes.normalized_results) download from TCGA DCC, log2(x+1) transformed, and processed at UCSC into cgData repository"
         else:
-            J["description"] = J["description"] + "as in RSEM normalized count, percentile ranked within each sample"
+            J["description"] = J["description"] + "as in RSEM normalized count, percentile ranked within each sample. "
             J["wrangling_procedure"]= "Level_3 Data (file names: *.rsem.genes.normalized_results) download from TCGA DCC, percentile ranked, and processed at UCSC into cgData repository"
             
     elif PATHPATTERN in [ "IlluminaHiSeq_RNASeqV2","IlluminaGA_RNASeqV2"] and string.find(namesuffix, "exon")!=-1:

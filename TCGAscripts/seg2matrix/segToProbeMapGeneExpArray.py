@@ -6,7 +6,7 @@ import CGData.SegToMatrix
 import CGData.RefGene
 import CGData.GeneMap
 
-class beds:    
+class segs:    
     def __init__(self):
         self.probes = []
         
@@ -19,9 +19,11 @@ class beds:
             if line[0]=="#":
                 continue
             tmp = string.split(line,"\t")
-            p = probeseg(tmp[3], tmp[0], int(tmp[1]), int(tmp[2]),tmp[5])
-            self.probes.append(p)
+            if len(tmp)== 5:
+                p = probeseg(tmp[0], tmp[1], int(tmp[3]), int(tmp[4]),tmp[2])
+                self.probes.append(p)
         fin.close()
+
 
 class probeseg:
     def __init__(self, name, chrom, chrom_start, chrom_end, strand):
@@ -35,10 +37,10 @@ class probeseg:
 if __name__ == "__main__":
     #python pro.py bed refGene_hg18 probeMap
     if len(sys.argv) != 4:
-        print "python bedToProbeMap.py bedInput refGene(eg hg18) probeMapOut\n"
+        print "python segToProbeMapGeneExpArray.py segInput(name,chr,strand,start,end) refGene(eg hg18) probeMapOut\n"
         sys.exit()
         
-    probes=beds()
+    probes=segs()
     probes.load(sys.argv[1])
     
     refgene = CGData.RefGene.RefGene()
@@ -48,7 +50,7 @@ if __name__ == "__main__":
     #python pro.py seg refGene_hg18 matrixout
 
     handle = open(sys.argv[3], "w")
-    probeMapper = CGData.GeneMap.ProbeMapper('g')
+    probeMapper = CGData.GeneMap.ProbeMapper('b')
     for probe in probes.probes:
         hits = []
         for hit in probeMapper.find_overlap( probe, refgene ):
