@@ -7,7 +7,7 @@ from CGDataUtil import *
 import ClinicalFeatureNew
 
 class ClinicalMatrixNew():
-    def __init__ (self, rFHandle,name,FirstColAuto=False, ClinF=None):
+    def __init__ (self, rFHandle,name,FirstColAuto=False, ClinF=None, SkipLines=[], AllowDupCOL = False):
         #1stColAuto== True, replace first column with autoincrement index 1,2,3,...
         # return emptySelf if fail to initiate
         self.__name=""
@@ -31,8 +31,13 @@ class ClinicalMatrixNew():
 
         # load header validate header COLs <self.__maxColLen characters
         lineReader= csv.reader(readHandle,delimiter='\t', quotechar='"')
-        data = lineReader.next()
 
+        while 1:
+            data = lineReader.next()
+            if lineReader.line_num in SkipLines:
+                continue
+            else:
+                break
         ignoreCol=[]
 
         for i in range (1,len(data)):
@@ -58,14 +63,22 @@ class ClinicalMatrixNew():
                 ignoreCol.append(i)
                 continue
             """
-            self.__COLs.append(d)
-
+            if d not in self.__COLs:
+                self.__COLs.append(d)
+            else:
+                if AllowDupCOL:
+                    ignoreCol.append(i)
+                else:
+                    return
                 
         self.__COL = len(self.__COLs)
-            
+
         # load data
-        c=0
+
         for line in lineReader:
+            if lineReader.line_num in SkipLines:
+                continue
+
             data =line
             #bad line
             if ignoreCol==[] and len(data[1:]) != self.__COL:
@@ -74,7 +87,7 @@ class ClinicalMatrixNew():
                 for i in range (0, self.__COL-len(data[1:])):
                     data.append("")
                 print "Fix", len(data[1:]), self.__COL, len(ignoreCol)
-                
+
             if ignoreCol!=[]  and len(data[1:]) != self.__COL+len(ignoreCol):
                 print "WARNING detected bad line sample=",data[0]
                 print len(data[1:]), self.__COL, len(ignoreCol)
@@ -86,10 +99,9 @@ class ClinicalMatrixNew():
             for i in range(0,len(data)):
                 data[i]= string.strip(data[i])
             if FirstColAuto:
-                sample=str(c)
+                sample=str(lineReader.line_num)
             else:
                 sample=data[0]
-
 
             if sample not in self.__ROWs:
                 self.__ROWs.append(sample)
@@ -111,22 +123,21 @@ class ClinicalMatrixNew():
                 else:
                     col = self.__COLs[i-1]
 
-                if not self.__DATA[sample].has_key(col):
+                if not self.__DATA[sample].has_key(col) :
                     if data[i] in ["NA","na","NULL", "null"]: #bad formatting in clinical data, clinical data NULL use empty
                         data[i]=""
                     self.__DATA[sample][col]=data[i]
                 else:
                     self = emptySelf
                     return  
-            
-            c=c+1
 
         if self.validate() != True:
             self = emptySelf
             return
 
         readHandle.close()
-    
+
+
     def getName(self):
         return self.__name
 
@@ -480,13 +491,16 @@ class ClinicalMatrixNew():
                 return False
             if len(col)>self.__maxColLen:
                 return False
+                
         if self.__ROW != len(self.__ROWs):
             return False
+        
         for row in self.__ROWs:
             if self.__ROWs.count(row) !=1:
                 return False
         if self.__DATA.keys().sort() != self.__ROWs.sort():
             return False
+    
         for sample in self.__DATA.keys():
             if self.__COL != len(self.__DATA[sample]):
                 return False
@@ -495,7 +509,6 @@ class ClinicalMatrixNew():
             testKeys.sort()
             if self.__COLs!= testKeys:
                 return False
-
 
         #test all states length for only categorical cols
         for col in self.__COLs:
@@ -506,6 +519,7 @@ class ClinicalMatrixNew():
             type = self.isTypeCategory (col)
             if type == None:
                 return False
+
         return True
 
     def badCols(self):
@@ -538,6 +552,14 @@ class ClinicalMatrixNew():
                     self.__DATA[sample][feature]=string.replace(self.__DATA[sample][feature],old,new)
         return
 
+    #repalce value when value=cell in the whole matrix
+    def replaceValueWhole(self, old, new):
+        for sample in self.__ROWs:
+            for feature in self.__COLs:
+                if self.__DATA[sample][feature] ==old:
+                    self.__DATA[sample][feature]=new
+        return
+
     #repalce value in a specific col
     def replaceValueInCol(self, feature, old, new):
         if feature not in self.__COLs:
@@ -561,6 +583,7 @@ class ClinicalMatrixNew():
     def store(self, oHandle, validation=False):
         if validation and self.validate()!=True:
             return False
+
         # output clinicalMatrix Data
         oHandle.write("sampleID\t"+string.join(self.__COLs,"\t")+"\n")
         for sample in self.__ROWs:

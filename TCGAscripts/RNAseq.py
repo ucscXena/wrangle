@@ -381,6 +381,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     J["version"]= datetime.date.today().isoformat()
     J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
     J["gain"]=1.0
+    J["expressionDataSpace"]="log"
 
     if PATHPATTERN in ["IlluminaHiSeq_RNASeq","IlluminaHiSeq_RNASeqV2"]:
         platformTitle ="Illumina HiSeq 2000 RNA Sequencing platform"
@@ -421,6 +422,8 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
             J["description"] = J["description"] + "as in RSEM normalized count."
             J["wrangling_procedure"]= "Level_3 Data (file names: *.rsem.genes.normalized_results) download from TCGA DCC, log2(x+1) transformed, and processed at UCSC into cgData repository"
         else:
+            J["gain"]=0.1
+            J["expressionDataSpace"]="rank"
             J["description"] = J["description"] + "as in RSEM normalized count, percentile ranked within each sample. "
             J["wrangling_procedure"]= "Level_3 Data (file names: *.rsem.genes.normalized_results) download from TCGA DCC, percentile ranked, and processed at UCSC into cgData repository"
             

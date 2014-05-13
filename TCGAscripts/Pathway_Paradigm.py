@@ -37,6 +37,9 @@ def Pathway_Paradigm_RNASeq_And_Copy_Number (inDir, outDir, cancer,flog, REALRUN
 def Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN):
     if string.find(string.upper(cancer),"PANCAN")!=-1:
         return
+
+    if string.find(string.upper(cancer),"SKCM")!=-1:
+        return
     
     garbage=[tmpDir]
     if os.path.exists(tmpDir ):
@@ -210,9 +213,11 @@ def cleanGarbage(garbageDirs):
 def process(infile, outfile,cancer):
     if cancer in ["LAML"]:
         cancerCode="03"
+    elif cancer in ["SKCM"]:
+        cancerCode=""
     else:
         cancerCode="01"
-        
+    
     fin=open(infile,'r')
     fout=open(outfile,'w')
 
@@ -220,7 +225,10 @@ def process(infile, outfile,cancer):
     ids= string.split(line,'\t')
     fout.write(ids[0])
     for id in ids[1:]:
-        fout.write("\t"+id+ "-"+cancerCode)
+        if cancerCode!="":
+            fout.write("\t"+id+ "-"+cancerCode)
+        else:
+            fout.write("\t"+id)
     fout.write("\n")
 
     for line in fin.readlines():

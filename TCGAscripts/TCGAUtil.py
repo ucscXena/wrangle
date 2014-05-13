@@ -494,6 +494,13 @@ def barcode_IntegrationId (barcode):
     if len(parts[3])>2:
         parts[3]=parts[3][0:2]
     return string.join(parts[0:4],"-")
+
+def barcode_PatientId (barcode):
+    #return TCGA-01-1234
+    parts= string.split(barcode,"-")
+    if len(parts)<3:
+        return None
+    return string.join(parts[0:3],"-")
     
 ## UUID related code
 def uuid_normal_cellline():

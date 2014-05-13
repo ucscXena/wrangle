@@ -28,17 +28,7 @@ def cgWalk(dir, ignore):
                 else:
                     print "json file size 0", root+"/"+file
                     return 0
-            """
-            #file is ascii
-            command ="file "+root+"/"+base
-            r = os.popen(command).read()
-            if string.find(r,"ASCII")==-1:
-                if ignore:
-                    continue
-                else:
-                    print "CRITICAL ERROR file is not a ASCII file", root+"/"+base
-                    return 0
-            """
+
             #load .json
             J = json.loads(open(root+"/"+base+".json").read())
             J['path']= root+"/"+base
@@ -58,8 +48,11 @@ def cgWalk(dir, ignore):
 
             #json checking if valid
             if bookDic.has_key(name):
-                print "CRITICAL ERROR already has this name in repo", name
-                return 0
+                if ignore:
+                    pass
+                else:
+                    print "CRITICAL ERROR already has this name in repo", name
+                    return 0
             if type in ["genomicMatrix","clinicalMatrix"] and not trackName_good(name): 
                 print "ERROR name has bad characters or too long", name
                 return 0

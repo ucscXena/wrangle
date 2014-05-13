@@ -175,10 +175,13 @@ def downloadBundle(inDir, PROBEMAP, testVersionOnly):
         os.system("md5sum * | sed s/'  '/'\t'/ > md5.txt") 
         os.chdir(currdir)
         
-        #tar.gz
+        
         if not os.path.exists(tarballDir +secureDir):
             os.system("mkdir "+tarballDir +secureDir)
-        os.system("tar -czPf "+ tarballDir +"/"+subdir[:-1]+".tar.gz -C "+ outDir+secureDir+" "+targetdir)
+        #tar.gz
+        #os.system("tar -czPf "+ tarballDir +"/"+subdir[:-1]+".tar.gz -C "+ outDir+secureDir+" "+targetdir)
+        #.tgz
+        os.system("tar -czPf "+ tarballDir +"/"+subdir[:-1]+".tgz -C "+ outDir+secureDir+" "+targetdir)
 
         if badVersion:
             print "bad version number detected"

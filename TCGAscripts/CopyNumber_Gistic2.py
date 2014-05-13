@@ -68,7 +68,8 @@ def CopyNumber_Gistic2 (inDir, outDir, cancer,flog,REALRUN):
         os.makedirs( outDir+cancer+"/" )
 
     #data processing single dir mode
-    for pattern in ["all_data_by_genes","all_thresholded.by_genes","focal_data_by_genes"]:
+    #for pattern in ["all_data_by_genes","all_thresholded.by_genes","focal_data_by_genes"]:
+    for pattern in ["all_data_by_genes","all_thresholded.by_genes"]:
         cgFileName= "Gistic2_"+PATHPATTERN
         cgFileName = cgFileName +"_"+pattern
 
@@ -91,11 +92,12 @@ def CopyNumber_Gistic2 (inDir, outDir, cancer,flog,REALRUN):
         if pattern=="all_thresholded.by_genes":
             suffix="gistic2_thresholded"
             namesuffix="gistic2thd"
-            
+        
+        """
         if pattern=="focal_data_by_genes":
             suffix="gistic2_focal"
             namesuffix="gistic2foc"
-
+        """
         
         J["cgDataVersion"]=1
         J["shortTitle"]=cancer +" copy number ("+suffix+")"
@@ -139,14 +141,14 @@ def CopyNumber_Gistic2 (inDir, outDir, cancer,flog,REALRUN):
                               " Copy number profile was measured experimentally using whole genome microarray at a TCGA genome characterization center. Subsequently, GISTIC2 method was applied using the TCGA FIREHOSE pipeline to produce gene-level copy number estimates. GISTIC2 further thresholded the estimated values to -2,-1,0,1,2, representing homozygous deletion, single copy deletion, diploid normal copy, low-level copy number amplification, or high-level copy number amplification."+\
                               " Genes are mapped onto the human genome coordinates using UCSC cgData HUGO probeMap."+\
                               " Reference to GISTIC2 method PMID:21527027."
-
+        """    
         if pattern=="focal_data_by_genes":
             J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+")"\
                               " gene-level focal copy number variation (CNV) estimated using the GISTIC2 method.<br><br>"+ \
                               " Copy number profile was measured experimentally using whole genome microarray at a TCGA genome characterization center. Subsequently, GISTIC2 method was applied using the TCGA FIREHOSE pipeline to produce focal gene-level copy number estimates. GISTIC2 separates CNV profiles into underlying arm-level and focal alterations (short CNV segments that map to small regions of the genome) based on CNV segment length. FIREHOSE further maps segmented CNV data to genes. This dataset shows only the gene-level focal CNV events."+\
                               " Genes were mapped onto the human genome coordinates using UCSC cgData HUGO probeMap."+\
                               " Reference to GISTIC2 method PMID:21527027."
-
+        """                      
         J["description"] = J["description"] +"<br><br>"
                 
         #change cgData
