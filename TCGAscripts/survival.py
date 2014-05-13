@@ -9,9 +9,6 @@ from CGDataLib import *
 import  TCGAUtil
 
 def survival (dir,cancer):
-    os.system("rm "+dir+"clinical_survival")
-    os.system("rm "+dir+"clinical_survival.json")
-        
     ignore=0
     bookDic=cgWalk(dir,ignore)
     sampleMaps = collectSampleMaps(bookDic)

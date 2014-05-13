@@ -18,7 +18,7 @@ def oldClin (inDir, outDir, cancer, flog,REALRUN):
     preCOLs = preClinMatrix.getCOLs()
     currentCOLs = currentClin(outDir+real_cancer, real_cancer)
 
-    
+   
     preROWs = preClinMatrix.getROWs()
     oldClinMatrix= ClinicalMatrixNew(None,"clinical_"+cancer+"_oldClin")
     oldClinMatrix.addNewRows(preROWs, {})
@@ -26,6 +26,8 @@ def oldClin (inDir, outDir, cancer, flog,REALRUN):
 
     for col in preCOLs:
         if col not in currentCOLs and col not in ["_PATIENT","_INTEGRATION"]:
+            if len(col) >10 and  col[:11]=="_GENOMIC_ID":
+                continue
             oldClinMatrix.addOneColWithSameValue(col,"")
             for row in preROWs:
                 oldClinMatrix.setDATA(row,col,preClinMatrix.getDATA(row,col))

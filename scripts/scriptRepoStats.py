@@ -7,7 +7,7 @@ from ClinicalMatrixNew  import *
 from ClinicalFeatureNew  import *
 from CGDataUtil import *
 
-inDir="data_flatten"
+inDir="CAVMold"
 outfile ="statReport"
 
 def genomicMatrixSampleNumber(file):

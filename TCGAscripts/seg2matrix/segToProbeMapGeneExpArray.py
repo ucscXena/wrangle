@@ -46,9 +46,6 @@ if __name__ == "__main__":
     refgene = CGData.RefGene.RefGene()
     refgene.load(sys.argv[2])
     
-    #nrefgene = CGData.GeneMap.filter_longest_form(refgene)
-    #python pro.py seg refGene_hg18 matrixout
-
     handle = open(sys.argv[3], "w")
     probeMapper = CGData.GeneMap.ProbeMapper('b')
     for probe in probes.probes:
