@@ -52,7 +52,7 @@ def RPPA_RBN (inDir, outDir, cancer,flog,REALRUN):
     J={}
     #stable
     J["cgDataVersion"]=1
-    J[":dataSubType"]="protein"
+    J[":dataSubType"]="protein expression RPPA"
     J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
     J["dataProducer"]= dataProducer
     J["type"]= "genomicMatrix" 

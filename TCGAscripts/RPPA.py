@@ -158,7 +158,7 @@ def RPPA (inDir, outDir, cancer, flog,REALRUN):
     J={}
     #stable
     J["cgDataVersion"]=1
-    J[":dataSubType"]="protein"
+    J[":dataSubType"]="protein expression RPPA"
     J["redistribution"]= True
     J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
     J["dataProducer"]= dataProducer

@@ -105,6 +105,7 @@ def cohort (inDir, outDir, cancer, flog,REALRUN):
     J["version"]= datetime.date.today().isoformat()
     J["name"]="TCGA_"+cancer+"_cohort"
     J["type"]= "clinicalMatrix" 
+    J[":dataSubType"]="phenotype"
     J[":sampleMap"]="TCGA."+cancer+".sampleMap"
     if withClinF:
         J[":clinicalFeature"]=  "TCGA_"+ cancer+"_cohort_clinFeat"

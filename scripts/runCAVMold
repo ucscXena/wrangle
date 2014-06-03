@@ -1,4 +1,4 @@
-REALRUN=1
+REALRUN=-1
 
 python convertCAVM.py --inDir=data_flatten/TARGET/  --outDir=CAVMold/TARGET/ --CAVM=0 --TCGA=0 --REALRUN=$REALRUN
 

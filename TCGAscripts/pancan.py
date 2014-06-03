@@ -112,10 +112,10 @@ def pancan_cluster_of_cluster (dir, outDir, cancer,log, REALRUN):
     print cancer, sys._getframe().f_code.co_name
 
     featureName="_PANCAN_Cluster_Cluster_PANCAN"
-    shortTitle="PANCAN Cluster"
-    longTitle="_PANCAN Integrated Clusters subtype k=13 (syn1889916)"
+    shortTitle="COCA"
+    longTitle="_PANCAN COCA assignment (syn2487022)"
     maxSubtype=13
-    dataProducer="https://www.synapse.org/#!Synapse:syn1889916"
+    dataProducer="https://www.synapse.org/#!Synapse:syn2487022"
 
     filepath= dir
     code=None
@@ -306,7 +306,10 @@ def pancan_subtype (dir, outDir, cancer,log, REALRUN, featureName,dataProducer, 
         else:
             for line in fin.readlines():
                 id,cluster= string.split(string.strip(line),"\t")
-                fout.write(id+"\t"+dic[cluster]+"\n")
+                if cluster in ["","NA"]:
+                    fout.write(id+"\tNA\n")
+                else:
+                    fout.write(id+"\t"+dic[cluster]+"\n")
         fout.close()
         fin.close()
 
@@ -338,7 +341,7 @@ def pancan_subtype (dir, outDir, cancer,log, REALRUN, featureName,dataProducer, 
             s=s+"\""+str(maxSubtype)+"\""
             fout.write(featureName+"\tstateOrder\t"+s+"\n")
 
-            fout.close()
+
         elif isinstance( maxSubtype, list):
             for i in range (0,len(maxSubtype)-1):
                 fout.write(featureName+"\tstate\t"+maxSubtype[i]+"\n")

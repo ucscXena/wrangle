@@ -366,7 +366,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     J={}
     #stable    
     J["cgDataVersion"]=1
-    J[":dataSubType"]="geneExp"
+    J[":dataSubType"]="gene expression RNAseq"
     J["redistribution"]= True
     J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
     J["dataProducer"]= dataProducer
@@ -484,7 +484,7 @@ def process(dataMatrix,samples, sample,genes, cancer,infile,flog, valuePOS, LOG2
         hugo = string.split(hugo,"|")[0]
 
         if hugo=="?":
-            continue
+            hugo=data[0]
 
         if hugo not in genes:
             p=len(genes)
@@ -520,7 +520,7 @@ def process_percentileRANK (dataMatrix,samples, sample,genes, cancer,infile,flog
         hugo = string.split(hugo,"|")[0]
 
         if hugo=="?":
-            continue
+            hugo=data[0]
 
         if hugo not in genes:
             p=len(genes)

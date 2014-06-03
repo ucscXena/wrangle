@@ -252,7 +252,8 @@ def output (dir, finalClinMatrix, survivalMatrix, cancer):
     J["name"]=survivalMatrix.getName()
     J["type"]= "clinicalMatrix"
     J[":sampleMap"]="TCGA."+cancer+".sampleMap"
-    
+    J[":dataSubType"]="phenotype"
+
     #cFjson
     cFJ={}
     cFJ["name"]=J["name"]+"_clinFeat"

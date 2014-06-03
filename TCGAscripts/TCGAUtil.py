@@ -60,7 +60,8 @@ cancerOfficial={
     "UCS":"uterine carcinosarcoma",
     "UVM":"uveal melanoma",
     "TGCT":"testicular germ cell tumor",
-    "PANCAN":"pan-cancer"
+    "PANCAN":"pan-cancer",
+    "PANCAN12":"pan-cancer"
     }
 
 cancerHumanReadable={
@@ -103,7 +104,8 @@ cancerHumanReadable={
     "UCS":"Uterine Carcinosarcoma",
     "UVM":"Ocular melanomas",
     "TGCT":"Testicular Cancaer",
-    "PANCAN":"Pan-Cancer"
+    "PANCAN":"Pan-Cancer",
+    "PANCAN12":"Pan-Cancer"
     }
 
 anatomical_origin ={
@@ -146,7 +148,8 @@ anatomical_origin ={
     "UCS":["Uterus"],
     "UVM":["Eye"],
     "TGCT":["Testis"],
-    "PANCAN":[]
+    "PANCAN":[],
+    "PANCAN12":[]
     }
 
 tags ={
@@ -189,7 +192,8 @@ tags ={
     "UCS":[],
     "UVM":[],
     "TGCT":[],
-    "PANCAN":["non-small cell lung cancer","gastric cancer"]
+    "PANCAN":["non-small cell lung cancer","gastric cancer"],
+    "PANCAN12":["non-small cell lung cancer"]
     }
 
 cancerGroupTitle={
@@ -232,7 +236,8 @@ cancerGroupTitle={
     "CHOL":"cholangiocarcinoma",
     "UVM":"uveal Melanoma",
     "TGCT":"testicular germ cell tumor",
-    "PANCAN":" Pan-Cancer"
+    "PANCAN":" Pan-Cancer",
+    "PANCAN12":" Pan-Cancer"
     }
 
 TCGASampleType={
@@ -459,6 +464,11 @@ featurePriority={
     "PANCAN": {"sample_type":"1",
                "cohort":"2",
                "_PANCAN_UNC_RNAseq_PANCAN_K16":"3",
+               "gender":"4"
+             },
+    "PANCAN12": {"_PANCAN_Cluster_Cluster_PANCAN":"1",
+               "cohort":"2",
+               "sample_type":"3",
                "gender":"4"
              }
     }

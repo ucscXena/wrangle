@@ -66,11 +66,10 @@ for line in fin.readlines():
             for p in pattern:
                 cancer =string.replace(cancer,p,"")
             cancer=string.upper(cancer)
-
             cancer = string.replace(cancer,"TCGA.","")
             cancer = string.replace(cancer,".SAMPLEMAP","")
 
-#            if cancer not in ["BRCA"]:
+#            if cancer not in ["LGG"]:
 #                continue
 
             if run:

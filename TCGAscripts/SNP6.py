@@ -244,7 +244,7 @@ def makeJSON(oHandle,cancer,lastMageTab,inDir,noCNV,type):
     else:
         J["shortTitle"]= cancer +" copy number"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") segmented copy number"
-    J[":dataSubType"]="cna"
+    J[":dataSubType"]="copy number"
     J["redistribution"]= True
     J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
 

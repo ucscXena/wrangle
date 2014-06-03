@@ -3,6 +3,9 @@
 
 $TMP=preFreeze/TCGA/
 
+#DCC clinical data
+1	1	Clinical	ClinicalPublicBioTab	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/bcr/biotab/clin/	$TMP
+
 #FH analysis
 $FIREHOSEDATE_ana
 $FIREHOSEDATE_ana_version
@@ -28,8 +31,6 @@ $FIREHOSEDATE_ana_version
 1	1	SNP6	SNP6	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/broad.mit.edu/genome_wide_snp_6/snp/	$TMP
 1	1	RPPA	RPPA	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/mdanderson.org/mda_rppa_core/protein_exp/	$TMP
 
-#DCC clinical data
-1	1	Clinical	ClinicalPublicBioTab	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/bcr/biotab/clin/	$TMP
 
 #mutation data oneoff
 1	1	mutationMatrix	mutationMatrix	/data/TCGA/tcgaDataOneOff/Genomic/PANCAN/*_cleaned_filtered.maf	$TMP

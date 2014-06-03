@@ -10,7 +10,7 @@ $FIREHOSEDATE_ana_version
 0	0	Pathway_Paradigm	Pathway_Paradigm_mRNA_And_Copy_Number	/inside/depot/tcgafiles/tcga4yeo/other/gdacs/gdacbroad/firehose/analyses__$FIREHOSEDATE_ana/*/$FIREHOSEDATE_ana_version/	$TMP
 0	0	Pathway_Paradigm	Pathway_Paradigm_RNAseq	/inside/depot/tcgafiles/tcga4yeo/other/gdacs/gdacbroad/firehose/analyses__$FIREHOSEDATE_ana/*/$FIREHOSEDATE_ana_version/	$TMP
 0	0	Pathway_Paradigm	Pathway_Paradigm_RNASeq_And_Copy_Number	/inside/depot/tcgafiles/tcga4yeo/other/gdacs/gdacbroad/firehose/analyses__$FIREHOSEDATE_ana/*/$FIREHOSEDATE_ana_version/	$TMP
-1	0	CopyNumber_Gistic2	CopyNumber_Gistic2	/inside/depot/tcgafiles/tcga4yeo/other/gdacs/gdacbroad/firehose/analyses__$FIREHOSEDATE_ana/*/$FIREHOSEDATE_ana_version/	$TMP
+0	0	CopyNumber_Gistic2	CopyNumber_Gistic2	/inside/depot/tcgafiles/tcga4yeo/other/gdacs/gdacbroad/firehose/analyses__$FIREHOSEDATE_ana/*/$FIREHOSEDATE_ana_version/	$TMP
 
 0	0	AgilentGeneExp	AgilentG4502A_07_3	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/unc.edu/agilentg4502a_07_3/transcriptome/	$TMP
 0	0	AgilentGeneExp	AgilentG4502A_07_2	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/unc.edu/agilentg4502a_07_2/transcriptome/	$TMP
@@ -39,10 +39,11 @@ $FIREHOSEDATE_ana_version
 
 
 #PANCAN subtype oneoff
+1	1	pancan	pancan_cluster_of_cluster	/data/TCGA/tcgaDataOneOff/Clinical/*/Table_COCA_syn2487022	$TMP
 0	0	pancan	pancan_DNAmethyl	/data/TCGA/tcgaDataOneOff/Clinical/*/DNA_Methylation_Cluster_syn1875816_clean	$TMP
 0	0	pancan	pancan_icluster	/data/TCGA/tcgaDataOneOff/Clinical/*/icluster.k28.syn1869809_clean	$TMP
 0	0	pancan	pancan_PARADIGM	/data/TCGA/tcgaDataOneOff/Clinical/*/PARADIGM_ConsensusClusters_syn1807631_clean	$TMP
-0	0	pancan	pancan_cluster_of_cluster	/data/TCGA/tcgaDataOneOff/Clinical/*/CofC.noMut.K13.Hoadley.20130523_syn1889916_clean	$TMP
+
 
 0	0	pancan	pancan_UNC_RANseq	/data/TCGA/tcgaDataOneOff/Clinical/*/UNC_RNAseq_PanCan12.3602-corrected-v3.Subtypes.K16_syn1715753_clean	$TMP
 0	0	pancan	pancan_RPPA	/data/TCGA/tcgaDataOneOff/Clinical/*/PanCan11_RBN_SimpleCluster_syn1756922_clean	$TMP
