@@ -181,7 +181,7 @@ def humanmethylation (inDir, outDir, cancer,flog,PATHPATTERN,BETAOFFSET,REALRUN)
     J['owner']="TCGA"
     
     J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") DNA methylation ("+suffix+")"
-    J[":dataSubType"]="DNAMethylation"
+    J[":dataSubType"]="DNA methylation"
     J["redistribution"]= True
     J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
     #J["priority"]= TCGAUtil.browserPriority[cancer]            

@@ -26,7 +26,7 @@ def Mutation (dir,outDir, cancer,flog,REALRUN):
 
 
 def clin (dir,outDir, cancer,flog,REALRUN):
-    if cancer !="PANCAN":
+    if cancer not in ["PANCAN12","PANCAN"]:
         return
 
     print cancer, sys._getframe().f_code.co_name
@@ -39,7 +39,7 @@ def processClin (filename, dir,outDir, CANCER,flog, REALRUN):
     inFiles ={}
     print os.path.dirname(dir)
     for cancer in os.listdir(os.path.dirname(dir)):
-        if cancer in ["LUNG","COADREAD","PANCAN"]:
+        if cancer in ["LUNG","COADREAD","PANCAN","PANCAN12"]:
             continue
 
         cancerDir= os.path.dirname(dir)  + "/"+cancer
@@ -55,7 +55,7 @@ def processClin (filename, dir,outDir, CANCER,flog, REALRUN):
     for feature in features:
         print feature
         if REALRUN:
-            outfile  = outDir+"/"+CANCER+"/"+feature+"_PANCAN"
+            outfile  = outDir+"/"+CANCER+"/"+feature+"_"+CANCER
             foutPANCAN = open(outfile,'w')
             foutPANCAN.write("sample\t"+feature+"\n")
             
@@ -83,17 +83,17 @@ def processClin (filename, dir,outDir, CANCER,flog, REALRUN):
                         foutPANCAN.write(data[-1]+"\t"+data[POS]+"\n")
             foutPANCAN.close()
 
-        outfile  = outDir+"/"+CANCER+"/"+feature+"_PANCAN.json"
+        outfile  = outDir+"/"+CANCER+"/"+feature+"_"+CANCER+".json"
         fout =open(outfile,'w')
 
         J={}
-        J['name']=feature+"_PANCAN"
+        J['name']=feature+"_"+CANCER
         J['type']="clinicalMatrix"
         J[":sampleMap"]="TCGA."+CANCER+".sampleMap"
 
         if TCGAUtil.featurePriority.has_key(CANCER) or TCGAUtil.valueType.has_key(feature):
             featureConfig=0
-            cfout =open(outDir+"/"+CANCER+"/"+feature+"_PANCAN_clinFeature","w")
+            cfout =open(outDir+"/"+CANCER+"/"+feature+"_"+CANCER+"_clinFeature","w")
             
             if TCGAUtil.featurePriority[CANCER].has_key(feature):
                 featureConfig=1
@@ -127,7 +127,7 @@ def processClin (filename, dir,outDir, CANCER,flog, REALRUN):
                 cfJ ={}
                 cfJ["name"]= J['name']+"_clinFeature"
                 cfJ["type"]="clinicalFeature"
-                cfout=open(outDir+"/"+CANCER+"/"+feature+"_PANCAN_clinFeature.json","w")
+                cfout=open(outDir+"/"+CANCER+"/"+feature+"_"+CANCER+"_clinFeature.json","w")
                 cfout.write(json.dumps(cfJ,indent=-1))
                 cfout.close()
                 

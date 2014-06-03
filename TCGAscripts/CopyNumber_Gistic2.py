@@ -103,7 +103,7 @@ def CopyNumber_Gistic2 (inDir, outDir, cancer,flog,REALRUN):
         J["shortTitle"]=cancer +" copy number ("+suffix+")"
         J["label"] = J["shortTitle"] 
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") copy number "+suffix+" estimate"
-        J[":dataSubType"]="cna"
+        J[":dataSubType"]="copy number"
         J["redistribution"]= True
         J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
         J["dataProducer"]= "TCGA FIREHOSE pipeline"        

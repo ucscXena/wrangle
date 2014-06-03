@@ -301,7 +301,7 @@ def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN,  originCancer,REAL
                           + string.replace(dataDir,tmpDir,"")[:-1]
                 J["version"]= datetime.date.today().isoformat()
                 J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
-
+                J[":dataSubType"]="phenotype"
                 #change description
                 J["wrangling_procedure"]= "Clinical data download from TCGA DCC, processed at UCSC into cgData repository"
                 J["description"]= "This dataset is the TCGA "+ TCGAUtil.cancerHumanReadable[cancer]+" ("+cancer+") clinical data."
