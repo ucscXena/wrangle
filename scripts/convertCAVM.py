@@ -66,6 +66,20 @@ def convertCAVM (inDir, outD ,REALRUN, CAVM, TCGA, MAPID=1):
         for name in sampleMaps[sampleMap]:
             obj=bookDic[name]
             if obj['type']=="clinicalMatrix":
+                clinFile = outDir +os.path.basename(obj['path'])
+
+                #JSON
+                fin = open (obj['path']+".json",'r')
+                J=json.load(fin)
+                fin.close()
+                J['cohort']=J[':sampleMap']
+                J["label"]="Phenotypes and de-identified clinical data"
+                if CAVM:
+                    J.pop(':sampleMap') 
+                fout=open(clinFile+".json",'w')
+                fout.write(json.dumps (J, indent=-1))
+                fout.close()
+
                 if REALRUN != 0 and  REALRUN !=1:
                     continue
 
@@ -73,7 +87,6 @@ def convertCAVM (inDir, outD ,REALRUN, CAVM, TCGA, MAPID=1):
                     print "only one clinical matrix is allowed"
                     sys.exit()
                     
-                clinFile = outDir +os.path.basename(obj['path'])
                 fin = open(obj['path'],'U')
                 fout = open(clinFile,'w')
                 line = fin.readline()
@@ -96,16 +109,6 @@ def convertCAVM (inDir, outD ,REALRUN, CAVM, TCGA, MAPID=1):
                 fout.close()
                 integrationList = copy.deepcopy(samples)
                 
-                #JSON
-                fin = open (obj['path']+".json",'r')
-                J=json.load(fin)
-                fin.close()
-                J['cohort']=J[':sampleMap']
-                if CAVM:
-                    J.pop(':sampleMap') 
-                fout=open(clinFile+".json",'w')
-                fout.write(json.dumps (J, indent=-1))
-                fout.close()
 
                 #clinicalFeature
                 if J.has_key(":clinicalFeature"):
@@ -124,7 +127,7 @@ def convertCAVM (inDir, outD ,REALRUN, CAVM, TCGA, MAPID=1):
 
         for name in sampleMaps[sampleMap]:
             obj=bookDic[name]
-            if obj['type']=="genomicSegment":
+            if obj['type'] in ["genomicSegment","mutationVector"]:
                 path= obj['path']
                 if REALRUN ==1 :
                     fin =open(path,'r')

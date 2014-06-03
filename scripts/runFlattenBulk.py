@@ -4,8 +4,11 @@ os.sys.path.insert(0, os.path.dirname(__file__)+"../CGDataNew")
 
 from flattenClinical import *
 
-REALRUN =0
+REALRUN =-1
 
+inDir ="data/TARGET/"
+outDir ="data_flatten/TARGET/"
+r = runFlatten(inDir, outDir,REALRUN,None)
 
 inDir ="data/su2c/su2cPancreas/"
 outDir ="data_flatten/su2c/su2cPancreas/"
@@ -31,9 +34,6 @@ inDir ="data/ispy/"
 outDir ="data_flatten/ispy/"
 r = runFlatten(inDir, outDir,REALRUN,None)
 
-inDir ="data/lincs/"
-outDir ="data_flatten/lincs/"
-r = runFlatten(inDir, outDir,REALRUN,None)
 
 inDir ="data/public/OHSUBaylorLBL/"
 outDir ="data_flatten/public/OHSUBaylorLBL/"
@@ -43,9 +43,10 @@ inDir ="data/public/other/"
 outDir ="data_flatten/public/other/"
 r = runFlatten(inDir, outDir,REALRUN,None)
 
-"""
-
 inDir ="data/public/TCGA/"
 outDir ="data_flatten/public/TCGA/"
 r = runFlatten(inDir, outDir,REALRUN,None)
-"""
+
+inDir ="data/lincs/"
+outDir ="data_flatten/lincs/"
+r = runFlatten(inDir, outDir,REALRUN,None)
