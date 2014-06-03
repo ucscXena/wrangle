@@ -493,6 +493,7 @@ class ClinicalFeatureNew():
         return
     
     def store(self, fout):
+        fout.write("#feature\tattribute\tvalue\n")
         for feature in self.__FEATUREs:
             if self.__DATA[feature].has_key("shortTitle"):
                 fout.write(feature+"\tshortTitle\t"+self.__DATA[feature]["shortTitle"]+"\n")

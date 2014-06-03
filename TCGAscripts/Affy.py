@@ -155,11 +155,12 @@ def Affy (inDir, outDir, cancer,flog,REALRUN):
     J["shortTitle"]=cancer +" gene expression ("+suffix+")"
     J["label"] = J["shortTitle"]
     J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression ("+suffix+" array)"
-    J[":dataSubType"]="geneExp"
+    J[":dataSubType"]="gene expression array"
+    J["expressionDataSpace"] = "log", 
     J["redistribution"]= True
     J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
-    #J["priority"]= TCGAUtil.browserPriority[cancer]
     J["dataProducer"]= "Broad Institute of MIT and Harvard University cancer genomic characterization center"
+
     #multiple dirs
     J["url"]=TCGAUtil.remoteBase \
               +string.replace(inDir,TCGAUtil.localBase,"")
@@ -179,7 +180,7 @@ def Affy (inDir, outDir, cancer,flog,REALRUN):
     J["gain"]=1.0
     J["colNormalization"]=True
     J["PLATFORM"]= suffix
-    J["wrangling_procedure"]= "Level_3 Data download from TCGA DCC, processed at UCSC into cgData repository"
+    J["wrangling_procedure"]= "Level_3 Data download from TCGA DCC, no data transformation is carried out."
     J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+")"\
                       " gene expression data by AffyU133a array.<br><br>"+ \
                       " The gene expression profile was measured experimentally using the Affymetrix HT Human Genome U133a microarray platform by the " + J["dataProducer"] +"."+\

@@ -129,7 +129,7 @@ def AgilentG4502A (inDir, outDir, cancer,flog,PATHPATTERN,REALRUN):
     J["shortTitle"]=cancer +" gene expression ("+suffix+")"
     J["label"] = J["shortTitle"] 
     J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression ("+suffix+" array)"
-    J[":dataSubType"]="geneExp"
+    J[":dataSubType"]="gene expression array"
     J["redistribution"]= True
     J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
     #J["priority"]= TCGAUtil.browserPriority[cancer]

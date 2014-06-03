@@ -499,20 +499,20 @@ def cpGenomicEachSample(REALRUN, outDir, bookDic, sMap):
         J = bookDic[name]
         if J['type'] not in [ "clinicalMatrix","sampleMap"]:
             path = J['path']
-            if J['type']=="genomicMatrix":
-                # check redistribution tag, if it is false (any forms) convert to python False, if not present, set to python True
-                if not J.has_key("redistribution"):
-                    J["redistribution"]=True
-                elif J["redistribution"] in ["false","FALSE","False", False,"0", 0 ,"no","NO","No"]:
-                    J["redistribution"]=False
-                elif J["redistribution"] in ["true","TRUE","True", True,"1", 1 ,"yes","YES","Yes"]:
-                    J["redistribution"]=True
+            #if J['type']=="genomicMatrix":
+            # check redistribution tag, if it is false (any forms) convert to python False, if not present, set to python True
+            if not J.has_key("redistribution"):
+                J["redistribution"]=True
+            elif J["redistribution"] in ["false","FALSE","False", False,"0", 0 ,"no","NO","No"]:
+                J["redistribution"]=False
+            elif J["redistribution"] in ["true","TRUE","True", True,"1", 1 ,"yes","YES","Yes"]:
+                J["redistribution"]=True
 
-                # check security tag, if it is private (any forms) set to "private", if not present, set to "public"
-                if not J.has_key("security"):
-                    J["security"]="public"
-                elif J["security"] in ["private","PRIVATE","Private","controlled-access"]:
-                    J["security"]="private"
+            # check security tag, if it is private (any forms) set to "private", if not present, set to "public"
+            if not J.has_key("security"):
+                J["security"]="public"
+            elif J["security"] in ["private","PRIVATE","Private","controlled-access"]:
+                J["security"]="private"
                 
             outfile = dataPackageDir+"/"+os.path.basename(path+".json")
             oHandle=open(outfile,"w")
@@ -542,7 +542,7 @@ def cpGenomicEachSample(REALRUN, outDir, bookDic, sMap):
                             #print badCols
                             s = string.join(goodCols,",")
                             os.system("cut -f "+s+" "+path+" > "+dataPackageDir+"/"+os.path.basename(path))
-                    if J['type']=="genomicSegment":
+                    if J['type'] in ["genomicSegment","mutationVector"]:
                         s = "grep -v "+badList[0]+" "+path
                         for i in range (1,len(badList)):
                             s= s+" | grep -v "+ badList[i]
