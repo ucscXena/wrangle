@@ -5,7 +5,6 @@ class IntegrationId():
     def __init__ (self,name,readHandle=None):
         self.__list=[]
         self.__name=name
-        
         if readHandle==None:
             return
         for line in readHandle.readlines():

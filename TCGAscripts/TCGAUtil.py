@@ -15,7 +15,7 @@ import os.path, time,datetime
 from TCGAfeature import *
 
 remoteBase="https://tcga-data.nci.nih.gov/"
-localBase="/inside/depot/"
+localBase="/data/TCGA/"
 
 uuid_barcode_txt= "https://tcga-data.nci.nih.gov/tcgafiles/ftp_auth/distro_ftpusers/anonymous/other/metadata/metadata.current.txt"
 
@@ -759,5 +759,8 @@ def uuid_Sample_all():  #the dictionary of all Aliquote key=uuid value=barcode
 
     return uuid_barcode_dic
 
+
 UUID_NORMAL_CELLLINE=uuid_normal_cellline()
 UUID_CELLLINE=uuid_cellline()
+
+

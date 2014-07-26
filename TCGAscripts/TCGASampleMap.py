@@ -33,10 +33,20 @@ def TCGASampleMap (dir, outDir, cancer,log, REALRUN):
         print missingMaps[map]
         sMap =SampleMapNew(None,map)
 
+        #integration id
+        intName= map+".integrationID"
+        if intName in bookDic:
+            fin = open(bookDic[intName]["path"],'r')
+            integrationID=IntegrationId(intName, fin)
+            fin.close()
+        else:
+            integrationID=IntegrationId(intName)
+
         samples =[]
         for name in missingMaps[map]:
             if REALRUN !=1:
                 continue
+            print name
             obj=bookDic[name]
             if obj['type']=="genomicMatrix":
                 fin =open(obj['path'],'U')
@@ -51,11 +61,20 @@ def TCGASampleMap (dir, outDir, cancer,log, REALRUN):
                 for sample in cMa.getROWs():
                     if sample not in samples:
                         samples.append(sample)
+            elif obj['type']=="mutationVector":
+                path = obj['path']
+                fin=open(path,'r')
+                fin.readline()
+                for line in fin.readlines():
+                    if string.strip(line)=="":
+                        break
+                    sample = string.split(line,'\t')[0]
+                    if sample not in samples:
+                        samples.append(sample)
+
             else:
                 continue
 
-        intName= map+".integrationID"
-        integrationID=IntegrationId(intName)
         for sample in samples:
             if REALRUN !=1:
                 continue
@@ -69,10 +88,15 @@ def TCGASampleMap (dir, outDir, cancer,log, REALRUN):
                 child = sample
                 sMap.addLink(parent,child)
                 sample = parent
+
             #do TCGA barcode trick
             parts= string.split(sample,"-")
-            parent = string.join(parts[0:3],"-")
+            if len(parts)>3 and len(parts[3])==3:
+                parts = parts[0:3]+ [parts[3][0:2],parts[3][2]]+parts[4:]
+                #print parts
 
+            """
+            parent = string.join(parts[0:3],"-")
             #parts[3]
             if len(parts)>3 and len(parts[3])==3:
                 child=parent +"-" +parts[3][0:2]
@@ -81,9 +105,13 @@ def TCGASampleMap (dir, outDir, cancer,log, REALRUN):
                 child=string.join(parts[0:4],"-")
                 sMap.addLink(parent,child)
                 parent=child
-                
-            for i in range (4,len(parts)):
-                child = parent +"-" +parts[i]
+            """
+            parent = string.join(parts[0:3],"-")
+            for i in range (3,len(parts)):
+                if i!=4:
+                    child = parent +"-" +parts[i]
+                else:
+                    child = parent +parts[i]
                 #add parent child
                 sMap.addLink(parent,child)
                 parent = child

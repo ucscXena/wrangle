@@ -28,15 +28,17 @@ def runFlatten(inDir, outDir,REALRUN, onlyGenomicSamples, SMAPNAME=None):
 
         print sampleMap
         path = bookDic[sampleMap]['path']
-        if os.path.abspath(path) =="/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/PANCAN/TCGA.PANCAN.sampleMap":
+        if os.path.abspath(path) in [ \
+            "/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/PANCAN/TCGA.PANCAN.sampleMap", \
+                "/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/PANCAN12/TCGA.PANCAN12.sampleMap" ]:
             print "ignore "+path
             continue
-            
+
         if sampleMap in missingMaps:
             #construct an empty sampleMap
             sMap = SampleMapNew(None,sampleMap)
             #fill sMap with individual nodes, no connection
-            changed = checkIdsAllIn(sMap, bookDic)
+            changed = checkIdsAllIn (sMap, bookDic)
             #build connection
         else:
             name = bookDic[sampleMap]['name']
@@ -46,6 +48,7 @@ def runFlatten(inDir, outDir,REALRUN, onlyGenomicSamples, SMAPNAME=None):
                 print "Fail to initiate", name
                 return 0
             fin.close()
+            changed = checkIdsAllIn (sMap, bookDic)
         
         if REALRUN in [0,1]:
             r = flattenEachSampleMap(sMap,bookDic,onlyGenomicSamples)
@@ -184,8 +187,9 @@ def flattenEachSampleMap(sMap, bookDic,onlyGenomicSamples):
             #get matrix obj
             path = obj['path']
             name = obj['name']
-            cMatrix = ClinicalMatrixNew(path,name,False, clinFeature)
 
+            cMatrix = ClinicalMatrixNew(path,name,False, clinFeature)
+            
             if finalClinMatrix==None:
                 finalClinMatrix= cMatrix
                 
@@ -236,7 +240,7 @@ def flattenEachSampleMap(sMap, bookDic,onlyGenomicSamples):
             print "final clinFeature file .tmp is invalid"
             return 0
         fin.close()
-
+    
     #SURVIVAL analysis data
     foundE=0
     foundT=0
@@ -302,7 +306,12 @@ def flattenEachSampleMap(sMap, bookDic,onlyGenomicSamples):
             print "Fail to push down"
             return 0
     print "after clinical push down", sampleMap,finalClinMatrix.getROWnum()
-
+    
+    """
+    for s in finalClinMatrix.getROWs():
+        print s,finalClinMatrix.getDATA(s, "_PANCAN_Cluster_Cluster_PANCAN")
+    print finalClinMatrix.getCOLs()
+    """
 
     # collect all genomic data
     keepSamples  = getAllGenomicIds(sMap, bookDic)
@@ -499,8 +508,6 @@ def cpGenomicEachSample(REALRUN, outDir, bookDic, sMap):
         J = bookDic[name]
         if J['type'] not in [ "clinicalMatrix","sampleMap"]:
             path = J['path']
-            #if J['type']=="genomicMatrix":
-            # check redistribution tag, if it is false (any forms) convert to python False, if not present, set to python True
             if not J.has_key("redistribution"):
                 J["redistribution"]=True
             elif J["redistribution"] in ["false","FALSE","False", False,"0", 0 ,"no","NO","No"]:

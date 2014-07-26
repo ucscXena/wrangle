@@ -71,8 +71,8 @@ def mutationMatrix (inDir, outDir, cancer,flog,REALRUN):
     J["version"]= datetime.date.today().isoformat()
     J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
     J[":probeMap"]= "hugo"
-    J["shortTitle"]= cancer +" mutation"
-    J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") somatic mutation"
+    J["shortTitle"]= cancer +" non-silent mutation (pancan awg)"
+    J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") non-silent somatic mutation (pancan awg)"
     J["gain"]=10
     
     J["label"] = J["shortTitle"] 
@@ -145,8 +145,6 @@ def process (file, cancer, outfile, allGenes):
     for line in fin.readlines():
         #cut -f 1,9,16 brca_cleaned_filtered.maf |grep $GENE
         c = c+1
-        if c % 500 ==0:
-            print c
         data =string.split(line[:-1],'\t')
         gene = data[0]
         mtype = typeDic[data[8]]
@@ -172,7 +170,7 @@ def process (file, cancer, outfile, allGenes):
         for sample in samples:
             try:
                 mtype = dic[gene][sample]
-                if mtype not in [7,8,10]:
+                if mtype <10:
                     fout.write("\t1")
                 else:
                     fout.write("\t0")

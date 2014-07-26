@@ -304,7 +304,7 @@ def makeJSON(oHandle,cancer,lastMageTab,inDir,noCNV,type):
 
     J["type"]= type
     if type=="genomicSegment":
-        J[":assembly"]= "hg18"
+        J["assembly"]= "hg18"
     if type=="genomicMatrix":
         J[":probeMap"]=J['name']+"_probeMap"
         if noCNV:

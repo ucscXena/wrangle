@@ -67,6 +67,8 @@ def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN,  originCancer,REAL
     #data processing
     currentFollowUpV=0.0
     for file in os.listdir(dataDir):
+        if file[-5:]==".html":
+            continue
         for pattern in ["clinical_sample","clinical_patient","clinical_follow_up","auxiliary","biospecimen_tumor_sample","biospecimen_sample"]:
             if string.find(file,pattern)!=-1:
                 followUpV =0.0

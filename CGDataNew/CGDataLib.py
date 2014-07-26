@@ -53,7 +53,7 @@ def cgWalk(dir, ignore):
                 else:
                     print "CRITICAL ERROR already has this name in repo", name
                     return 0
-            if type in ["genomicMatrix","clinicalMatrix"] and not trackName_good(name): 
+            if type in ["genomicMatrix","clinicalMatrix","mutationVector"] and not trackName_good(name): 
                 print "ERROR name has bad characters or too long", name
                 return 0
             bookDic[name]=J
@@ -159,7 +159,7 @@ def checkIdsAllIn(sMap, bookDic):
     for name in bookDic.keys():
         obj = bookDic[name]
         if obj.has_key(':sampleMap') and obj[':sampleMap']==sMap.getName():
-            if obj['type']=="clinicalMatrix":
+            if obj['type'] in ["clinicalMatrix","mutationVector"]:
                 #get matrix obj
                 path = obj['path']
                 fin=open(path,'r')
@@ -199,6 +199,16 @@ def getAllGenomicIds(sMap, bookDic):
                     if sample not in allSamples:
                         allSamples.append(sample)
                 fin.close()
+            elif obj['type']=="mutationVector":
+                path = obj['path']
+                fin=open(path,'r')
+                fin.readline()
+                for line in fin.readlines():
+                    if string.strip(line)=="":
+                        break
+                    sample = string.split(line,'\t')[0]
+                    if sample not in allSamples:
+                        allSamples.append(sample)
             else:
                 print obj['type'],"need to write code for this"
     return allSamples
