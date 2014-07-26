@@ -25,6 +25,36 @@ def unc_mixed_dnaseq_cont_automated (inDir, outDir, cancer,flog,REALRUN):
     clean=1
     mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
 
+def ucsc_illuminaga_dnaseq_cont (inDir, outDir, cancer,flog,REALRUN):
+    print cancer, sys._getframe().f_code.co_name
+    PATHPATTERN= "IlluminaGA_DNASeq_Cont."
+    PLATFORM = "IlluminaGA"
+    suffix     = "ucsc"
+    namesuffix = "mutation_ucsc_gene_maf"
+    dataProducer = "University of Californis Santa Cruz GDAC"
+    clean=1
+    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+    
+def ucsc_illuminaga_dnaseq_cont_automated (inDir, outDir, cancer,flog,REALRUN):
+    print cancer, sys._getframe().f_code.co_name
+    PATHPATTERN= "IlluminaGA_DNASeq_Cont_automated."
+    PLATFORM = "IlluminaGA"
+    suffix     = "ucsc"
+    namesuffix = "mutation_ucsc_gene_maf"
+    dataProducer = "University of Californis Santa Cruz GDAC"
+    clean=1
+    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+
+def ucsc_solid_dnaseq_cont  (inDir, outDir, cancer,flog,REALRUN):
+    print cancer, sys._getframe().f_code.co_name
+    PATHPATTERN= "SOLiD_DNASeq_Cont."
+    PLATFORM = "SOLiD"
+    suffix     = "ucsc"
+    namesuffix = "mutation_ucsc_solid_gene_maf"
+    dataProducer = "University of Californis Santa Cruz GDAC"
+    clean=1
+    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+
 def broad_illuminaga_dnaseq (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
     PATHPATTERN= "IlluminaGA_DNASeq."
@@ -307,6 +337,8 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
                     process_xena (infile, fout)
         fout.close()
 
+    if not os.path.exists(outDir+cancer+"/"+cgFileName):
+        return
     oHandle = open(outDir+cancer+"/"+cgFileName+".json","w")    
     J={}
     #stable    
@@ -378,7 +410,6 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
     oHandle.write( json.dumps( J, indent=-1 ) )
     oHandle.close()
     return
-
 
 def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataProducer,REALRUN, clean, PLATFORM):
     garbage=[tmpDir]
@@ -486,7 +517,11 @@ def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, data
                     infile = rootDir+dataDir+"/"+file
                     print infile
                     process (infile, allGenes, samples, genes, dic)
-        outputMatrix(samples, genes, dic, outDir+cancer+"/"+cgFileName)
+        if len(samples)!=0:
+            outputMatrix(samples, genes, dic, outDir+cancer+"/"+cgFileName)
+
+    if not os.path.exists(outDir+cancer+"/"+cgFileName):
+        return
 
     oHandle = open(outDir+cancer+"/"+cgFileName+".json","w")    
     J={}

@@ -4,19 +4,26 @@
 $TMP=preFreeze/TCGA/
 
 #DCC clinical data
-0	0	Clinical	ClinicalPublicBioTab	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/bcr/biotab/	$TMP
+0	0	Clinical	ClinicalPublicBioTab	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/bcr/biotab/	$TMP
+
+
+#uncsc (protected) vcf
+#illuminaga_dnaseq_cont, solid_dnaseq_cont
+0	0	radia	ucsc_illuminaga_dnaseq_cont	/data/TCGA/tcgafiles/tcga4yeo/tumor/*/gsc/ucsc.edu/illuminaga_dnaseq_cont/mutations_protected/	$TPM
+0	0	radia	ucsc_illuminaga_dnaseq_cont_automated	/data/TCGA/tcgafiles/tcga4yeo/tumor/*/gsc/ucsc.edu/illuminaga_dnaseq_cont_automated/mutations_protected/	$TMP
+0	0	radia	ucsc_solid_dnaseq_cont	/data/TCGA/tcgafiles/tcga4yeo/tumor/*/gsc/ucsc.edu/solid_dnaseq_cont/mutations_protected/	$TMP
+
+#uncsc (protected) maf
+#illuminaga_dnaseq_cont, solid_dnaseq_cont
+1	1	maf	ucsc_illuminaga_dnaseq_cont	/data/TCGA/tcgafiles/tcga4yeo/tumor/*/gsc/ucsc.edu/illuminaga_dnaseq_cont/mutations_protected/	$TPM
+1	1	maf	ucsc_illuminaga_dnaseq_cont_automated	/data/TCGA/tcgafiles/tcga4yeo/tumor/*/gsc/ucsc.edu/illuminaga_dnaseq_cont_automated/mutations_protected/	$TMP
+1	1	maf	ucsc_solid_dnaseq_cont	/data/TCGA/tcgafiles/tcga4yeo/tumor/*/gsc/ucsc.edu/solid_dnaseq_cont/mutations_protected/	$TMP
 
 
 #unc (protect)
 #mixed_dnaseq_cont_automated
-0	0	maf	unc_mixed_dnaseq_cont_automated	/data/TCGA/tcgafiles/tcga4yeo/tumor/*/gsc/unc.edu/mixed_dnaseq_cont_automated/mutations_protected/	$TMP
+1	1	maf	unc_mixed_dnaseq_cont_automated	/data/TCGA/tcgafiles/tcga4yeo/tumor/*/gsc/unc.edu/mixed_dnaseq_cont_automated/mutations_protected/	$TPM
 
-#uncsc (protected
-#illuminaga_dnaseq_cont
-#solid_dnaseq_cont
-1	1	radia	ucsc_illuminaga_dnaseq_cont	/data/TCGA/tcgafiles/tcga4yeo/tumor/*/gsc/ucsc.edu/illuminaga_dnaseq_cont/mutations_protected/	$TMP
-1	1	radia	ucsc_illuminaga_dnaseq_cont_automated	/data/TCGA/tcgafiles/tcga4yeo/tumor/*/gsc/ucsc.edu/illuminaga_dnaseq_cont_automated/mutations_protected/	$TMP
-1	1	radia	ucsc_solid_dnaseq_cont	/data/TCGA/tcgafiles/tcga4yeo/tumor/*/gsc/ucsc.edu/solid_dnaseq_cont/mutations_protected/	$TMP
 
 #maf mutation
 #broad  : illuminaga_dnaseq

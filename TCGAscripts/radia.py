@@ -163,7 +163,7 @@ def radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, da
             matrixfileout = xena+ "_gene"
             os.system("python xenaToMatrix.py "+ matrixfileout + " "+ xena)
             #nonSilentMatrix json
-            nonSilentMatrixJson (matrixfileout+".json", inDir, suffix, cancer, namesuffix+"_vcf_gene", dataProducer,PLATFORM, PATHPATTERN)
+            nonSilentMatrixJson (matrixfileout+".json", inDir, suffix, cancer, namesuffix+"_gene_vcf", dataProducer,PLATFORM, PATHPATTERN)
         else:
             os.system("rm -f "+ xena)
 
