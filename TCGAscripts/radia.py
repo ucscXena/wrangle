@@ -14,7 +14,7 @@ tmpDir="tmptmp/"
 
 #/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/ucs/gsc/broad.mit.edu/illuminaga_dnaseq_curated/mutations/
 
-def ucsc_illuminaga_dnaseq_cont (inDir, outDir, cancer,flog,REALRUN):
+def ucsc_illuminaga_dnaseq_cont_vcf (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
     PATHPATTERN= "IlluminaGA_DNASeq_Cont."
     PLATFORM = "IlluminaGA"
@@ -24,7 +24,7 @@ def ucsc_illuminaga_dnaseq_cont (inDir, outDir, cancer,flog,REALRUN):
     clean=1
     radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
     
-def ucsc_illuminaga_dnaseq_cont_automated (inDir, outDir, cancer,flog,REALRUN):
+def ucsc_illuminaga_dnaseq_cont_automated_vcf (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
     PATHPATTERN= "IlluminaGA_DNASeq_Cont_automated."
     PLATFORM = "IlluminaGA"
@@ -34,7 +34,7 @@ def ucsc_illuminaga_dnaseq_cont_automated (inDir, outDir, cancer,flog,REALRUN):
     clean=1
     radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
 
-def ucsc_solid_dnaseq_cont  (inDir, outDir, cancer,flog,REALRUN):
+def ucsc_solid_dnaseq_cont_vcf  (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
     PATHPATTERN= "SOLiD_DNASeq_Cont."
     PLATFORM = "SOLiD"

@@ -13,8 +13,6 @@ import xenaToMatrix
 
 tmpDir="tmptmp/"
 
-#/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/ucs/gsc/broad.mit.edu/illuminaga_dnaseq_curated/mutations/
-
 def unc_mixed_dnaseq_cont_automated (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
     PATHPATTERN= "Mixed_DNASeq_Cont_automated."
@@ -517,6 +515,7 @@ def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, data
                     infile = rootDir+dataDir+"/"+file
                     print infile
                     process (infile, allGenes, samples, genes, dic)
+
         if len(samples)!=0:
             outputMatrix(samples, genes, dic, outDir+cancer+"/"+cgFileName)
 

@@ -116,21 +116,22 @@ def output (outfile, samples, genes, dic):
     fout.close()
 
 
-if len(sys.argv[:]) < 3:
-    print "python mafToMatrix.py matrixOUTPUT  mafTypeFilen\n"
-    sys.exit()
+if __name__ == '__main__':
+    if len(sys.argv[:]) < 3:
+        print "python mafToMatrix.py matrixOUTPUT mafTypeFilen\n"
+        sys.exit()
 
-outfile = sys.argv[1]
-files = sys.argv[2:]
-samples=[]
-genes=[]
-dic={}
+    outfile = sys.argv[1]
+    files = sys.argv[2:]
+    samples=[]
+    genes=[]
+    dic={}
 
-allGeneList = allGeneList(ALLGENE_FILE)
-for gene in allGeneList:
-    dic[gene]={}
-        
-for file in files:
-    process (file, samples, allGeneList, dic)
+    allGeneList = allGeneList(ALLGENE_FILE)
+    for gene in allGeneList:
+        dic[gene]={}
+    
+    for file in files:
+        process (file, samples, allGeneList, dic)
 
-output(outfile, samples, genes, dic)
+    output(outfile, samples, genes, dic)

@@ -175,7 +175,7 @@ def convertCAVM (inDir, outD ,REALRUN, CAVM, TCGA, MAPID=1):
                 
                 if REALRUN != 1 and REALRUN !=0:
                     continue
-
+                
                 # add to clinMatrix the id mappings
                 mappingCol= "_GENOMIC_ID_"+obj['name']
                 clinMatrix.addOneColWithSameValue(mappingCol,"")

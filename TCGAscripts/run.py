@@ -61,6 +61,7 @@ for line in fin.readlines():
             
         pattern= string.split(inDir,"*")
 
+        #LUSC=0
         for dir in glob.glob(inDir):
             cancer =dir
             for p in pattern:
@@ -69,10 +70,18 @@ for line in fin.readlines():
             cancer = string.replace(cancer,"TCGA.","")
             cancer = string.replace(cancer,".SAMPLEMAP","")
 
-#            if cancer not in ["LGG"]:
-#                continue
+            #if cancer not in ["UCEC"]:
+            #    continue
 
+            """
+            if cancer in ["LUSC"]:
+                LUSC=1
+                continue
+            if not LUSC:
+                continue
+            """
             if run:
+                print module, function
                 m = __import__(module)
                 func = getattr(m,function)
                 apply(func,[dir, outDir,cancer,flog, REALRUN])

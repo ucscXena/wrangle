@@ -6,22 +6,31 @@ $TMP=preFreeze/TCGA/
 #DCC clinical data
 1	1	Clinical	ClinicalPublicBioTab	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/bcr/biotab/	$TMP
 
-# unc
 
-#ucsc 
-#illuminaga_dnaseq_cont
-#illuminaga_dnaseq_cont_automated
-#solid_dnaseq_cont
-1	1	radia	ucsc_illuminaga_dnaseq_cont	/data/TCGA/tcgafiles/tcga4yeo/tumor/*/gsc/ucsc.edu/illuminaga_dnaseq_cont/mutations_protected/	$TMP
-1	1	radia	ucsc_illuminaga_dnaseq_cont_automated	/data/TCGA/tcgafiles/tcga4yeo/tumor/*/gsc/ucsc.edu/illuminaga_dnaseq_cont_automated/mutations_protected/	$TMP
-1	1	radia	ucsc_solid_dnaseq_cont	/data/TCGA/tcgafiles/tcga4yeo/tumor/*/gsc/ucsc.edu/solid_dnaseq_cont/mutations_protected/	$TMP
+
+#uncsc (protected) vcf
+#illuminaga_dnaseq_cont, solid_dnaseq_cont
+1	1	radia	ucsc_illuminaga_dnaseq_cont_vcf	/data/TCGA/tcgafiles/tcga4yeo/tumor/*/gsc/ucsc.edu/illuminaga_dnaseq_cont/mutations_protected/	$TMP
+1	1	radia	ucsc_illuminaga_dnaseq_cont_automated_vcf	/data/TCGA/tcgafiles/tcga4yeo/tumor/*/gsc/ucsc.edu/illuminaga_dnaseq_cont_automated/mutations_protected/	$TMP
+1	1	radia	ucsc_solid_dnaseq_cont_vcf	/data/TCGA/tcgafiles/tcga4yeo/tumor/*/gsc/ucsc.edu/solid_dnaseq_cont/mutations_protected/	$TMP
+
+#unc (protect)
+#mixed_dnaseq_cont_automated
+1	1	maf	unc_mixed_dnaseq_cont_automated	/data/TCGA/tcgafiles/tcga4yeo/tumor/*/gsc/unc.edu/mixed_dnaseq_cont_automated/mutations_protected/	$TMP
+
+#uncsc (protected) maf
+#illuminaga_dnaseq_cont, solid_dnaseq_cont
+#1	1	maf	ucsc_illuminaga_dnaseq_cont	/data/TCGA/tcgafiles/tcga4yeo/tumor/*/gsc/ucsc.edu/illuminaga_dnaseq_cont/mutations_protected/	$TMP
+1	1	maf	ucsc_illuminaga_dnaseq_cont_automated	/data/TCGA/tcgafiles/tcga4yeo/tumor/*/gsc/ucsc.edu/illuminaga_dnaseq_cont_automated/mutations_protected/	$TMP
+#1	1	maf	ucsc_solid_dnaseq_cont	/data/TCGA/tcgafiles/tcga4yeo/tumor/*/gsc/ucsc.edu/solid_dnaseq_cont/mutations_protected/	$TMP
+
 
 
 #maf mutation
 #broad  : illuminaga_dnaseq
 #bcm    : illuminaga_dnaseq, solid_dnaseq
 #washU  : illuminaga_dnaseq
-#bcgsc  : illuminahiseq_dnaseq_automated
+#bcgsc  : illuminahiseq_dnaseq
 
 1	1	maf	bcgsc_illuminahiseq_dnaseq	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/gsc/bcgsc.ca/illuminahiseq_dnaseq/mutations/	$TMP
 1	1	maf	broad_illuminaga_dnaseq	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/gsc/broad.mit.edu/illuminaga_dnaseq/mutations/	$TMP
