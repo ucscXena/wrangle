@@ -4,32 +4,68 @@
 $TMP=preFreeze/TCGA/
 
 #DCC clinical data
-1	1	Clinical	ClinicalPublicBioTab	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/bcr/biotab/clin/	$TMP
+1	1	Clinical	ClinicalPublicBioTab	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/bcr/biotab/	$TMP
+
+# unc
+
+#ucsc 
+#illuminaga_dnaseq_cont
+#illuminaga_dnaseq_cont_automated
+#solid_dnaseq_cont
+1	1	radia	ucsc_illuminaga_dnaseq_cont	/data/TCGA/tcgafiles/tcga4yeo/tumor/*/gsc/ucsc.edu/illuminaga_dnaseq_cont/mutations_protected/	$TMP
+1	1	radia	ucsc_illuminaga_dnaseq_cont_automated	/data/TCGA/tcgafiles/tcga4yeo/tumor/*/gsc/ucsc.edu/illuminaga_dnaseq_cont_automated/mutations_protected/	$TMP
+1	1	radia	ucsc_solid_dnaseq_cont	/data/TCGA/tcgafiles/tcga4yeo/tumor/*/gsc/ucsc.edu/solid_dnaseq_cont/mutations_protected/	$TMP
+
+
+#maf mutation
+#broad  : illuminaga_dnaseq
+#bcm    : illuminaga_dnaseq, solid_dnaseq
+#washU  : illuminaga_dnaseq
+#bcgsc  : illuminahiseq_dnaseq_automated
+
+1	1	maf	bcgsc_illuminahiseq_dnaseq	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/gsc/bcgsc.ca/illuminahiseq_dnaseq/mutations/	$TMP
+1	1	maf	broad_illuminaga_dnaseq	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/gsc/broad.mit.edu/illuminaga_dnaseq/mutations/	$TMP
+1	1	maf	wustl_illuminaga_dnaseq	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/gsc/genome.wustl.edu/illuminaga_dnaseq/mutations/	$TMP
+1	1	maf	hgsc_illuminaga_dnaseq	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/gsc/hgsc.bcm.edu/illuminaga_dnaseq/mutations/	$TMP
+
+1	1	maf	bcgsc_illuminahiseq_dnaseq_automated	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/gsc/bcgsc.ca/illuminahiseq_dnaseq_automated/mutations/	$TMP
+1	1	maf	broad_illuminaga_dnaseq_automated	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/gsc/broad.mit.edu/illuminaga_dnaseq_automated/mutations/	$TMP
+1	1	maf	hgsc_illuminaga_dnaseq_automated	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/gsc/hgsc.bcm.edu/illuminaga_dnaseq_automated/mutations/	$TMP
+1	1	maf	wustl_illuminaga_dnaseq_automated	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/gsc/genome.wustl.edu/illuminaga_dnaseq_automated/mutations/	$TMP
+
+
+1	1	maf	bcgsc_illuminahiseq_dnaseq_curated	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/gsc/bcgsc.ca/illuminahiseq_dnaseq_curated/mutations/	$TMP
+1	1	maf	broad_illuminaga_dnaseq_curated	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/gsc/broad.mit.edu/illuminaga_dnaseq_curated/mutations/	$TMP
+1	1	maf	hgsc_illuminaga_dnaseq_curated	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/gsc/hgsc.bcm.edu/illuminaga_dnaseq_curated/mutations/	$TMP
+1	1	maf	wustl_illuminaga_dnaseq_curated	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/gsc/genome.wustl.edu/illuminaga_dnaseq_curated/mutations/	$TMP
+
 
 #FH analysis
 $FIREHOSEDATE_ana
 $FIREHOSEDATE_ana_version
-1	1	Pathway_Paradigm	Pathway_Paradigm_mRNA	/inside/depot/tcgafiles/tcga4yeo/other/gdacs/gdacbroad/firehose/analyses__$FIREHOSEDATE_ana/*/$FIREHOSEDATE_ana_version/	$TMP
-1	1	Pathway_Paradigm	Pathway_Paradigm_mRNA_And_Copy_Number	/inside/depot/tcgafiles/tcga4yeo/other/gdacs/gdacbroad/firehose/analyses__$FIREHOSEDATE_ana/*/$FIREHOSEDATE_ana_version/	$TMP
-1	1	Pathway_Paradigm	Pathway_Paradigm_RNAseq	/inside/depot/tcgafiles/tcga4yeo/other/gdacs/gdacbroad/firehose/analyses__$FIREHOSEDATE_ana/*/$FIREHOSEDATE_ana_version/	$TMP
-1	1	Pathway_Paradigm	Pathway_Paradigm_RNASeq_And_Copy_Number	/inside/depot/tcgafiles/tcga4yeo/other/gdacs/gdacbroad/firehose/analyses__$FIREHOSEDATE_ana/*/$FIREHOSEDATE_ana_version/	$TMP
-1	1	CopyNumber_Gistic2	CopyNumber_Gistic2	/inside/depot/tcgafiles/tcga4yeo/other/gdacs/gdacbroad/firehose/analyses__$FIREHOSEDATE_ana/*/$FIREHOSEDATE_ana_version/	$TMP
+1	1	Pathway_Paradigm	Pathway_Paradigm_mRNA	/data/TCGA/tcgafiles/tcga4yeo/other/gdacs/gdacbroad/firehose/analyses__$FIREHOSEDATE_ana/*/$FIREHOSEDATE_ana_version/	$TMP
+1	1	Pathway_Paradigm	Pathway_Paradigm_mRNA_And_Copy_Number	/data/TCGA/tcgafiles/tcga4yeo/other/gdacs/gdacbroad/firehose/analyses__$FIREHOSEDATE_ana/*/$FIREHOSEDATE_ana_version/	$TMP
+1	1	Pathway_Paradigm	Pathway_Paradigm_RNAseq	/data/TCGA/tcgafiles/tcga4yeo/other/gdacs/gdacbroad/firehose/analyses__$FIREHOSEDATE_ana/*/$FIREHOSEDATE_ana_version/	$TMP
+1	1	Pathway_Paradigm	Pathway_Paradigm_RNASeq_And_Copy_Number	/data/TCGA/tcgafiles/tcga4yeo/other/gdacs/gdacbroad/firehose/analyses__$FIREHOSEDATE_ana/*/$FIREHOSEDATE_ana_version/	$TMP
+1	1	CopyNumber_Gistic2	CopyNumber_Gistic2	/data/TCGA/tcgafiles/tcga4yeo/other/gdacs/gdacbroad/firehose/analyses__$FIREHOSEDATE_ana/*/$FIREHOSEDATE_ana_version/	$TMP
+
+1	1	AgilentGeneExp	AgilentG4502A_07_3	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/unc.edu/agilentg4502a_07_3/transcriptome/	$TMP
+1	1	AgilentGeneExp	AgilentG4502A_07_2	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/unc.edu/agilentg4502a_07_2/transcriptome/	$TMP
+1	1	AgilentGeneExp	AgilentG4502A_07_1	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/unc.edu/agilentg4502a_07_1/transcriptome/	$TMP
+1	1	Affy	Affy	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/broad.mit.edu/ht_hg-u133a/transcriptome/	$TMP
+1	1	Methylation	humanmethylation27	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/jhu-usc.edu/humanmethylation27/methylation/	$TMP
+1	1	Methylation450	humanmethylation450	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/jhu-usc.edu/humanmethylation450/methylation/	$TMP
+
+1	1	RNAseq	illuminahiseq_rnaseqV2_unc	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/unc.edu/illuminahiseq_rnaseqv2/rnaseqv2/	$TMP
+1	1	RNAseq	illuminaga_rnaseqV2_unc	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/unc.edu/illuminaga_rnaseqv2/rnaseqv2/	$TMP
+1	1	RNAseq	illuminaga_rnaseq_bcgsc	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/bcgsc.ca/illuminaga_rnaseq/rnaseq/	$TMP
+1	1	RNAseq	illuminahiseq_rnaseq_bcgsc	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/bcgsc.ca/illuminahiseq_rnaseq/rnaseq/	$TMP
 
 
-1	1	AgilentGeneExp	AgilentG4502A_07_3	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/unc.edu/agilentg4502a_07_3/transcriptome/	$TMP
-1	1	AgilentGeneExp	AgilentG4502A_07_2	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/unc.edu/agilentg4502a_07_2/transcriptome/	$TMP
-1	1	AgilentGeneExp	AgilentG4502A_07_1	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/unc.edu/agilentg4502a_07_1/transcriptome/	$TMP
-1	1	Affy	Affy	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/broad.mit.edu/ht_hg-u133a/transcriptome/	$TMP
-1	1	Methylation	humanmethylation27	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/jhu-usc.edu/humanmethylation27/methylation/	$TMP
-1	1	Methylation450	humanmethylation450	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/jhu-usc.edu/humanmethylation450/methylation/	$TMP
+1	1	RNAseq	illuminahiseq_rnaseqV2_unc_percentileRank	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/unc.edu/illuminahiseq_rnaseqv2/rnaseqv2/	$TMP
 
-1	1	RNAseq	illuminahiseq_rnaseqV2_unc	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/unc.edu/illuminahiseq_rnaseqv2/rnaseqv2/	$TMP
-1	1	RNAseq	illuminaga_rnaseqV2_unc	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/unc.edu/illuminaga_rnaseqv2/rnaseqv2/	$TMP
-1	1	RNAseq	illuminaga_rnaseq_bcgsc	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/bcgsc.ca/illuminaga_rnaseq/rnaseq/	$TMP
-1	1	RNAseq	illuminahiseq_rnaseq_bcgsc	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/bcgsc.ca/illuminahiseq_rnaseq/rnaseq/	$TMP
-
-1	1	SNP6	SNP6	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/broad.mit.edu/genome_wide_snp_6/snp/	$TMP
-1	1	RPPA	RPPA	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/mdanderson.org/mda_rppa_core/protein_exp/	$TMP
+1	1	SNP6	SNP6	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/broad.mit.edu/genome_wide_snp_6/snp/	$TMP
+1	1	RPPA	RPPA	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/mdanderson.org/mda_rppa_core/protein_exp/	$TMP
 
 
 #mutation data oneoff
@@ -40,10 +76,12 @@ $FIREHOSEDATE_ana_version
 
 
 #PANCAN subtype oneoff
+1	1	pancan	pancan_cluster_of_cluster	/data/TCGA/tcgaDataOneOff/Clinical/*/Table_COCA_syn2487022	$TMP
 1	1	pancan	pancan_DNAmethyl	/data/TCGA/tcgaDataOneOff/Clinical/*/DNA_Methylation_Cluster_syn1875816_clean	$TMP
 1	1	pancan	pancan_icluster	/data/TCGA/tcgaDataOneOff/Clinical/*/icluster.k28.syn1869809_clean	$TMP
 1	1	pancan	pancan_PARADIGM	/data/TCGA/tcgaDataOneOff/Clinical/*/PARADIGM_ConsensusClusters_syn1807631_clean	$TMP
-1	1	pancan	pancan_cluster_of_cluster	/data/TCGA/tcgaDataOneOff/Clinical/*/CofC.noMut.K13.Hoadley.20130523_syn1889916_clean	$TMP
+
+
 1	1	pancan	pancan_UNC_RANseq	/data/TCGA/tcgaDataOneOff/Clinical/*/UNC_RNAseq_PanCan12.3602-corrected-v3.Subtypes.K16_syn1715753_clean	$TMP
 1	1	pancan	pancan_RPPA	/data/TCGA/tcgaDataOneOff/Clinical/*/PanCan11_RBN_SimpleCluster_syn1756922_clean	$TMP
 1	1	pancan	pancan_CNA_named	/data/TCGA/tcgaDataOneOff/Clinical/*/SCNA_Cluster_table_syn1712130_K8_clean	$TMP
@@ -58,15 +96,16 @@ $FIREHOSEDATE_ana_version
 1	1	OneOff	OneOffClinical	/data/TCGA/tcgaDataOneOff/Clinical/*/	$TMP
 
 
+
 #getting previous release clinical data
 1	1	oldClin	oldClin	/data/cancerGenomeData/cgDataFreezeLatest/public/TCGA/*/	$TMP
 
 #cohort
 1	1	cohort	cohort	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
 
-
 #merging LUAD and LUSC to LUNG ; COAD READ to COADREAD
 1	1	Merge	genomic	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
+
 
 #PANCAN dataset both PANCAN and individual cancer
 1	1	MergePANCAN	RNAseq	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
@@ -75,8 +114,6 @@ $FIREHOSEDATE_ana_version
 1	1	TCGASampleMap	TCGASampleMap	$TMP*/	$TMP
 
 
-
 #PANCAN dataset done after new data compiled
 #1	1	MergePANCAN	clin	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
-
 
