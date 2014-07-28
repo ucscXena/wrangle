@@ -160,7 +160,7 @@ def radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, da
         
         if good:
             #nonSilentMatrix
-            matrixfileout = xena+ "_gene"
+            matrixfileout = xena+ "_gene_vcf"
             os.system("python xenaToMatrix.py "+ matrixfileout + " "+ xena)
             #nonSilentMatrix json
             nonSilentMatrixJson (matrixfileout+".json", inDir, suffix, cancer, namesuffix+"_gene_vcf", dataProducer,PLATFORM, PATHPATTERN)
@@ -198,7 +198,7 @@ def radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, da
               +string.replace(inDir,TCGAUtil.localBase,"")
     J["version"]= datetime.date.today().isoformat()
     J["wrangler"]= "TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
-    J["wrangling_procedure"] ="Download .maf file from TCGA DCC, processed into UCSC Xena muation format into Xena repository"
+    J["wrangling_procedure"] ="Download .vcf file from TCGA DCC, processed into UCSC Xena muation format into Xena repository"
 
     #change description
     if string.find(PATHPATTERN, "curated")!=-1 :
