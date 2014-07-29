@@ -157,7 +157,13 @@ def radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, da
                     good=1
             os.system("rm -f "+tmpout)
         fout.close()
-        
+
+        #get rid of cohort with too many bad samples really stupid UCSC pipeline thing
+        r=os.popen("r=$(cut -f 1 "+ xena+ " | sort |uniq| wc -l); echo $r").read()
+        if float(string.strip(r))<=10:
+            good=0
+            print: too many bad samples
+
         if good:
             #nonSilentMatrix
             matrixfileout = xena+ "_gene_vcf"
@@ -166,6 +172,9 @@ def radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, da
             nonSilentMatrixJson (matrixfileout+".json", inDir, suffix, cancer, namesuffix+"_gene_vcf", dataProducer,PLATFORM, PATHPATTERN)
         else:
             os.system("rm -f "+ xena)
+            os.system("rm -f "+ xena+".json")
+            os.system("rm -f "+ xena+"_gene_vcf")
+            os.system("rm -f "+ xena+"_gene_vcf.json")
 
     if not os.path.exists(outDir+cancer+"/"+cgFileName):
         return 

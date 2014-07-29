@@ -234,7 +234,7 @@ cancerGroupTitle={
     "PCPG":"pheochromocytoma & paraganglioma",
     "UCS":"uterine carcinosarcoma",
     "CHOL":"cholangiocarcinoma",
-    "UVM":"uveal Melanoma",
+    "UVM":"uveal melanoma",
     "TGCT":"testicular germ cell tumor",
     "PANCAN":" Pan-Cancer",
     "PANCAN12":" Pan-Cancer"
@@ -461,6 +461,8 @@ featurePriority={
              "_PANCAN_UNC_RNAseq_PANCAN_K16":"3",
              "_PANCAN_DNAMethyl_PANCAN":"4"
              },
+    "UVM":{"sample_type":"1"
+           },
     "PANCAN": {"sample_type":"1",
                "cohort":"2",
                "_PANCAN_UNC_RNAseq_PANCAN_K16":"3",
