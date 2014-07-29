@@ -10,6 +10,7 @@ import TCGAUtil
 sys.path.insert(0,"../CGDataNew")
 from CGDataUtil import *
 import xenaToMatrix
+import radia
 
 tmpDir="tmptmp/"
 
@@ -28,11 +29,15 @@ def ucsc_illuminaga_dnaseq_cont (inDir, outDir, cancer,flog,REALRUN):
     PATHPATTERN= "IlluminaGA_DNASeq_Cont."
     PLATFORM = "IlluminaGA"
     suffix     = "ucsc"
-    namesuffix = "mutation_ucsc_gene_maf"
     dataProducer = "University of Californis Santa Cruz GDAC"
     clean=1
+    namesuffix = "mutation_ucsc_gene_maf"
     mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
     
+    clean=0
+    namesuffix = "mutation_ucsc"
+    radia.radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+
 def ucsc_illuminaga_dnaseq_cont_automated (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
     PATHPATTERN= "IlluminaGA_DNASeq_Cont_automated."
@@ -43,6 +48,11 @@ def ucsc_illuminaga_dnaseq_cont_automated (inDir, outDir, cancer,flog,REALRUN):
     clean=1
     mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
 
+    clean=0
+    namesuffix = "mutation_ucsc"
+    radia.radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+
+
 def ucsc_solid_dnaseq_cont  (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
     PATHPATTERN= "SOLiD_DNASeq_Cont."
@@ -52,6 +62,10 @@ def ucsc_solid_dnaseq_cont  (inDir, outDir, cancer,flog,REALRUN):
     dataProducer = "University of Californis Santa Cruz GDAC"
     clean=1
     mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+
+    clean=0
+    namesuffix = "mutation_ucsc"
+    radia.radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
 
 def broad_illuminaga_dnaseq (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
