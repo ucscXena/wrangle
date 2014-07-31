@@ -5,6 +5,7 @@ import CGData.GenomicSegment
 import CGData.SegToMatrix
 import CGData.RefGene
 import CGData.GeneMap
+import optparse
 
 class beds:    
     def __init__(self):
@@ -33,11 +34,22 @@ class probeseg:
 
 
 if __name__ == "__main__":
-    #python pro.py bed refGene_hg18 probeMap
-    if len(sys.argv) != 4:
-        print "python bedToProbeMap.py bedInput refGene(eg hg18) probeMapOut\n"
+    def printUsage():
+        print "python bedToProbeMap.py bedInput refGene(eg hg18) probeMapOut  --mode=cnv|exp\n"
+
+    if len(sys.argv) != 5:
+        printUsage()
         sys.exit()
         
+    parser = optparse.OptionParser()
+    parser.add_option("--mode", action="store", type="string", dest="mode")
+    (options, args) = parser.parse_args()
+
+    if (not options.mode) or (options.mode not in ["cnv","exp"]):
+        printUsage()
+        sys.exit()
+
+
     probes=beds()
     probes.load(sys.argv[1])
     
@@ -48,7 +60,10 @@ if __name__ == "__main__":
     #python pro.py seg refGene_hg18 matrixout
 
     handle = open(sys.argv[3], "w")
-    probeMapper = CGData.GeneMap.ProbeMapper('g')
+    if options.mode=="cnv":
+        probeMapper = CGData.GeneMap.ProbeMapper('b')
+    if options.mode=="exp":
+        probeMapper = CGData.GeneMap.ProbeMapper('g')
     for probe in probes.probes:
         hits = []
         for hit in probeMapper.find_overlap( probe, refgene ):
