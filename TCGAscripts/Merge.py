@@ -23,29 +23,29 @@ def genomic (dir,outDir, cancer,flog,REALRUN):
         c2 ="READ"
 
     for file in [
-        #"HiSeqV2",
-        #"HiSeqV2_exon",
-        #"AgilentG4502A_07_3",
-        #"Gistic2_CopyNumber_Gistic2_all_data_by_genes",
-        #"Gistic2_CopyNumber_Gistic2_all_thresholded.by_genes",
-        #"Gistic2_CopyNumber_Gistic2_focal_data_by_genes",
-        #"HumanMethylation27",
-        #"HumanMethylation450",
-        #"RPPA",
+        "mutation",
+        "HiSeqV2",
+        "HiSeqV2_exon",
+        "AgilentG4502A_07_3",
+        "Gistic2_CopyNumber_Gistic2_all_data_by_genes",
+        "Gistic2_CopyNumber_Gistic2_all_thresholded.by_genes",
+        "HumanMethylation27",
+        "HumanMethylation450",
         "RPPA_RBN",
-        #"SNP6_genomicSegment",
-        #"SNP6_nocnv_genomicSegment",
+        "SNP6_genomicSegment",
+        "SNP6_nocnv_genomicSegment",
         ""
         ]:
         
-        type=""
+        type= ""
         if file =="RPPA":
             type="RPPA"
+        if file =="mutation":
+            type="mutation"
         if file=="SNP6_genomicSegment" or file =="SNP6_nocnv_genomicSegment":
             type="SNP6_genomicSegment"
         if cancer =="COADREAD" and file in ["Gistic2_CopyNumber_Gistic2_all_data_by_genes",
                                             "Gistic2_CopyNumber_Gistic2_all_thresholded.by_genes",
-                                            "Gistic2_CopyNumber_Gistic2_focal_data_by_genes",
                                             "mutation"]:            
             continue
 
@@ -80,15 +80,18 @@ def process (outDir, cancer, c1, c2, file, REALRUN,type):
         
     elif os.path.exists(c1file) and os.path.exists(c2file):
         if REALRUN:
-            if type !="SNP6_genomicSegment":
-                os.system("cut -f 2- "+c2file +" >tmp")
-                os.system("paste "+c1file+" tmp > "+outDir+cancer+"/"+file)
-            else:
+            if type =="mutation":
+                os.system("python mergeFilesByColumn.py "+ outDir+cancer+"/"+file +" "+ c1file+" "+c2file )
+            elif type =="SNP6_genomicSegment":
                 os.system("cat "+c1file+" "+c2file +" > "+outDir+cancer+"/"+file)
                 # segToMatrix
                 outfile=outDir+cancer+"/"+file
                 gMoutput = outDir+cancer+"/"+string.replace(file,"_genomicSegment","")
                 os.system("python seg2matrix/segToMatrix.py "+outfile +" seg2matrix/refGene_hg18 "+ gMoutput)
+            else: 
+                os.system("cut -f 2- "+c2file +" >tmp")
+                os.system("paste "+c1file+" tmp > "+outDir+cancer+"/"+file)
+
 
     J={}
     iHandle =open(c1file+".json","r")

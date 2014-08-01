@@ -240,7 +240,7 @@ def mutationJSON(J, cancer):
     J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" somatic mutation. Red color (=1) represents non-silent somatic mutations (nonsense, missense, frame-shift indels, splice site mutations, stop codon readthroughs) are identified in the protein coding region of a gene, and white color (=0) means that none of the above mutation calls are made in this gene for the specific sample."
     J["description"] = J["description"] +"<br><br>"
     
-    J["wrangling_procedure"]="Data is combined from all TCGA cohorts and deposited into UCSC cgData repository"
+    J["wrangling_procedure"]="Data is combined from all TCGA cohorts and deposited into UCSC Xena repository"
     return
     
 def processRNA (filename, dir,outDir, cancer,flog, REALRUN):
@@ -364,7 +364,7 @@ def processRNA (filename, dir,outDir, cancer,flog, REALRUN):
         J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression by RNAseq, mean-normalized across all TCGA cohorts.<br><br>"+ \
                           " The gene expression profile was measured experimentally using the "+J['PLATFORM']+" by the "+ J['dataProducer'] +"." + \
                           " This dataset shows the mean-normalized gene-level transcription estimates."
-        J["wrangling_procedure"]="Level_3 Data (file names: *.rsem.genes.normalized_results) download from TCGA DCC, log2(x+1) transformed, normalized across all TCGA cancer cohorts, and deposited into UCSC cgData repository"
+        J["wrangling_procedure"]="Level_3 Data (file names: *.rsem.genes.normalized_results) download from TCGA DCC, log2(x+1) transformed, normalized across all TCGA cancer cohorts, and deposited into UCSC Xena repository"
         J['tags']=["cancer"] + TCGAUtil.tags[cancer]
         J['gain'] = 0.5
 
@@ -381,6 +381,7 @@ def processRNA (filename, dir,outDir, cancer,flog, REALRUN):
                 if value not in origin:
                     origin.extend(value)
 
+            J["tags"]= J["tags"]+["PANCAN12"]
             J["tags"]= J["tags"]+origin
             J["url"]="https://tcga-data.nci.nih.gov/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/"
             J["name"]= "TCGA_PANCAN_exp_HiSeqV2_PANCAN"

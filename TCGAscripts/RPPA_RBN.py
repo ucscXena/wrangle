@@ -8,7 +8,7 @@ import TCGAUtil
 sys.path.insert(0,"../CGDataNew")
 from CGDataUtil import *
 
-tmpDir="tmptmp/"
+tmpDir="tmpTry/"
 
 #/inside/home/cline/projects/PanCancer/mutationMatrices/*_RBN
 
@@ -63,33 +63,48 @@ def RPPA_RBN (inDir, outDir, cancer,flog,REALRUN):
     J["version"]= datetime.date.today().isoformat()
     J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
     J[":probeMap"]= "md_anderson_antibodies"
-    J["shortTitle"]= cancer +" protein (RBN)"
-    J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") reverse phase protein array (replicate-base normalization)"
-    J["label"] = J["shortTitle"]
-    
+
     J["sample_type"]=["tumor"]
     J["redistribution"]= True
     J['tags']=["cancer"]+ TCGAUtil.tags[cancer]
     
-    if cancer !="PANCAN":
+    if cancer !="PANCAN12":
         J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
         J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
+        J["shortTitle"]= cancer +" protein (RBN)"
+        J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") phospho- or total protein expression by reverse phase protein array (replicate-base normalization)"
     else:
         J["primary_disease"] = "cancer"
         J["anatomical_origin"]= ""
+        J["shortTitle"]= "PANCAN AWG protein (RBN)"
+        J["longTitle"]="TCGA PANCAN AWG phospho- or total- protein expression by reverse phase protein array (replicate-base normalization)"
+
+        J["tags"]=["PANCAN12","PANCAN11"]
         origin =[]
-        for value in TCGAUtil.anatomical_origin.values():
-            if value =="":
-                continue
-            if value not in origin:
-                origin.extend(value)
+        for values in [ TCGAUtil.anatomical_origin["BLCA"],["BLCA"],\
+                            TCGAUtil.anatomical_origin["BRCA"],["BRCA"],\
+                            TCGAUtil.anatomical_origin["COAD"],["COAD"],\
+                            TCGAUtil.anatomical_origin["UCEC"],["UCEC"],\
+                            TCGAUtil.anatomical_origin["GBM"],["GBM"],\
+                            TCGAUtil.anatomical_origin["HNSC"],["HNSC"],\
+                            TCGAUtil.anatomical_origin["KIRC"],["KIRC"],\
+                            TCGAUtil.anatomical_origin["LUAD"],["LUAD"],\
+                            TCGAUtil.anatomical_origin["LUSC"],["LUSC"],\
+                            TCGAUtil.anatomical_origin["OV"],["OV"],\
+                            TCGAUtil.anatomical_origin["READ"],["READ"]
+                        ]:
+            for value in values:
+                if value not in origin:
+                    origin.append(value)
+
         J["tags"]= J["tags"]+origin
-        
+
+    J["label"] = J["shortTitle"]        
     J["cohort"] ="TCGA_"+cancer
     J['domain']="TCGA"
     J['owner']="TCGA"
     
-    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") protein expression data for 131 proteins, measured by RPPA (reverse phase protein array) technology. These data have been normalized by RBN (replicate-base normalization) method developed by MDACC. Details: https://www.synapse.org/#!Synapse:syn1750330."
+    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") protein expression data for 131 proteins, measured by RPPA (reverse phase protein array) technology. These data have been normalized by RBN (replicate-base normalization) method developed by MDACC. Details: https://www.synapse.org/#!Synapse:syn1750330 and http://bioinformatics.mdanderson.org/main/TCPA:Overview."
     J["description"] = J["description"] +"<br><br>"
     J["wrangling_procedure"]= "Data download from https://www.synapse.org/#!Synapse:syn1759392, processed into antibody by sample matrix at UCSC into cgData repository"
 

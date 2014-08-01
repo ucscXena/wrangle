@@ -224,7 +224,7 @@ def humanmethylation (inDir, outDir, cancer,flog,PATHPATTERN,BETAOFFSET,REALRUN)
     else:
         J["name"]=name        
     if suffix =="HumanMethylation450":
-        J[":probeMap"]= "illuminaHumanMethylation450_GPL13534"
+        J[":probeMap"]= "illuminaHumanMethylation450_GPL13534"  
     J["type"]= "genomicMatrix" 
     J[":sampleMap"]="TCGA."+cancer+".sampleMap"
     oHandle.write( json.dumps( J, indent=-1 ) )

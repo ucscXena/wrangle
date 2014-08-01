@@ -105,7 +105,7 @@ cancerHumanReadable={
     "UVM":"Ocular melanomas",
     "TGCT":"Testicular Cancaer",
     "PANCAN":"Pan-Cancer",
-    "PANCAN12":"Pan-Cancer"
+    "PANCAN12":"PANCAN12"
     }
 
 anatomical_origin ={
@@ -138,7 +138,7 @@ anatomical_origin ={
     "SKCM":["Skin"],
     "STAD":["Stomach"],
     "THCA":["Thyroid Gland"],
-    "UCEC":["Uterus"],
+    "UCEC":["Uterus","endometrium"],
     "CHOL":["Bile duct"],
     "LCLL":["Blood"],
     "LCML":["Blood"],
@@ -192,8 +192,8 @@ tags ={
     "UCS":[],
     "UVM":[],
     "TGCT":[],
-    "PANCAN":["non-small cell lung cancer","gastric cancer"],
-    "PANCAN12":["non-small cell lung cancer"]
+    "PANCAN":["non-small cell lung cancer","gastric cancer","pancancer"],
+    "PANCAN12":["non-small cell lung cancer","pancancer"]
     }
 
 cancerGroupTitle={
@@ -237,7 +237,7 @@ cancerGroupTitle={
     "UVM":"uveal melanoma",
     "TGCT":"testicular germ cell tumor",
     "PANCAN":" Pan-Cancer",
-    "PANCAN12":" Pan-Cancer"
+    "PANCAN12":" PANCAN12"
     }
 
 TCGASampleType={

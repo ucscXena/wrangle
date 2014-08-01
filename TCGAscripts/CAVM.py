@@ -150,7 +150,12 @@ def process(file, outfile,samples, intDic):
             value = ""
             for sample in sample_ids:
                 pos =sampleDic[sample]
+                data[pos]=string.strip(data[pos])
                 if data[pos]=="":
+                    continue
+                try:
+                    float(data[pos])
+                except:
                     continue
                 if value=="":
                     value =0.0

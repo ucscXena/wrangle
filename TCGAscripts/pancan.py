@@ -6,8 +6,29 @@ sys.path.insert(0,"../CGDataNew")
 from CGDataLib import *
 import TCGAUtil
 
+def pancan_miRNA(dir, outDir, cancer,log, REALRUN):
+    print cancer, sys._getframe().f_code.co_name
+
+    featureName="_PANCAN_miRNA_PANCAN"
+    shortTitle="PANCAN miRNA"
+    longTitle="_PANCAN miRNA subtype k=15 (syn2027079)"
+    maxSubtype=15
+    dataProducer="https://www.synapse.org/#!Synapse:2027079"
+    
+    filepath= dir
+    code=None
+    if os.path.exists(filepath+".json"):
+        fin = open(filepath+".json",'r')
+        J = json.loads(fin.read())
+        if J.has_key("code"):
+            code= J["code"]
+        if J.has_key("stateOrder"):
+            maxSubtype = J["stateOrder"]
+        fin.close()
+
+    pancan_subtype (dir, outDir, cancer,log, REALRUN, featureName,dataProducer, shortTitle, longTitle, maxSubtype , code)
+
 def pancan_DNAmethyl (dir, outDir, cancer,log, REALRUN):
-    #print status
     print cancer, sys._getframe().f_code.co_name
 
     featureName="_PANCAN_DNAMethyl_PANCAN"
@@ -56,9 +77,9 @@ def pancan_mutation (dir, outDir, cancer,log, REALRUN):
 
     featureName="_PANCAN_mutation_PANCAN"
     shortTitle="PANCAN mutation"
-    longTitle="_PANCAN mutation subtype k=14 (syn1868708)"
+    longTitle="_PANCAN AWG mutation subtype k=14 (syn2492003)"
     maxSubtype=14
-    dataProducer="https://www.synapse.org/#!Synapse:syn1868708"
+    dataProducer="https://www.synapse.org/#!Synapse:syn2492003"
     
     filepath= dir
     code=None
@@ -90,9 +111,9 @@ def pancan_UNC_RANseq (dir, outDir, cancer,log, REALRUN):
 
     featureName="_PANCAN_UNC_RNAseq_PANCAN_K16"
     shortTitle="PANCAN RNAseq"
-    longTitle="_PANCAN RNAseq subtype k=16 (syn1715753)"
+    longTitle="_PANCAN AWG RNAseq subtype k=16 (syn1715788)"
     maxSubtype=16
-    dataProducer="https://www.synapse.org/#!Synapse:syn1715753"
+    dataProducer="https://www.synapse.org/#!Synapse:syn1715788"
 
     filepath= dir
     code=None
@@ -112,8 +133,8 @@ def pancan_cluster_of_cluster (dir, outDir, cancer,log, REALRUN):
     print cancer, sys._getframe().f_code.co_name
 
     featureName="_PANCAN_Cluster_Cluster_PANCAN"
-    shortTitle="COCA"
-    longTitle="_PANCAN COCA assignment (syn2487022)"
+    shortTitle="PANCAN COCA"
+    longTitle="_PANCAN AWG COCA subtype assignment (syn2487022)"
     maxSubtype=13
     dataProducer="https://www.synapse.org/#!Synapse:syn2487022"
 
@@ -135,7 +156,7 @@ def pancan_RPPA (dir, outDir, cancer,log, REALRUN):
 
     featureName="_PANCAN_RPPA_PANCAN_K8"
     shortTitle="PANCAN RPPA"
-    longTitle="_PANCAN RPPA subtype k=8 (syn1756922)"
+    longTitle="_PANCAN AWG RPPA RBN subtype k=8 (syn1756922)"
     maxSubtype=8
     dataProducer="https://www.synapse.org/#!Synapse:syn1756922"
     
@@ -157,8 +178,8 @@ def  pancan_CNA_named (dir, outDir, cancer,log, REALRUN):
 
     featureName="_PANCAN_CNA_PANCAN_K8"
     shortTitle="PANCAN CNA k=8"
-    longTitle="_PANCAN copy number abnormality subtype named_k8_clusters (syn1712130)"
-    dataProducer="https://www.synapse.org/#!Synapse:syn1712130"
+    longTitle="_PANCAN copy number abnormality subtype k=8 (syn1712142)"
+    dataProducer="https://www.synapse.org/#!Synapse:syn1712142"
     
     filepath= dir
     code=None
@@ -300,14 +321,16 @@ def pancan_subtype (dir, outDir, cancer,log, REALRUN, featureName,dataProducer, 
         
         #data
         fin= open(filepath,'r')
+
         fin.readline()
+
         if dic ==None:
             fout.write(fin.read())
         else:
             for line in fin.readlines():
-                id,cluster= string.split(string.strip(line),"\t")
+                id,cluster= string.split(line[:-1],"\t")
                 if cluster in ["","NA"]:
-                    fout.write(id+"\tNA\n")
+                    fout.write(id+"\t\n")
                 else:
                     fout.write(id+"\t"+dic[cluster]+"\n")
         fout.close()

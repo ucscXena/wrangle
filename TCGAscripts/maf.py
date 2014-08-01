@@ -12,7 +12,7 @@ from CGDataUtil import *
 import xenaToMatrix
 import radia
 
-tmpDir="tmptmp/"
+tmpDir="tmpTry/"
 
 def unc_mixed_dnaseq_cont_automated (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
@@ -24,35 +24,37 @@ def unc_mixed_dnaseq_cont_automated (inDir, outDir, cancer,flog,REALRUN):
     clean=1
     mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
 
-def ucsc_illuminaga_dnaseq_cont (inDir, outDir, cancer,flog,REALRUN):
-    print cancer, sys._getframe().f_code.co_name
-    PATHPATTERN= "IlluminaGA_DNASeq_Cont."
-    PLATFORM = "IlluminaGA"
-    suffix     = "ucsc"
-    dataProducer = "University of Californis Santa Cruz GDAC"
-    clean=1
-    namesuffix = "mutation_ucsc_gene_maf"
-    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
-    
-    clean=0
-    namesuffix = "mutation_ucsc"
-    radia.radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
-
+#vcf
 def ucsc_illuminaga_dnaseq_cont_automated (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
     PATHPATTERN= "IlluminaGA_DNASeq_Cont_automated."
     PLATFORM = "IlluminaGA"
     suffix     = "ucsc"
-    namesuffix = "mutation_ucsc_gene_maf"
+    namesuffix = "mutation_ucsc_maf_gene"
     dataProducer = "University of Californis Santa Cruz GDAC"
     clean=1
     mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
 
     clean=0
-    namesuffix = "mutation_ucsc"
+    namesuffix = "mutation_ucsc_vcf"
     radia.radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
 
+#maf
+def ucsc_illuminaga_dnaseq_automated (inDir, outDir, cancer,flog,REALRUN):
+    print cancer, sys._getframe().f_code.co_name
+    PATHPATTERN= "IlluminaGA_DNASeq_automated."
+    PLATFORM = "IlluminaGA"
+    suffix     = "ucsc"
+    namesuffix = "mutation_ucsc_maf_gene"
+    dataProducer = "University of Californis Santa Cruz GDAC"
+    clean=1
+    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
 
+    clean=0
+    namesuffix = "mutation_ucsc_maf"
+    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+
+#vcf
 def ucsc_solid_dnaseq_cont  (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
     PATHPATTERN= "SOLiD_DNASeq_Cont."
@@ -339,7 +341,7 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
     if REALRUN:
         xena = outDir+cancer+"/"+cgFileName 
         fout= open(xena,'w')
-        fout.write("#"+string.join(["sample","chr","start","end","gene","reference","alt","effect","DNA_VAF","RNA_VAF","Amino_Acid_Change"],"\t")+"\n")
+        fout.write("#"+string.join(["sample","chr","start","end","reference","alt","gene","effect","DNA_VAF","RNA_VAF","Amino_Acid_Change"],"\t")+"\n")
         for dataDir in os.listdir(rootDir):
             for file in os.listdir(rootDir+dataDir):
                 pattern =".maf"
@@ -370,7 +372,7 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
     elif string.find( dataProducer ,"Michael Smith Genome Sciences Centre")!=-1:
         J["method"]= "BCGSC pipeline"
     elif string.find( dataProducer ,"University of Californis Santa Cruz GDAC")!=-1:
-        J["method"]= "UCSC pipeline"
+        J["method"]= "RADIA"
     elif string.find( dataProducer ,"University of North Carolina")!=-1:
         J["method"]= "UNC pipeline"
     else:
@@ -466,7 +468,6 @@ def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, data
             pass
         else:
             continue
-
         if not os.path.exists(inDir +file+".md5"):
             continue
 
@@ -595,7 +596,6 @@ def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, data
     J['owner']="TCGA"
 
     J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") somatic mutation data.  Sequencing data are generated on a "+PLATFORM +" system. The calls are generated at "+dataProducer+" using "+ J["method"] +" method. <br><br> Red (=1) indicates that a non-silent somatic mutation (nonsense, missense, frame-shif indels, splice site mutations, stop codon readthroughs, change of start codon, inframe indels) was identified in the protein coding region of a gene, or any mutation identified in a non-coding gene. White (=0) indicates that none of the above mutation calls were made in this gene for the specific sample.<br><br>"
-    J["description"] = J["description"] +"<br><br>"
 
     #change cgData
     J["name"]="TCGA_"+cancer+"_"+namesuffix

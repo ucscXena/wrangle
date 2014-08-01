@@ -32,7 +32,7 @@ typeDic={
     "Indel":8,
     "RNA":9,
     "non_coding_exon_variant": 9,
-    "exon_variant":10, #non-coding 
+    "exon_variant":9, #non-coding 
     "Silent":100 ,##
     "synonymous_variant":100, ##
     "stop_retained_variant":100, ##

@@ -150,14 +150,20 @@ def process(file, outfile,samples, intDic):
             count =0
             for sample in sample_ids:
                 pos =sampleDic[sample]
+                data[pos]=string.strip(data[pos])
                 if data[pos]=="":
                     continue
                 if data[pos]=="NA":
+                    continue
+                try:
+                    float(data[pos])
+                except:
                     continue
                 if value=="":
                     value =0.0
                 value =value+float(data[pos])
                 count=count+1
+                    
             if value =="":
                 fout.write("\t")
             else:

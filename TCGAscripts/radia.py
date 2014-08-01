@@ -10,36 +10,16 @@ import TCGAUtil
 sys.path.insert(0,"../CGDataNew")
 from CGDataUtil import *
 
-tmpDir="tmptmp/"
+tmpDir="tmpTry/"
 
 #/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/ucs/gsc/broad.mit.edu/illuminaga_dnaseq_curated/mutations/
 
-def ucsc_illuminaga_dnaseq_cont_vcf (inDir, outDir, cancer,flog,REALRUN):
-    print cancer, sys._getframe().f_code.co_name
-    PATHPATTERN= "IlluminaGA_DNASeq_Cont."
-    PLATFORM = "IlluminaGA"
-    suffix     = "ucsc"
-    namesuffix = "mutation_ucsc"
-    dataProducer = "University of Californis Santa Cruz GDAC"
-    clean=1
-    radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
-    
 def ucsc_illuminaga_dnaseq_cont_automated_vcf (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
     PATHPATTERN= "IlluminaGA_DNASeq_Cont_automated."
     PLATFORM = "IlluminaGA"
     suffix     = "ucsc"
-    namesuffix = "mutation_ucsc"
-    dataProducer = "University of Californis Santa Cruz GDAC"
-    clean=1
-    radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
-
-def ucsc_solid_dnaseq_cont_vcf  (inDir, outDir, cancer,flog,REALRUN):
-    print cancer, sys._getframe().f_code.co_name
-    PATHPATTERN= "SOLiD_DNASeq_Cont."
-    PLATFORM = "SOLiD"
-    suffix     = "ucsc"
-    namesuffix = "mutation_ucsc_solid"
+    namesuffix = "mutation_ucsc_vcf"
     dataProducer = "University of Californis Santa Cruz GDAC"
     clean=1
     radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
@@ -134,12 +114,12 @@ def radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, da
         good=0
         xena = outDir+cancer+"/"+cgFileName 
         fout = open (xena,'w')
-        fout.write("#"+string.join(["sample","chr","start","end","gene","reference","alt","effect","DNA_VAF","RNA_VAF","Amino_Acid_Change"],"\t")+"\n")
+        fout.write("#"+string.join(["sample","chr","start","end","reference","alt","gene","effect","DNA_VAF","RNA_VAF","Amino_Acid_Change"],"\t")+"\n")
 
         for dataDir in os.listdir(rootDir):
             tmpout= "xena_out"
             open(tmpout,'w').close()
-            os.system("python /inside/home/jzhu/scripts/vcfXenaData/browserDataMelisssa/somaticMutationsForCavm/scripts/runSnpEffOnCohortParseOutput.py -passingSomatic=1 "+ rootDir+dataDir  + " " +tmpout)
+            os.system("python /inside/home/jzhu/scripts/vcfXenaData/browserDataMelisssa/somaticMutationsForCavm/scripts/runSnpEffOnCohortParseOutput.py -passingSomatic=2 "+ rootDir+dataDir  + " " +tmpout)
             
             #remove position not in a gene, bad stupid calls like alt=NA
             fin =open(tmpout,'r')
@@ -162,14 +142,14 @@ def radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, da
         r=os.popen("r=$(cut -f 1 "+ xena+ " | sort |uniq| wc -l); echo $r").read()
         if float(string.strip(r))<=10:
             good=0
-            print: too many bad samples
+            print "too many bad samples"
 
         if good:
             #nonSilentMatrix
-            matrixfileout = xena+ "_gene_vcf"
+            matrixfileout = xena+ "_gene"
             os.system("python xenaToMatrix.py "+ matrixfileout + " "+ xena)
             #nonSilentMatrix json
-            nonSilentMatrixJson (matrixfileout+".json", inDir, suffix, cancer, namesuffix+"_gene_vcf", dataProducer,PLATFORM, PATHPATTERN)
+            nonSilentMatrixJson (matrixfileout+".json", inDir, suffix, cancer, namesuffix+"_gene", dataProducer,PLATFORM, PATHPATTERN)
         else:
             os.system("rm -f "+ xena)
             os.system("rm -f "+ xena+".json")
@@ -198,7 +178,7 @@ def radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, da
     elif string.find( dataProducer ,"Michael Smith Genome Sciences Centre")!=-1:
         J["method"]= "BCGSC pipeline"
     elif string.find( dataProducer ,"University of Californis Santa Cruz GDAC")!=-1:
-        J["method"]= "UCSC pipeline"
+        J["method"]= "RADIA"
     else:
         J["method"]= ""
 
@@ -309,7 +289,6 @@ def nonSilentMatrixJson (jsonFile, inDir, suffix, cancer, namesuffix, dataProduc
     J['owner']="TCGA"
 
     J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") somatic mutation data.  Sequencing data are generated on a "+PLATFORM +" system. The calls are generated at "+dataProducer+" using "+ J["method"] +" method. <br><br> Red (=1) indicates that a non-silent somatic mutation (nonsense, missense, frame-shif indels, splice site mutations, stop codon readthroughs, change of start codon, inframe indels) was identified in the protein coding region of a gene, or any mutation identified in a non-coding gene. White (=0) indicates that none of the above mutation calls were made in this gene for the specific sample.<br><br>"
-    J["description"] = J["description"] +"<br><br>"
 
     #change cgData
     J["name"]="TCGA_"+cancer+"_"+namesuffix
