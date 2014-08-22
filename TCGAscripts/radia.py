@@ -156,8 +156,14 @@ def radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, da
             os.system("rm -f "+ xena+"_gene_vcf")
             os.system("rm -f "+ xena+"_gene_vcf.json")
 
+
     if not os.path.exists(outDir+cancer+"/"+cgFileName):
         return 
+
+    #nonSilentMatrix json
+    if os.path.exists(outDir+cancer+"/"+cgFileName+"_gene"):
+        matrixfileout = outDir+cancer+"/"+cgFileName+ "_gene"
+        nonSilentMatrixJson (matrixfileout+".json", inDir, suffix, cancer, namesuffix+"_gene", dataProducer,PLATFORM, PATHPATTERN)
 
     oHandle = open(outDir+cancer+"/"+cgFileName+".json","w")    
     J={}
@@ -187,18 +193,18 @@ def radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, da
               +string.replace(inDir,TCGAUtil.localBase,"")
     J["version"]= datetime.date.today().isoformat()
     J["wrangler"]= "TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
-    J["wrangling_procedure"] ="Download .vcf file from TCGA DCC, processed into UCSC Xena muation format into Xena repository"
+    J["wrangling_procedure"] ="Download .vcf file from TCGA DCC, select somatic mutations overlapping with exon region, processed into UCSC Xena muation format, stored into UCSC Xena repository"
 
     #change description
     if string.find(PATHPATTERN, "curated")!=-1 :
-        J["shortTitle"]= cancer +" mutation ("+suffix+" curated)"
-        J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") nonsilent somatic mutation ("+suffix+" curated)"
+        J["shortTitle"]= cancer +" mutation ("+suffix+" curated vcf)"
+        J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") nonsilent somatic mutation ("+suffix+" curated vcf)"
     elif string.find(PATHPATTERN, "automated")!=-1 :
-        J["shortTitle"]= cancer +" mutation ("+suffix+" automated)"
-        J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") nonsilent somatic mutation ("+suffix+" automated)"
+        J["shortTitle"]= cancer +" mutation ("+suffix+" automated vcf)"
+        J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") nonsilent somatic mutation ("+suffix+" automated vcf)"
     else:
-        J["shortTitle"]= cancer +" mutation ("+suffix+")"
-        J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") nonsilent somatic mutation ("+suffix+")"
+        J["shortTitle"]= cancer +" mutation ("+suffix+" vcf)"
+        J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") nonsilent somatic mutation ("+suffix+" vcf)"
 
     J["assembly"]="hg19"
     J["wholeGenome"]= True
@@ -212,7 +218,7 @@ def radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, da
     J['gdata_tags'] = [dataProducer]
     J['owner']="TCGA"
 
-    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") somatic mutation data. Sequencing data are generated on a "+PLATFORM +" system. The calls are generated at "+dataProducer+" using "+ J["method"] +" method."
+    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") somatic mutation data. Sequencing data are generated on a "+PLATFORM +" system. The calls are generated at "+dataProducer+" using the "+ J["method"] +" method."
 
     #change cgData
     J["name"]="TCGA_"+cancer+"_"+namesuffix
@@ -253,7 +259,7 @@ def nonSilentMatrixJson (jsonFile, inDir, suffix, cancer, namesuffix, dataProduc
     elif string.find( dataProducer ,"Michael Smith Genome Sciences Centre")!=-1:
         J["method"]= "BCGSC pipeline"
     elif string.find( dataProducer ,"University of Californis Santa Cruz GDAC")!=-1:
-        J["method"]= "UCSC pipeline"
+        J["method"]= "RADIA"
     else:
         J["method"]= ""
 
@@ -262,20 +268,21 @@ def nonSilentMatrixJson (jsonFile, inDir, suffix, cancer, namesuffix, dataProduc
               +string.replace(inDir,TCGAUtil.localBase,"")
     J["version"]= datetime.date.today().isoformat()
     J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
-    J["wrangling_procedure"] ="Download .vcf files from TCGA DCC, processed into gene by sample matrix of non-silent mutations at UCSC into Xena repository"
+    J["wrangling_procedure"] ="Download .vcf files from TCGA DCC, select somatic mutations overlapping with exon region, processed into gene by sample matrix of non-silent mutations at UCSC into Xena repository"
+
     J["gain"]=10
-    J["min"]=-0.1
-    J["max"]=0.1
+    J["min"]=-1
+    J["max"]=1
 
     #change
     if string.find(PATHPATTERN, "curated")!=-1 :
-        J["shortTitle"]= cancer +" gene-level mutation ("+suffix+" curated)"
+        J["shortTitle"]= cancer +" gene-level mutation ("+suffix+" curated vcf)"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene-level nonsilent somatic mutation from ("+suffix+" curated vcf)"
     elif string.find(PATHPATTERN, "automated")!=-1 :
-        J["shortTitle"]= cancer +" gene-level mutation ("+suffix+" automated)"
+        J["shortTitle"]= cancer +" gene-level mutation ("+suffix+" automated vcf)"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene-level nonsilent somatic mutation ("+suffix+" automated vcf)"
     else:
-        J["shortTitle"]= cancer +" gene-level mutation ("+suffix+")"
+        J["shortTitle"]= cancer +" gene-level mutation ("+suffix+" vcf)"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene-level nonsilent somatic mutation ("+suffix+" vcf)"
 
     J["label"] = J["shortTitle"] 
@@ -288,7 +295,7 @@ def nonSilentMatrixJson (jsonFile, inDir, suffix, cancer, namesuffix, dataProduc
     J['gdata_tags'] = [dataProducer]
     J['owner']="TCGA"
 
-    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") somatic mutation data.  Sequencing data are generated on a "+PLATFORM +" system. The calls are generated at "+dataProducer+" using "+ J["method"] +" method. <br><br> Red (=1) indicates that a non-silent somatic mutation (nonsense, missense, frame-shif indels, splice site mutations, stop codon readthroughs, change of start codon, inframe indels) was identified in the protein coding region of a gene, or any mutation identified in a non-coding gene. White (=0) indicates that none of the above mutation calls were made in this gene for the specific sample.<br><br>"
+    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") somatic mutation data.  Sequencing data are generated on a "+PLATFORM +" system. The calls are generated at "+dataProducer+" using the "+ J["method"] +" method. <br><br> Red (=1) indicates that a non-silent somatic mutation (nonsense, missense, frame-shif indels, splice site mutations, stop codon readthroughs, change of start codon, inframe indels) was identified in the protein coding region of a gene, or any mutation identified in a non-coding gene. White (=0) indicates that none of the above mutation calls were made in this gene for the specific sample.<br><br>"
 
     #change cgData
     J["name"]="TCGA_"+cancer+"_"+namesuffix

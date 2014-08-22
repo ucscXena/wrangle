@@ -24,7 +24,11 @@ def unc_mixed_dnaseq_cont_automated (inDir, outDir, cancer,flog,REALRUN):
     clean=1
     mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
 
-#vcf
+    clean =0
+    namesuffix = "mutation_unc"
+    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+
+#vcf protected
 def ucsc_illuminaga_dnaseq_cont_automated (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
     PATHPATTERN= "IlluminaGA_DNASeq_Cont_automated."
@@ -35,11 +39,15 @@ def ucsc_illuminaga_dnaseq_cont_automated (inDir, outDir, cancer,flog,REALRUN):
     clean=1
     mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
 
+    clean =0
+    namesuffix = "mutation_ucsc_maf"
+    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+
     clean=0
     namesuffix = "mutation_ucsc_vcf"
     radia.radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
 
-#maf
+#maf open
 def ucsc_illuminaga_dnaseq_automated (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
     PATHPATTERN= "IlluminaGA_DNASeq_automated."
@@ -408,7 +416,7 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
     J['gdata_tags'] = [dataProducer]
     J['owner']="TCGA"
 
-    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") somatic mutation data. Sequencing data are generated on a "+PLATFORM +" system. The calls are generated at "+dataProducer+" using "+ J["method"] +" method."
+    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") somatic mutation data. Sequencing data are generated on a "+PLATFORM +" system. The calls are generated at "+dataProducer+" using the "+ J["method"] +" method."
 
     #change cgData
     J["name"]="TCGA_"+cancer+"_"+namesuffix
@@ -558,7 +566,7 @@ def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, data
     elif string.find( dataProducer ,"Michael Smith Genome Sciences Centre")!=-1:
         J["method"]= "BCGSC pipeline"
     elif string.find( dataProducer ,"University of Californis Santa Cruz GDAC")!=-1:
-        J["method"]= "UCSC pipeline"
+        J["method"]= "RADIA"
     elif string.find( dataProducer ,"University of North Carolina")!=-1:
         J["method"]= "UNC pipeline"
     else:
@@ -571,8 +579,8 @@ def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, data
     J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
     J["wrangling_procedure"] ="Download .maf file from TCGA DCC, processed into gene by sample matrix at UCSC into cgData repository"
     J["gain"]=10
-    J["min"]=-0.1
-    J["max"]=0.1
+    J["min"]= -1
+    J["max"]= 1
 
     #change
     if string.find(PATHPATTERN, "curated")!=-1 :
@@ -595,7 +603,7 @@ def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, data
     J['gdata_tags'] = [dataProducer]
     J['owner']="TCGA"
 
-    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") somatic mutation data.  Sequencing data are generated on a "+PLATFORM +" system. The calls are generated at "+dataProducer+" using "+ J["method"] +" method. <br><br> Red (=1) indicates that a non-silent somatic mutation (nonsense, missense, frame-shif indels, splice site mutations, stop codon readthroughs, change of start codon, inframe indels) was identified in the protein coding region of a gene, or any mutation identified in a non-coding gene. White (=0) indicates that none of the above mutation calls were made in this gene for the specific sample.<br><br>"
+    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") somatic mutation data.  Sequencing data are generated on a "+PLATFORM +" system. The calls are generated at "+dataProducer+" using the "+ J["method"] +" method. <br><br> Red (=1) indicates that a non-silent somatic mutation (nonsense, missense, frame-shif indels, splice site mutations, stop codon readthroughs, change of start codon, inframe indels) was identified in the protein coding region of a gene, or any mutation identified in a non-coding gene. White (=0) indicates that none of the above mutation calls were made in this gene for the specific sample.<br><br>"
 
     #change cgData
     J["name"]="TCGA_"+cancer+"_"+namesuffix
@@ -629,22 +637,8 @@ def process (file, allGenes, samples, genes, dic):
                     Hugo_Symbol =i
                 if header[i]=="NCBI_Build":
                     NCBI_Build =i
-                if header[i]=="Chromosome":
-                    Chromosome =i
-                if string.lower(header[i])=="start_position":
-                    Start_position =i
-                if string.lower(header[i])=="end_position":
-                    End_position =i
                 if header[i]=="Variant_Classification":
                     Variant_Classification =i
-                if header[i]=="Reference_Allele":
-                    Reference_Allele =i
-                if header[i]=="Tumor_Seq_Allele2":
-                    Tumor_Seq_Allele2 =i
-                if header[i]=="t_alt_count":
-                    t_alt_count =i
-                if header[i]=="t_ref_count":
-                    t_ref_count =i
                 if header[i]=="Tumor_Sample_Barcode":
                     Tumor_Sample_Barcode =i
 
@@ -723,6 +717,13 @@ def process_xena (file, fout):
                     t_ref_count =i
                 if header[i]=="Tumor_Sample_Barcode":
                     Tumor_Sample_Barcode =i
+                ## aa change
+                if header[i]=="Protein_Change":
+                    Protein_Change =i
+                if header[i]=="AAChange":
+                    Protein_Change =i
+                if string.find(header[i],"amino_acid_change")!=-1:
+                    Protein_Change =i
             continue
         
         # use the maf input 
@@ -741,8 +742,10 @@ def process_xena (file, fout):
         except:
             DNA_VAF= ""
         RNA_VAF= ""
-        AA_Change=""
-        
+        try:
+            AA_Change= data[Protein_Change]
+        except:
+            AA_Change= ""
         fout.write(string.join([sample,chrom,start,end, ref, alt, gene, mtype, str(DNA_VAF), str(RNA_VAF),AA_Change],"\t")+"\n")
 
     fin.close()

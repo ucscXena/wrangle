@@ -162,7 +162,7 @@ def RFS  (dir, finalClinMatrix, survivalMatrix, cancer):
     if not found:
         print "no new_tumor_event_after_initial_treatment info, can not compute _RFS, _RFS_ind"
         return 0
-    
+
     survivalMatrix.addOneColWithSameValue("_RFS","")
     survivalMatrix.addOneColWithSameValue("_RFS_IND","")
 
@@ -188,10 +188,10 @@ def RFS  (dir, finalClinMatrix, survivalMatrix, cancer):
                         pass
 
                 if foundDays!=-1:
-                   if foundD ==-1:
+                   if foundD ==-1 and foundDays>0:
                        foundD = foundDays
                    else:
-                       if foundDays < foundD:
+                       if foundDays < foundD and foundDays>0:
                            foundD = foundDays
 
             d = finalClinMatrix.getDATA(id,"days_to_tumor_recurrence")
@@ -210,10 +210,10 @@ def RFS  (dir, finalClinMatrix, survivalMatrix, cancer):
                     except:
                         pass
                 if foundDays!=-1:
-                   if foundD ==-1:
+                   if foundD ==-1 and foundDays>=0:
                        foundD = foundDays
                    else:
-                       if foundDays < foundD:
+                       if foundDays < foundD and foundDays>0:
                            foundD = foundDays
 
             if foundD !=-1:
@@ -233,6 +233,7 @@ def RFS  (dir, finalClinMatrix, survivalMatrix, cancer):
 
     if minGood<5:
         survivalMatrix.removeCols(["_RFS","_RFS_IND"])
+
     return 1
                 
         

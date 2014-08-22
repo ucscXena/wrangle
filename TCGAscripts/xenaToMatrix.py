@@ -51,12 +51,9 @@ typeDic={
     }
 
 
-
 #xena data file
-GENECOL = 4
-MutTYPECOL = 7
-SAMPLECOL = 0
-ALLGENE_FILE = "/inside/home/jzhu/scripts/name2/RefGene.name2"
+#ALLGENE_FILE = "/inside/home/jzhu/scripts/name2/RefGene.name2"
+ALLGENE_FILE = "/data/TCGA/tcgaDataOneOff/Genomic/PANCAN/genes"
 
 def allGeneList(file):
     fin = open(file,'r')
@@ -73,7 +70,18 @@ def allGeneList(file):
 
 def process (file, samples, genes, dic):
     fin =open(file, 'r')
-    fin.readline()
+
+    #header parser
+    line = fin.readline()
+    data =string.split(line[:-1],'\t')
+    
+    SAMPLECOL = 0
+
+    for i in range (0, len(data)):
+        if data[i]=="gene":
+            GENECOL = i
+        if data[i]=="effect":
+            MutTYPECOL = i
     
     for line in fin.readlines():
         data =string.split(line[:-1],'\t')

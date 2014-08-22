@@ -18,6 +18,7 @@ def convertCAVM (inDir, outD ,REALRUN, CAVM, TCGA, MAPID=1):
         print "repo has problem"
         return 0
 
+
     sampleMaps = collectSampleMaps(bookDic)
     missingMaps= collectMissingSampleMaps(bookDic)
 
@@ -73,7 +74,7 @@ def convertCAVM (inDir, outD ,REALRUN, CAVM, TCGA, MAPID=1):
                 J=json.load(fin)
                 fin.close()
                 J['cohort']=J[':sampleMap']
-                J["label"]="Phenotypes and de-identified clinical data"
+                J["label"]="Phenotypes"
                 if CAVM:
                     J.pop(':sampleMap') 
                 fout=open(clinFile+".json",'w')
@@ -129,6 +130,20 @@ def convertCAVM (inDir, outD ,REALRUN, CAVM, TCGA, MAPID=1):
             obj=bookDic[name]
             if obj['type'] in ["genomicSegment","mutationVector"]:
                 path= obj['path']
+                print path
+
+                outfile = outDir +os.path.basename(obj['path'])
+                fin = open (obj['path']+".json",'r')
+                J=json.load(fin)
+                fin.close()
+                J['cohort']=J[':sampleMap']
+                if CAVM:
+                    J.pop(':sampleMap')
+
+                fout=open(outfile+".json",'w')
+                fout.write(json.dumps (J, indent=-1))
+                fout.close()
+
                 if REALRUN ==1 :
                     fin =open(path,'r')
                     fout =open(outDir+os.path.basename(path),'w')
@@ -145,8 +160,6 @@ def convertCAVM (inDir, outD ,REALRUN, CAVM, TCGA, MAPID=1):
                         fout.write(root+"\t"+string.join(data[1:],'\t'))
                     fin.close()
                     fout.close()
-
-                os.system("cp "+path+".json "+outDir+os.path.basename(path)+".json")
                 
             if obj['type']=="genomicMatrix":
                 print obj['name']

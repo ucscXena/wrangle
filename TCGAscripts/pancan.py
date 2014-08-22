@@ -11,7 +11,7 @@ def pancan_miRNA(dir, outDir, cancer,log, REALRUN):
 
     featureName="_PANCAN_miRNA_PANCAN"
     shortTitle="PANCAN miRNA"
-    longTitle="_PANCAN miRNA subtype k=15 (syn2027079)"
+    longTitle="_PANCAN AWG miRNA subtype k=15 (syn2027079)"
     maxSubtype=15
     dataProducer="https://www.synapse.org/#!Synapse:2027079"
     
@@ -32,32 +32,10 @@ def pancan_DNAmethyl (dir, outDir, cancer,log, REALRUN):
     print cancer, sys._getframe().f_code.co_name
 
     featureName="_PANCAN_DNAMethyl_PANCAN"
-    shortTitle="PANCAN DNA hyper-methyl"
-    longTitle="_PANCAN DNA hyper-methylation subtype k=19 (syn1875816)"
+    shortTitle="PANCAN DNA methylation"
+    longTitle="_PANCAN AWG DNA methylation subtype k=19 (syn1875816)"
     maxSubtype=19
     dataProducer="https://www.synapse.org/#!Synapse:1875816"
-    
-    filepath= dir
-    code=None
-    if os.path.exists(filepath+".json"):
-        fin = open(filepath+".json",'r')
-        J = json.loads(fin.read())
-        if J.has_key("code"):
-            code= J["code"]
-        if J.has_key("stateOrder"):
-            maxSubtype = J["stateOrder"]
-        fin.close()
-    pancan_subtype (dir, outDir, cancer,log, REALRUN, featureName,dataProducer, shortTitle, longTitle, maxSubtype , code)
-
-def pancan_icluster (dir, outDir, cancer,log, REALRUN):
-    #print status
-    print cancer, sys._getframe().f_code.co_name
-
-    featureName="_PANCAN_icluster_PANCAN"
-    shortTitle="PANCAN iCluster"
-    longTitle="_PANCAN iCluster subtype k=28 (syn1869809)"
-    maxSubtype=25
-    dataProducer="https://www.synapse.org/#!Synapse:syn1869809"
     
     filepath= dir
     code=None
@@ -155,8 +133,8 @@ def pancan_RPPA (dir, outDir, cancer,log, REALRUN):
     print cancer, sys._getframe().f_code.co_name
 
     featureName="_PANCAN_RPPA_PANCAN_K8"
-    shortTitle="PANCAN RPPA"
-    longTitle="_PANCAN AWG RPPA RBN subtype k=8 (syn1756922)"
+    shortTitle="PANCAN protein"
+    longTitle="_PANCAN AWG protein RBN subtype k=8 (syn1756922)"
     maxSubtype=8
     dataProducer="https://www.synapse.org/#!Synapse:syn1756922"
     
@@ -178,7 +156,7 @@ def  pancan_CNA_named (dir, outDir, cancer,log, REALRUN):
 
     featureName="_PANCAN_CNA_PANCAN_K8"
     shortTitle="PANCAN CNA k=8"
-    longTitle="_PANCAN copy number abnormality subtype k=8 (syn1712142)"
+    longTitle="_PANCAN copy number subtype k=8 (syn1712142)"
     dataProducer="https://www.synapse.org/#!Synapse:syn1712142"
     
     filepath= dir
@@ -353,7 +331,6 @@ def pancan_subtype (dir, outDir, cancer,log, REALRUN, featureName,dataProducer, 
         fout.write(featureName+"\tshortTitle\t"+shortTitle+"\n")
         fout.write(featureName+"\tlongTitle\t"+longTitle+"\n")
         fout.write(featureName+"\tvalueType\tcategory\n")
-        fout.write(featureName+"\tstateOrderRelax\ttrue\n")
 
         s=""
         if isinstance(maxSubtype, int):
