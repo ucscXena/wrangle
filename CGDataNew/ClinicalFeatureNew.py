@@ -301,18 +301,19 @@ class ClinicalFeatureNew():
                     cMaStates= cMa.getColStates(feature)
                     states = copy.deepcopy(self.getStates(feature))
 
-                    #relaxed version
+                    #relaxed version state and stateOrder can have extra value, matrix can have extra value, extra vlue of matrix is added to the end of the ordering.
                     if self.__DATA[feature].has_key("stateOrderRelax"):
                         print feature,"relax"
                         edit=0
                         for state in cMaStates:
                             if state not in states:
-                                self.__DATA[feature].pop("state")
-                                self.__DATA[feature].pop("stateOrder")
-                                print "WARNING: not all matrix state in feature state, reset new state new stateOrder"
-                                edit=1
-                                break
-                        
+                                self.__DATA[feature]["state"].append(state)
+                                self.__DATA[feature]["stateOrder"].append(state)
+                                print "WARNING: not all matrix state in feature state, add new states at the end"
+                                #print "WARNING: not all matrix state in feature state, reset new state new stateOrder"
+                                #edit=1
+                                #break
+                        """
                         if (edit):
                             self.__DATA[feature]["state"]=[]
                             for state in cMaStates:
@@ -320,8 +321,8 @@ class ClinicalFeatureNew():
                                     self.__DATA[feature]["state"].append(state)
                             sort_nicely(cMaStates)
                             self.__DATA[feature]["stateOrder"]=cMaStates
-
-                    #strict version
+                        """
+                    #strict version state and stateOrder can not have extra value that is not in matrix, neither is matrix, must perfectly match
                     else:
                         print feature,"not relax"
                         print self.__DATA[feature]

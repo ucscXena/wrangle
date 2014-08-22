@@ -38,14 +38,14 @@ class ClinicalMatrixNew():
                 continue
             else:
                 break
-        ignoreCol=[]
 
+        ignoreCol=[]
         for i in range (1,len(data)):
             d= data[i]
             d =string.strip(d)
             if d=="":
-                self = emptySelf
-                return
+                ignoreCol.append(i)
+                continue
 
             #fix col
             new_d= col_fix(d)
@@ -73,8 +73,8 @@ class ClinicalMatrixNew():
                 
         self.__COL = len(self.__COLs)
 
-        # load data
 
+        # load data
         for line in lineReader:
             if lineReader.line_num in SkipLines:
                 continue
@@ -310,14 +310,17 @@ class ClinicalMatrixNew():
             
         for sample in aCMatrix.getROWs():
             for col in dupCols:
-                if aCMatrix.getDATA(sample,col) in ["",None]:
+                if aCMatrix.getDATA(sample,col) is None or  string.strip(aCMatrix.getDATA(sample,col))=="":
                     continue
                 if self.__DATA[sample][col]!=aCMatrix.getDATA(sample,col):
-                    if self.__DATA[sample][col] in ["",None]:
-                        self.__DATA[sample][col]=aCMatrix.getDATA(sample,col)
+                    if self.__DATA[sample][col] is None or string.strip(self.__DATA[sample][col])=="":
+                        #if col=="days_to_new_tumor_event_after_initial_treatment":
+                        #    print sample,col, self.__DATA[sample][col], string.strip(aCMatrix.getDATA(sample,col)), "choose", string.strip(aCMatrix.getDATA(sample,col))
+                        self.__DATA[sample][col]=string.strip(aCMatrix.getDATA(sample,col))
                     else:
+                        #if col=="days_to_new_tumor_event_after_initial_treatment":
+                        #    print "WARNING use old matrix",sample,col,self.__name,"old:",self.__DATA[sample][col] ,"new:",aCMatrix.getDATA(sample,col), "choose:", self.__DATA[sample][col]
                         pass
-                        #print "WARNING use old matrix",sample,col,self.__name,"old:",self.__DATA[sample][col],"new:",aCMatrix.getDATA(sample,col), "choose:", self.__DATA[sample][col]
                         
         # load uniq col aCMatrix data to self
         for sample in aCMatrix.getROWs():

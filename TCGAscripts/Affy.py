@@ -178,6 +178,8 @@ def Affy (inDir, outDir, cancer,flog,REALRUN):
     
     #change description
     J["gain"]=1.0
+    J["min"]=-1.0
+    J["max"]=1.0
     J["colNormalization"]=True
     J["PLATFORM"]= suffix
     J["wrangling_procedure"]= "Level_3 Data download from TCGA DCC, no data transformation is carried out."

@@ -170,8 +170,10 @@ class SampleMapNew():
         for parent in self.__DATA.keys():
             children = self.__DATA[parent]
             if children ==[] and self.isRoot(parent):
-                oHandle.write(parent+"\t"+parent+"\n")
+                if parent !="" and  parent ==  string.strip(parent):
+                    oHandle.write(parent+"\t"+parent+"\n")
             else:
                 for child in children:
-                    oHandle.write(parent+"\t"+child+"\n")
+                    if parent !="" and child !="":
+                        oHandle.write(parent+"\t"+child+"\n")
                 

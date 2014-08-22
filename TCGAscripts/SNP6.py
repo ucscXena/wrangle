@@ -230,7 +230,7 @@ def makeProbeJSON(oHandle,cancer,noCNV):
     J["name"]=mName+"_probeMap"
     J["type"]="probeMap"
     J["version"]= datetime.date.today().isoformat()
-    J[":assembly"]="hg18"
+    J["assembly"]="hg18"
     oHandle.write( json.dumps( J, indent=-1 ) )
     oHandle.close()
     
@@ -266,6 +266,8 @@ def makeJSON(oHandle,cancer,lastMageTab,inDir,noCNV,type):
     
     #change description
     J["gain"]=1
+    J["min"]=-1
+    J["max"]=1
     J["PLATFORM"]= "SNP6"
     J["wrangling_procedure"]= "Level_3 data download from TCGA DCC, processed at UCSC into cgData repository"
 

@@ -114,7 +114,6 @@ def CAVMid (dir, outDir, cancer,log, REALRUN):
                     intID= TCGAUtil.barcode_IntegrationId(sample)
                     if intDic.has_key(intID):
                         intDic[intID].append(uuid)
-                        print intDic[intID]
                     else:
                         intDic[intID]=[uuid]
 
@@ -148,10 +147,13 @@ def process(file, outfile,samples, intDic):
         for intID in intDic.keys():
             sample_ids= intDic[intID]
             value = ""
+            count =0
             for sample in sample_ids:
                 pos =sampleDic[sample]
                 data[pos]=string.strip(data[pos])
                 if data[pos]=="":
+                    continue
+                if data[pos]=="NA":
                     continue
                 try:
                     float(data[pos])
@@ -160,25 +162,35 @@ def process(file, outfile,samples, intDic):
                 if value=="":
                     value =0.0
                 value =value+float(data[pos])
+                count=count+1
+                    
             if value =="":
                 fout.write("\t")
             else:
-                value = value/len(sample_ids)
+                value = value/count
                 fout.write("\t"+str(value))
         fout.write("\n")
     fout.close()
     return
 
 
+REALRUN= 0
+#1 genomic + clinical 
+#0 only clinical data
+# -1: only genomic json
+
+cancer="PANCAN12"
+dir="preFreeze/TCGA/"
+outDir="preFreezeCAVM/TCGA/"
+log=0
+CAVMid (dir+cancer+"/", outDir+cancer+"/",cancer, log, REALRUN)
+TCGASampleMap (outDir + cancer+"/", outDir, cancer,log, REALRUN)
+
 cancer="PANCAN"
 dir="preFreeze/TCGA/"
 outDir="preFreezeCAVM/TCGA/"
 log=0
-
-REALRUN= -1
-#1 genomic + clinical 
-#0 only clinical data
-# -1: only genomic json
 CAVMid (dir+cancer+"/", outDir+cancer+"/",cancer, log, REALRUN)
-
 TCGASampleMap (outDir + cancer+"/", outDir, cancer,log, REALRUN)
+
+

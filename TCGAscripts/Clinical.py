@@ -21,6 +21,7 @@ def ClinicalPublicBioTab(inDir, outDir, cancer,flog,REALRUN):
     
 def Clinical(inDir, outDir, cancer,flog,PATHPATTERN, REALRUN):
     garbage=[tmpDir]
+
     if os.path.exists( tmpDir ):
         os.system("rm -rf "+tmpDir+"*")
     else:
@@ -75,8 +76,7 @@ def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN,  originCancer,REAL
                 cgFileName = string.replace(file,".txt","")
                 # the follow_up files has -vn.n version number
                 if cgFileName!= re.sub(r'_v[1-9]+.[0-9]+','',cgFileName):
-                    followUpV = float(string.split(cgFileName,"follow_up_")[1][1:4])
-
+                    followUpV = string.split(string.split(cgFileName,"follow_up_")[1], "_"+string.lower(cancer))[0][1:]
                 # the auxillary, biospecimen_tumor_sample file does not start with clin
                 if cgFileName[0:9] != "clinical_":
                     cgFileName="clinical_"+cgFileName
@@ -145,6 +145,7 @@ def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN,  originCancer,REAL
                     SkipLines =[2]
                 else:
                     SkipLines =[1,3]
+                
                 clinMatrix = ClinicalMatrixNew(infile, "foo", FirstColAuto, None, SkipLines, AllowDupCol)
 
                 clinMatrix.removeCols(["ethnicity","race","jewish_origin","patient_id"])
@@ -202,13 +203,12 @@ def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN,  originCancer,REAL
 
                 #if cancer != originCancer:
                 #    clinMatrix.addOneColWithSameValue("cohort",originCancer)
-
+                
                 oHandle = open(outfile,"w")
                 if pattern =="biospecimen_tumor_sample":
                     clinMatrix.storeSkip1stCol(oHandle, validation=True)
                 else:
                     clinMatrix.store(oHandle, validation=True)
-
                 oHandle.close()
 
                 #clinicalFeature
@@ -246,7 +246,6 @@ def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN,  originCancer,REAL
                             for state in stateOrder:
                                 fout.write(feature+"\tstate\t"+state+"\n")
                             fout.write(feature+"\tstateOrder\t\""+string.join(stateOrder,"\",\"")+"\"\n")
-                            #if feature=="sample_type":
                             fout.write(feature+"\tstateOrderRelax\ttrue\n")
                             
                     if TCGAUtil.featurePriority.has_key(cancer):

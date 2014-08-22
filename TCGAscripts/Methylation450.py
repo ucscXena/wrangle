@@ -159,6 +159,10 @@ def humanmethylation (inDir, outDir, cancer,flog,PATHPATTERN,BETAOFFSET,REALRUN)
         if not GOOD:
             sys.exit()
 
+
+    if not os.path.exists(outDir+cancer+"/"+cgFileName):
+        return
+
     oHandle = open(outDir+cancer+"/"+cgFileName+".json","w")
     
     J={}
@@ -195,6 +199,8 @@ def humanmethylation (inDir, outDir, cancer,flog,PATHPATTERN,BETAOFFSET,REALRUN)
     
     #change description
     J["gain"]=2.0
+    J["min"]=-0.5
+    J["max"]=0.5
     if suffix =="HumanMethylation27":
         J["PLATFORM"]= "Illumina Infinium HumanMethylation27"
     elif suffix =="HumanMethylation450":

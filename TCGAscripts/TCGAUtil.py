@@ -60,6 +60,7 @@ cancerOfficial={
     "UCS":"uterine carcinosarcoma",
     "UVM":"uveal melanoma",
     "TGCT":"testicular germ cell tumor",
+    "THYM":"thymoma",
     "PANCAN":"pan-cancer",
     "PANCAN12":"pan-cancer"
     }
@@ -104,6 +105,7 @@ cancerHumanReadable={
     "UCS":"Uterine Carcinosarcoma",
     "UVM":"Ocular melanomas",
     "TGCT":"Testicular Cancaer",
+    "THYM":"thymoma",
     "PANCAN":"Pan-Cancer",
     "PANCAN12":"PANCAN12"
     }
@@ -138,7 +140,7 @@ anatomical_origin ={
     "SKCM":["Skin"],
     "STAD":["Stomach"],
     "THCA":["Thyroid Gland"],
-    "UCEC":["Uterus","endometrium"],
+    "UCEC":["Endometrium"],
     "CHOL":["Bile duct"],
     "LCLL":["Blood"],
     "LCML":["Blood"],
@@ -148,6 +150,7 @@ anatomical_origin ={
     "UCS":["Uterus"],
     "UVM":["Eye"],
     "TGCT":["Testis"],
+    "THYM":["Thymus"],
     "PANCAN":[],
     "PANCAN12":[]
     }
@@ -182,7 +185,7 @@ tags ={
     "SKCM":[],
     "STAD":["gastric cancer"],
     "THCA":[],
-    "UCEC":[],
+    "UCEC":["uterus"],
     "CHOL":[],
     "LCLL":[],
     "LCML":[],
@@ -236,6 +239,7 @@ cancerGroupTitle={
     "CHOL":"cholangiocarcinoma",
     "UVM":"uveal melanoma",
     "TGCT":"testicular germ cell tumor",
+    "THYM":"thymoma",
     "PANCAN":" Pan-Cancer",
     "PANCAN12":" PANCAN12"
     }
@@ -463,15 +467,17 @@ featurePriority={
              },
     "UVM":{"sample_type":"1"
            },
+    "THYM":{"sample_type":"1"
+           },
     "PANCAN": {"sample_type":"1",
                "cohort":"2",
                "_PANCAN_UNC_RNAseq_PANCAN_K16":"3",
                "gender":"4"
              },
-    "PANCAN12": {"_PANCAN_Cluster_Cluster_PANCAN":"1",
-               "cohort":"2",
-               "sample_type":"3",
-               "gender":"4"
+    "PANCAN12": {"cohort":"1",
+                 "_PANCAN_Cluster_Cluster_PANCAN":"2",
+               "age_at_initial_pathologic_diagnosis":"3",
+               "sample_type":"4"
              }
     }
 

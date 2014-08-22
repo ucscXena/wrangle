@@ -4,6 +4,7 @@ import csv
 
 sys.path.insert(0,"../CGDataNew")
 from ClinicalMatrixNew import *
+from ClinicalFeatureNew import *
 from CGDataUtil import *
 from CGDataLib import *
 import  TCGAUtil
@@ -28,30 +29,30 @@ def Mutation (dir,outDir, cancer,flog,REALRUN):
 def clin (dir,outDir, cancer,flog,REALRUN):
     if cancer not in ["PANCAN12","PANCAN"]:
         return
-
     print cancer, sys._getframe().f_code.co_name
-    filename = "_clinicalMatrix"
+    filename = "_clinical"
     doAve=0
     dir = "/inside/home/jzhu/cgDataJing/scripts/data_flatten/public/TCGA/"
     processClin (filename, dir,outDir, cancer,flog, REALRUN)
-
+    
 def processClin (filename, dir,outDir, CANCER,flog, REALRUN):
     inFiles ={}
-    print os.path.dirname(dir)
     for cancer in os.listdir(os.path.dirname(dir)):
         if cancer in ["LUNG","COADREAD","PANCAN","PANCAN12"]:
             continue
 
         cancerDir= os.path.dirname(dir)  + "/"+cancer
-        cancerFile = cancerDir+"/"+cancer+filename
+
+        cancerFile = cancerDir+"/"+cancer+filename+"Matrix"
+
         if not os.path.exists(cancerFile):
             continue
 
         inFiles[cancer]= cancerFile
 
     features=["sample_type","sample_type_id","gender","cohort","age_at_initial_pathologic_diagnosis",
-              "_OS","_OS_IND","_RFS","_RFS_IND","_EVENT","_TIME_TO_EVENT"]
-        
+              "_OS","_OS_IND","_RFS","_RFS_IND","_EVENT","_TIME_TO_EVENT","_anatomical_origin","_primary_disease"]        
+
     for feature in features:
         print feature
         if REALRUN:
@@ -65,6 +66,15 @@ def processClin (filename, dir,outDir, CANCER,flog, REALRUN):
 
             for key in keys:
                 file = inFiles[key]
+
+                # check if it is deprecated
+                featureFile = os.path.dirname(dir)  + "/"+key+"/"+key+filename+"Feature"
+                if os.path.exists(featureFile):
+                    clinFeature = ClinicalFeatureNew.ClinicalFeatureNew(featureFile,"tmpName")
+                    longTitle= clinFeature.getLongTitle(feature)
+                    if longTitle and string.find(longTitle,"_DEPRECATED_")!=-1:
+                        continue
+                
                 fin = open(file,'r')
                 POS = 0
                 data = string.split(fin.readline()[:-1],"\t")
@@ -367,6 +377,8 @@ def processRNA (filename, dir,outDir, cancer,flog, REALRUN):
         J["wrangling_procedure"]="Level_3 Data (file names: *.rsem.genes.normalized_results) download from TCGA DCC, log2(x+1) transformed, normalized across all TCGA cancer cohorts, and deposited into UCSC Xena repository"
         J['tags']=["cancer"] + TCGAUtil.tags[cancer]
         J['gain'] = 0.5
+        J['min'] = -2
+        J['max'] = 2
 
         if cancer!="PANCAN":
             J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]

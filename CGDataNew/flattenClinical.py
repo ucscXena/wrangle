@@ -160,20 +160,13 @@ def flattenEachSampleMap(sMap, bookDic,onlyGenomicSamples):
         if obj['type']=="clinicalMatrix":
             if obj.has_key('upToDate') :
                 upToDateSets[obj['upToDate']]=name
+    
     keys= upToDateSets.keys()
     keys.sort()
     for version in keys:
         name = upToDateSets [version]
         datasetsOrdered.insert(0,name)
 
-    """
-    for name in datasets:  
-        obj= bookDic[name]
-        if obj['type']=="clinicalMatrix":
-            if obj.has_key('upToDate') and obj['upToDate'] in ["yes", "Yes","YES"]:
-                datasetsOrdered.insert(0,name)
-    """
-            
     for name in datasetsOrdered:  
         obj= bookDic[name]
         if obj['type']=="clinicalMatrix":
@@ -307,12 +300,6 @@ def flattenEachSampleMap(sMap, bookDic,onlyGenomicSamples):
             return 0
     print "after clinical push down", sampleMap,finalClinMatrix.getROWnum()
     
-    """
-    for s in finalClinMatrix.getROWs():
-        print s,finalClinMatrix.getDATA(s, "_PANCAN_Cluster_Cluster_PANCAN")
-    print finalClinMatrix.getCOLs()
-    """
-
     # collect all genomic data
     keepSamples  = getAllGenomicIds(sMap, bookDic)
 

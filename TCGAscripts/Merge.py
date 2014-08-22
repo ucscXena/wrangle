@@ -32,8 +32,8 @@ def genomic (dir,outDir, cancer,flog,REALRUN):
         "HumanMethylation27",
         "HumanMethylation450",
         "RPPA_RBN",
-        "SNP6_genomicSegment",
-        "SNP6_nocnv_genomicSegment",
+        #"SNP6_genomicSegment",
+        #"SNP6_nocnv_genomicSegment",
         ""
         ]:
         
@@ -47,6 +47,8 @@ def genomic (dir,outDir, cancer,flog,REALRUN):
         if cancer =="COADREAD" and file in ["Gistic2_CopyNumber_Gistic2_all_data_by_genes",
                                             "Gistic2_CopyNumber_Gistic2_all_thresholded.by_genes",
                                             "mutation"]:            
+            continue
+        if cancer =="LUNG" and file in ["SNP6_genomicSegment","SNP6_nocnv_genomicSegment"]:
             continue
 
         process (outDir, cancer, c1, c2, file, REALRUN,type)
@@ -104,7 +106,8 @@ def process (outDir, cancer, c1, c2, file, REALRUN,type):
     s = string.replace(s,c1,cancer)
     J["shortTitle"]= s
     J["label"] = J["shortTitle"] 
-    J[":probeMap"]=Jinput[":probeMap"]
+    if J["type"] not in ["genomicSegment","mutationVector","clinicalMatrix"]:
+        J[":probeMap"]=Jinput[":probeMap"]
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
     J["sample_type"]=["tumor"]
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
@@ -117,6 +120,10 @@ def process (outDir, cancer, c1, c2, file, REALRUN,type):
         J["gdata_tags"]= Jinput["gdata_tags"]
     if Jinput.has_key("gain"):
         J["gain"]= Jinput["gain"]
+    if Jinput.has_key("min"):
+        J["min"]= Jinput["min"]
+    if Jinput.has_key("max"):
+        J["max"]= Jinput["max"]
     if Jinput.has_key("colNormalization"):
         J["colNormalization"]= Jinput["colNormalization"]
         
@@ -141,8 +148,9 @@ def process (outDir, cancer, c1, c2, file, REALRUN,type):
 
     if type =="SNP6_genomicSegment":
         J={}
-        cfile = c1dir+gMoutput+".matrix.json"
-        iHandle =open(cfile+".json","r")
+        gMoutput = outDir+cancer+"/"+string.replace(file,"_genomicSegment","")
+        cfile = gMoutput+".matrix.json"
+        iHandle =open(cfile,"r")
         Jinput= json.loads(iHandle.read())
         J[":dataSubType"]=  Jinput[":dataSubType"]
         J["version"]=  Jinput["version"]
@@ -156,6 +164,10 @@ def process (outDir, cancer, c1, c2, file, REALRUN,type):
         
         if Jinput.has_key("gain"):
             J["gain"]= Jinput["gain"]
+        if Jinput.has_key("min"):
+            J["min"]= Jinput["min"]
+        if Jinput.has_key("max"):
+            J["max"]= Jinput["max"]
         
         s= Jinput ["longTitle"]
         s = string.replace(s,c1,cancer)

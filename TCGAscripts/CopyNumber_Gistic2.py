@@ -120,10 +120,10 @@ def CopyNumber_Gistic2 (inDir, outDir, cancer,flog,REALRUN):
         J['owner']="TCGA"
         
         #change description
-        if suffix=="gistic2_thresholded":
-            J["gain"]=0.5
-        else:
-            J["gain"]=0.5
+        J["gain"]=0.5
+        J["min"]=-2
+        J["max"]=2
+        
 
         J["wrangling_procedure"]= "FIREHOSE data download from TCGA DCC, processed at UCSC into cgData repository"
                 

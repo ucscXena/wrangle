@@ -67,7 +67,8 @@ def RPPA_RBN (inDir, outDir, cancer,flog,REALRUN):
     J["sample_type"]=["tumor"]
     J["redistribution"]= True
     J['tags']=["cancer"]+ TCGAUtil.tags[cancer]
-    
+    J["min"]=-1
+    J["max"]=1
     if cancer !="PANCAN12":
         J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
         J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
@@ -78,6 +79,9 @@ def RPPA_RBN (inDir, outDir, cancer,flog,REALRUN):
         J["anatomical_origin"]= ""
         J["shortTitle"]= "PANCAN AWG protein (RBN)"
         J["longTitle"]="TCGA PANCAN AWG phospho- or total- protein expression by reverse phase protein array (replicate-base normalization)"
+        J["citation"] = "Cell 2014 http://dx.doi.org/10.1016/j.cell.2014.06.049"
+        J["articleTitle"]= "Multi-platform analysis of 12 cancer types reveals molecular classification within and across tissues-of-origin"
+        J["dataProducer"]= "Hoadley, K.M., Yau, C., Wolf, D.M., et al. and TCGA PANCAN AWG"
 
         J["tags"]=["PANCAN12","PANCAN11"]
         origin =[]

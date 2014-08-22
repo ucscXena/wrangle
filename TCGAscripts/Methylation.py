@@ -187,6 +187,8 @@ def humanmethylation (inDir, outDir, cancer,flog,PATHPATTERN,BETAOFFSET,REALRUN)
     J["mean"]= average
     #change description
     J["gain"]=2.0
+    J["min"]=-0.5
+    J["max"]=0.5
     if suffix =="HumanMethylation27":
         J["PLATFORM"]= "Illumina Infinium HumanMethylation27"
     elif suffix =="HumanMethylation450":

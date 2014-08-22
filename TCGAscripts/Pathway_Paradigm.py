@@ -122,12 +122,12 @@ def Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN):
     #stable
     if PATHPATTERN== "Pathway_Paradigm_mRNA.":
         suffix="PDMarray"
-        J["shortTitle"]= cancer +" paradigm.mRNA (Firehose)"
+        J["shortTitle"]= cancer +" paradigm.mRNAarray (Firehose)"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") PARADIGM inference activity (array mRNA)"
         
     if PATHPATTERN== "Pathway_Paradigm_mRNA_And_Copy_Number.":
         suffix="PDMarrayCNV"
-        J["shortTitle"]=cancer +" paradigm.mRNA+CNV (Firehose)"
+        J["shortTitle"]=cancer +" paradigm.mRNAarray+CNV (Firehose)"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") PARADIGM inference activity (array mRNA + CNV)"
         
     if PATHPATTERN== "Pathway_Paradigm_RNASeq.":
@@ -142,6 +142,8 @@ def Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN):
 
     J[":dataSubType"]="PARADIGM pathway activity"
     J["gain"]=1.0
+    J["min"]=-1.0
+    J["max"]=1.0
     
     J["label"] = J["shortTitle"] 
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
