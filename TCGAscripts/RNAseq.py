@@ -1,8 +1,9 @@
-mport sys,string,os
+import sys,string,os
 import json,datetime
 import math
 import inspect
 import copy
+import Jing_util
 
 LEVEL="Level_3"
 
@@ -103,6 +104,15 @@ def illuminaga_rnaseq_bcgsc (inDir, outDir, cancer, flog,REALRUN):
     dataProducer = "British Columbia Cancer Agency TCGA genome characterization center"
     clean =1
     geneRPKM (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN, clean)
+
+    print cancer, "illuminaga_rnaseq_bcgsc_exon"
+    PATHPATTERN = "IlluminaGA_RNASeq"
+    suffix      = "IlluminaGA"
+    namesuffix = "GA_exon"
+    dataProducer = "British Columbia Cancer Agency TCGA genome characterization center"
+    clean =0
+    geneRPKM (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN, clean)
+
     return
 
 def illuminahiseq_rnaseq_bcgsc  (inDir, outDir, cancer, flog,REALRUN):
@@ -113,6 +123,15 @@ def illuminahiseq_rnaseq_bcgsc  (inDir, outDir, cancer, flog,REALRUN):
     dataProducer = "British Columbia Cancer Agency TCGA genome characterization center"
     clean =1
     geneRPKM (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN, clean)
+
+    print cancer, "illuminahiseq_rnaseq_bcgsc_exon"
+    PATHPATTERN = "IlluminaHiSeq_RNASeq"
+    suffix      = "IlluminaHiseq"
+    namesuffix = "HiSeq_exon"
+    dataProducer = "British Columbia Cancer Agency TCGA genome characterization center"
+    clean =0
+    geneRPKM (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN, clean)
+
     return
 
 
@@ -203,15 +222,52 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
 
     #data processing multiple dirs mode
     if REALRUN:
+        
         allSamples={}
 
         for dataDir in os.listdir(rootDir):
             for file in os.listdir(rootDir+dataDir):
                 sample =""
-                #v1
+
+                #v2 bcgsc gene
                 pattern =".gene.quantification"
-                #stupid hg18 and hg19 issues, ignore files with hg19 in its name
-                if string.find(file,pattern)!=-1:
+                altpattern =".v2.gene.quantification"
+                if string.find(file,pattern)!=-1 and string.find(namesuffix,"exon")==-1:
+                    #check if there is .v2
+                    if string.find(file,".v2.")==-1:
+                        V2=0
+                        for file2 in os.listdir(rootDir+dataDir):
+                            if string.find(file2,altpattern)!=-1:
+                                V2=1
+                                break
+                        if V2:
+                            continue
+
+                    #stupid hg18 and hg19 issues, ignore files with hg19 in its name
+                    if string.find(file,"hg19")!=-1:
+                        continue
+                    infile = rootDir+dataDir+"/"+file
+                    # bcgsc stupid sample name in file name
+                    if dataProducer=="British Columbia Cancer Agency TCGA genome characterization center":
+                        sample = string.split(file,".")[0]
+                    else:
+                        print "please check how to identify sample name"
+
+                #v2 bcgsc exon
+                pattern =".exon.quantification"
+                altpattern =".v2.exon.quantification"
+                if string.find(file,pattern)!=-1 and string.find(namesuffix,"exon")!=-1:
+                    #check if there is .v2
+                    if string.find(file,".v2.")==-1:
+                        V2=0
+                        for file2 in os.listdir(rootDir+dataDir):
+                            if string.find(file2,altpattern)!=-1:
+                                V2=1
+                                break
+                        if V2:
+                            continue
+
+                    #stupid hg18 and hg19 issues, ignore files with hg19 in its name
                     if string.find(file,"hg19")!=-1:
                         continue
                     infile = rootDir+dataDir+"/"+file
@@ -263,6 +319,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
                 p=len(allSamples)
                 allSamples[sample]=p
                     
+
         c=0
         dataMatrix=[]
         tmpSamples={}
@@ -273,11 +330,25 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
         for dataDir in os.listdir(rootDir):
             for file in os.listdir(rootDir+dataDir):
                 sample=""
-                #v1
-                pattern =".gene.quantification"
-                if string.find(file,pattern)!=-1:
+                #bcgsc v1 and 2
+                pattern ="gene.quantification" 
+                altpattern =".v2.gene.quantification"
+                if string.find(file,pattern)!=-1 and string.find(namesuffix,"exon")==-1:
+
+                    #check if there is .v2
+                    if string.find(file,".v2.")==-1:
+                        V2=0
+                        for file2 in os.listdir(rootDir+dataDir):
+                            if string.find(file2,altpattern)!=-1:
+                                V2=1
+                                break
+                        if V2:
+                            continue
+
                     if string.find(file,"hg19")!=-1:
                         continue
+                    #print file
+
                     infile = rootDir+dataDir+"/"+file
                     # bcgsc stupid sample name in file name
                     if dataProducer=="British Columbia Cancer Agency TCGA genome characterization center":
@@ -287,6 +358,36 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
                     valuePOS=3
                     LOG2=1
                     RANK=0
+
+                #bcgsc exon v1 and v2
+                pattern ="exon.quantification" 
+                altpattern =".v2.exon.quantification"
+                if string.find(file,pattern)!=-1 and string.find(namesuffix,"exon")!=-1:
+                    #check if there is .v2
+                    if string.find(file,".v2.")==-1:
+                        V2=0
+                        for file2 in os.listdir(rootDir+dataDir):
+                            if string.find(file2,altpattern)!=-1:
+                                V2=1
+                                break
+                        if V2:
+                            continue
+
+                    if string.find(file,"hg19")!=-1 :
+                        continue
+                    #print file
+                    infile = rootDir+dataDir+"/"+file
+                    # bcgsc stupid sample name in file name
+                    if dataProducer=="British Columbia Cancer Agency TCGA genome characterization center":
+                        sample = string.split(file,".")[0]
+                    else:
+                        print "please check how to identify sample name"
+                    valuePOS=3
+                    LOG2=1
+                    RANK=0
+
+
+
                 #v2
                 pattern ="rsem.genes.normalized_results"
                 if string.find(file,pattern)!=-1 and string.find(namesuffix,"exon")==-1:
@@ -360,7 +461,11 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
             os.system("rm "+ file) 
         if not GOOD:
             sys.exit()
-            
+    
+    datafile= outDir+cancer+"/"+cgFileName
+    if not os.path.exists(datafile):
+        return
+
     oHandle = open(outDir+cancer+"/"+cgFileName+".json","w")
     
     J={}
@@ -411,10 +516,30 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
                           " The gene expression profile was measured experimentally using the "+platformTitle+" by the "+ dataProducer +"." + \
                           " Level 3 interpreted level data was downloaded from TCGA data coordination center. This dataset shows the gene-level transcription estimates, "
     else:
-        J[":probeMap"]= "unc_RNAseq_exon"
+        ### really stupid thing here
+        #file path for the data
+        if string.find(namesuffix,"V2")==-1:
+            datafile= outDir+cancer+"/"+cgFileName
+            lineNum = Jing_util.file_len(datafile) 
+            if lineNum == 219297:
+                J[":probeMap"]= "bcgsc_v1_exon.hg18"
+            else:
+                J[":probeMap"]= "unc_RNAseq_exon"
+        else:
+            J[":probeMap"]= "unc_RNAseq_exon"
 
-        J["shortTitle"]= cancer +" "+"exon expression ("+suffix+")"
-        J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") exon expression by RNAseq ("+suffix+")"
+        if cancer != "OV":
+            J["shortTitle"]= cancer +" "+"exon expression ("+suffix+")"
+            J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") exon expression by RNAseq ("+suffix+")"
+        else:
+            if dataProducer =="University of North Carolina TCGA genome characterization center":
+                J["shortTitle"]= cancer +" "+"exon expression ("+suffix+" UNC)"
+                J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") exon expression by RNAseq ("+suffix+" UNC)"
+            else:
+                J["shortTitle"]= cancer +" "+"exon expression ("+suffix+" BC)"
+                J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") exon expression by RNAseq ("+suffix+" BC)"
+
+
         J["description"]= J["description"] +"TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") exon expression by RNAseq.<br><br>"+ \
                           " The exon expression profile was measured experimentally using the "+platformTitle+" by the "+ dataProducer +"." + \
                           " Level 3 interpreted level data was downloaded from TCGA data coordination center. This dataset shows the exon-level transcription estimates, "
@@ -431,7 +556,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
             J["description"] = J["description"] + "as in RSEM normalized count, percentile ranked within each sample. "
             J["wrangling_procedure"]= "Level_3 Data (file names: *.rsem.genes.normalized_results) download from TCGA DCC, percentile ranked, and processed at UCSC into cgData repository"
             
-    elif PATHPATTERN in [ "IlluminaHiSeq_RNASeqV2","IlluminaGA_RNASeqV2"] and string.find(namesuffix, "exon")!=-1:
+    elif string.find(namesuffix, "exon")!=-1:
         J["description"] = J["description"] + "as in RPKM values (Reads Per Kilobase of exon model per Million mapped reads)."
         J["wrangling_procedure"]= "Level_3 Data (file names: *.exon_quantification.txt) download from TCGA DCC, log2(x+1) transformed, and processed at UCSC into cgData repository"
     else:

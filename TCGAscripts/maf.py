@@ -36,6 +36,7 @@ def ucsc_illuminaga_dnaseq_cont_automated (inDir, outDir, cancer,flog,REALRUN):
     suffix     = "ucsc"
     namesuffix = "mutation_ucsc_maf_gene"
     dataProducer = "University of Californis Santa Cruz GDAC"
+
     clean=1
     mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
 
@@ -87,7 +88,7 @@ def broad_illuminaga_dnaseq (inDir, outDir, cancer,flog,REALRUN):
     clean=1
     mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
 
-    clean =0
+    clean=0
     namesuffix = "mutation_broad"
     mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
 
@@ -117,6 +118,20 @@ def broad_illuminaga_dnaseq_curated (inDir, outDir, cancer,flog,REALRUN):
 
     clean =0
     namesuffix = "mutation_curated_broad"
+    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+
+def hgsc_solid_dnaseq_curated (inDir, outDir, cancer,flog,REALRUN):
+    print cancer, sys._getframe().f_code.co_name
+    PATHPATTERN= "SOLiD_DNASeq_curated."
+    PLATFORM = "SOLiD"
+    suffix     = "bcm SOLiD"
+    namesuffix = "mutation_curated_bcm_solid_gene"
+    dataProducer = "Baylor College of Medicine Human Genome Sequencing Center"
+    clean=1
+    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+
+    clean =0
+    namesuffix = "mutation_curated_bcm_solid"
     mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
 
 def hgsc_solid_dnaseq (inDir, outDir, cancer,flog,REALRUN):
@@ -391,7 +406,7 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
               +string.replace(inDir,TCGAUtil.localBase,"")
     J["version"]= datetime.date.today().isoformat()
     J["wrangler"]= "TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
-    J["wrangling_procedure"] ="Download .maf file from TCGA DCC, processed into UCSC Xena muation format into Xena repository"
+    J["wrangling_procedure"] ="Download .maf file from TCGA DCC, removed any calls from WGS samples, processed into UCSC Xena mutation format, stored in the UCSC Xena repository"
 
     #change description
     if string.find(PATHPATTERN, "curated")!=-1 :
@@ -577,7 +592,7 @@ def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, data
               +string.replace(inDir,TCGAUtil.localBase,"")
     J["version"]= datetime.date.today().isoformat()
     J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
-    J["wrangling_procedure"] ="Download .maf file from TCGA DCC, processed into gene by sample matrix at UCSC into cgData repository"
+    J["wrangling_procedure"] ="Download .maf file from TCGA DCC, processed into gene by sample matrix at UCSC, stored in the UCSC Xena repository"
     J["gain"]=10
     J["min"]= -1
     J["max"]= 1
@@ -644,12 +659,11 @@ def process (file, allGenes, samples, genes, dic):
 
             continue
 
-        #cut -f 1,9,16 brca_cleaned_filtered.maf |grep $GENE
         gene = data[Hugo_Symbol]
         try:
             mtype = xenaToMatrix.typeDic[data[Variant_Classification]]
         except:
-            print "muation type not seen before", data[Variant_Classification]
+            print "mutation type not seen before", data[Variant_Classification]
             continue
         sample = data[Tumor_Sample_Barcode]
         if sample not in samples:
@@ -695,6 +709,8 @@ def process_xena (file, fout):
         if header=="":
             header=data
             for i in range (0,len(header)):
+                if header[i]=="Sequence_Source":
+                    Sequence_Source =i
                 if header[i]=="Hugo_Symbol":
                     Hugo_Symbol =i
                 if header[i]=="NCBI_Build":
@@ -726,6 +742,10 @@ def process_xena (file, fout):
                     Protein_Change =i
             continue
         
+        #do not use  Sequence_Source=="WGS"
+        if data[Sequence_Source]=="WGS":
+            continue
+
         # use the maf input 
         sample = data[Tumor_Sample_Barcode]
         chrom= data[Chromosome]

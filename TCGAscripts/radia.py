@@ -21,7 +21,7 @@ def ucsc_illuminaga_dnaseq_cont_automated_vcf (inDir, outDir, cancer,flog,REALRU
     suffix     = "ucsc"
     namesuffix = "mutation_ucsc_vcf"
     dataProducer = "University of Californis Santa Cruz GDAC"
-    clean=1
+    clean=0
     radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
 
 def radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM):
@@ -111,6 +111,23 @@ def radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, da
 
     #data processing multiple dirs mode
     if REALRUN:
+        # go through rootDir file and delete any file WGS in its comment line of DNA_TUMOR
+        for dataDir in os.listdir(rootDir):
+            badfiles=[]
+            for file in os.listdir(rootDir+dataDir):
+                fin = open(rootDir+dataDir+"/"+file,'r')
+                BAD=0
+                while 1:
+                    line =fin.readline()
+                    if line and line[0]!="#":
+                        break
+                    if string.find(line,"=WGS") !=-1:
+                        BAD=1
+                if BAD:
+                    badfiles.append(rootDir+dataDir+"/"+file)
+            for file in badfiles:
+                os.system("rm -f "+ file)
+
         good=0
         xena = outDir+cancer+"/"+cgFileName 
         fout = open (xena,'w')
@@ -193,7 +210,7 @@ def radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, da
               +string.replace(inDir,TCGAUtil.localBase,"")
     J["version"]= datetime.date.today().isoformat()
     J["wrangler"]= "TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
-    J["wrangling_procedure"] ="Download .vcf file from TCGA DCC, select somatic mutations overlapping with exon region, processed into UCSC Xena muation format, stored into UCSC Xena repository"
+    J["wrangling_procedure"] ="Download .vcf file from TCGA DCC, select somatic mutations overlapping with exon region, removed all calls from WGS samples, processed into UCSC Xena muation format, stored in the UCSC Xena repository"
 
     #change description
     if string.find(PATHPATTERN, "curated")!=-1 :
@@ -268,7 +285,7 @@ def nonSilentMatrixJson (jsonFile, inDir, suffix, cancer, namesuffix, dataProduc
               +string.replace(inDir,TCGAUtil.localBase,"")
     J["version"]= datetime.date.today().isoformat()
     J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
-    J["wrangling_procedure"] ="Download .vcf files from TCGA DCC, select somatic mutations overlapping with exon region, processed into gene by sample matrix of non-silent mutations at UCSC into Xena repository"
+    J["wrangling_procedure"] ="Download .vcf files from TCGA DCC, select somatic mutations overlapping with exon region, removed all calls from WGS samples, processed into gene by sample matrix of non-silent mutations at UCSC, stored in the UCSC Xena repository"
 
     J["gain"]=10
     J["min"]=-1
