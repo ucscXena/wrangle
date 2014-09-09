@@ -50,7 +50,7 @@ def processClin (filename, dir,outDir, CANCER,flog, REALRUN):
 
         inFiles[cancer]= cancerFile
 
-    features=["sample_type","sample_type_id","gender","cohort","age_at_initial_pathologic_diagnosis",
+    features=["sample_type","sample_type_id","gender","_cohort","age_at_initial_pathologic_diagnosis",
               "_OS","_OS_IND","_RFS","_RFS_IND","_EVENT","_TIME_TO_EVENT","_anatomical_origin","_primary_disease"]        
 
     for feature in features:
@@ -103,9 +103,9 @@ def processClin (filename, dir,outDir, CANCER,flog, REALRUN):
 
         if TCGAUtil.featurePriority.has_key(CANCER) or TCGAUtil.valueType.has_key(feature):
             featureConfig=0
-            cfout =open(outDir+"/"+CANCER+"/"+feature+"_"+CANCER+"_clinFeature","w")
             
             if TCGAUtil.featurePriority[CANCER].has_key(feature):
+                cfout =open(outDir+"/"+CANCER+"/"+feature+"_"+CANCER+"_clinFeature","w")
                 featureConfig=1
                 priority= TCGAUtil.featurePriority[CANCER][feature]
                 cfout.write(feature+"\tpriority\t"+str(priority)+"\n")
@@ -120,6 +120,9 @@ def processClin (filename, dir,outDir, CANCER,flog, REALRUN):
                     featureConfig=1
                     stateOrder = TCGAUtil.featureStateOrder[feature]["ALL"]
             if stateOrder:
+                if featureConfig==0:
+                    cfout =open(outDir+"/"+CANCER+"/"+feature+"_"+CANCER+"_clinFeature","w")
+                featureConfig=1
                 cfout.write(feature+"\tvalueType\tcategory\n")
                 for state in stateOrder:
                     cfout.write(feature+"\tstate\t"+state+"\n")
@@ -128,6 +131,8 @@ def processClin (filename, dir,outDir, CANCER,flog, REALRUN):
                 cfout.write(feature+"\tstateOrderRelax\ttrue\n")
 
             if TCGAUtil.valueType.has_key(feature):
+                if featureConfig==0:
+                    cfout =open(outDir+"/"+CANCER+"/"+feature+"_"+CANCER+"_clinFeature","w")
                 featureConfig=1
                 cfout.write(feature+"\tvalueType\tcategory\n")
                 

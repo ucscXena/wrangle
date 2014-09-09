@@ -171,6 +171,8 @@ def process (file, cancer, outfile, allGenes):
         gene = data[0]
         mtype = xenaToMatrix.typeDic[data[8]]
         sample = data[15]
+        if gene=="":
+            continue
         if sample not in samples:
             samples.append(sample)
         if gene not in genes:
@@ -187,7 +189,10 @@ def process (file, cancer, outfile, allGenes):
     print len(genes), len(dic)
     fout=open(outfile,'w')
     fout.write("sample\t"+string.join(samples,"\t")+"\n")
+    
     for gene in dic:
+        if gene=="":
+            continue
         fout.write(gene)
         for sample in samples:
             try:

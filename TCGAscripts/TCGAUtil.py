@@ -341,7 +341,7 @@ featurePriority={
     "COADREAD":{"sample_type":"1",
                 "_PANCAN_DNAMethyl_PANCAN":"2",
                 "mononucleotide_and_dinucleotide_marker_panel_analysis_status":"3",
-                "cohort":"4"
+                "_cohort":"4"
                 },
     "CESC": {"sample_type":"1",
              "neoplasm_histologic_grade":"2",
@@ -393,7 +393,7 @@ featurePriority={
              "tobacco_smoking_history":"5"
              },
     "LUNG": {"sample_type":"1",
-             "cohort":"2",
+             "_cohort":"2",
              "_PANCAN_UNC_RNAseq_PANCAN_K16":"3",
              "_PANCAN_DNAMethyl_PANCAN":"4"
              },
@@ -461,7 +461,7 @@ featurePriority={
     "UCS":{"sample_type":"1"
            },
     "UCEC": {"sample_type":"1",
-             "cohort":"2",
+             "_cohort":"2",
              "_PANCAN_UNC_RNAseq_PANCAN_K16":"3",
              "_PANCAN_DNAMethyl_PANCAN":"4"
              },
@@ -470,11 +470,11 @@ featurePriority={
     "THYM":{"sample_type":"1"
            },
     "PANCAN": {"sample_type":"1",
-               "cohort":"2",
+               "_cohort":"2",
                "_PANCAN_UNC_RNAseq_PANCAN_K16":"3",
                "gender":"4"
              },
-    "PANCAN12": {"cohort":"1",
+    "PANCAN12": {"_cohort":"1",
                  "_PANCAN_Cluster_Cluster_PANCAN":"2",
                "age_at_initial_pathologic_diagnosis":"3",
                "sample_type":"4"

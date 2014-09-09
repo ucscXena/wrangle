@@ -8,7 +8,6 @@ ASSEMBLY ="hg18"
 
 tarballDir = "TestdownloadTarball/"
 outDir = "Testdownload/"
-#ROOT ="data_flatten/"
 ROOT ="CAVMold/"
 
 def probeMapWalk(probeMap):
@@ -52,7 +51,7 @@ def downloadBundle(inDir, PROBEMAP, testVersionOnly):
         return 0
     #dir related to security    
     if secureDir not in ["gray","ispy","pancreas","public","su2c","fake-tcga","lincs"]: 
-        print "wrong security dir", secureDir
+        print "wrong security dir ", secureDir
         return 1
     if secureDir =="fake-tcga":
         secureDir = "tcga"

@@ -9,7 +9,7 @@ import TCGAUtil
 def cohort (inDir, outDir, cancer, flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
         
-    variable ="cohort"
+    variable ="_cohort"
     value = "TCGA "+TCGAUtil.cancerHumanReadable[cancer]
     cohort_variable (variable, value, inDir, outDir, cancer, flog,REALRUN)
     
@@ -147,31 +147,38 @@ def doDerivedCancer( var, outDir, cancer, derived_cancer, flog,REALRUN):
         return
     
     os.system("cp "+outDir+cancer+"/"+var +" " +outDir+derived_cancer+"/"+var+"_" +cancer)
+    #clinFeature
+    feature=var
+    withClinF =0
+    if TCGAUtil.featurePriority.has_key(cancer):
+        if TCGAUtil.featurePriority[cancer].has_key(feature):
+            priority = TCGAUtil.featurePriority[cancer][feature]
+            J={}
+            J["name"]="TCGA_"+derived_cancer+"_"+var+"_"+cancer+"_clinFeat"
+            J["type"]="clinicalFeature"
+
+            oHandle = open(outDir+derived_cancer+"/"+var+"_" +cancer +"_clinFeature.json","w")
+            oHandle.write( json.dumps( J, indent=-1 ) )
+            oHandle.close()
+        
+            oHandle = open(outDir+derived_cancer+"/"+var+"_" +cancer +"_clinFeature","w")
+            oHandle.write(feature+"\tpriority\t"+str(priority)+"\n")
+            oHandle.write(feature+"\tvisibility\ton\n") 
+            oHandle.close()
+
+            withClinF =1
+
+
     J={}
     J["cgDataVersion"]=1
     J["version"]= datetime.date.today().isoformat()
     J["name"]="TCGA_"+derived_cancer+"_"+var+"_"+cancer
     J["type"]= "clinicalMatrix" 
     J[":sampleMap"]="TCGA."+derived_cancer+".sampleMap"
-    J[":clinicalFeature"]=  "TCGA_"+derived_cancer+"_"+var+"_"+cancer+"_clinFeat"
+    if withClinF:
+        J[":clinicalFeature"]=  "TCGA_"+derived_cancer+"_"+var+"_"+cancer+"_clinFeat"
     oHandle = open(outDir+derived_cancer+"/"+var+"_" +cancer +".json","w")
     oHandle.write( json.dumps( J, indent=-1 ) )
     oHandle.close()
-        
-    #clinFeature
-    J={}
-    J["name"]="TCGA_"+derived_cancer+"_"+var+"_"+cancer+"_clinFeat"
-    J["type"]="clinicalFeature"
-    oHandle = open(outDir+derived_cancer+"/"+var+"_" +cancer +"_clinFeature.json","w")
-    oHandle.write( json.dumps( J, indent=-1 ) )
-    oHandle.close()
-        
-    oHandle = open(outDir+derived_cancer+"/"+var+"_" +cancer +"_clinFeature","w")
-    feature=var
-    if TCGAUtil.featurePriority.has_key(derived_cancer):
-        if TCGAUtil.featurePriority[derived_cancer].has_key(feature):
-            priority= TCGAUtil.featurePriority[derived_cancer][feature]
-            oHandle.write(feature+"\tpriority\t"+str(priority)+"\n")
-            oHandle.write(feature+"\tvisibility\ton\n") 
-    oHandle.close()
+
     return

@@ -660,6 +660,9 @@ def process (file, allGenes, samples, genes, dic):
             continue
 
         gene = data[Hugo_Symbol]
+        
+        if gene =="":
+            continue
         try:
             mtype = xenaToMatrix.typeDic[data[Variant_Classification]]
         except:
@@ -684,6 +687,8 @@ def outputMatrix(samples, genes, dic, outfile):
     fout=open(outfile,'w')
     fout.write("sample\t"+string.join(samples,"\t")+"\n")
     for gene in dic:
+        if gene =="":
+            continue
         fout.write(gene)
         for sample in samples:
             try:
