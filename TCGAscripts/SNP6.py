@@ -259,7 +259,7 @@ def makeJSON(oHandle,cancer,lastMageTab,inDir,noCNV,type):
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
     J["sample_type"]=["tumor"]
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
-    J["cohort"] ="TCGA_"+cancer
+    J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]
     J['domain']="TCGA"
     J['tags']=["cancer"]+ TCGAUtil.tags[cancer]
     J['owner']="TCGA"

@@ -104,7 +104,7 @@ def RPPA_RBN (inDir, outDir, cancer,flog,REALRUN):
         J["tags"]= J["tags"]+origin
 
     J["label"] = J["shortTitle"]        
-    J["cohort"] ="TCGA_"+cancer
+    J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]
     J['domain']="TCGA"
     J['owner']="TCGA"
     

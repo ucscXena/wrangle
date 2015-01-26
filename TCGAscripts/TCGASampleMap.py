@@ -84,6 +84,7 @@ def TCGASampleMap (dir, outDir, cancer,log, REALRUN):
                     TCGAbarcode = aliquote_dic[string.lower(sample)]
                 else:
                     print sample
+                    continue
                 parent = TCGAbarcode
                 child = sample
                 sMap.addLink(parent,child)
@@ -142,12 +143,12 @@ def TCGASampleMap (dir, outDir, cancer,log, REALRUN):
 
         J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
         J["sample_type"]="tumor"
-        if cancer !="PANCAN":
+        if cancer not in ["PANCAN","PANCAN12"]:
             J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
         else:
             J["primary_disease"]="cancer"
             
-        J["cohort"] ="TCGA_"+cancer
+        #J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]
         J['domain']="TCGA"
         J['owner']="TCGA"
         

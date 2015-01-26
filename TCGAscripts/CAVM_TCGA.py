@@ -69,10 +69,10 @@ def CAVMid (dir, outDir, cancer,log, REALRUN):
                     if sample =="":
                         print name, "has bad empty sample id"
                         sys.exit()
-                    if sample not in samples:
-                        samples.append(sample)
+                    samples.append(sample)
+
                 fin.close()
-                
+
                 outfile = outDir +os.path.basename(obj['path'])
 
                 os.system("cp "+obj['path']+".json "+outfile+".json")
@@ -92,6 +92,7 @@ def CAVMid (dir, outDir, cancer,log, REALRUN):
                         child = sample
                         sMap.addLink(parent,child)
                         sample = parent
+
                     #do TCGA barcode trick
                     parts= string.split(sample,"-")
                     parent = string.join(parts[0:3],"-")
@@ -126,7 +127,10 @@ def process(file, outfile,samples, intDic):
     fout=open(outfile,"w")
     sampleDic={}
     for i in range (0,len(samples)):
-        sampleDic[samples[i]]= i+1
+        if samples[i] not in sampleDic:
+            sampleDic[samples[i]]= [i+1]
+        else:
+            sampleDic[samples[i]].append(i+1)
 
     #header
     fin =open(file,'r')
@@ -149,21 +153,21 @@ def process(file, outfile,samples, intDic):
             value = ""
             count =0
             for sample in sample_ids:
-                pos =sampleDic[sample]
-                data[pos]=string.strip(data[pos])
-                if data[pos]=="":
-                    continue
-                if data[pos]=="NA":
-                    continue
-                try:
-                    float(data[pos])
-                except:
-                    continue
-                if value=="":
-                    value =0.0
-                value =value+float(data[pos])
-                count=count+1
-                    
+                poslist =sampleDic[sample]
+                for pos in poslist:
+                    data[pos]=string.strip(data[pos])
+                    if data[pos]=="":
+                        continue
+                    if data[pos]=="NA":
+                        continue
+                    try:
+                        float(data[pos])
+                    except:
+                        continue
+                    if value=="":
+                        value =0.0
+                    value =value+float(data[pos])
+                    count=count+1
             if value =="":
                 fout.write("\t")
             else:
@@ -179,18 +183,19 @@ REALRUN= 1
 #0 only clinical data
 # -1: only genomic json
 
-cancer="PANCAN12"
-dir="preFreeze/TCGA/"
-outDir="preFreezeCAVM/TCGA/"
-log=0
-CAVMid (dir+cancer+"/", outDir+cancer+"/",cancer, log, REALRUN)
-TCGASampleMap (outDir + cancer+"/", outDir, cancer,log, REALRUN)
-
 cancer="PANCAN"
 dir="preFreeze/TCGA/"
 outDir="preFreezeCAVM/TCGA/"
 log=0
 CAVMid (dir+cancer+"/", outDir+cancer+"/",cancer, log, REALRUN)
 TCGASampleMap (outDir + cancer+"/", outDir, cancer,log, REALRUN)
+os.system("cp " + dir+cancer+"/cohort.json "+ outDir+cancer+"/")
 
+cancer="PANCAN12"
+dir="preFreeze/TCGA/"
+outDir="preFreezeCAVM/TCGA/"
+log=0
+CAVMid (dir+cancer+"/", outDir+cancer+"/",cancer, log, REALRUN)
+TCGASampleMap (outDir + cancer+"/", outDir, cancer,log, REALRUN)
+os.system("cp " + dir+cancer+"/cohort.json "+ outDir+cancer+"/")
 

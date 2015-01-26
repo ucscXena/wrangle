@@ -16,21 +16,23 @@ tmpDir="tmpTry/"
 
 def unc_mixed_dnaseq_cont_automated (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
+    distribution = False
     PATHPATTERN= "Mixed_DNASeq_Cont_automated."
     PLATFORM = "mixed"
     suffix     = "unc"
     namesuffix = "mutation_unc_gene"
     dataProducer = "University of North Carolina"
     clean=1
-    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
     clean =0
     namesuffix = "mutation_unc"
-    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
 #vcf protected
 def ucsc_illuminaga_dnaseq_cont_automated (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
+    distribution= False
     PATHPATTERN= "IlluminaGA_DNASeq_Cont_automated."
     PLATFORM = "IlluminaGA"
     suffix     = "ucsc"
@@ -38,244 +40,260 @@ def ucsc_illuminaga_dnaseq_cont_automated (inDir, outDir, cancer,flog,REALRUN):
     dataProducer = "University of Californis Santa Cruz GDAC"
 
     clean=1
-    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
     clean =0
     namesuffix = "mutation_ucsc_maf"
-    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
     clean=0
     namesuffix = "mutation_ucsc_vcf"
-    radia.radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+    radia.radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
 #maf open
 def ucsc_illuminaga_dnaseq_automated (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
+    distribution = True
     PATHPATTERN= "IlluminaGA_DNASeq_automated."
     PLATFORM = "IlluminaGA"
     suffix     = "ucsc"
     namesuffix = "mutation_ucsc_maf_gene"
     dataProducer = "University of Californis Santa Cruz GDAC"
     clean=1
-    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
     clean=0
     namesuffix = "mutation_ucsc_maf"
-    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
 #vcf
 def ucsc_solid_dnaseq_cont  (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
+    distribution = True
     PATHPATTERN= "SOLiD_DNASeq_Cont."
     PLATFORM = "SOLiD"
     suffix     = "ucsc"
     namesuffix = "mutation_ucsc_solid_gene_maf"
     dataProducer = "University of Californis Santa Cruz GDAC"
     clean=1
-    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
     clean=0
     namesuffix = "mutation_ucsc"
-    radia.radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+    radia.radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
 def broad_illuminaga_dnaseq (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
+    distribution = True
     PATHPATTERN= "IlluminaGA_DNASeq."
     PLATFORM = "IlluminaGA"
     suffix     = "broad"
     namesuffix = "mutation_broad_gene"
     dataProducer = "Broad Institute Genome Sequencing Center"
     clean=1
-    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
     clean=0
     namesuffix = "mutation_broad"
-    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
 def broad_illuminaga_dnaseq_automated (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
+    distribution = True
     PATHPATTERN= "IlluminaGA_DNASeq_automated"
     PLATFORM = "IlluminaGA"
     suffix     = "broad"
     namesuffix = "mutation_broad_gene"
     dataProducer = "Broad Institute Genome Sequencing Center"
     clean=1
-    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
     clean =0
     namesuffix = "mutation_broad"
-    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
 def broad_illuminaga_dnaseq_curated (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
+    distribution = True
     PATHPATTERN= "IlluminaGA_DNASeq_curated"
     PLATFORM = "IlluminaGA"
     suffix     = "broad"
     namesuffix = "mutation_curated_broad_gene"
     dataProducer = "Broad Institute Genome Sequencing Center"
     clean=1
-    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
     clean =0
     namesuffix = "mutation_curated_broad"
-    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
 def hgsc_solid_dnaseq_curated (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
+    distribution = True
     PATHPATTERN= "SOLiD_DNASeq_curated."
     PLATFORM = "SOLiD"
     suffix     = "bcm SOLiD"
     namesuffix = "mutation_curated_bcm_solid_gene"
     dataProducer = "Baylor College of Medicine Human Genome Sequencing Center"
     clean=1
-    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
     clean =0
     namesuffix = "mutation_curated_bcm_solid"
-    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
 def hgsc_solid_dnaseq (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
+    distribution = True
     PATHPATTERN= "SOLiD_DNASeq."
     PLATFORM = "SOLiD"
     suffix     = "bcm SOLiD"
     namesuffix = "mutation_bcm_solid_gene"
     dataProducer = "Baylor College of Medicine Human Genome Sequencing Center"
     clean=1
-    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
     clean =0
     namesuffix = "mutation_bcm_solid"
-    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
 def hgsc_illuminaga_dnaseq (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
+    distribution = True
     PATHPATTERN= "IlluminaGA_DNASeq."
     PLATFORM = "IlluminaGA"
     suffix     = "bcm"
     namesuffix = "mutation_bcm_gene"
     dataProducer = "Baylor College of Medicine Human Genome Sequencing Center"
     clean=1
-    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
     clean =0
     namesuffix = "mutation_bcm"
-    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
 
 def hgsc_illuminaga_dnaseq_automated (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
+    distribution = True
     PATHPATTERN= "IlluminaGA_DNASeq_automated"
     PLATFORM = "IlluminaGA"
     suffix     = "bcm"
     namesuffix = "mutation_bcm_gene"
     dataProducer = "Baylor College of Medicine Human Genome Sequencing Center"
     clean=1
-    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
     clean =0
     namesuffix = "mutation_bcm"
-    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
 def hgsc_illuminaga_dnaseq_curated (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
+    distribution = True
     PATHPATTERN= "IlluminaGA_DNASeq_curated"
     PLATFORM = "IlluminaGA"
     suffix     = "bcm"
     namesuffix = "mutation_curated_bcm_gene"
     dataProducer = "Baylor College of Medicine Human Genome Sequencing Center"
     clean=1
-    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
     clean =0
     namesuffix = "mutation_curated_bcm"
-    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
 def wustl_illuminaga_dnaseq (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
+    distribution = True
     PATHPATTERN= "IlluminaGA_DNASeq."
     PLATFORM = "IlluminaGA"
     suffix     = "wustl"
     namesuffix = "mutation_wustl_gene"
     dataProducer = "Genome Institute at Washington University Sequencing Center"
     clean=1
-    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
     clean =0
     namesuffix = "mutation_wustl"
-    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
 def wustl_illuminaga_dnaseq_automated (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
+    distribution = True
     PATHPATTERN= "IlluminaGA_DNASeq_automated"
     PLATFORM = "IlluminaGA"
     suffix     = "wustl"
     namesuffix = "mutation_wustl_gene"
     dataProducer = "Genome Institute at Washington University Sequencing Center"
     clean=1
-    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
     clean =0
     namesuffix = "mutation_wustl"
-    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
 def wustl_illuminaga_dnaseq_curated (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
+    distribution = True
     PATHPATTERN= "IlluminaGA_DNASeq_curated"
     PLATFORM = "IlluminaGA"
     suffix     = "wustl"
     namesuffix = "mutation_curated_wustl_gene"
     dataProducer = "Genome Institute at Washington University Sequencing Center"
     clean=1
-    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
     clean =0
     namesuffix = "mutation_curated_wustl"
-    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
 def bcgsc_illuminahiseq_dnaseq (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
+    distribution = True
     PATHPATTERN= "IlluminaHiSeq_DNASeq."
     PLATFORM = "IlluminaHiSeq"
     suffix     = "bcgsc"
     namesuffix = "mutation_bcgsc_gene"
     dataProducer = "Michael Smith Genome Sciences Centre (British Columbia Genome Sciences Centre, BCGSC)"
     clean=1
-    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
     clean =0
     namesuffix = "mutation_bcgsc"
-    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
 def bcgsc_illuminahiseq_dnaseq_automated (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
+    distribution = True
     PATHPATTERN= "IlluminaHiSeq_DNASeq_automated"
     PLATFORM = "IlluminaHiSeq"
     suffix     = "bcgsc"
     namesuffix = "mutation_bcgsc_gene"
     dataProducer = "Michael Smith Genome Sciences Centre (British Columbia Genome Sciences Centre, BCGSC)"
     clean=1
-    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
     clean =0
     namesuffix = "mutation_bcgsc"
-    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
 def bcgsc_illuminahiseq_dnaseq_curated (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
+    distribution = True
     PATHPATTERN= "IlluminaHiSeq_DNASeq_curated"
     PLATFORM = "IlluminaHiSeq"
     suffix     = "bcgsc"
     namesuffix = "mutation_curated_bcgsc_gene"
     dataProducer = "Michael Smith Genome Sciences Centre (British Columbia Genome Sciences Centre, BCGSC)"
     clean=1
-    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
     clean =0
     namesuffix = "mutation_curated_bcgsc"
-    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
-def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM):
+def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM, distribution):
     garbage=[tmpDir]
     os.system("rm -rf tmp_*") 
     if os.path.exists( tmpDir ):
@@ -381,9 +399,10 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
     #stable    
     J["cgDataVersion"]=1
     J[":dataSubType"]="somatic mutation"
-    J["redistribution"]= True
+    J["redistribution"]= distribution
     J["dataProducer"]= dataProducer
     J["type"]= "mutationVector" 
+    J["start_index"]=1
     J[":sampleMap"]="TCGA."+cancer+".sampleMap"
     J["PLATFORM"]= PLATFORM 
     if string.find( dataProducer ,"Broad")!=-1:
@@ -425,7 +444,7 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
     J["sample_type"]=["tumor"]
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
-    J["cohort"] ="TCGA_"+cancer
+    J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]
     J['domain']="TCGA"
     J['tags']=["cancer"]+ TCGAUtil.tags[cancer]
     J['gdata_tags'] = [dataProducer]
@@ -448,7 +467,7 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
     oHandle.close()
     return
 
-def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataProducer,REALRUN, clean, PLATFORM):
+def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataProducer,REALRUN, clean, PLATFORM, distribution):
     garbage=[tmpDir]
     os.system("rm -rf tmp_*") 
     if os.path.exists( tmpDir ):
@@ -565,7 +584,7 @@ def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, data
     #stable    
     J["cgDataVersion"]=1
     J[":dataSubType"]="somatic mutation"
-    J["redistribution"]= True
+    J["redistribution"]= distribution
     J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
     J["dataProducer"]= dataProducer
     J["type"]= "genomicMatrix" 
@@ -612,7 +631,7 @@ def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, data
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
     J["sample_type"]=["tumor"]
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
-    J["cohort"] ="TCGA_"+cancer
+    J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]
     J['domain']="TCGA"
     J['tags']=["cancer"]+ TCGAUtil.tags[cancer]
     J['gdata_tags'] = [dataProducer]

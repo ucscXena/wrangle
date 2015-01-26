@@ -221,7 +221,7 @@ def processMutation (filename, dir,outDir, cancer,flog, REALRUN):
 
     J['dataProducer']="UCSC Cancer Browser team"
     J["sample_type"]=["tumor"]
-    J["cohort"] ="TCGA_"+cancer
+    J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]
     J['domain']="TCGA"
     J['tags']=["cancer"] + TCGAUtil.tags[cancer]
     J['owner']="TCGA"
@@ -367,7 +367,7 @@ def processRNA (filename, dir,outDir, cancer,flog, REALRUN):
         J['name']= J['name']+"_PANCAN"
         J['dataProducer']="UCSC Cancer Browser team"
         J["sample_type"]="tumor"
-        J["cohort"] ="TCGA_"+cancer
+        J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]
         J['domain']="TCGA"
         J['owner']="TCGA"
         J[":sampleMap"]="TCGA."+cancer+".sampleMap"

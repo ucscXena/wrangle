@@ -126,6 +126,7 @@ def cohort_variable (var, value, inDir, outDir, cancer, flog,REALRUN):
     J["type"]= "clinicalMatrix" 
     J[":dataSubType"]="phenotype"
     J[":sampleMap"]="TCGA."+cancer+".sampleMap"
+    J["cohort"]="TCGA "+TCGAUtil.cancerHumanReadable[cancer]
     if withClinF:
         J[":clinicalFeature"]=  "TCGA_"+ cancer+"_"+var+"_clinFeat"
 

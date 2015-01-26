@@ -65,7 +65,13 @@ def runFlatten(inDir, outDir,REALRUN, onlyGenomicSamples, SMAPNAME=None):
             
         cpGenomicEachSample(REALRUN, outDir, bookDic, sMap)
         cpProbeMaps(REALRUN,outDir,bookDic,sMap)
-            
+
+        #cpCohort if exists
+        path = string.join(string.split(bookDic[sampleMap]['path'],"/")[0:-1],"/") + "/cohort.json"
+        if os.path.exists(path):
+            dataPackageDir = outDir + sampleMapBaseName(sMap)
+            os.system("cp "+path+" "+dataPackageDir+"/")
+
     return 1
 
 def flattenForClinicalFeature(sMap, bookDic):
@@ -122,7 +128,7 @@ def flattenForClinicalFeature(sMap, bookDic):
 
 def flattenEachSampleMap(sMap, bookDic,onlyGenomicSamples):
     sampleMap = sMap.getName()
-
+    
     jsonName= trackName_fix(sampleMapBaseName(sMap)+"_clinicalMatrix")
     finalClinMatrix= ClinicalMatrixNew(None,jsonName)
     finalClinMatrixJSON={}

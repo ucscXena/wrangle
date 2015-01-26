@@ -82,6 +82,9 @@ def CopyNumber_Gistic2 (inDir, outDir, cancer,flog,REALRUN):
                 command= "cut -f 1,4- "+dataDir+file+" > "+outDir+cancer+"/"+cgFileName
                 os.system(command)
             
+        if not os.path.exists(outDir+cancer+"/"+cgFileName):
+            continue
+
         oHandle = open(outDir+cancer+"/"+cgFileName+".json","w")
         J={}
         #stable
@@ -92,12 +95,6 @@ def CopyNumber_Gistic2 (inDir, outDir, cancer,flog,REALRUN):
         if pattern=="all_thresholded.by_genes":
             suffix="gistic2_thresholded"
             namesuffix="gistic2thd"
-        
-        """
-        if pattern=="focal_data_by_genes":
-            suffix="gistic2_focal"
-            namesuffix="gistic2foc"
-        """
         
         J["cgDataVersion"]=1
         J["shortTitle"]=cancer +" copy number ("+suffix+")"
@@ -114,7 +111,7 @@ def CopyNumber_Gistic2 (inDir, outDir, cancer,flog,REALRUN):
         J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
         J["sample_type"]=["tumor"]
         J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
-        J["cohort"] ="TCGA_"+cancer
+        J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]
         J['domain']="TCGA"
         J['tags']=["cancer"]+ TCGAUtil.tags[cancer]
         J['owner']="TCGA"

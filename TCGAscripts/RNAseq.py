@@ -471,7 +471,6 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     J={}
     #stable    
     J["cgDataVersion"]=1
-    J[":dataSubType"]="gene expression RNAseq"
     J["redistribution"]= True
     J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
     J["dataProducer"]= dataProducer
@@ -499,6 +498,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     J["description"]=""
     if string.find(namesuffix, "exon")==-1:
         J[":probeMap"]= "hugo"
+        J[":dataSubType"]="gene expression RNAseq"
 
         if cancer != "OV":
             J["shortTitle"]= cancer +" "+"gene expression ("+suffix+")"
@@ -516,6 +516,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
                           " The gene expression profile was measured experimentally using the "+platformTitle+" by the "+ dataProducer +"." + \
                           " Level 3 interpreted level data was downloaded from TCGA data coordination center. This dataset shows the gene-level transcription estimates, "
     else:
+        J[":dataSubType"]="exon expression RNAseq"
         ### really stupid thing here
         #file path for the data
         if string.find(namesuffix,"V2")==-1:
@@ -580,7 +581,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
     J["sample_type"]=["tumor"]
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
-    J["cohort"] ="TCGA_"+cancer
+    J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]
     J['domain']="TCGA"
     J['tags']=["cancer"]+ TCGAUtil.tags[cancer]
     J['owner']="TCGA"

@@ -21,6 +21,7 @@ uuid_barcode_txt= "https://tcga-data.nci.nih.gov/tcgafiles/ftp_auth/distro_ftpus
 
 # all sorted by short titles
 cancerOfficial={
+    "FPPP":"FFPE pilot phase II",
     "LAML":"acute myeloid leukemia",
     "ACC":"adrenocortical carcinoma",
     "BLCA":"bladder urothelial carcinoma",
@@ -62,10 +63,11 @@ cancerOfficial={
     "TGCT":"testicular germ cell tumor",
     "THYM":"thymoma",
     "PANCAN":"pan-cancer",
-    "PANCAN12":"pan-cancer"
+    "PANCAN12":"PANCAN12"
     }
 
 cancerHumanReadable={
+    "FPPP":"Formalin Fixed Paraffin-Embedded Pilot Phase II",
     "LAML":"Acute Myeloid Leukemia",
     "ACC":"Adrenocortical Cancer",
     "BLCA":"Bladder Cancer",
@@ -111,6 +113,7 @@ cancerHumanReadable={
     }
 
 anatomical_origin ={
+    "FPPP":[],
     "LAML":["White blood cell"],
     "ACC":["Adrenal gland"],
     "BLCA":["Bladder"],
@@ -155,7 +158,48 @@ anatomical_origin ={
     "PANCAN12":[]
     }
 
+default_mutation = {
+    "LAML":"TCGA_LAML_mutation_wustl",
+    "ACC":"TCGA_ACC_mutation_curated_broad", 
+    "BLCA":"TCGA_BLCA_mutation_broad", 
+    "LGG":"TCGA_LGG_mutation_broad", 
+    "BRCA":"TCGA_BRCA_mutation_curated_wustl",
+    "CESC":"TCGA_CESC_mutation_curated_wustl",
+    "COAD":"TCGA_COAD_mutation_bcm",
+    "ESCA":"",
+    "GBM":"TCGA_GBM_mutation_broad",
+    "HNSC":"TCGA_HNSC_mutation_broad",
+    "KICH":"TCGA_KICH_mutation_broad",
+    "KIRC":"TCGA_KIRC_mutation_broad",
+    "KIRP":"TCGA_KIRP_mutation_curated_broad",
+    "LIHC":"TCGA_LIHC_mutation_bcm",
+    "LUAD":"TCGA_LUAD_mutation_broad",
+    "LUSC":"TCGA_LUSC_mutation_broad",
+    "DLBC":"",
+    "LNNH":"",
+    "OV":"TCGA_OV_mutation_wustl",
+    "PAAD":"TCGA_PAAD_mutation_broad",
+    "PRAD":"TCGA_PRAD_mutation_curated_broad",
+    "READ":"TCGA_READ_mutation_bcm",
+    "SARC":"",
+    "SKCM":"TCGA_SKCM_mutation_broad",
+    "STAD":"TCGA_STAD_mutation_curated_broad",
+    "THCA":"TCGA_THCA_mutation_broad",
+    "UCEC":"TCGA_UCEC_mutation_wustl",
+    "CHOL":"",
+    "LCLL":"",
+    "LCML":"",
+    "MESO":"",
+    "PCPG":"TCGA_PCPG_mutation_broad",
+    "UCS":"TCGA_UCS_mutation_broad",
+    "UVM":"",
+    "TGCT":"",
+    "THYM":"",
+    "":""
+    }
+
 tags ={
+    "FPPP":["Formalin-fixed paraffin-embedded","FFPE"],
     "LAML":[],
     "ACC":[],
     "BLCA":[],
@@ -200,6 +244,7 @@ tags ={
     }
 
 cancerGroupTitle={
+    "FPPP":"FFPE pilot phase II",
     "LAML":"acute myeloid leukemia",
     "BLCA":"bladder urothelial carcinoma",
     "LGG":"brain lower grade glioma",
@@ -469,6 +514,9 @@ featurePriority={
            },
     "THYM":{"sample_type":"1"
            },
+    "FPPP":{"sample_type":"1",
+            "original_study":"2"
+            },
     "PANCAN": {"sample_type":"1",
                "_cohort":"2",
                "_PANCAN_UNC_RNAseq_PANCAN_K16":"3",
