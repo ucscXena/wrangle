@@ -12,19 +12,18 @@ from CGDataUtil import *
 
 tmpDir="tmpTry/"
 
-#/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/ucs/gsc/broad.mit.edu/illuminaga_dnaseq_curated/mutations/
-
 def ucsc_illuminaga_dnaseq_cont_automated_vcf (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
+    distribution = False
     PATHPATTERN= "IlluminaGA_DNASeq_Cont_automated."
     PLATFORM = "IlluminaGA"
     suffix     = "ucsc"
     namesuffix = "mutation_ucsc_vcf"
     dataProducer = "University of Californis Santa Cruz GDAC"
     clean=0
-    radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM)
+    radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
-def radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM):
+def radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution):
     garbage=[tmpDir]
     os.system("rm -rf tmp_*") 
     if os.path.exists( tmpDir ):
@@ -187,7 +186,7 @@ def radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, da
     #stable    
     J["cgDataVersion"]=1
     J[":dataSubType"]="somatic mutation"
-    J["redistribution"]= True
+    J["redistribution"]= distribution
     J["dataProducer"]= dataProducer
     J["type"]= "mutationVector" 
     J[":sampleMap"]="TCGA."+cancer+".sampleMap"
@@ -229,7 +228,7 @@ def radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, da
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
     J["sample_type"]=["tumor"]
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
-    J["cohort"] ="TCGA_"+cancer
+    J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]
     J['domain']="TCGA"
     J['tags']=["cancer"]+ TCGAUtil.tags[cancer]
     J['gdata_tags'] = [dataProducer]
@@ -306,7 +305,7 @@ def nonSilentMatrixJson (jsonFile, inDir, suffix, cancer, namesuffix, dataProduc
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
     J["sample_type"]=["tumor"]
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
-    J["cohort"] ="TCGA_"+cancer
+    J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]
     J['domain']="TCGA"
     J['tags']=["cancer"]+ TCGAUtil.tags[cancer]
     J['gdata_tags'] = [dataProducer]

@@ -82,7 +82,6 @@ def process (file, samples, genes, dic):
             GENECOL = i
         if data[i]=="effect":
             MutTYPECOL = i
-    
     for line in fin.readlines():
         data =string.split(line[:-1],'\t')
         gene = data[GENECOL]

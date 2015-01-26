@@ -65,7 +65,11 @@ def process(dir):
                     if "mRNA" in J["tags"]:
                         J["tags"].remove("mRNA")
 
-        if J["type"] in ["genomicMatrix","genomicSegment","sampleMap"]:
+        if J["type"] in ["genomicMatrix","genomicSegment","sampleMap","clinicalMatrix"]:
+            if J["type"] == "sampleMap":
+                if J.has_key('cohort'):
+                    J.pop('cohort')
+
             if J.has_key("tags"):
                 if "cancer" not in J["tags"]:
                     J["tags"].append("cancer")
@@ -88,12 +92,13 @@ def process(dir):
                     J["tags"]=["neural"]
 
         if (J["type"] in ["genomicMatrix","genomicSegment","mutationVector"]):
-            if J.has_key("gain"):
-                J["min"]= -1.0/float(J["gain"])
-                J["max"]= 1.0/float(J["gain"])
-            else:
-                J["min"]= -1.0
-                J["max"]= 1.0
+            if not J.has_key("min") or not J.has_key("max"):
+                if J.has_key("gain"):
+                    J["min"]= -1.0/float(J["gain"])
+                    J["max"]= 1.0/float(J["gain"])
+                else:
+                    J["min"]= -1.0
+                    J["max"]= 1.0
         if J.has_key(":dataSubType"):
             if J[":dataSubType"]=="cna":
                 J[":dataSubType"]="copy number"
@@ -113,12 +118,12 @@ def process(dir):
                 J[":dataSubType"]="cell viability"
 
         #temporary
-        if (J["type"] in ["genomicMatrix","genomicSegment","mutationVector"]) and J.has_key("shortTitle"):
-            J["label"] = J["shortTitle"]
+        #if (J["type"] in ["genomicMatrix","genomicSegment","mutationVector"]) and J.has_key("shortTitle"):
+        #    J["label"] = J["shortTitle"]
 
         fout=open(J['path']+".json","w")
         fout.write(json.dumps(J,indent=-1,sort_keys=True))
         fout.close()
             
-dir="data/"
+dir="data_flatten/"
 process(dir)

@@ -76,7 +76,7 @@ def mutationMatrix (inDir, outDir, cancer,flog,REALRUN):
     J["gain"]=10
     
     J["sample_type"]=["tumor"]
-    J["cohort"] ="TCGA_"+cancer
+    J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]
     J['domain']="TCGA"
     J['tags']=["cancer"]+ TCGAUtil.tags[cancer]
     J['owner']="TCGA"

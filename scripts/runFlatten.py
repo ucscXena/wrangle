@@ -9,7 +9,7 @@ onlyGenomicSamples =1
 # 1 (default) only keep genomicSamples
 # 0 keep all samples mentioned in both clinical and genomic data files
 
-REALRUN = 1
+REALRUN = 0
 #1 : full
 #0 : clinical data only, full json
 # -1: only copy genomic JSON

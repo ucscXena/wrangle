@@ -108,8 +108,8 @@ def outputDic (outputfile, dataDic,sampleName):
     fout.close()
 
 if __name__ == "__main__" :
-    if len(sys.argv[:])!= 5:
-        print "python processRSEM2percentile.py rsem_result_file percentileFileOut log2(FPKM+1)Fileout sampleName\n"
+    if len(sys.argv[:])!= 2:
+        print "python processRSEM2percentile.py rsem_result_file" # percentileFileOut log2(FPKM+1)Fileout sampleName\n"
         sys.exit()
 
     inputfile = sys.argv[1]
@@ -117,15 +117,17 @@ if __name__ == "__main__" :
     dataRankDic = percentileRANK (dataDic)
     dataLog2Dic = log2Plus1 (dataDic)
 
+    basename = string.join(string.split(inputfile,".")[:-2],".")
+    
     #sampleName
-    sName = sys.argv[4]
-
+    sName = string.split(basename,"/")[-1:]
+    
     #output percentileRank
-    outputfile = sys.argv[2]
+    outputfile = basename + ".percentile" # sys.argv[2]
     outputDic (outputfile, dataRankDic, sName)
 
     #output log2(FPKM+1)
-    outputfile = sys.argv[3]
+    outputfile = basename + ".log2FPKM" #sys.argv[3]
     outputDic (outputfile, dataLog2Dic, sName)
 
 

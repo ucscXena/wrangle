@@ -64,6 +64,14 @@ def convertCAVM (inDir, outD ,REALRUN, CAVM, TCGA, MAPID=1):
         clinFile =""
         clinMatrix = None
         
+        #cohort
+        COHORT =""
+        cohortPath= string.join(string.split(bookDic[sampleMap]['path'],"/")[0:-1],"/")+"/cohort.json"
+        if os.path.exists(cohortPath):
+            fin = open (cohortPath,'r')
+            cohortJ= json.loads(fin.read())
+            COHORT = cohortJ["name"]
+
         for name in sampleMaps[sampleMap]:
             obj=bookDic[name]
             if obj['type']=="clinicalMatrix":
@@ -73,10 +81,23 @@ def convertCAVM (inDir, outD ,REALRUN, CAVM, TCGA, MAPID=1):
                 fin = open (obj['path']+".json",'r')
                 J=json.load(fin)
                 fin.close()
-                J['cohort']=J[':sampleMap']
+
+                if COHORT :
+                    J["cohort"]=COHORT
+                else:
+                    J['cohort']=J[':sampleMap']
+
                 J["label"]="Phenotypes"
                 if CAVM:
                     J.pop(':sampleMap') 
+                    if J.has_key("dataSubType"):
+                        if J.has_key(":dataSubType"):
+                            J.pop(':dataSubType') 
+                    else:
+                        if J.has_key(":dataSubType"):
+                            J["dataSubType"]=J[":dataSubType"]
+                            J.pop(':dataSubType')
+
                 fout=open(clinFile+".json",'w')
                 fout.write(json.dumps (J, indent=-1))
                 fout.close()
@@ -136,9 +157,22 @@ def convertCAVM (inDir, outD ,REALRUN, CAVM, TCGA, MAPID=1):
                 fin = open (obj['path']+".json",'r')
                 J=json.load(fin)
                 fin.close()
-                J['cohort']=J[':sampleMap']
+
+                if COHORT :
+                    J["cohort"]=COHORT
+                else:
+                    J['cohort']=J[':sampleMap']
+
                 if CAVM:
                     J.pop(':sampleMap')
+                    if J.has_key("dataSubType"):
+                        if J.has_key(":dataSubType"):
+                            J.pop(':dataSubType') 
+                    else:
+                        if J.has_key(":dataSubType"):
+                            J["dataSubType"]=J[":dataSubType"]
+                            J.pop(':dataSubType') 
+
 
                 fout=open(outfile+".json",'w')
                 fout.write(json.dumps (J, indent=-1))
@@ -168,9 +202,22 @@ def convertCAVM (inDir, outD ,REALRUN, CAVM, TCGA, MAPID=1):
                 fin = open (obj['path']+".json",'r')
                 J=json.load(fin)
                 fin.close()
-                J['cohort']=J[':sampleMap']
+
+                if COHORT :
+                    J["cohort"]=COHORT
+                else:
+                    J['cohort']=J[':sampleMap']
+
                 if CAVM:
                     J.pop(':sampleMap')
+                    if J.has_key("dataSubType"):
+                        if J.has_key(":dataSubType"):
+                            J.pop(':dataSubType') 
+                    else:
+                        if J.has_key(":dataSubType"):
+                            J["dataSubType"]=J[":dataSubType"]
+                            J.pop(':dataSubType') 
+
                 fout=open(outfile+".json",'w')
                 fout.write(json.dumps (J, indent=-1))
                 fout.close()
@@ -394,14 +441,18 @@ def convertCAVM (inDir, outD ,REALRUN, CAVM, TCGA, MAPID=1):
             fout.write(json.dumps(sMapJ,indent=-1))
             fout.close()
         
-        #cohort json
-        outfile= outDir+"cohort.json"
-        fout=open(outfile,'w')
-        cohortJ = copy.deepcopy(sMapJ)
-        cohortJ['type']="cohort"
-        fout.write(json.dumps(cohortJ,indent=-1))
-        fout.close()
-
+        #cohort json cp or create
+        cohortPath= string.join(string.split(bookDic[sampleMap]['path'],"/")[0:-1],"/")+"/cohort.json"
+        if os.path.exists(cohortPath):
+            os.system("cp " + cohortPath +" " + outDir)
+        else:
+            outfile = outDir+"cohort.json"
+            fout=open(outfile,'w')
+            cohortJ={}
+            cohortJ["type"]="cohort"
+            cohortJ["name"]= sampleMap
+            fout.write(json.dumps(cohortJ,indent=-1))
+            fout.close()
 
 parser = optparse.OptionParser()
 parser.add_option("--inDir", action="store", type="string", dest="inDir")

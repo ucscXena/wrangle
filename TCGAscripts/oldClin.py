@@ -53,7 +53,7 @@ def output (dir, oldClinMatrix, cancer):
     J["wrangling_procedure"]= "old clinical data that is deprecated in the current version"
     J["name"]= name
     J["type"]= "clinicalMatrix"
-    J[":sampleMap"]="TCGA."+cancer+".sampleMap"
+    #J[":sampleMap"]="TCGA."+cancer+".sampleMap"
     
     #cFjson
     cFJ={}

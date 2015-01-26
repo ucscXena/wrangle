@@ -253,6 +253,7 @@ def individual_subtype (dir, outDir, cancer,log, REALRUN, featureName,dataProduc
     J["version"]= datetime.date.today().isoformat()
     J["type"]= "clinicalMatrix"
     J[":sampleMap"]="TCGA."+cancer+".sampleMap"
+    J["cohort"]="TCGA "+TCGAUtil.cancerHumanReadable[cancer]
     J['dataProducer']=dataProducer
     J[":clinicalFeature"] = J['name']+ "_clinicalFeature"
     fout= open(outDir+cancer+"/"+outfile+".json",'w')
@@ -320,6 +321,7 @@ def pancan_subtype (dir, outDir, cancer,log, REALRUN, featureName,dataProducer, 
         J["version"]= datetime.date.today().isoformat()
         J["type"]= "clinicalMatrix"
         J[":sampleMap"]="TCGA."+cancerDir+".sampleMap"
+        J["cohort"]="TCGA "+TCGAUtil.cancerHumanReadable[cancerDir]
         J['dataProducer']=dataProducer
         J[":clinicalFeature"] = J['name']+ "_clinicalFeature"
         fout= open(outDir+cancerDir+"/"+outfile+".json",'w')
