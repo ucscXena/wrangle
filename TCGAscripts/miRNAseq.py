@@ -4,6 +4,7 @@ import math
 import inspect
 import copy
 import Jing_util
+import mergeGenomicMatrixFiles
 
 LEVEL="Level_3"
 
@@ -37,6 +38,80 @@ def illuminahiseq_miRnaseq_bcgsc  (inDir, outDir, cancer, flog,REALRUN):
     geneRPKM (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN, clean)
     return
 
+def mergeGA_Hiseq (inDir, outDir, cancer, flog, REALRUN):
+    print cancer, sys._getframe().f_code.co_name
+    dataProducer = "British Columbia Cancer Agency TCGA genome characterization center"
+
+    if not os.path.exists( outDir ):
+        return
+    file1 = outDir+cancer+"/"+"miRNA_GA"
+    file2 = outDir+cancer+"/"+"miRNA_HiSeq"
+    if ( (not os.path.exists(file1 )) or (not os.path.exists(file2 ))):
+        return
+
+    outfile = outDir+cancer+"/"+"miRNA"
+    if REALRUN:
+        genes={}
+        samples={}
+        dataMatrix=[]
+        mergeGenomicMatrixFiles.header (samples, file1)
+        mergeGenomicMatrixFiles.header (samples, file2)
+        mergeGenomicMatrixFiles.process(genes, samples, dataMatrix, file1)
+        mergeGenomicMatrixFiles.process(genes, samples, dataMatrix, file2)
+        mergeGenomicMatrixFiles.outputMatrix(dataMatrix, samples, genes, outfile)
+
+    #json
+    J={}
+    
+    J["cgDataVersion"]=1
+    J["redistribution"]= True
+    J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
+    J["dataProducer"]= dataProducer
+    J["colNormalization"]=True
+    J["PLATFORM"]= "IlluminaGA and IlluminaHiSeq miRNAseq"
+    J["type"]= "genomicMatrix" 
+    J[":sampleMap"]="TCGA."+cancer+".sampleMap"
+    
+    #multiple dirs
+    J["url"]=TCGAUtil.remoteBase \
+              +string.replace(inDir,TCGAUtil.localBase,"")
+    J["version"]= datetime.date.today().isoformat()
+    J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
+    J["gain"]=1.0
+    J["expressionDataSpace"]="log"
+
+    platformTitle ="Illumina Genome Analyzer and HiSeq 2000 RNA Sequencing platform"
+
+    #change description
+    J["description"]=""
+    J[":probeMap"]= "miRBase_primary_transcript_hg18"
+    J[":dataSubType"]="miRNA expression RNAseq"
+    J["shortTitle"]= cancer +" "+"miRNA expression (GA, HiSeq)"
+    J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") miRNA expression by RNAseq (Illumina GA, HiSeq)"
+    J["description"]= J["description"] +"TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") miRNA expression by RNAseq.<br><br>"+ \
+        " The miRNA expression profile was measured experimentally using the "+platformTitle+" by the "+ dataProducer +"." + \
+        " Level 3 interpreted level data was downloaded from TCGA data coordination center. This dataset shows the miRNA transcription estimates in log2(reads per million miRNA mapped)."
+    J["description"] = J["description"] + " miRNA primary transcripts are mapped onto the human genome coordinates using UCSC cgData miRBase miRNA_primary_transcript probeMap."
+
+    J["description"] = J["description"] +\
+                       "<br><br>In order to more easily view the differential expression between samples, we set the default view to center each miRNA to zero by independently subtracting the mean of the genomic location on the fly. Users can view the original non-normalized values by adjusting visualization settings. For more information on how to use the cancer browser, please refer to the help page."
+    J["description"] = J["description"] +"<br><br>"
+
+    J["wrangling_procedure"]= "Level_3 Data (file names: *.mirna.quantification.txt) download from TCGA DCC, log2(x+1) transformed, and processed at UCSC into cgData repository."
+
+    J["label"] = J["shortTitle"] 
+    J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
+    J["sample_type"]=["tumor"]
+    J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
+    J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]
+    J['domain']="TCGA"
+    J['tags']=["cancer"]+ TCGAUtil.tags[cancer]
+    J['owner']="TCGA"
+    J['gdata_tags'] =["transcription","miRNA"]
+    J["name"]="TCGA_"+cancer + "_miRNA"
+    oHandle = open(outfile+".json",'w')
+    oHandle.write( json.dumps( J, indent=-1 ) )
+    oHandle.close()
 
 def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataProducer,REALRUN,clean):
     garbage=[tmpDir]
@@ -136,6 +211,9 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
                 pattern ="mirna.quantification"
                 if string.find(file,pattern)!=-1 :
                     infile = rootDir+dataDir+"/"+file
+                    # stupid bcgsc file name with hg19 ---- ignored
+                    if string.find(file,".hg19.")!=-1:
+                        continue
                     # bcgsc stupid sample name in file name
                     if dataProducer=="British Columbia Cancer Agency TCGA genome characterization center":
                         sample = string.split(file,".")[0]
@@ -182,6 +260,9 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
                 pattern ="mirna.quantification"
                 if string.find(file,pattern)!=-1:
                     infile = rootDir+dataDir+"/"+file
+                    # stupid bcgsc file name with hg19 ---- ignored
+                    if string.find(file,".hg19.")!=-1:
+                        continue
                     # bcgsc stupid sample name in file name
                     if dataProducer=="British Columbia Cancer Agency TCGA genome characterization center":
                         sample = string.split(file,".")[0]
@@ -259,8 +340,6 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     J["version"]= datetime.date.today().isoformat()
     J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
     J["gain"]=1.0
-    J["min"]=-1.0
-    J["max"]=1.0
     J["expressionDataSpace"]="log"
 
     if PATHPATTERN in ["IlluminaHiSeq_miRNASeq"]:
@@ -270,13 +349,13 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
 
     #change description
     J["description"]=""
-    J[":probeMap"]= "miRBase_miRNA_primary_transcript_hg18"  
+    J[":probeMap"]= "miRBase_primary_transcript_hg18"
     J[":dataSubType"]="miRNA expression RNAseq"
     J["shortTitle"]= cancer +" "+"miRNA expression ("+suffix+")"
     J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") miRNA expression by RNAseq ("+suffix+")"
     J["description"]= J["description"] +"TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") miRNA expression by RNAseq.<br><br>"+ \
         " The miRNA expression profile was measured experimentally using the "+platformTitle+" by the "+ dataProducer +"." + \
-        " Level 3 interpreted level data was downloaded from TCGA data coordination center. This dataset shows the miRNA transcription estimates in reads per million miRNA mapped."
+        " Level 3 interpreted level data was downloaded from TCGA data coordination center. This dataset shows the miRNA transcription estimates in log2(reads per million miRNA mapped)."
     J["description"] = J["description"] + " miRNA primary transcripts are mapped onto the human genome coordinates using UCSC cgData miRBase miRNA_primary_transcript probeMap."
 
     J["description"] = J["description"] +\
