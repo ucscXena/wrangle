@@ -199,7 +199,7 @@ default_mutation = {
     }
 
 tags ={
-    "FPPP":["Formalin-fixed paraffin-embedded","FFPE"],
+    "FPPP":["formalin-fixed paraffin-embedded","FFPE"],
     "LAML":[],
     "ACC":[],
     "BLCA":[],
@@ -238,6 +238,7 @@ tags ={
     "PCPG":[],
     "UCS":[],
     "UVM":[],
+    "THYM":[],
     "TGCT":[],
     "PANCAN":["non-small cell lung cancer","gastric cancer","pancancer"],
     "PANCAN12":["non-small cell lung cancer","pancancer"]

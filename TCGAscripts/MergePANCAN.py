@@ -8,6 +8,7 @@ from ClinicalFeatureNew import *
 from CGDataUtil import *
 from CGDataLib import *
 import  TCGAUtil
+import mergeGenomicMatrixFiles
 
 def RNAseq (dir,outDir, cancer,flog,REALRUN):
     if cancer !="PANCAN":
@@ -17,13 +18,26 @@ def RNAseq (dir,outDir, cancer,flog,REALRUN):
     doAve=1
     processRNA (filename, dir,outDir, cancer,flog, REALRUN)
 
-def Mutation (dir,outDir, cancer,flog,REALRUN):
+def HiSeqV2  ( dir, outDir, cancer,flog,REALRUN):
     if cancer !="PANCAN":
         return
     print cancer, sys._getframe().f_code.co_name
-    filename = "mutation"
-    doAve=0
-    processMutation (filename, dir,outDir, cancer,flog, REALRUN)
+    filename = "HiSeqV2"
+    processMatrix (filename, dir,outDir, cancer,flog, REALRUN)
+
+def miRNA  ( dir, outDir, cancer,flog,REALRUN):
+    if cancer !="PANCAN":
+        return
+    print cancer, sys._getframe().f_code.co_name
+    filename = "miRNA"
+    processMatrix (filename, dir,outDir, cancer,flog, REALRUN)
+
+def Gistic2 (dir,outDir, cancer,flog,REALRUN):
+    if cancer !="PANCAN":
+        return
+    print cancer, sys._getframe().f_code.co_name
+    filename = "Gistic2_CopyNumber_Gistic2_all_data_by_genes"
+    processMatrix (filename, dir,outDir, cancer,flog, REALRUN)
 
 
 def clin (dir,outDir, cancer,flog,REALRUN):
@@ -151,9 +165,8 @@ def processClin (filename, dir,outDir, CANCER,flog, REALRUN):
         fout.write(json.dumps(J,indent=-1))
         fout.close()
         
-def processMutation (filename, dir,outDir, cancer,flog, REALRUN):
-    inFiles ={}
-    outFiles={}
+def processFiles (filename, dir,outDir, cancer ):
+    inFiles =[]
 
     for cancer in os.listdir(outDir):
         if cancer in ["LUNG","COADREAD","PANCAN"]:
@@ -162,102 +175,106 @@ def processMutation (filename, dir,outDir, cancer,flog, REALRUN):
         cancerDir= outDir+ cancer
         cancerFile = cancerDir+"/"+filename
         if not os.path.exists(cancerFile):
-            continue
+            if filename =="miRNA":
+                cancerFile = cancerDir+"/"+filename+"_HiSeq"
+                if not os.path.exists(cancerFile):
+                    cancerFile = cancerDir+"/"+filename+"_GA"
+                    if not os.path.exists(cancerFile):
+                        continue
+                    else:
+                        inFiles.append(cancerFile)
+                else:
+                    inFiles.append(cancerFile)
+            else:
+                continue
 
-        inFiles[cancer]= cancerFile
+        inFiles.append(cancerFile)
+    return inFiles
+
+def processMatrix (filename, dir,outDir, cancer,flog, REALRUN):
+    inFiles =processFiles (filename, dir,outDir, cancer )
 
     cancer="PANCAN"
-    outFiles[cancer]= outDir+"/"+cancer+"/"+filename+"_PANCAN" 
+    outfile = outDir +cancer + "/"+filename
 
-    keys = inFiles.keys()
-    
     if REALRUN:
         #header:
-        foutPANCAN= open(outFiles["PANCAN"],"w")
+        foutPANCAN= open(outfile,"w")
         
-        for i in range (0,len(keys)):
-            fin = open(inFiles[keys[i]],'r')
-            inFiles[keys[i]] =fin
-            line = fin.readline()
+        genes={}
+        samples={}
+        dataMatrix=[]
 
-            if i==0:
-                foutPANCAN.write(string.join(string.split(line[:-1],"\t"),"\t"))
-            else:
-                foutPANCAN.write("\t"+string.join(string.split(line[:-1],"\t")[1:],"\t") )
-        foutPANCAN.write("\n")
-                
-        #data normalization per gene
-        while 1:
-            end=0
-            for i in range (0,len(keys)):
-                fin = inFiles[keys[i]]
-                line = fin.readline()
-                if line =="":
-                    end=1
-                    inFiles[keys[i]] =fin.name
-                    continue
-                
-                data = string.split(line[:-1],"\t")
-                if i==0:
-                    foutPANCAN.write(data[0])
-                for i in range(1,len(data)):
-                    foutPANCAN.write("\t"+data[i])
-
-            if end:
-                break
-
-            foutPANCAN.write("\n")
+        for infile in inFiles:
+            mergeGenomicMatrixFiles.header (samples, infile)
+        for infile in inFiles:
+            mergeGenomicMatrixFiles.process(genes, samples, dataMatrix, infile)
+        mergeGenomicMatrixFiles.outputMatrix(dataMatrix, samples, genes, outfile)                
 
     J={}
-    fin= open(inFiles[keys[0]]+".json","r")
-    J= json.loads(fin.read())
-    fin.close()
+    fout = open(outfile+".json","w")
 
-    cancer="PANCAN"
-    fout= open(outFiles[cancer]+".json","w")
-    
-    if filename=="mutation":
-        mutationJSON(J,cancer)
-
-    J['dataProducer']="UCSC Cancer Browser team"
+    cancer="PANCAN"    
+    if filename=="Gistic2_CopyNumber_Gistic2_all_data_by_genes":
+        gisticJSON(J,cancer)
+    elif filename=="HiSeqV2":
+        HiSeqV2JSON(J,cancer)
+    elif filename=="miRNA":
+        miRNAJSON(J,cancer)
+ 
+    J['dataProducer']="UCSC Xena team"
     J["sample_type"]=["tumor"]
     J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]
     J['domain']="TCGA"
-    J['tags']=["cancer"] + TCGAUtil.tags[cancer]
+    J['tags']=["cancer"]+TCGAUtil.tags[cancer]
     J['owner']="TCGA"
     J[":sampleMap"]="TCGA."+cancer+".sampleMap"
     J["groupTitle"]= "TCGA "+TCGAUtil.cancerGroupTitle[cancer]
-
+    J["wrangling_procedure"]="Data is combined from all TCGA cohorts and deposited into UCSC Xena repository"
             
-    if cancer!="PANCAN":
-        J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
-        J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
-    else:
-        J["primary_disease"]="cancer"
-        J["anatomical_origin"]=""
-        origin =[]
-        for value in TCGAUtil.anatomical_origin.values():
-            if value =="":
-                continue
-            if value not in origin:
-                origin.append(value)
-        J["tags"]= J["tags"]+origin
+    J["primary_disease"]="cancer"
+    J["anatomical_origin"]=""
+    origin =[]
+    for value in TCGAUtil.anatomical_origin.values():
+        for data in value:
+            if data not in origin:
+                origin.append(data)
+    J["tags"]= J["tags"]+origin
         
     fout.write(json.dumps(J,indent=-1))
     fout.close()
     return
 
-def mutationJSON(J, cancer):
-    J['name']= "TCGA_PANCAN_mutation"
-    J["shortTitle"]= cancer +" mutation"
+def miRNAJSON(J,cancer):
+    J['name']= "TCGA_PANCAN_miRNA"
+    J["shortTitle"]= cancer +" miRNA expression"
     J["label"] = J["shortTitle"] 
-    J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+" somatic mutation"
-    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" somatic mutation. Red color (=1) represents non-silent somatic mutations (nonsense, missense, frame-shift indels, splice site mutations, stop codon readthroughs) are identified in the protein coding region of a gene, and white color (=0) means that none of the above mutation calls are made in this gene for the specific sample."
-    J["description"] = J["description"] +"<br><br>"
-    
-    J["wrangling_procedure"]="Data is combined from all TCGA cohorts and deposited into UCSC Xena repository"
+    J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+" miRNA expression (RNAseq)"
+    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" miRNA expression by RNAseq.<br>"
+    J["description"] = J["description"] +"miRNA expression measured using the IlluminaHiSeq and IllunimaGA technology. Data from all TCGA cohorts are combined to produce this dataset."
+    J["description"] = J["description"] +"<br><br>"    
     return
-    
+
+def HiSeqV2JSON (J, cancer):
+    J['name']= "TCGA_PANCAN_HiSeqV2"
+    J["shortTitle"]= cancer +" gene expression"
+    J["label"] = J["shortTitle"] 
+    J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+" gene expression (IlluminaHiSeq)"
+    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" gene expression by RNAseq.<br>"
+    J["description"] = J["description"] +"Gene expression measured using the IlluminaHiSeq technology. Data from all TCGA cohorts are combined to produce this dataset."
+    J["description"] = J["description"] +"<br><br>"    
+    return
+
+def gisticJSON(J,cancer):
+    J['name']= "TCGA_PANCAN_gistic2"
+    J["shortTitle"]= cancer +" gene-level copy number (gistic2)"
+    J["label"] = J["shortTitle"] 
+    J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+" gene-level copy number (gistic2)"
+    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" gene-level copy number variation (CNV) estimated using the GISTIC2 method.<br>"
+    J["description"] = J["description"] +"Copy number profile was measured experimentally using whole genome microarray at Broad TCGA genome characterization center. Subsequently, TCGA FIREHOSE pipeline applied GISTIC2 method to produce segmented CNV data, which was then mapped to genes to produce gene-level estimates. Gistic2 data from all TCGA cohorts are combined to produce this dataset. Reference to GISTIC2 method PMID:21527027."
+    J["description"] = J["description"] +"<br><br>"    
+    return
+
 def processRNA (filename, dir,outDir, cancer,flog, REALRUN):
     inFiles ={}
     outFiles={}
