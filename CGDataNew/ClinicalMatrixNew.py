@@ -32,6 +32,7 @@ class ClinicalMatrixNew():
         # load header validate header COLs <self.__maxColLen characters
         lineReader= csv.reader(readHandle,delimiter='\t', quotechar='"')
 
+
         while 1:
             data = lineReader.next()
             if lineReader.line_num in SkipLines:

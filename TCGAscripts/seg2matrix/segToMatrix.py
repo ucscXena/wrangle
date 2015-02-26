@@ -53,6 +53,7 @@ if __name__ == "__main__":
     
     handle = open(outbase + ".probeMap", "w")
     probeMapper = CGData.GeneMap.ProbeMapper('b')
+    handle.write("%s\t%s\t%s\t%s\t%s\t%s\n" % ("id", "gene","chrom","chromStart","chromEnd","strand"))
     for probe in m.probes:
         hits = []
         for hit in probeMapper.find_overlap( probe, refgene ):

@@ -70,14 +70,14 @@ def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN,  originCancer,REAL
     for file in os.listdir(dataDir):
         if file[-5:]==".html":
             continue
-        for pattern in ["clinical_sample","clinical_patient","clinical_follow_up","auxiliary","biospecimen_tumor_sample","biospecimen_sample"]:
+        for pattern in ["clinical_sample","clinical_patient","clinical_follow_up","auxiliary","biospecimen_slide","biospecimen_sample"]:
             if string.find(file,pattern)!=-1:
                 followUpV =0.0
                 cgFileName = string.replace(file,".txt","")
                 # the follow_up files has -vn.n version number
                 if cgFileName!= re.sub(r'_v[1-9]+.[0-9]+','',cgFileName):
                     followUpV = string.split(string.split(cgFileName,"follow_up_")[1], "_"+string.lower(cancer))[0][1:]
-                # the auxillary, biospecimen_tumor_sample file does not start with clin
+                # the auxillary file does not start with clin
                 if cgFileName[0:9] != "clinical_":
                     cgFileName="clinical_"+cgFileName
 
@@ -135,27 +135,28 @@ def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN,  originCancer,REAL
                         cleanupFollowUpFile(infile, ".tmp")
                         os.system("cp .tmp "+infile)
 
+                # slide file need to be remade due to the need to duplicate column as top or bottom 
+                if pattern=="biospecimen_slide":
+                    print file
+                    if cancer ==originCancer:
+                        cleanupSlideFile(infile, ".tmp")
+                        os.system("cp .tmp "+infile)
+
                 #clinicalMatrix
-                if pattern =="biospecimen_tumor_sample":
-                    FirstColAuto = True
-                else:
-                    FirstColAuto = False
+                FirstColAuto = False
                 AllowDupCol= True
                 if string.find(pattern,"biospecimen_")!=-1:
                     SkipLines =[2]
                 else:
                     SkipLines =[1,3]
                 
+                if os.path.getsize(infile) ==0:
+                    continue
+
                 clinMatrix = ClinicalMatrixNew(infile, "foo", FirstColAuto, None, SkipLines, AllowDupCol)
 
                 clinMatrix.removeCols(["ethnicity","race","jewish_origin","patient_id"])
 
-                if pattern =="biospecimen_tumor_sample":
-                    clinMatrix.removeCols(["vial_number"])
-                    #replace bcr_sample_uuid with barcode
-                    mapDic= TCGAUtil.uuid_Sample_all()
-                    uuid_2_barcode (clinMatrix,"bcr_sample_uuid",mapDic,flog)
-                    
                 if pattern =="clinical_sample" or pattern=="biospecimen_sample":
                     if "sample_type" in clinMatrix.getCOLs():
                         add_col_PseudoSample (clinMatrix,"sample_type")
@@ -201,14 +202,8 @@ def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN,  originCancer,REAL
                 clinMatrix.replaceValue("DEAD","DECEASED") #stupid BCR
                 clinMatrix.replaceValue("dead","DECEASED") #stupid BCR
 
-                #if cancer != originCancer:
-                #    clinMatrix.addOneColWithSameValue("cohort",originCancer)
-                
                 oHandle = open(outfile,"w")
-                if pattern =="biospecimen_tumor_sample":
-                    clinMatrix.storeSkip1stCol(oHandle, validation=True)
-                else:
-                    clinMatrix.store(oHandle, validation=True)
+                clinMatrix.store(oHandle, validation=True)
                 oHandle.close()
 
                 #clinicalFeature
@@ -254,7 +249,7 @@ def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN,  originCancer,REAL
                             fout.write(feature+"\tpriority\t"+str(priority)+"\n")
                             fout.write(feature+"\tvisibility\ton\n")
                             
-                    if feature in ["gender","age_at_initial_pathologic_diagnosis","days_to_last_followup","days_to_last_known_alive","sample_type","mononucleotide_and_dinucleotide_marker_panel_analysis_status","tumor_necrosis_percent","tumor_nuclei_percent"]:
+                    if feature in ["gender","age_at_initial_pathologic_diagnosis","days_to_last_followup","days_to_last_known_alive","sample_type","mononucleotide_and_dinucleotide_marker_panel_analysis_status","percent_stromal_cells_BOTTOM","percent_tumor_nuclei_BOTTOM"]:
                         fout.write(feature+"\tvisibility\ton\n")
                 fout.close()
 
@@ -284,11 +279,11 @@ def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN,  originCancer,REAL
                         suffix = "clinAuxiliary"+PATHPATTERN+originCancer
                     else:
                         suffix = "clinAuxiliary"+PATHPATTERN
-                if pattern =="biospecimen_tumor_sample":
+                if pattern =="biospecimen_slide":
                     if cancer != originCancer:
-                        suffix = "clinTumorSample"+PATHPATTERN+originCancer
+                        suffix = "bioSlide"+PATHPATTERN+originCancer
                     else:
-                        suffix = "clinTumorSample"+PATHPATTERN
+                        suffix = "bioSlide"+PATHPATTERN
                 if  pattern=="biospecimen_sample":
                     if cancer != originCancer:
                         suffix = "bioSample"+PATHPATTERN+originCancer
@@ -322,8 +317,6 @@ def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN,  originCancer,REAL
                         J["upToDate"]=str(followUpV)+"_"+ originCancer  #"Yes"
                     else:
                         J["upToDate"]=str(followUpV)  #"Yes"
-                if pattern =="biospecimen_tumor_sample":
-                    J["outOfDate"]="Yes"
                 oHandle.write( json.dumps( J, indent=-1 ) )
                 oHandle.close()
 
@@ -336,6 +329,84 @@ def cleanGarbage(garbageDirs):
     for dir in garbageDirs:
         os.system("rm -rf "+dir+"*")
     return
+
+def cleanupSlideFile(infile, outfile):
+    fin = open(infile,'U')
+    fout= open(outfile,'w')
+
+    section_location_col =-1
+    keepCols=[]
+    section_location=[]
+    header =string.split(string.strip(fin.readline()),"\t")
+    for i in range(1, len(header)):
+        if header[i] =="section_location":
+            section_location_col = i
+        if header[i][0:7]== "percent":
+            keepCols.append(i)
+
+    if section_location_col ==-1 or len(keepCols)==0:
+        print "slide file is not what we expected, skip"
+        fin.close()
+        fout.close()
+        return
+
+    #get information on section location
+    for line in fin.readlines():
+        data = string.split(line[:-1],'\t')
+        try:
+            if data[section_location_col] !="" and data[section_location_col] not in section_location:
+                section_location.append(data[section_location_col])
+        except:
+            pass
+
+    fin.close()
+    
+    fin = open(infile,'U')
+    fin.readline()
+    storedData={}
+    #content
+    for line in fin.readlines():
+        data = string.split(line[:-1],'\t')
+        sample = data[0]
+        if sample not in storedData:
+            storedData[sample]=[]
+            for i in keepCols:
+                for location in section_location:
+                    storedData[sample].append("")
+
+        try:
+            if data[section_location_col] !="":
+                value_location = data[section_location_col]
+                k=0
+                for i in keepCols:
+                    for location in section_location:
+                        if value_location == location:
+                            value = data[i]
+                            storedData[sample][k]= value
+                        k= k+1
+            else:
+                pass
+        except:
+            pass
+    fin.close()
+
+    #make new file
+    fin = open(infile,'U')
+    #write header
+    header =string.split(string.strip(fin.readline()),"\t")
+    fout.write(header[0])
+    for i in keepCols:
+        for location in section_location:
+            key = header[i]+"_"+ location
+            fout.write("\t"+key)
+    fout.write("\n")
+    #write content
+    for sample in storedData:
+        fout.write(sample)
+        for value in storedData[sample]:
+            fout.write("\t"+value)
+        fout.write("\n")
+    fout.close()
 
 def cleanupFollowUpFile(infile, outfile):
     fin = open(infile,'U')

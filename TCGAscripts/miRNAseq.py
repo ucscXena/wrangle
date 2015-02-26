@@ -375,7 +375,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     J['gdata_tags'] =["transcription","miRNA"]
     
     #change cgData
-    J["name"]="TCGA_"+cancer + namesuffix
+    J["name"]="TCGA_"+cancer + "_"+namesuffix
     name = trackName_fix(J['name'])
     if name ==False:
         message = "bad object name, need fix otherwise break loader, too long "+J["name"]

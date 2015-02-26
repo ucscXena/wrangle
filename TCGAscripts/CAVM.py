@@ -33,23 +33,34 @@ def CAVMid (dir, outDir, cancer,log, REALRUN):
         sMap =SampleMapNew(None,map)
         for name in missingMaps[map]:
             samples =[]
-            intDic={}
+            intDic={}#keyed on CAVMid
+            sampleDic={} #keyd on original sample id
             obj=bookDic[name]
-            if obj['type']=="clinicalMatrix":
+            print obj
+            if obj['type'] in ["clinicalMatrix","mutationVector"]:
                 if REALRUN ==-1:
                     continue
-                outfile = outDir +os.path.basename(obj['path'])
+
                 fin = open(obj['path'],'r')
-                fout = open(outfile,'w')
-                fout.write(fin.readline())
-                samples =[]
+                fin.readline()
                 for line in fin.readlines():
                     sample =string.split(line,"\t")[0]
                     if sample not in samples and sample !="":
                         samples.append(sample)
+                buildSampleDic (samples, sMap, intDic, sampleDic, aliquote_dic)
+
+                outfile = outDir +os.path.basename(obj['path'])
+                fin = open(obj['path'],'r')
+                fout = open(outfile,'w')
+                fout.write(fin.readline())
+                for line in fin.readlines():
+                    data =string.split(line,"\t")
+                    sample =data[0]
+                    try:
+                        fout.write(sampleDic[sample]+"\t")
+                        fout.write(string.join(data[1:],"\t"))
+                    except:
                         fout.write(line)
-                    else:
-                        print sample, obj['path']
                 fout.close()
                 
                 os.system("cp "+obj['path']+".json "+outfile+".json")
@@ -79,47 +90,50 @@ def CAVMid (dir, outDir, cancer,log, REALRUN):
 
                 if REALRUN !=1:
                     continue
-                          
-                for sample in samples:
-                    #TCGA uuid handling
-                    uuid=sample
-                    if sample[0:4]!="TCGA": 
-                        if aliquote_dic.has_key(string.lower(sample)):
-                            TCGAbarcode = aliquote_dic[string.lower(sample)]
-                        else:
-                            print sample
-                        parent = TCGAbarcode
-                        child = sample
-                        sMap.addLink(parent,child)
-                        sample = parent
-
-                    #do TCGA barcode trick
-                    parts= string.split(sample,"-")
-                    parent = string.join(parts[0:3],"-")
-                    
-                    #parts[3]
-                    if len(parts)>3 and len(parts[3])==3:
-                        child=parent +"-" +parts[3][0:2]
-                        sMap.addLink(parent,child)
-                        parent=child
-                        child=string.join(parts[0:4],"-")
-                        sMap.addLink(parent,child)
-                        parent=child
                 
-                    for i in range (4,len(parts)):
-                        child = parent +"-" +parts[i]
-                        #add parent child
-                        sMap.addLink(parent,child)
-                        parent = child
-                
-                    intID= TCGAUtil.barcode_IntegrationId(sample)
-                    if intDic.has_key(intID):
-                        intDic[intID].append(uuid)
-                    else:
-                        intDic[intID]=[uuid]
-
+                buildSampleDic (samples, sMap, intDic, sampleDic,aliquote_dic)
                 process(obj['path'], outfile, samples, intDic)        
-            
+
+def buildSampleDic (samples, sMap, intDic, sampleDic,aliquote_dic):
+    for sample in samples:
+        #TCGA uuid handling
+        uuid=sample
+        if sample[0:4]!="TCGA": 
+            if aliquote_dic.has_key(string.lower(sample)):
+                TCGAbarcode = aliquote_dic[string.lower(sample)]
+            else:
+                print sample
+            parent = TCGAbarcode
+            child = sample
+            sMap.addLink(parent,child)
+            sample = parent
+                
+        #do TCGA barcode trick
+        parts= string.split(sample,"-")
+        parent = string.join(parts[0:3],"-")
+                    
+        #parts[3]
+        if len(parts)>3 and len(parts[3])==3:
+            child=parent +"-" +parts[3][0:2]
+            sMap.addLink(parent,child)
+            parent=child
+            child=string.join(parts[0:4],"-")
+            sMap.addLink(parent,child)
+            parent=child
+                
+        for i in range (4,len(parts)):
+            child = parent +"-" +parts[i]
+            #add parent child
+            sMap.addLink(parent,child)
+            parent = child
+                
+        intID= TCGAUtil.barcode_IntegrationId(sample)
+        if intDic.has_key(intID):
+            intDic[intID].append(uuid)
+        else:
+            intDic[intID]=[uuid]
+        sampleDic[uuid]=intID
+
 def process(file, outfile,samples, intDic):
     print file
 

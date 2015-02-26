@@ -5,7 +5,7 @@ os.sys.path.insert(0, os.path.dirname(__file__)+"../CGDataNew")
 
 from downloadBundle import *
 
-PROBEMAP = "/inside/home/jzhu/cgDataJing/scripts/data_flatten/probeMap/"
+PROBEMAP = "/inside/home/jzhu/cgDataJing/scripts/data_flatten/public/probeMap/"
 
 parser = optparse.OptionParser()
 parser.add_option("--inDir", action="store", type="string", dest="inDir")
