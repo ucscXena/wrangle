@@ -13,6 +13,12 @@ tmpDir = "tmpTry/"
 def CopyNumber_Gistic2 (inDir, outDir, cancer,flog,REALRUN):
     if string.find(string.upper(cancer),"PANCAN")!=-1:
         return
+    if string.find(string.upper(cancer),"KIPAN")!=-1:
+        return
+    if string.find(string.upper(cancer),"GBMLGG")!=-1:
+        return
+    if string.find(string.upper(cancer),"STES")!=-1:
+        return
         
     garbage=[tmpDir]
     if os.path.exists( tmpDir ):
@@ -97,10 +103,9 @@ def CopyNumber_Gistic2 (inDir, outDir, cancer,flog,REALRUN):
             namesuffix="gistic2thd"
         
         J["cgDataVersion"]=1
-        J["shortTitle"]=cancer +" copy number ("+suffix+")"
-        J["label"] = J["shortTitle"] 
+        J["label"]= "copy number ("+suffix+")"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") copy number "+suffix+" estimate"
-        J[":dataSubType"]="copy number"
+        J["dataSubType"]="copy number (gene-level)"
         J["redistribution"]= True
         J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
         J["dataProducer"]= "TCGA FIREHOSE pipeline"        
@@ -117,11 +122,6 @@ def CopyNumber_Gistic2 (inDir, outDir, cancer,flog,REALRUN):
         J['owner']="TCGA"
         
         #change description
-        J["gain"]=0.5
-        J["min"]=-2
-        J["max"]=2
-        
-
         J["wrangling_procedure"]= "FIREHOSE data download from TCGA DCC, processed at UCSC into cgData repository"
                 
         if pattern=="all_data_by_genes":

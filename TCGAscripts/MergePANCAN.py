@@ -268,7 +268,7 @@ def processMutationData (filename, dir,outDir, cancer,flog, REALRUN):
     elif filename=="mutation_bcgsc":
         mutation_bcgscJSON(J,cancer,genelevel)
     commonJSON(J, cancer)
-
+    J["dataSubType"]="somatic mutation (SNPs and small INDELs)"
     fout.write(json.dumps(J,indent=-1))
     fout.close()
 
@@ -278,7 +278,7 @@ def processMutationData (filename, dir,outDir, cancer,flog, REALRUN):
 
     cancer="PANCAN"    
     J["type"]= "genomicMatrix"
-    genelevel = " gene-level"
+    genelevel = "gene-level"
     if filename=="mutation_broad":
         mutation_broadJSON(J,cancer,genelevel)
     elif filename=="mutation_bcm":
@@ -288,7 +288,7 @@ def processMutationData (filename, dir,outDir, cancer,flog, REALRUN):
     elif filename=="mutation_bcgsc":
         mutation_bcgscJSON(J,cancer,genelevel)
     J[":probeMap"]="hugo"
-    J[":dataSubType"]="somatic mutation"
+    J["dataSubType"]="somatic non-silent mutation (gene-level)"
     commonJSON(J, cancer)
 
     fout.write(json.dumps(J,indent=-1))
@@ -359,15 +359,14 @@ def commonJSON(J, cancer):
 
 def mutation_bcgscJSON(J,cancer,genelevel):
     J['name']= "TCGA_PANCAN_mutation_bcgsc"+string.strip(genelevel).replace("-","")
-    J["shortTitle"]= cancer +genelevel+" mutation (bcgsc)"
-    J["label"] = J["shortTitle"] 
+    J["label"]= "somatic "+genelevel +"mutation (bcgsc)"
     J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+genelevel+" nonsilent somatic mutation (bcgsc)"
     J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" somatic mutation data. The calls are generated at Michael Smith Genome Sciences Centre (British Columbia Genome Sciences Centre, BCGSC) using the BCGSC pipeline method. BCGSC's calls from various TCGA cohorts are combined to produce this dataset."
     J["description"] = J["description"] +"<br><br>"    
 
 def mutation_ucsc_vcfJSON(J,cancer,genelevel):
     J['name']= "TCGA_PANCAN_mutation_ucsc_vcf"+string.strip(genelevel).replace("-","")
-    J["shortTitle"]= cancer +genelevel+" mutation (ucsc automated vcf)"
+    J["shortTitle"]= "somatic "+genelevel +"mutation (ucsc automated vcf)"
     J["label"] = J["shortTitle"] 
     J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+ genelevel+" nonsilent somatic mutation (ucsc)"
     J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" somatic mutation data.  The calls are generated at University of Californis Santa Cruz GDAC using the RADIA method. RADIA's calls (vcfs) from various TCGA cohorts are combined to produce this dataset. Reference to RADIA: PMID: 25405470."
@@ -375,7 +374,7 @@ def mutation_ucsc_vcfJSON(J,cancer,genelevel):
 
 def mutation_bcmJSON(J,cancer,genelevel):
     J['name']= "TCGA_PANCAN_mutation_bcm"+string.strip(genelevel).replace("-","")
-    J["shortTitle"]= cancer + genelevel+ " mutation (bcm)"
+    J["shortTitle"]= "somatic "+ genelevel+ "mutation (bcm)"
     J["label"] = J["shortTitle"] 
     J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+ genelevel+ " nonsilent somatic mutation (bcm)"
     J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" somatic mutation data.  The calls are generated at Baylor College of Medicine Human Genome Sequencing Center using the Baylor pipeline method. Baylor's calls from various TCGA cohorts are combined to produce this dataset."
@@ -383,7 +382,7 @@ def mutation_bcmJSON(J,cancer,genelevel):
 
 def mutation_broadJSON(J,cancer,genelevel):
     J['name']= "TCGA_PANCAN_mutation_broad"+string.strip(genelevel).replace("-","")
-    J["shortTitle"]= cancer + genelevel+ " mutation (broad)"
+    J["shortTitle"]= "somatic "+ genelevel+ "mutation (broad)"
     J["label"] = J["shortTitle"] 
     J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+ genelevel+" nonsilent somatic mutation (broad)"
     J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" somatic mutation data.  The calls are generated at Broad Institute Genome Sequencing Center using the MutDect method. MutDect calls from various TCGA cohorts are combined to produce this dataset."
@@ -391,40 +390,41 @@ def mutation_broadJSON(J,cancer,genelevel):
     
 def miRNAJSON(J,cancer):
     J['name']= "TCGA_PANCAN_miRNA"
-    J["shortTitle"]= cancer +" miRNA expression"
+    J["shortTitle"]= "miRNA expression"
     J["label"] = J["shortTitle"] 
     J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+" miRNA expression (RNAseq)"
     J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" miRNA expression by RNAseq.<br>"
     J["description"] = J["description"] +"miRNA expression measured using the IlluminaHiSeq and IllunimaGA technology. Data from all TCGA cohorts are combined to produce this dataset."
     J["description"] = J["description"] +"<br><br>"    
     J[":probeMap"]= "miRBase_primary_transcript_hg18"
-    J[":dataSubType"]="miRNA expression RNAseq"
+    J["dataSubType"]="miRNA expression RNAseq"
     J["colNormalization"]=True
     return
 
 def HiSeqV2JSON (J, cancer):
     J['name']= "HiSeqV2_PANCAN"
-    J["shortTitle"]= cancer +" gene expression"
+    J["shortTitle"]= "gene expression"
     J["label"] = J["shortTitle"] 
     J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+" gene expression (IlluminaHiSeq)"
     J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" gene expression by RNAseq.<br>"
-    J["description"] = J["description"] +"Gene expression measured using the IlluminaHiSeq technology. Data from all TCGA cohorts are combined to produce this dataset."
+    J["description"] = J["description"] +"Gene expression measured using the IlluminaHiSeq technology. Data from all TCGA cohorts are combined to produce this dataset. Values are log2(x+1) transformed RSEM gene-level expression estimations."
     J["description"] = J["description"] +"<br><br>"    
     J[":probeMap"]="hugo"
-    J[":dataSubType"]="gene expression RNAseq"
+    J["dataSubType"]="gene expression RNAseq"
     J["colNormalization"]=True
+    J["wrangling_procedure"] = "Level_3 data (file names: *.rsem.genes.normalized_results) are downloaded from each cancer project at TCGA DCC, log2(x+1) transformed, and then combined at UCSC into Xena repository."
     return
 
 def gisticJSON(J,cancer):
     J['name']= "TCGA_PANCAN_gistic2"
-    J["shortTitle"]= cancer +" gene-level copy number (gistic2)"
+    J["shortTitle"]= "gene-level copy number (gistic2)"
     J["label"] = J["shortTitle"] 
     J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+" gene-level copy number (gistic2)"
     J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" gene-level copy number variation (CNV) estimated using the GISTIC2 method.<br>"
     J["description"] = J["description"] +"Copy number profile was measured experimentally using whole genome microarray at Broad TCGA genome characterization center. Subsequently, TCGA FIREHOSE pipeline applied GISTIC2 method to produce segmented CNV data, which was then mapped to genes to produce gene-level estimates. Gistic2 data from all TCGA cohorts are combined to produce this dataset. Reference to GISTIC2 method PMID:21527027."
     J["description"] = J["description"] +"<br><br>"    
     J[":probeMap"]="hugo"
-    J[":dataSubType"]="copy number"
+    J["dataSubType"]="copy number"
     return
 
 def processRNA (filename, dir,outDir, cancer,flog, REALRUN):
@@ -547,12 +547,9 @@ def processRNA (filename, dir,outDir, cancer,flog, REALRUN):
         J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression by RNAseq (IlluminaHiSeq), pancan normalized"
         J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression by RNAseq, mean-normalized across all TCGA cohorts.<br><br>"+ \
                           " The gene expression profile was measured experimentally using the "+J['PLATFORM']+" by the "+ J['dataProducer'] +"." + \
-                          " This dataset shows the mean-normalized gene-level transcription estimates."
-        J["wrangling_procedure"]="Level_3 Data (file names: *.rsem.genes.normalized_results) download from TCGA DCC, log2(x+1) transformed, normalized across all TCGA cancer cohorts, and deposited into UCSC Xena repository"
+                          " This dataset shows the mean-normalized (across all TCGA cancer cohorts) gene-level transcription estimates."
+        J["wrangling_procedure"]="Level_3 data (file names: *.rsem.genes.normalized_results) are download from TCGA DCC, log2(x+1) transformed, normalized across all TCGA cancer cohorts, and deposited into UCSC Xena repository"
         J['tags']=["cancer"] + TCGAUtil.tags[cancer]
-        J['gain'] = 0.5
-        J['min'] = -2
-        J['max'] = 2
 
         if cancer!="PANCAN":
             J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]

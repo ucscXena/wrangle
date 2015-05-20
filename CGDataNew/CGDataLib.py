@@ -44,7 +44,8 @@ def cgWalk(dir, ignore):
                     if J['type']=="cohort":
                         continue
                     print "data file does not exist", root+"/"+base
-                    return 0
+                    continue
+                    #return 0
 
             #json checking if valid
             if bookDic.has_key(name):

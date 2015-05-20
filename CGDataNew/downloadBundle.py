@@ -50,10 +50,10 @@ def downloadBundle(inDir, PROBEMAP, testVersionOnly):
     if secureDir in ["probemap","common"]:
         return 0
     #dir related to security    
-    if secureDir not in ["gray","ispy","pancreas","public","su2c","fake-tcga","lincs"]: 
+    if secureDir not in ["gray","ispy","pancreas","public","su2c","target","lincs"]: 
         print "wrong security dir ", secureDir
         return 1
-    if secureDir =="fake-tcga":
+    if secureDir =="target":
         secureDir = "tcga"
 
     bookDic={}

@@ -126,10 +126,9 @@ def AgilentG4502A (inDir, outDir, cancer,flog,PATHPATTERN,REALRUN):
     #stable
     suffix=PATHPATTERN
     J["cgDataVersion"]=1
-    J["shortTitle"]=cancer +" gene expression ("+suffix+")"
-    J["label"] = J["shortTitle"] 
+    J["label"]="gene expression ("+suffix+")"
     J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression ("+suffix+" array)"
-    J[":dataSubType"]="gene expression array"
+    J["dataSubType"]="gene expression array"
     J["redistribution"]= True
     J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
     #J["priority"]= TCGAUtil.browserPriority[cancer]
@@ -150,9 +149,6 @@ def AgilentG4502A (inDir, outDir, cancer,flog,PATHPATTERN,REALRUN):
     J['gdata_tags'] =["transcription"]
     
     #change description
-    J["gain"]=1.0
-    J["min"]=-1.0
-    J["max"]=1.0
     J["colNormalization"]=True    
     J["PLATFORM"]= suffix
     J["wrangling_procedure"]= "Level_3 Data download from TCGA DCC, processed at UCSC into cgData repository"

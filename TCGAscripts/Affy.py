@@ -152,10 +152,9 @@ def Affy (inDir, outDir, cancer,flog,REALRUN):
     #stable
     suffix="AffyU133a"
     J["cgDataVersion"]=1
-    J["shortTitle"]=cancer +" gene expression ("+suffix+")"
-    J["label"] = J["shortTitle"]
+    J["label"]="gene expression ("+suffix+")"
     J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression ("+suffix+" array)"
-    J[":dataSubType"]="gene expression array"
+    J["dataSubType"]="gene expression array"
     J["expressionDataSpace"] = "log", 
     J["redistribution"]= True
     J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
@@ -177,9 +176,6 @@ def Affy (inDir, outDir, cancer,flog,REALRUN):
     J['gdata_tags'] =["transcription"]
     
     #change description
-    J["gain"]=1.0
-    J["min"]=-1.0
-    J["max"]=1.0
     J["colNormalization"]=True
     J["PLATFORM"]= suffix
     J["wrangling_procedure"]= "Level_3 Data download from TCGA DCC, no data transformation is carried out."

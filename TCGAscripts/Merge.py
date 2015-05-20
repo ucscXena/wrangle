@@ -98,14 +98,13 @@ def process (outDir, cancer, c1, c2, file, REALRUN,type):
     J={}
     iHandle =open(c1file+".json","r")
     Jinput= json.loads(iHandle.read())
-    J[":dataSubType"]=  Jinput[":dataSubType"]
+    print c1file
+    J["dataSubType"]=  Jinput["dataSubType"]
     J["version"]=  Jinput["version"]
     J["type"]=  Jinput["type"]
-    J["cgDataVersion"]=     Jinput["cgDataVersion"]
-    s= Jinput["shortTitle"]
+    s= Jinput["label"]
     s = string.replace(s,c1,cancer)
-    J["shortTitle"]= s
-    J["label"] = J["shortTitle"] 
+    J["label"]= s
     if J["type"] not in ["genomicSegment","mutationVector","clinicalMatrix"]:
         J[":probeMap"]=Jinput[":probeMap"]
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
@@ -118,8 +117,6 @@ def process (outDir, cancer, c1, c2, file, REALRUN,type):
 
     if Jinput.has_key("gdata_tags"):
         J["gdata_tags"]= Jinput["gdata_tags"]
-    if Jinput.has_key("gain"):
-        J["gain"]= Jinput["gain"]
     if Jinput.has_key("min"):
         J["min"]= Jinput["min"]
     if Jinput.has_key("max"):
