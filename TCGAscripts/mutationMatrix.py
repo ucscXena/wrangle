@@ -61,7 +61,7 @@ def mutationMatrix (inDir, outDir, cancer,flog,REALRUN):
     J={}
     #stable
     J["cgDataVersion"]=1
-    J[":dataSubType"]="somatic mutation"
+    J["dataSubType"]="somatic non-silent mutation (gene-level)"
     J["redistribution"]= True
     J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
     J["dataProducer"]= dataProducer
@@ -84,7 +84,7 @@ def mutationMatrix (inDir, outDir, cancer,flog,REALRUN):
     if cancer not in ["PANCAN12","PANCAN"]:
         J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
         J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
-        J["shortTitle"]= cancer +" gene-level mutation (pancan awg)"
+        J["shortTitle"]= "gene-level non-silent mutation (pancan awg)"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene-level non-silent somatic mutation (pancan awg)"
 
     else:
@@ -92,14 +92,14 @@ def mutationMatrix (inDir, outDir, cancer,flog,REALRUN):
         J["anatomical_origin"]=""
        
         if cancer =="PANCAN12":
-            J["shortTitle"]= "PANCAN AWG gene-level mutation (12 cohorts)"
+            J["shortTitle"]= "PANCAN AWG gene-level non-silent mutation (12 cohorts)"
             J["longTitle"]="TCGA PANCAN AWG (12) gene-level non-silent somatic mutation (12 cohorts)"
             J["citation"] = "Cell 2014 http://dx.doi.org/10.1016/j.cell.2014.06.049"
             J["articleTitle"]= "Multi-platform analysis of 12 cancer types reveals molecular classification within and across tissues-of-origin"
             J["dataProducer"]= "Hoadley, K.M., Yau, C., Wolf, D.M., et al. and TCGA PANCAN AWG"
 
         if cancer =="PANCAN":
-            J["shortTitle"]= "PANCAN AWG gene-level mutation (19 cohorts)"
+            J["shortTitle"]= "PANCAN AWG gene-level non-silent mutation (19 cohorts)"
             J["longTitle"]="TCGA PANCAN AWG gene-level non-silent somatic mutation (19 cohorts)"
 
         J["tags"]=["PANCAN12"]

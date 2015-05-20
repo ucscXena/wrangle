@@ -29,6 +29,20 @@ def unc_mixed_dnaseq_cont_automated (inDir, outDir, cancer,flog,REALRUN):
     namesuffix = "mutation_unc"
     mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
+#vcf protected germline
+def germline_ucsc_illuminaga_dnaseq_cont (inDir, outDir, cancer,flog,REALRUN):
+    print cancer, sys._getframe().f_code.co_name
+    distribution= False
+    PATHPATTERN= "IlluminaGA_DNASeq_Cont."
+    PLATFORM = "IlluminaGA"
+    suffix     = "ucsc"
+    namesuffix = "germline_ucsc_vcf"
+    dataProducer = "University of Californis Santa Cruz GDAC"
+
+    clean=0
+    type ="germline"
+    radia.radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution, type)
+
 #vcf protected
 def ucsc_illuminaga_dnaseq_cont_automated (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
@@ -48,7 +62,8 @@ def ucsc_illuminaga_dnaseq_cont_automated (inDir, outDir, cancer,flog,REALRUN):
 
     clean=0
     namesuffix = "mutation_ucsc_vcf"
-    radia.radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
+    type ="somatic"
+    radia.radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution,type)
 
 #maf open
 def ucsc_illuminaga_dnaseq_automated (inDir, outDir, cancer,flog,REALRUN):
@@ -295,7 +310,7 @@ def bcgsc_illuminahiseq_dnaseq_curated (inDir, outDir, cancer,flog,REALRUN):
 
 def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM, distribution):
     garbage=[tmpDir]
-    os.system("rm -rf tmp_*") 
+    os.system("rm -rf tmp_*")
     if os.path.exists( tmpDir ):
         if clean:
             os.system("rm -rf "+tmpDir+"*")
@@ -310,14 +325,14 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
             pass
         else:
             continue
-        
+
         if not os.path.exists(inDir +file+".md5"):
             print "file has no matching .md5 throw out", file
             continue
-            
+
         #find lastest in each archive
         info = string.split(file,".")
-        archive = info [-5] 
+        archive = info [-5]
         release = int(info [-4])
 
         if not lastRelease.has_key(archive):
@@ -325,7 +340,7 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
         else:
             if lastRelease[archive]< release:
                 lastRelease[archive]=release
-                
+
 
     rootDir =""
     lastDate=None
@@ -342,7 +357,7 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
 
         #find the file that is the lastest release for the archive
         info = string.split(file,".")
-        archive = info [-5] 
+        archive = info [-5]
         release = int(info [-4])
 
         if release != lastRelease[archive]:
@@ -354,7 +369,7 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
             lastDate = newDate
         if lastDate < newDate:
             lastDate = newDate
-            
+
         if remoteDataDirExample =="":
             remoteDataDirExample = file[:-7]
 
@@ -362,9 +377,9 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
         if not clean:
             rootDir =tmpDir
         elif string.find(file,".tar.gz")!=-1 and REALRUN and clean:
-            os.system("tar -xzf "+inDir+file +" -C "+tmpDir) 
+            os.system("tar -xzf "+inDir+file +" -C "+tmpDir)
             rootDir =tmpDir
-            
+
     #make sure there is data
     if REALRUN and (rootDir =="" or not os.path.exists(rootDir)):
         print "ERROR expect data, but wrong dirpath", rootDir, cancer, __name__
@@ -376,11 +391,11 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
     if not os.path.exists( outDir +cancer+"/"):
         os.makedirs( outDir+cancer+"/" )
 
-    cgFileName= namesuffix 
+    cgFileName= namesuffix
 
     #data processing multiple dirs mode
     if REALRUN:
-        xena = outDir+cancer+"/"+cgFileName 
+        xena = outDir+cancer+"/"+cgFileName
         fout= open(xena,'w')
         fout.write("#"+string.join(["sample","chr","start","end","reference","alt","gene","effect","DNA_VAF","RNA_VAF","Amino_Acid_Change"],"\t")+"\n")
         for dataDir in os.listdir(rootDir):
@@ -394,17 +409,17 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
 
     if not os.path.exists(outDir+cancer+"/"+cgFileName):
         return
-    oHandle = open(outDir+cancer+"/"+cgFileName+".json","w")    
+    oHandle = open(outDir+cancer+"/"+cgFileName+".json","w")
     J={}
-    #stable    
+    #stable
     J["cgDataVersion"]=1
-    J[":dataSubType"]="somatic mutation"
+    J["dataSubType"]="somatic mutation (SNPs and small INDELs)"
     J["redistribution"]= distribution
     J["dataProducer"]= dataProducer
-    J["type"]= "mutationVector" 
+    J["type"]= "mutationVector"
     J["start_index"]=1
     J[":sampleMap"]="TCGA."+cancer+".sampleMap"
-    J["PLATFORM"]= PLATFORM 
+    J["PLATFORM"]= PLATFORM
     if string.find( dataProducer ,"Broad")!=-1:
         J["method"]= "MutDect"
     elif string.find( dataProducer ,"Baylor")!=-1:
@@ -429,18 +444,17 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
 
     #change description
     if string.find(PATHPATTERN, "curated")!=-1 :
-        J["shortTitle"]= cancer +" mutation ("+suffix+" curated)"
+        J["label"]= "somatic mutation SNPs and small INDELs ("+suffix+" curated)"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") nonsilent somatic mutation ("+suffix+" curated)"
     elif string.find(PATHPATTERN, "automated")!=-1 :
-        J["shortTitle"]= cancer +" mutation ("+suffix+" automated)"
+        J["label"]= "somatic mutation SNPs and small INDELs ("+suffix+" automated)"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") nonsilent somatic mutation ("+suffix+" automated)"
     else:
-        J["shortTitle"]= cancer +" mutation ("+suffix+")"
+        J["label"]= "somatic mutation SNPs and small INDELs ("+suffix+")"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") nonsilent somatic mutation ("+suffix+")"
 
     J["assembly"]="hg19"
     J["wholeGenome"]= True
-    J["label"] = J["shortTitle"] 
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
     J["sample_type"]=["tumor"]
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
@@ -461,15 +475,15 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
         flog.write(message+"\n")
         return
     else:
-        J["name"]=name        
-        
+        J["name"]=name
+
     oHandle.write( json.dumps( J, indent=-1 ) )
     oHandle.close()
     return
 
 def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataProducer,REALRUN, clean, PLATFORM, distribution):
     garbage=[tmpDir]
-    os.system("rm -rf tmp_*") 
+    os.system("rm -rf tmp_*")
     if os.path.exists( tmpDir ):
         if clean:
             os.system("rm -rf "+tmpDir+"*")
@@ -484,14 +498,14 @@ def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, data
             pass
         else:
             continue
-        
+
         if not os.path.exists(inDir +file+".md5"):
             print "file has no matching .md5 throw out", file
             continue
-            
+
         #find lastest in each archive
         info = string.split(file,".")
-        archive = info [-5] 
+        archive = info [-5]
         release = int(info [-4])
 
         if not lastRelease.has_key(archive):
@@ -499,7 +513,7 @@ def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, data
         else:
             if lastRelease[archive]< release:
                 lastRelease[archive]=release
-                
+
 
     rootDir =""
     lastDate=None
@@ -515,7 +529,7 @@ def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, data
 
         #find the file that is the lastest release for the archive
         info = string.split(file,".")
-        archive = info [-5] 
+        archive = info [-5]
         release = int(info [-4])
 
         if release != lastRelease[archive]:
@@ -527,7 +541,7 @@ def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, data
             lastDate = newDate
         if lastDate < newDate:
             lastDate = newDate
-            
+
         if remoteDataDirExample =="":
             remoteDataDirExample = file[:-7]
 
@@ -535,9 +549,9 @@ def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, data
         if not clean:
             rootDir =tmpDir
         elif string.find(file,".tar.gz")!=-1 and REALRUN and clean:
-            os.system("tar -xzf "+inDir+file +" -C "+tmpDir) 
+            os.system("tar -xzf "+inDir+file +" -C "+tmpDir)
             rootDir =tmpDir
-            
+
     #make sure there is data
     if REALRUN and (rootDir =="" or not os.path.exists(rootDir)):
         print "ERROR expect data, but wrong dirpath", rootDir, cancer, __name__
@@ -549,7 +563,7 @@ def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, data
     if not os.path.exists( outDir +cancer+"/"):
         os.makedirs( outDir+cancer+"/" )
 
-    cgFileName= namesuffix 
+    cgFileName= namesuffix
 
     #data processing multiple dirs mode
     if REALRUN:
@@ -579,18 +593,18 @@ def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, data
     if not os.path.exists(outDir+cancer+"/"+cgFileName):
         return
 
-    oHandle = open(outDir+cancer+"/"+cgFileName+".json","w")    
+    oHandle = open(outDir+cancer+"/"+cgFileName+".json","w")
     J={}
-    #stable    
+    #stable
     J["cgDataVersion"]=1
-    J[":dataSubType"]="somatic mutation"
+    J["dataSubType"]="somatic non-silent mutation (gene-level)"
     J["redistribution"]= distribution
     J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
     J["dataProducer"]= dataProducer
-    J["type"]= "genomicMatrix" 
+    J["type"]= "genomicMatrix"
     J[":sampleMap"]="TCGA."+cancer+".sampleMap"
     J[":probeMap"]= "hugo"
-    J["PLATFORM"]= PLATFORM 
+    J["PLATFORM"]= PLATFORM
     if string.find( dataProducer ,"Broad")!=-1:
         J["method"]= "MutDect"
     elif string.find( dataProducer ,"Baylor")!=-1:
@@ -612,22 +626,18 @@ def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, data
     J["version"]= datetime.date.today().isoformat()
     J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
     J["wrangling_procedure"] ="Download .maf file from TCGA DCC, processed into gene by sample matrix at UCSC, stored in the UCSC Xena repository"
-    J["gain"]=10
-    J["min"]= -1
-    J["max"]= 1
 
     #change
     if string.find(PATHPATTERN, "curated")!=-1 :
-        J["shortTitle"]= cancer +" gene-level mutation ("+suffix+" curated)"
+        J["label"]= "somatic gene-level non-silent mutation ("+suffix+" curated)"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene-level nonsilent somatic mutation ("+suffix+" curated)"
     elif string.find(PATHPATTERN, "automated")!=-1 :
-        J["shortTitle"]= cancer +" gene-level mutation ("+suffix+" automated)"
+        J["label"]= "somatic gene-level non-silent mutation ("+suffix+" automated)"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene-level nonsilent somatic mutation ("+suffix+" automated)"
     else:
-        J["shortTitle"]= cancer +" gene-level mutation ("+suffix+")"
+        J["label"]= "somatic gene-level non-silent mutation ("+suffix+")"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene-level nonsilent somatic mutation ("+suffix+")"
 
-    J["label"] = J["shortTitle"] 
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
     J["sample_type"]=["tumor"]
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
@@ -648,15 +658,15 @@ def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, data
         flog.write(message+"\n")
         return
     else:
-        J["name"]=name        
-        
+        J["name"]=name
+
     oHandle.write( json.dumps( J, indent=-1 ) )
     oHandle.close()
     return
 
 def process (file, allGenes, samples, genes, dic):
     fin =open(file, 'r')
-        
+
     header=""
     for line in fin.readlines():
         if line[0] == "#":
@@ -679,7 +689,7 @@ def process (file, allGenes, samples, genes, dic):
             continue
 
         gene = data[Hugo_Symbol]
-        
+
         if gene =="":
             continue
         try:
@@ -765,12 +775,12 @@ def process_xena (file, fout):
                 if string.find(header[i],"amino_acid_change")!=-1:
                     Protein_Change =i
             continue
-        
+
         #do not use  Sequence_Source=="WGS"
         if data[Sequence_Source]=="WGS":
             continue
 
-        # use the maf input 
+        # use the maf input
         sample = data[Tumor_Sample_Barcode]
         chrom= data[Chromosome]
         if string.lower(chrom[0:2])!="ch":
@@ -793,4 +803,4 @@ def process_xena (file, fout):
         fout.write(string.join([sample,chrom,start,end, ref, alt, gene, mtype, str(DNA_VAF), str(RNA_VAF),AA_Change],"\t")+"\n")
 
     fin.close()
-    
+

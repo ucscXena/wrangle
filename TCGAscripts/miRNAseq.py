@@ -77,7 +77,6 @@ def mergeGA_Hiseq (inDir, outDir, cancer, flog, REALRUN):
               +string.replace(inDir,TCGAUtil.localBase,"")
     J["version"]= datetime.date.today().isoformat()
     J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
-    J["gain"]=1.0
     J["expressionDataSpace"]="log"
 
     platformTitle ="Illumina Genome Analyzer and HiSeq 2000 RNA Sequencing platform"
@@ -85,8 +84,8 @@ def mergeGA_Hiseq (inDir, outDir, cancer, flog, REALRUN):
     #change description
     J["description"]=""
     J[":probeMap"]= "miRBase_primary_transcript_hg18"
-    J[":dataSubType"]="miRNA expression RNAseq"
-    J["shortTitle"]= cancer +" "+"miRNA expression (GA, HiSeq)"
+    J["dataSubType"]="miRNA expression RNAseq"
+    J["label"]= "miRNA expression (GA, HiSeq)"
     J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") miRNA expression by RNAseq (Illumina GA, HiSeq)"
     J["description"]= J["description"] +"TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") miRNA expression by RNAseq.<br><br>"+ \
         " The miRNA expression profile was measured experimentally using the "+platformTitle+" by the "+ dataProducer +"." + \
@@ -99,7 +98,6 @@ def mergeGA_Hiseq (inDir, outDir, cancer, flog, REALRUN):
 
     J["wrangling_procedure"]= "Level_3 Data (file names: *.mirna.quantification.txt) download from TCGA DCC, log2(x+1) transformed, and processed at UCSC into cgData repository."
 
-    J["label"] = J["shortTitle"] 
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
     J["sample_type"]=["tumor"]
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
@@ -339,7 +337,6 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
               +string.replace(inDir,TCGAUtil.localBase,"")
     J["version"]= datetime.date.today().isoformat()
     J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
-    J["gain"]=1.0
     J["expressionDataSpace"]="log"
 
     if PATHPATTERN in ["IlluminaHiSeq_miRNASeq"]:
@@ -350,8 +347,8 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     #change description
     J["description"]=""
     J[":probeMap"]= "miRBase_primary_transcript_hg18"
-    J[":dataSubType"]="miRNA expression RNAseq"
-    J["shortTitle"]= cancer +" "+"miRNA expression ("+suffix+")"
+    J["dataSubType"]="miRNA expression RNAseq"
+    J["label"]= "miRNA expression ("+suffix+")"
     J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") miRNA expression by RNAseq ("+suffix+")"
     J["description"]= J["description"] +"TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") miRNA expression by RNAseq.<br><br>"+ \
         " The miRNA expression profile was measured experimentally using the "+platformTitle+" by the "+ dataProducer +"." + \
@@ -364,7 +361,6 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
 
     J["wrangling_procedure"]= "Level_3 Data (file names: *.mirna.quantification.txt) download from TCGA DCC, log2(x+1) transformed, and processed at UCSC into cgData repository."
 
-    J["label"] = J["shortTitle"] 
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
     J["sample_type"]=["tumor"]
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]

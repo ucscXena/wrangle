@@ -1,16 +1,18 @@
 #!/usr/bin/env python
 
 import sys,string
+sys.path.insert(0,"../CGDataNew")
+
 import CGData.GenomicSegment
 import CGData.SegToMatrix
 import CGData.RefGene
 import CGData.GeneMap
 import optparse
 
-class segs:    
+class segs:
     def __init__(self):
         self.probes = []
-        
+
     def load (self, handle): #handle bed6
         fin =open(handle,'r')
         while 1:
@@ -42,7 +44,7 @@ if __name__ == "__main__":
     if len(sys.argv) != 5:
         printUsage()
         sys.exit()
-        
+
     parser = optparse.OptionParser()
     parser.add_option("--mode", action="store", type="string", dest="mode")
     (options, args) = parser.parse_args()
@@ -53,15 +55,17 @@ if __name__ == "__main__":
 
     probes=segs()
     probes.load(sys.argv[1])
-    
+
     refgene = CGData.RefGene.RefGene()
     refgene.load(sys.argv[2])
-    
+
     handle = open(sys.argv[3], "w")
     if options.mode=="cnv":
         probeMapper = CGData.GeneMap.ProbeMapper('b')
     if options.mode=="exp":
         probeMapper = CGData.GeneMap.ProbeMapper('g')
+
+    handle.write("%s\t%s\t%s\t%s\t%s\t%s\n" % ("#id", "gene","chrom","chromStart","chromEnd","strand"))
     for probe in probes.probes:
         hits = []
         for hit in probeMapper.find_overlap( probe, refgene ):
@@ -69,5 +73,5 @@ if __name__ == "__main__":
                 hits.append(hit.name)
         handle.write("%s\t%s\t%s\t%s\t%s\t%s\n" % (probe.name, ",".join(hits), probe.chrom, probe.chrom_start, probe.chrom_end, probe.strand))
     handle.close()
-    
-    
+
+

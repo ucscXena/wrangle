@@ -12,20 +12,21 @@ from CGDataUtil import *
 
 tmpDir="tmpTry/"
 
-def ucsc_illuminaga_dnaseq_cont_automated_vcf (inDir, outDir, cancer,flog,REALRUN):
-    print cancer, sys._getframe().f_code.co_name
-    distribution = False
-    PATHPATTERN= "IlluminaGA_DNASeq_Cont_automated."
-    PLATFORM = "IlluminaGA"
-    suffix     = "ucsc"
-    namesuffix = "mutation_ucsc_vcf"
-    dataProducer = "University of Californis Santa Cruz GDAC"
-    clean=0
-    radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
+#def ucsc_illuminaga_dnaseq_cont_automated_vcf (inDir, outDir, cancer,flog,REALRUN):
+#    print cancer, sys._getframe().f_code.co_name
+#    distribution = False
+#    PATHPATTERN= "IlluminaGA_DNASeq_Cont_automated."
+#    PLATFORM = "IlluminaGA"
+#    suffix     = "ucsc"
+#    namesuffix = "mutation_ucsc_vcf"
+#    dataProducer = "University of Californis Santa Cruz GDAC"
+#    clean=0
+#    radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
-def radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution):
+def radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix,
+    dataProducer,REALRUN,clean, PLATFORM,distribution, type):
     garbage=[tmpDir]
-    os.system("rm -rf tmp_*") 
+    os.system("rm -rf tmp_*")
     if os.path.exists( tmpDir ):
         if clean:
             os.system("rm -rf "+tmpDir+"*")
@@ -40,14 +41,14 @@ def radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, da
             pass
         else:
             continue
-        
+
         if not os.path.exists(inDir +file+".md5"):
             print "file has no matching .md5 throw out", file
             continue
-            
+
         #find lastest in each archive
         info = string.split(file,".")
-        archive = info [-5] 
+        archive = info [-5]
         release = int(info [-4])
 
         if not lastRelease.has_key(archive):
@@ -55,7 +56,7 @@ def radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, da
         else:
             if lastRelease[archive]< release:
                 lastRelease[archive]=release
-                
+
 
     rootDir =""
     lastDate=None
@@ -72,7 +73,7 @@ def radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, da
 
         #find the file that is the lastest release for the archive
         info = string.split(file,".")
-        archive = info [-5] 
+        archive = info [-5]
         release = int(info [-4])
 
         if release != lastRelease[archive]:
@@ -84,7 +85,7 @@ def radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, da
             lastDate = newDate
         if lastDate < newDate:
             lastDate = newDate
-            
+
         if remoteDataDirExample =="":
             remoteDataDirExample = file[:-7]
 
@@ -92,7 +93,7 @@ def radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, da
         if not clean:
             rootDir =tmpDir
         elif string.find(file,".tar.gz")!=-1 and REALRUN and clean:
-            os.system("tar -xzf "+inDir+file +" -C "+tmpDir) 
+            os.system("tar -xzf "+inDir+file +" -C "+tmpDir)
             rootDir =tmpDir
 
     #make sure there is data
@@ -106,7 +107,7 @@ def radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, da
     if not os.path.exists( outDir +cancer+"/"):
         os.makedirs( outDir+cancer+"/" )
 
-    cgFileName= namesuffix 
+    cgFileName= namesuffix
 
     #data processing multiple dirs mode
     if REALRUN:
@@ -128,15 +129,18 @@ def radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, da
                 os.system("rm -f "+ file)
 
         good=0
-        xena = outDir+cancer+"/"+cgFileName 
+        xena = outDir+cancer+"/"+cgFileName
         fout = open (xena,'w')
         fout.write("#"+string.join(["sample","chr","start","end","reference","alt","gene","effect","DNA_VAF","RNA_VAF","Amino_Acid_Change"],"\t")+"\n")
 
         for dataDir in os.listdir(rootDir):
             tmpout= "xena_out"
             open(tmpout,'w').close()
-            os.system("python /inside/home/jzhu/scripts/vcfXenaData/browserDataMelisssa/somaticMutationsForCavm/scripts/runSnpEffOnCohortParseOutput.py -passingSomatic=2 "+ rootDir+dataDir  + " " +tmpout)
-            
+            if type =="somatic": #somatic SNP
+                os.system("python /inside/home/jzhu/scripts/vcfXenaData/browserDataMelisssa/somaticMutationsForCavm/scripts/runSnpEffOnCohortParseOutput.py -passingSomatic=2 "+ rootDir+dataDir  + " " +tmpout)
+            elif type == "germline":
+                os.system("python /inside/home/jzhu/scripts/vcfXenaData/browserDataMelisssa/somaticMutationsForCavm/scripts/runSnpEffOnCohortParseOutput.py -passingSomatic=3 "+ rootDir+dataDir  + " " +tmpout)
+
             #remove position not in a gene, bad stupid calls like alt=NA
             fin =open(tmpout,'r')
             for line in fin.readlines():
@@ -174,23 +178,23 @@ def radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, da
 
 
     if not os.path.exists(outDir+cancer+"/"+cgFileName):
-        return 
+        return
 
     #nonSilentMatrix json
     if os.path.exists(outDir+cancer+"/"+cgFileName+"_gene"):
         matrixfileout = outDir+cancer+"/"+cgFileName+ "_gene"
         nonSilentMatrixJson (matrixfileout+".json", inDir, suffix, cancer, namesuffix+"_gene", dataProducer,PLATFORM, PATHPATTERN)
 
-    oHandle = open(outDir+cancer+"/"+cgFileName+".json","w")    
+    oHandle = open(outDir+cancer+"/"+cgFileName+".json","w")
     J={}
-    #stable    
+    #stable
     J["cgDataVersion"]=1
-    J[":dataSubType"]="somatic mutation"
+    J["dataSubType"]="somatic mutation (SNPs and small INDELs)"
     J["redistribution"]= distribution
     J["dataProducer"]= dataProducer
-    J["type"]= "mutationVector" 
+    J["type"]= "mutationVector"
     J[":sampleMap"]="TCGA."+cancer+".sampleMap"
-    J["PLATFORM"]= PLATFORM 
+    J["PLATFORM"]= PLATFORM
     if string.find( dataProducer ,"Broad")!=-1:
         J["method"]= "MutDect"
     elif string.find( dataProducer ,"Baylor")!=-1:
@@ -213,18 +217,17 @@ def radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, da
 
     #change description
     if string.find(PATHPATTERN, "curated")!=-1 :
-        J["shortTitle"]= cancer +" mutation ("+suffix+" curated vcf)"
+        J["label"]= "somatic mutation SNPs and small INDELs ("+suffix+" curated vcf)"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") nonsilent somatic mutation ("+suffix+" curated vcf)"
     elif string.find(PATHPATTERN, "automated")!=-1 :
-        J["shortTitle"]= cancer +" mutation ("+suffix+" automated vcf)"
+        J["label"]= "somatic mutation SNPs and small INDELs ("+suffix+" automated vcf)"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") nonsilent somatic mutation ("+suffix+" automated vcf)"
     else:
-        J["shortTitle"]= cancer +" mutation ("+suffix+" vcf)"
+        J["label"]= "somatic mutation SNPs and small INDELs ("+suffix+" vcf)"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") nonsilent somatic mutation ("+suffix+" vcf)"
 
     J["assembly"]="hg19"
     J["wholeGenome"]= True
-    J["label"] = J["shortTitle"] 
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
     J["sample_type"]=["tumor"]
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
@@ -245,8 +248,8 @@ def radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, da
         flog.write(message+"\n")
         return
     else:
-        J["name"]=name        
-        
+        J["name"]=name
+
     oHandle.write( json.dumps( J, indent=-1 ) )
     oHandle.close()
     return
@@ -254,18 +257,18 @@ def radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, da
 
 def nonSilentMatrixJson (jsonFile, inDir, suffix, cancer, namesuffix, dataProducer,PLATFORM, PATHPATTERN):
 
-    oHandle = open(jsonFile,"w")    
+    oHandle = open(jsonFile,"w")
     J={}
-    #stable    
+    #stable
     J["cgDataVersion"]=1
-    J[":dataSubType"]="somatic mutation"
+    J["dataSubType"]="somatic non-silent mutation (gene-level)"
     J["redistribution"]= True
     J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
     J["dataProducer"]= dataProducer
-    J["type"]= "genomicMatrix" 
+    J["type"]= "genomicMatrix"
     J[":sampleMap"]="TCGA."+cancer+".sampleMap"
     J[":probeMap"]= "hugo"
-    J["PLATFORM"]= PLATFORM 
+    J["PLATFORM"]= PLATFORM
     if string.find( dataProducer ,"Broad")!=-1:
         J["method"]= "MutDect"
     elif string.find( dataProducer ,"Baylor")!=-1:
@@ -286,22 +289,17 @@ def nonSilentMatrixJson (jsonFile, inDir, suffix, cancer, namesuffix, dataProduc
     J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
     J["wrangling_procedure"] ="Download .vcf files from TCGA DCC, select somatic mutations overlapping with exon region, removed all calls from WGS samples, processed into gene by sample matrix of non-silent mutations at UCSC, stored in the UCSC Xena repository"
 
-    J["gain"]=10
-    J["min"]=-1
-    J["max"]=1
-
     #change
     if string.find(PATHPATTERN, "curated")!=-1 :
-        J["shortTitle"]= cancer +" gene-level mutation ("+suffix+" curated vcf)"
+        J["label"]= "somatic gene-level non-silent mutation ("+suffix+" curated vcf)"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene-level nonsilent somatic mutation from ("+suffix+" curated vcf)"
     elif string.find(PATHPATTERN, "automated")!=-1 :
-        J["shortTitle"]= cancer +" gene-level mutation ("+suffix+" automated vcf)"
+        J["label"]= "somatic gene-level non-silent mutation ("+suffix+" automated vcf)"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene-level nonsilent somatic mutation ("+suffix+" automated vcf)"
     else:
-        J["shortTitle"]= cancer +" gene-level mutation ("+suffix+" vcf)"
+        J["label"]= "somatic gene-level non-silent mutation ("+suffix+" vcf)"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene-level nonsilent somatic mutation ("+suffix+" vcf)"
 
-    J["label"] = J["shortTitle"] 
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
     J["sample_type"]=["tumor"]
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
@@ -322,8 +320,8 @@ def nonSilentMatrixJson (jsonFile, inDir, suffix, cancer, namesuffix, dataProduc
         flog.write(message+"\n")
         return
     else:
-        J["name"]=name        
-        
+        J["name"]=name
+
     oHandle.write( json.dumps( J, indent=-1 ) )
     oHandle.close()
     return

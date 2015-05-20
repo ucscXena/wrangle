@@ -1,7 +1,7 @@
 import string,os,sys
 
 def header (samples, infile):
-    fin= open(infile,'r')
+    fin= open(infile,'rU')
     #header, samples
     newSamples = string.split(string.strip(fin.readline()),'\t')[1:]
     for sample in newSamples:
@@ -13,7 +13,7 @@ def header (samples, infile):
 def process(genes, samples, dataMatrix, infile):
     maxLength= len(samples)
 
-    fin= open(infile,'r')
+    fin= open(infile,'rU')
     #header 
     newSamples = string.split(string.strip(fin.readline()),'\t')
     
