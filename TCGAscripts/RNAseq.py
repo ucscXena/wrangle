@@ -470,7 +470,6 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     
     J={}
     #stable    
-    J["cgDataVersion"]=1
     J["redistribution"]= True
     J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
     J["dataProducer"]= dataProducer
@@ -483,10 +482,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     J["url"]=TCGAUtil.remoteBase \
               +string.replace(inDir,TCGAUtil.localBase,"")
     J["version"]= datetime.date.today().isoformat()
-    J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
-    J["gain"]=1.0
-    J["min"]=-1.0
-    J["max"]=1.0
+    J["wrangler"]= "Xena TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
     J["expressionDataSpace"]="log"
 
     if PATHPATTERN in ["IlluminaHiSeq_RNASeq","IlluminaHiSeq_RNASeqV2"]:
@@ -498,17 +494,17 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     J["description"]=""
     if string.find(namesuffix, "exon")==-1:
         J[":probeMap"]= "hugo"
-        J[":dataSubType"]="gene expression RNAseq"
+        J["dataSubType"]="gene expression RNAseq"
 
         if cancer != "OV":
-            J["shortTitle"]= cancer +" "+"gene expression ("+suffix+")"
+            J["shortTitle"]= "gene expression RNAseq ("+suffix+")"
             J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression by RNAseq ("+suffix+")"
         else:
             if dataProducer =="University of North Carolina TCGA genome characterization center":
-                J["shortTitle"]= cancer +" "+"gene expression ("+suffix+" UNC)"
+                J["shortTitle"]= "gene expression RNAseq ("+suffix+" UNC)"
                 J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression by RNAseq ("+suffix+" UNC)"
             else:
-                J["shortTitle"]= cancer +" "+"gene expression ("+suffix+" BC)"
+                J["shortTitle"]= "gene expression RNAseq ("+suffix+" BC)"
                 J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression by RNAseq ("+suffix+" BC)"
                 
         J["notes"]= "the probeMap is hugo for the short term, however probably around 10% of the gene symbols are not HUGO names, but ENTRE genes"
@@ -516,7 +512,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
                           " The gene expression profile was measured experimentally using the "+platformTitle+" by the "+ dataProducer +"." + \
                           " Level 3 interpreted level data was downloaded from TCGA data coordination center. This dataset shows the gene-level transcription estimates, "
     else:
-        J[":dataSubType"]="exon expression RNAseq"
+        J["dataSubType"]="exon expression RNAseq"
         ### really stupid thing here
         #file path for the data
         if string.find(namesuffix,"V2")==-1:
@@ -530,14 +526,14 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
             J[":probeMap"]= "unc_RNAseq_exon"
 
         if cancer != "OV":
-            J["shortTitle"]= cancer +" "+"exon expression ("+suffix+")"
+            J["shortTitle"]= "exon expression RNAseq ("+suffix+")"
             J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") exon expression by RNAseq ("+suffix+")"
         else:
             if dataProducer =="University of North Carolina TCGA genome characterization center":
-                J["shortTitle"]= cancer +" "+"exon expression ("+suffix+" UNC)"
+                J["shortTitle"]= "exon expression RNAsea ("+suffix+" UNC)"
                 J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") exon expression by RNAseq ("+suffix+" UNC)"
             else:
-                J["shortTitle"]= cancer +" "+"exon expression ("+suffix+" BC)"
+                J["shortTitle"]= "exon expression RNAseq ("+suffix+" BC)"
                 J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") exon expression by RNAseq ("+suffix+" BC)"
 
 
@@ -548,21 +544,18 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     if PATHPATTERN in [ "IlluminaHiSeq_RNASeqV2","IlluminaGA_RNASeqV2"] and string.find(namesuffix, "exon")==-1:
         if  string.find(namesuffix, "percentile")==-1:
             J["description"] = J["description"] + "as in RSEM normalized count."
-            J["wrangling_procedure"]= "Level_3 Data (file names: *.rsem.genes.normalized_results) download from TCGA DCC, log2(x+1) transformed, and processed at UCSC into cgData repository"
+            J["wrangling_procedure"]= "Level_3 data (file names: *.rsem.genes.normalized_results) are downloaded from TCGA DCC, log2(x+1) transformed, and processed at UCSC into cgData repository"
         else:
-            J["gain"]=0.1
-            J["min"]=-10
-            J["max"]=10
             J["expressionDataSpace"]="rank"
             J["description"] = J["description"] + "as in RSEM normalized count, percentile ranked within each sample. "
-            J["wrangling_procedure"]= "Level_3 Data (file names: *.rsem.genes.normalized_results) download from TCGA DCC, percentile ranked, and processed at UCSC into cgData repository"
+            J["wrangling_procedure"]= "Level_3 data (file names: *.rsem.genes.normalized_results) are downloaded from TCGA DCC, percentile ranked, and processed at UCSC into cgData repository"
             
     elif string.find(namesuffix, "exon")!=-1:
         J["description"] = J["description"] + "as in RPKM values (Reads Per Kilobase of exon model per Million mapped reads)."
-        J["wrangling_procedure"]= "Level_3 Data (file names: *.exon_quantification.txt) download from TCGA DCC, log2(x+1) transformed, and processed at UCSC into cgData repository"
+        J["wrangling_procedure"]= "Level_3 data (file names: *.exon_quantification.txt) are downloaded from TCGA DCC, log2(x+1) transformed, and processed at UCSC into cgData repository"
     else:
         J["description"] = J["description"] + "as in RPKM values (Reads Per Kilobase of exon model per Million mapped reads)."
-        J["wrangling_procedure"]= "Level_3 Data (file names: *.gene.quantification.txt) download from TCGA DCC, log2(x+1) transformed, and processed at UCSC into cgData repository"
+        J["wrangling_procedure"]= "Level_3 data (file names: *.gene.quantification.txt) are downloaded from TCGA DCC, log2(x+1) transformed, and processed at UCSC into cgData repository"
 
     if string.find(namesuffix, "exon")==-1:
         J["description"] = J["description"] + " Genes are mapped onto the human genome coordinates using UCSC cgData HUGO probeMap."
@@ -582,7 +575,6 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     J["sample_type"]=["tumor"]
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
     J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]
-    J['domain']="TCGA"
     J['tags']=["cancer"]+ TCGAUtil.tags[cancer]
     J['owner']="TCGA"
     J['gdata_tags'] =["transcription"]

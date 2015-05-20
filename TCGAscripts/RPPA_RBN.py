@@ -52,7 +52,7 @@ def RPPA_RBN (inDir, outDir, cancer,flog,REALRUN):
     J={}
     #stable
     J["cgDataVersion"]=1
-    J[":dataSubType"]="protein expression RPPA"
+    J["dataSubType"]="protein expression RPPA"
     J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
     J["dataProducer"]= dataProducer
     J["type"]= "genomicMatrix" 
@@ -67,17 +67,15 @@ def RPPA_RBN (inDir, outDir, cancer,flog,REALRUN):
     J["sample_type"]=["tumor"]
     J["redistribution"]= True
     J['tags']=["cancer"]+ TCGAUtil.tags[cancer]
-    J["min"]=-1
-    J["max"]=1
     if cancer !="PANCAN12":
         J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
         J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
-        J["shortTitle"]= cancer +" protein (RBN)"
+        J["shortTitle"]= "protein expression RPPA (RBN)"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") phospho- or total protein expression by reverse phase protein array (replicate-base normalization)"
     else:
         J["primary_disease"] = "cancer"
         J["anatomical_origin"]= ""
-        J["shortTitle"]= "PANCAN AWG protein (RBN)"
+        J["shortTitle"]= "PANCAN AWG protein expression RPPA (RBN)"
         J["longTitle"]="TCGA PANCAN AWG phospho- or total- protein expression by reverse phase protein array (replicate-base normalization)"
         J["citation"] = "Cell 2014 http://dx.doi.org/10.1016/j.cell.2014.06.049"
         J["articleTitle"]= "Multi-platform analysis of 12 cancer types reveals molecular classification within and across tissues-of-origin"

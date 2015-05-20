@@ -239,12 +239,12 @@ def makeJSON(oHandle,cancer,lastMageTab,inDir,noCNV,type):
     #stable
     J["cgDataVersion"]=1
     if noCNV:
-        J["shortTitle"]= cancer +" copy number (delete germline cnv)"
+        J["shortTitle"]= "copy number (delete germline cnv)"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") segmented copy number (delete germline cnv)"
     else:
-        J["shortTitle"]= cancer +" copy number"
+        J["shortTitle"]= "copy number"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") segmented copy number"
-    J[":dataSubType"]="copy number"
+    J["dataSubType"]="copy number"
     J["redistribution"]= True
     J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
 
@@ -265,9 +265,6 @@ def makeJSON(oHandle,cancer,lastMageTab,inDir,noCNV,type):
     J['owner']="TCGA"
     
     #change description
-    J["gain"]=1
-    J["min"]=-1
-    J["max"]=1
     J["PLATFORM"]= "SNP6"
     J["wrangling_procedure"]= "Level_3 data download from TCGA DCC, processed at UCSC into cgData repository"
 

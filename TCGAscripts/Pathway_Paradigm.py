@@ -38,7 +38,16 @@ def Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN):
     if string.find(string.upper(cancer),"PANCAN")!=-1:
         return
 
-    if string.find(string.upper(cancer),"SKCM")!=-1:
+    #if string.find(string.upper(cancer),"SKCM")!=-1:
+    #    return
+
+    if string.find(string.upper(cancer),"KIPAN")!=-1:
+        return
+
+    if string.find(string.upper(cancer),"GBMLGG")!=-1:
+        return
+
+    if string.find(string.upper(cancer),"STES")!=-1:
         return
     
     garbage=[tmpDir]
@@ -122,28 +131,25 @@ def Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN):
     #stable
     if PATHPATTERN== "Pathway_Paradigm_mRNA.":
         suffix="PDMarray"
-        J["shortTitle"]= cancer +" paradigm.mRNAarray (Firehose)"
+        J["shortTitle"]= "Paradigm.mRNAarray (Firehose)"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") PARADIGM inference activity (array mRNA)"
         
     if PATHPATTERN== "Pathway_Paradigm_mRNA_And_Copy_Number.":
         suffix="PDMarrayCNV"
-        J["shortTitle"]=cancer +" paradigm.mRNAarray+CNV (Firehose)"
+        J["shortTitle"]="Paradigm.mRNAarray+CNV (Firehose)"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") PARADIGM inference activity (array mRNA + CNV)"
         
     if PATHPATTERN== "Pathway_Paradigm_RNASeq.":
         suffix="PDMRNAseq"
-        J["shortTitle"]=cancer +" paradigm.RNAseq (Firehose)"
+        J["shortTitle"]="Paradigm.RNAseq (Firehose)"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") PARADIGM inference activity (RNAseq)"
 
     if PATHPATTERN=="Pathway_Paradigm_RNASeq_And_Copy_Number.":
         suffix="PDMRNAseqCNV"
-        J["shortTitle"]=cancer +" paradigm.RNAseq+CNV (Firehose)"
+        J["shortTitle"]="Paradigm.RNAseq+CNV (Firehose)"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") PARADIGM inference activity (RNAseq + CNV)"
 
-    J[":dataSubType"]="PARADIGM pathway activity"
-    J["gain"]=1.0
-    J["min"]=-1.0
-    J["max"]=1.0
+    J["dataSubType"]="PARADIGM pathway activity"
     
     J["label"] = J["shortTitle"] 
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]

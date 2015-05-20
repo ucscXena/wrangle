@@ -3,7 +3,7 @@ import json,datetime
 import inspect
 
 LEVEL="Level_3"
-BETAOFFSET =-0.5
+BETAOFFSET =0.0
 BETA_POS=1
 
 import TCGAUtil
@@ -156,14 +156,13 @@ def humanmethylation (inDir, outDir, cancer,flog,PATHPATTERN,BETAOFFSET,REALRUN)
     
     J["cgDataVersion"]=1
     if suffix =="HumanMethylation27":
-        J["shortTitle"]= cancer +" DNA methylation (Methylation27k)"
+        J["label"]= "DNA methylation (Methylation27k)"
         namesuffix="hMethyl27"
         
     if suffix =="HumanMethylation450":
-        J["shortTitle"]= cancer +" DNA methylation (Methylation450k)"
+        J["label"]= "DNA methylation (Methylation450k)"
         namesuffix="hMethyl450" 
 
-    J["label"] = J["shortTitle"] 
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
     J["sample_type"]=["tumor"]
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
@@ -173,7 +172,7 @@ def humanmethylation (inDir, outDir, cancer,flog,PATHPATTERN,BETAOFFSET,REALRUN)
     J['owner']="TCGA"
     
     J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") DNA methylation ("+suffix+")"
-    J[":dataSubType"]="DNA methylation"
+    J["dataSubType"]="DNA methylation"
     J["redistribution"]= True
     J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
     #J["priority"]= TCGAUtil.browserPriority[cancer]            
@@ -186,9 +185,8 @@ def humanmethylation (inDir, outDir, cancer,flog,PATHPATTERN,BETAOFFSET,REALRUN)
     J["valOffset"] = BETAOFFSET
     J["mean"]= average
     #change description
-    J["gain"]=2.0
-    J["min"]=-0.5
-    J["max"]=0.5
+    J["min"]=0
+    J["max"]=1
     if suffix =="HumanMethylation27":
         J["PLATFORM"]= "Illumina Infinium HumanMethylation27"
     elif suffix =="HumanMethylation450":
@@ -198,7 +196,7 @@ def humanmethylation (inDir, outDir, cancer,flog,PATHPATTERN,BETAOFFSET,REALRUN)
 
     J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+")"\
                       " DNA methylation data.<br><br>"+ \
-                      " DNA methylation profile was measured experimentally using the "+J["PLATFORM"]+" platform. Beta values were derived at the Johns Hopkins University and University of Southern California TCGA genome characterization center. DNA methylation values, described as beta values, are recorded for each array probe in each sample via BeadStudio software. DNA methylation beta values are continuous variables between 0 and 1, representing the ratio of the intensity of the methylated bead type to the combined locus intensity. Thus higher beta values represent higher level of DNA methylation, i.e. hypermethylation and lower beta values represent lower level of DNA methylation, i.e. hypomethylation.\n\n We observed a bimodal distribution of the beta values from both methylation27 and methylation450 platforms, with two peaks around 0.1 and 0.9 and a relatively flat valley around 0.2-0.8.  The bimodal distribution is far more pronounced and balanced in methylation450 than methylation27 platform. In the methylation27 platform, the lower beta peak is much stronger than the higher beta peak, while the two peaks are of similar hight in the methylation450 platform. During data ingestion to UCSC cgData repository, the beta values were offset by " + str(BETAOFFSET)+" to shift the whole dataset to values between -0.5 to +0.5. The average of the unshifted beta values of this dataset is "+str(average)
+                      " DNA methylation profile was measured experimentally using the "+J["PLATFORM"]+" platform. Beta values were derived at the Johns Hopkins University and University of Southern California TCGA genome characterization center. DNA methylation values, described as beta values, are recorded for each array probe in each sample via BeadStudio software. DNA methylation beta values are continuous variables between 0 and 1, representing the ratio of the intensity of the methylated bead type to the combined locus intensity. Thus higher beta values represent higher level of DNA methylation, i.e. hypermethylation and lower beta values represent lower level of DNA methylation, i.e. hypomethylation.\n\n We observed a bimodal distribution of the beta values from both methylation27 and methylation450 platforms, with two peaks around 0.1 and 0.9 and a relatively flat valley around 0.2-0.8.  The bimodal distribution is far more pronounced and balanced in methylation450 than methylation27 platform. In the methylation27 platform, the lower beta peak is much stronger than the higher beta peak, while the two peaks are of similar hight in the methylation450 platform. The average of the beta values of this dataset is "+str(average)+"."
     if suffix =="HumanMethylation27":
         J["description"]= J["description"] +", thus much of the heatmap appears hypomethylated (blue)."
         J["description"]= J["description"] +" Microarray probes are mapped onto the human genome coordinates using cgData probeMap derived from GEO GPL8490 and GPL13534 records."
