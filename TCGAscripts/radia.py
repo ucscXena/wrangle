@@ -136,6 +136,7 @@ def radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix,
         for dataDir in os.listdir(rootDir):
             tmpout= "xena_out"
             open(tmpout,'w').close()
+            print rootDir+dataDir, tmpout
             if type =="somatic": #somatic SNP
                 os.system("python /inside/home/jzhu/scripts/vcfXenaData/browserDataMelisssa/somaticMutationsForCavm/scripts/runSnpEffOnCohortParseOutput.py -passingSomatic=2 "+ rootDir+dataDir  + " " +tmpout)
             elif type == "germline":

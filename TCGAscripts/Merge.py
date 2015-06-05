@@ -10,7 +10,7 @@ from CGDataLib import *
 import  TCGAUtil
 
 def genomic (dir,outDir, cancer,flog,REALRUN):
-    if cancer not in ["LUNG","COADREAD"]:
+    if cancer not in ["LUNG","COADREAD","GBMLGG"]:
         return
 
     print cancer, sys._getframe().f_code.co_name
@@ -21,6 +21,9 @@ def genomic (dir,outDir, cancer,flog,REALRUN):
     if cancer =="COADREAD":
         c1 ="COAD"
         c2 ="READ"
+    if cancer =="GBMLGG":
+        c1 ="LGG"
+        c2 ="GBM"
 
     for file in [
         "mutation",
@@ -32,24 +35,13 @@ def genomic (dir,outDir, cancer,flog,REALRUN):
         "HumanMethylation27",
         "HumanMethylation450",
         "RPPA_RBN",
-        #"SNP6_genomicSegment",
-        #"SNP6_nocnv_genomicSegment",
         ""
         ]:
-        
-        type= ""
-        if file =="RPPA":
-            type="RPPA"
-        if file =="mutation":
-            type="mutation"
-        if file=="SNP6_genomicSegment" or file =="SNP6_nocnv_genomicSegment":
-            type="SNP6_genomicSegment"
-        if cancer =="COADREAD" and file in ["Gistic2_CopyNumber_Gistic2_all_data_by_genes",
-                                            "Gistic2_CopyNumber_Gistic2_all_thresholded.by_genes",
-                                            "mutation"]:            
+
+        if file =="mutation" and cancer =="COADREAD": #PANCAN AWG mutation
             continue
-        if cancer =="LUNG" and file in ["SNP6_genomicSegment","SNP6_nocnv_genomicSegment"]:
-            continue
+
+        type= "matrix"
 
         process (outDir, cancer, c1, c2, file, REALRUN,type)
     return
@@ -65,35 +57,20 @@ def process (outDir, cancer, c1, c2, file, REALRUN,type):
     c1file = c1dir+file
     c2file = c2dir+file
 
-    if type in ["RPPA"]: #test file is the same
-        os.system("cut -f 1 "+c1file +" >tmp1")
-        os.system("cut -f 1 "+c2file +" >tmp2")
-        SAME = filecmp.cmp("tmp1", "tmp2")
+    if ( not os.path.exists(c1file)  or  not os.path.exists(c2file)):
+        return
 
-        if not SAME:
-            print "files are not the same"
-            return
-        
-        os.system("sort "+c1file +" >tmp1")
-        os.system("sort "+c2file +" >tmp2")
-        os.system("join -t$'\t' -1 1 -2 1 tmp1 tmp2 > tmp3")
-        os.system("grep sample tmp3 > "+ outDir+cancer+"/"+file)
-        os.system("grep -v sample tmp3 >> "+ outDir+cancer+"/"+file)
-        
-    elif os.path.exists(c1file) and os.path.exists(c2file):
-        if REALRUN:
-            if type =="mutation":
-                os.system("python mergeFilesByColumn.py "+ outDir+cancer+"/"+file +" "+ c1file+" "+c2file )
-            elif type =="SNP6_genomicSegment":
-                os.system("cat "+c1file+" "+c2file +" > "+outDir+cancer+"/"+file)
-                # segToMatrix
-                outfile=outDir+cancer+"/"+file
-                gMoutput = outDir+cancer+"/"+string.replace(file,"_genomicSegment","")
-                os.system("python seg2matrix/segToMatrix.py "+outfile +" seg2matrix/refGene_hg18 "+ gMoutput)
-            else: 
-                os.system("cut -f 2- "+c2file +" >tmp")
-                os.system("paste "+c1file+" tmp > "+outDir+cancer+"/"+file)
-
+    if REALRUN:
+        if type =="mutation":
+            print "todo"
+        elif type =="SNP6_genomicSegment":
+            os.system("cat "+c1file+" "+c2file +" > "+outDir+cancer+"/"+file)
+            # segToMatrix
+            outfile=outDir+cancer+"/"+file
+            gMoutput = outDir+cancer+"/"+string.replace(file,"_genomicSegment","")
+            os.system("python seg2matrix/segToMatrix.py "+outfile +" seg2matrix/refGene_hg18 "+ gMoutput)
+        else: 
+            os.system("python mergeGenomicMatrixFiles.py "+outDir+cancer+"/"+file + " "+c1file +" "+ c2file)
 
     J={}
     iHandle =open(c1file+".json","r")

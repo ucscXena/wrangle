@@ -42,11 +42,13 @@ def Clinical(inDir, outDir, cancer,flog,PATHPATTERN, REALRUN):
     if REALRUN:
         survival(outDir+cancer+"/", cancer)
 
-    if cancer in ["COAD","READ","LUAD","LUSC"]:
+    if cancer in ["COAD","READ","LUAD","LUSC","LGG","GBM"]:
         if cancer in ["COAD","READ"]:
             deriveCancer="COADREAD"
         if cancer in ["LUAD","LUSC"]:
             deriveCancer="LUNG"
+        if cancer in ["LGG","GBM"]:
+            deriveCancer="GBMLGG"
         process(inDir, outDir, dataDir, deriveCancer,flog,PATHPATTERN,  cancer,REALRUN)
         if REALRUN:
             survival(outDir+deriveCancer+"/", deriveCancer)
@@ -209,6 +211,7 @@ def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN,  originCancer,REAL
                 #clinicalFeature
                     
                 fout = open(cFfile,"w")
+                fout.write("#feature\tattribute\tvalue\n")
                 cFeatures = clinMatrix.getCOLs()
                 for feature in cFeatures:
                     if not TCGAUtil.featureLongTitle.has_key(feature):

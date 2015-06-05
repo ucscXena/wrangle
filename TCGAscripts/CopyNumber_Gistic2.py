@@ -15,8 +15,6 @@ def CopyNumber_Gistic2 (inDir, outDir, cancer,flog,REALRUN):
         return
     if string.find(string.upper(cancer),"KIPAN")!=-1:
         return
-    if string.find(string.upper(cancer),"GBMLGG")!=-1:
-        return
     if string.find(string.upper(cancer),"STES")!=-1:
         return
         

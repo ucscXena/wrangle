@@ -266,7 +266,7 @@ def output (dir, finalClinMatrix, survivalMatrix, cancer):
     #clinicalFeature
     cFfile =dir+"clinical_survival_clinicalFeature"
     fout = open(cFfile,"w")
-    
+    fout.write("#feature\tattribute\tvalue\n")
     fout.write("_EVENT\tshortTitle\toverall survival indicator\n")
     fout.write("_EVENT\tlongTitle\t_EVENT overall survival indicator 1=death 0=censor\n")
     fout.write("_EVENT\tvalueType\tcategory\n")

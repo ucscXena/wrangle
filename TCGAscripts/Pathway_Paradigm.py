@@ -44,9 +44,6 @@ def Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN):
     if string.find(string.upper(cancer),"KIPAN")!=-1:
         return
 
-    if string.find(string.upper(cancer),"GBMLGG")!=-1:
-        return
-
     if string.find(string.upper(cancer),"STES")!=-1:
         return
     

@@ -66,7 +66,7 @@ def outputMatrix(dataMatrix, samples, genes, outfile):
 if __name__ == '__main__' :
     if len(sys.argv[:]) <4:
         print "python mergeFilesByColumn.py output inputfile(s)"
-        print "**********memory intensive, not for very genomic data with hugo number of probes"
+        print "**********memory intensive"
         print "this is merging data A+B=C\n"
         sys.exit()
 

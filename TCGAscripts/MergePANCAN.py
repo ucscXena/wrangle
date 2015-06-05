@@ -26,6 +26,13 @@ def HiSeqV2  ( dir, outDir, cancer,flog,REALRUN):
     filename = "HiSeqV2"
     processMatrix (filename, dir,outDir, cancer,flog, REALRUN)
 
+def HiSeqV2_exon  ( dir, outDir, cancer,flog,REALRUN):
+    if cancer !="PANCAN":
+        return
+    print cancer, sys._getframe().f_code.co_name
+    filename = "HiSeqV2_exon"
+    processMatrix (filename, dir,outDir, cancer,flog, REALRUN)
+
 def miRNA  ( dir, outDir, cancer,flog,REALRUN):
     if cancer !="PANCAN":
         return
@@ -67,7 +74,6 @@ def Gistic2 (dir,outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
     filename = "Gistic2_CopyNumber_Gistic2_all_data_by_genes"
     processMatrix (filename, dir,outDir, cancer,flog, REALRUN)
-
 
 def clin (dir,outDir, cancer,flog,REALRUN):
     if cancer not in ["PANCAN12","PANCAN"]:
@@ -149,6 +155,7 @@ def processClin (filename, dir,outDir, CANCER,flog, REALRUN):
             
             if TCGAUtil.featurePriority[CANCER].has_key(feature):
                 cfout =open(outDir+"/"+CANCER+"/"+feature+"_"+CANCER+"_clinFeature","w")
+                cfout.write("#feature\tattribute\tvalue\n")
                 featureConfig=1
                 priority= TCGAUtil.featurePriority[CANCER][feature]
                 cfout.write(feature+"\tpriority\t"+str(priority)+"\n")
@@ -165,6 +172,7 @@ def processClin (filename, dir,outDir, CANCER,flog, REALRUN):
             if stateOrder:
                 if featureConfig==0:
                     cfout =open(outDir+"/"+CANCER+"/"+feature+"_"+CANCER+"_clinFeature","w")
+                    cfout.write("#feature\tattribute\tvalue\n")
                 featureConfig=1
                 cfout.write(feature+"\tvalueType\tcategory\n")
                 for state in stateOrder:
@@ -176,6 +184,7 @@ def processClin (filename, dir,outDir, CANCER,flog, REALRUN):
             if TCGAUtil.valueType.has_key(feature):
                 if featureConfig==0:
                     cfout =open(outDir+"/"+CANCER+"/"+feature+"_"+CANCER+"_clinFeature","w")
+                    cfout.write("#feature\tattribute\tvalue\n")
                 featureConfig=1
                 cfout.write(feature+"\tvalueType\tcategory\n")
                 
@@ -198,7 +207,7 @@ def processFiles (filename, dir,outDir, cancer ):
     inFiles =[]
 
     for cancer in os.listdir(outDir):
-        if cancer in ["LUNG","COADREAD","PANCAN"]:
+        if cancer in ["LUNG","COADREAD","PANCAN","GBMLGG","PANCAN12"]:
             continue
 
         cancerDir= outDir+ cancer
@@ -326,6 +335,8 @@ def processMatrix (filename, dir,outDir, cancer,flog, REALRUN):
         gisticJSON(J,cancer)
     elif filename=="HiSeqV2":
         HiSeqV2JSON(J,cancer)
+    elif filename=="HiSeqV2_exon":
+        HiSeqV2_exonJSON(J,cancer)
     elif filename=="miRNA":
         miRNAJSON(J,cancer)
  
@@ -414,6 +425,21 @@ def HiSeqV2JSON (J, cancer):
     J["colNormalization"]=True
     J["wrangling_procedure"] = "Level_3 data (file names: *.rsem.genes.normalized_results) are downloaded from each cancer project at TCGA DCC, log2(x+1) transformed, and then combined at UCSC into Xena repository."
     return
+
+def HiSeqV2_exonJSON (J, cancer):
+    J['name']= "HiSeqV2_exon_PANCAN"
+    J["shortTitle"]= "exon expression"
+    J["label"] = J["shortTitle"] 
+    J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+" exon expression (IlluminaHiSeq)"
+    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" exon expression by RNAseq.<br>"
+    J["description"] = J["description"] +"Exon expression measured using the IlluminaHiSeq technology. Data from all TCGA cohorts are combined to produce this dataset. Values are log2(x+1) transformed exon-level transcription estimates in RPKM values (Reads Per Kilobase of exon model per Million mapped reads)."
+    J["description"] = J["description"] +"<br><br>"    
+    J[":probeMap"]="unc_RNAseq_exon"
+    J["dataSubType"]="exon expression RNAseq"
+    J["colNormalization"]=True
+    J["wrangling_procedure"] = "Level_3 data (file names: *.exon_quantification.txt) are downloaded from each cancer project at TCGA DCC, log2(x+1) transformed, and then combined at UCSC into Xena repository."
+    return
+
 
 def gisticJSON(J,cancer):
     J['name']= "TCGA_PANCAN_gistic2"

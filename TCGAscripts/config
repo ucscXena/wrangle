@@ -8,12 +8,12 @@ $TMP=preFreeze/TCGA/
 
 #####ucsc (protected) maf and vcf
 #illuminaga_dnaseq_cont_automated
-0	0	maf	ucsc_illuminaga_dnaseq_cont_automated	/data/TCGA/tcgafiles/tcga4yeo/tumor/*/gsc/ucsc.edu/illuminaga_dnaseq_cont_automated/mutations_protected/	$TMP
+0	0	maf	ucsc_illuminaga_dnaseq_cont_automated	/inside/depot/tcgafiles/tcga4yeo/tumor/*/gsc/ucsc.edu/illuminaga_dnaseq_cont_automated/mutations_protected/	$TMP
 
 
 #####unc maf mutation (protect)
 #mixed_dnaseq_cont_automated
-0	0	maf	unc_mixed_dnaseq_cont_automated	/data/TCGA/tcgafiles/tcga4yeo/tumor/*/gsc/unc.edu/mixed_dnaseq_cont_automated/mutations_protected/	$TMP
+0	0	maf	unc_mixed_dnaseq_cont_automated	/inside/depot/tcgafiles/tcga4yeo/tumor/*/gsc/unc.edu/mixed_dnaseq_cont_automated/mutations_protected/	$TMP
 
 #maf mutation open
 #ucsc   : illuminaga_dnaseq_automated
@@ -46,11 +46,11 @@ $TMP=preFreeze/TCGA/
 #FH analysis
 $FIREHOSEDATE_ana
 $FIREHOSEDATE_ana_version
-0	0	Pathway_Paradigm	Pathway_Paradigm_mRNA	/data/TCGA/tcgafiles/tcga4yeo/other/gdacs/gdacbroad/firehose/analyses__$FIREHOSEDATE_ana/*/$FIREHOSEDATE_ana_version/	$TMP
-0	0	Pathway_Paradigm	Pathway_Paradigm_mRNA_And_Copy_Number	/data/TCGA/tcgafiles/tcga4yeo/other/gdacs/gdacbroad/firehose/analyses__$FIREHOSEDATE_ana/*/$FIREHOSEDATE_ana_version/	$TMP
-0	0	Pathway_Paradigm	Pathway_Paradigm_RNAseq	/data/TCGA/tcgafiles/tcga4yeo/other/gdacs/gdacbroad/firehose/analyses__$FIREHOSEDATE_ana/*/$FIREHOSEDATE_ana_version/	$TMP
-0	0	Pathway_Paradigm	Pathway_Paradigm_RNASeq_And_Copy_Number	/data/TCGA/tcgafiles/tcga4yeo/other/gdacs/gdacbroad/firehose/analyses__$FIREHOSEDATE_ana/*/$FIREHOSEDATE_ana_version/	$TMP
-0	0	CopyNumber_Gistic2	CopyNumber_Gistic2	/data/TCGA/tcgafiles/tcga4yeo/other/gdacs/gdacbroad/firehose/analyses__$FIREHOSEDATE_ana/*/$FIREHOSEDATE_ana_version/	$TMP
+0	0	Pathway_Paradigm	Pathway_Paradigm_mRNA	/data/TCGA/tcgafiles/firehose/analyses__$FIREHOSEDATE_ana/*/$FIREHOSEDATE_ana_version/	$TMP
+0	0	Pathway_Paradigm	Pathway_Paradigm_mRNA_And_Copy_Number	/data/TCGA/tcgafiles/firehose/analyses__$FIREHOSEDATE_ana/*/$FIREHOSEDATE_ana_version/	$TMP
+0	0	Pathway_Paradigm	Pathway_Paradigm_RNAseq	/data/TCGA/tcgafiles/firehose/analyses__$FIREHOSEDATE_ana/*/$FIREHOSEDATE_ana_version/	$TMP
+0	0	Pathway_Paradigm	Pathway_Paradigm_RNASeq_And_Copy_Number	/data/TCGA/tcgafiles/firehose/analyses__$FIREHOSEDATE_ana/*/$FIREHOSEDATE_ana_version/	$TMP
+0	0	CopyNumber_Gistic2	CopyNumber_Gistic2	/data/TCGA/tcgafiles/firehose/analyses__$FIREHOSEDATE_ana/*/$FIREHOSEDATE_ana_version/	$TMP
 
 0	0	AgilentGeneExp	AgilentG4502A_07_3	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/unc.edu/agilentg4502a_07_3/transcriptome/	$TMP
 0	0	AgilentGeneExp	AgilentG4502A_07_2	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/unc.edu/agilentg4502a_07_2/transcriptome/	$TMP
@@ -66,7 +66,8 @@ $FIREHOSEDATE_ana_version
 
 #0	0	RNAseq	illuminahiseq_rnaseqV2_unc_percentileRank	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/unc.edu/illuminahiseq_rnaseqv2/rnaseqv2/	$TMP
 0	0	miRNAseq	illuminaga_miRnaseq_bcgsc	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/bcgsc.ca/illuminaga_mirnaseq/mirnaseq/	$TMP
-1	1	miRNAseq	illuminahiseq_miRnaseq_bcgsc	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/bcgsc.ca/illuminahiseq_mirnaseq/mirnaseq/	$TMP
+0	0	miRNAseq	illuminahiseq_miRnaseq_bcgsc	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/bcgsc.ca/illuminahiseq_mirnaseq/mirnaseq/	$TMP
+0	0	miRNAseq	mergeGA_Hiseq	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/bcgsc.ca/	$TMP
 
 0	0	SNP6	SNP6	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/broad.mit.edu/genome_wide_snp_6/snp/	$TMP
 0	0	RPPA	RPPA	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/mdanderson.org/mda_rppa_core/protein_exp/	$TMP
@@ -105,12 +106,21 @@ $FIREHOSEDATE_ana_version
 0	0	cohort	cohort	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
 
 #merging LUAD and LUSC to LUNG ; COAD READ to COADREAD
-0	0	Merge	genomic	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
+1	1	Merge	genomic	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
 
 
 #PANCAN dataset both PANCAN and individual cancer
 0	0	MergePANCAN	RNAseq	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
+#PANCAN dataset just PANCAN
+0	0	MergePANCAN	Gistic2	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
+0	0	MergePANCAN	HiSeqV2	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
+#too much memory usage 0	0	MergePANCAN	HiSeqV2_exon	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
+0	0	MergePANCAN	miRNA	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
 
+0	0	MergePANCAN	mutation_broad	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
+0	0	MergePANCAN	mutation_bcm	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
+0	0	MergePANCAN	mutation_ucsc_vcf	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
+0	0	MergePANCAN	mutation_bcgsc	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
 #sampleMap
 0	0	TCGASampleMap	TCGASampleMap	$TMP*/	$TMP
 
