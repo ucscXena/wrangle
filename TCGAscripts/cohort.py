@@ -29,7 +29,7 @@ def primary_disease (inDir, outDir, cancer, flog,REALRUN):
 
 def cohort_variable (var, value, inDir, outDir, cancer, flog,REALRUN):
     #print status
-    if cancer in ["COADREAD","LUNG","PANCAN","PANCAN12"]:
+    if cancer in ["COADREAD","LUNG","PANCAN","PANCAN12","GBMLGG"]:
         return
 
     print inDir
@@ -112,6 +112,7 @@ def cohort_variable (var, value, inDir, outDir, cancer, flog,REALRUN):
             oHandle.close()
 
             oHandle = open(outDir+cancer+"/"+var+"_clinFeature","w")
+            oHandle.write("#feature+\tattribute\tvalue\n")
             oHandle.write(feature+"\tpriority\t"+str(priority)+"\n")
             oHandle.write(feature+"\tvisibility\ton\n") 
             oHandle.close()
@@ -142,6 +143,9 @@ def cohort_variable (var, value, inDir, outDir, cancer, flog,REALRUN):
     if cancer in ["COAD","READ"]:
         derived_cancer="COADREAD"
         doDerivedCancer(var, outDir, cancer, derived_cancer, flog,REALRUN)
+    if cancer in ["GBM","LGG"]:
+        derived_cancer="GBMLGG"
+        doDerivedCancer(var, outDir, cancer, derived_cancer, flog,REALRUN)
 
 def doDerivedCancer( var, outDir, cancer, derived_cancer, flog,REALRUN):
     if derived_cancer =="":
@@ -163,6 +167,7 @@ def doDerivedCancer( var, outDir, cancer, derived_cancer, flog,REALRUN):
             oHandle.close()
         
             oHandle = open(outDir+derived_cancer+"/"+var+"_" +cancer +"_clinFeature","w")
+            oHandle.write("#feature+\tattribute\tvalue\n")
             oHandle.write(feature+"\tpriority\t"+str(priority)+"\n")
             oHandle.write(feature+"\tvisibility\ton\n") 
             oHandle.close()

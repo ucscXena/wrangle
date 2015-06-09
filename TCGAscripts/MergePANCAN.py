@@ -87,7 +87,7 @@ def clin (dir,outDir, cancer,flog,REALRUN):
 def processClin (filename, dir,outDir, CANCER,flog, REALRUN):
     inFiles ={}
     for cancer in os.listdir(os.path.dirname(dir)):
-        if cancer in ["LUNG","COADREAD","PANCAN","PANCAN12"]:
+        if cancer in ["LUNG","COADREAD","GBMLGG", "PANCAN","PANCAN12"]:
             continue
 
         cancerDir= os.path.dirname(dir)  + "/"+cancer
@@ -396,7 +396,7 @@ def mutation_broadJSON(J,cancer,genelevel):
     J["shortTitle"]= "somatic "+ genelevel+ "mutation (broad)"
     J["label"] = J["shortTitle"] 
     J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+ genelevel+" nonsilent somatic mutation (broad)"
-    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" somatic mutation data.  The calls are generated at Broad Institute Genome Sequencing Center using the MutDect method. MutDect calls from various TCGA cohorts are combined to produce this dataset."
+    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" somatic mutation data.  The calls are generated at Broad Institute Genome Sequencing Center using the MuTect method. MuTect calls from various TCGA cohorts are combined to produce this dataset."
     J["description"] = J["description"] +"<br><br>"    
     
 def miRNAJSON(J,cancer):

@@ -222,17 +222,18 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
 
     #data processing multiple dirs mode
     if REALRUN:
-        
         allSamples={}
 
         for dataDir in os.listdir(rootDir):
             for file in os.listdir(rootDir+dataDir):
                 sample =""
 
+                print file
                 #v2 bcgsc gene
                 pattern =".gene.quantification"
                 altpattern =".v2.gene.quantification"
                 if string.find(file,pattern)!=-1 and string.find(namesuffix,"exon")==-1:
+                    print "0"
                     #check if there is .v2
                     if string.find(file,".v2.")==-1:
                         V2=0
@@ -252,7 +253,8 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
                         sample = string.split(file,".")[0]
                     else:
                         print "please check how to identify sample name"
-
+                
+                print "1"
                 #v2 bcgsc exon
                 pattern =".exon.quantification"
                 altpattern =".v2.exon.quantification"
@@ -276,6 +278,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
                         sample = string.split(file,".")[0]
                     else:
                         print "please check how to identify sample name"
+                print "2"
                 #v2
                 pattern ="rsem.genes.normalized_results"
                 if string.find(file,pattern)!=-1  and string.find(namesuffix,"exon")==-1:
@@ -295,6 +298,8 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
                     else:
                         print "please check how to identify sample name"
 
+                print "file=", file
+                print "sample=", sample
                 if sample=="":
                     continue
                 if sample in allSamples:

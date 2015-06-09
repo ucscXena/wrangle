@@ -421,7 +421,7 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
     J[":sampleMap"]="TCGA."+cancer+".sampleMap"
     J["PLATFORM"]= PLATFORM
     if string.find( dataProducer ,"Broad")!=-1:
-        J["method"]= "MutDect"
+        J["method"]= "MuTect"
     elif string.find( dataProducer ,"Baylor")!=-1:
         J["method"]= "Baylor pipeline"
     elif string.find( dataProducer ,"Genome Institute at Washington University Sequencing Center")!=-1:
@@ -606,7 +606,7 @@ def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, data
     J[":probeMap"]= "hugo"
     J["PLATFORM"]= PLATFORM
     if string.find( dataProducer ,"Broad")!=-1:
-        J["method"]= "MutDect"
+        J["method"]= "MuTect"
     elif string.find( dataProducer ,"Baylor")!=-1:
         J["method"]= "Baylor pipeline"
     elif string.find( dataProducer ,"Genome Institute at Washington University Sequencing Center")!=-1:
