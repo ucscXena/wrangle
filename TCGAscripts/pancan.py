@@ -262,6 +262,7 @@ def individual_subtype (dir, outDir, cancer,log, REALRUN, featureName,dataProduc
 
     #clinical feature data
     fout= open(outDir+cancer+"/"+outfile+"_clinicalFeature",'w')
+    fout.write("#feature\tattribute\tvalue\n")
     fout.write(featureName+"\tshortTitle\t"+shortTitle+"\n")
     fout.write(featureName+"\tlongTitle\t"+longTitle+"\n")
     fout.write(featureName+"\tvalueType\tcategory\n")
@@ -330,6 +331,7 @@ def pancan_subtype (dir, outDir, cancer,log, REALRUN, featureName,dataProducer, 
 
         #clinical feature data
         fout= open(outDir+cancerDir+"/"+outfile+"_clinicalFeature",'w')
+        fout.write("#feature\tattribute\tvalue\n")
         fout.write(featureName+"\tshortTitle\t"+shortTitle+"\n")
         fout.write(featureName+"\tlongTitle\t"+longTitle+"\n")
         fout.write(featureName+"\tvalueType\tcategory\n")

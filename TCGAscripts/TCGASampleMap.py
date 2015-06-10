@@ -87,7 +87,8 @@ def TCGASampleMap (dir, outDir, cancer,log, REALRUN):
                     continue
                 parent = TCGAbarcode
                 child = sample
-                sMap.addLink(parent,child)
+                sMap.addLink(parent,string.lower(child))
+                sMap.addLink(parent,string.upper(child))
                 sample = parent
 
             #do TCGA barcode trick

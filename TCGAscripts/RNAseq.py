@@ -121,7 +121,7 @@ def illuminahiseq_rnaseq_bcgsc  (inDir, outDir, cancer, flog,REALRUN):
     suffix      = "IlluminaHiseq"
     namesuffix = "HiSeq"
     dataProducer = "British Columbia Cancer Agency TCGA genome characterization center"
-    clean =1
+    clean = 1
     geneRPKM (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN, clean)
 
     print cancer, "illuminahiseq_rnaseq_bcgsc_exon"
@@ -228,25 +228,28 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
             for file in os.listdir(rootDir+dataDir):
                 sample =""
 
-                print file
                 #v2 bcgsc gene
                 pattern =".gene.quantification"
-                altpattern =".v2.gene.quantification"
                 if string.find(file,pattern)!=-1 and string.find(namesuffix,"exon")==-1:
-                    print "0"
                     #check if there is .v2
                     if string.find(file,".v2.")==-1:
                         V2=0
                         for file2 in os.listdir(rootDir+dataDir):
-                            if string.find(file2,altpattern)!=-1:
+                            if string.find(file2,".v2")!=-1:
                                 V2=1
                                 break
                         if V2:
                             continue
 
-                    #stupid hg18 and hg19 issues, ignore files with hg19 in its name
-                    if string.find(file,"hg19")!=-1:
-                        continue
+                    if string.find(file,".hg19.")==-1:
+                        HG19=0
+                        for file2 in os.listdir(rootDir+dataDir):
+                            if string.find(file2,".hg19.")!=-1:
+                                HG19=1
+                                break
+                        if HG19:
+                            continue
+
                     infile = rootDir+dataDir+"/"+file
                     # bcgsc stupid sample name in file name
                     if dataProducer=="British Columbia Cancer Agency TCGA genome characterization center":
@@ -254,31 +257,35 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
                     else:
                         print "please check how to identify sample name"
                 
-                print "1"
                 #v2 bcgsc exon
                 pattern =".exon.quantification"
-                altpattern =".v2.exon.quantification"
                 if string.find(file,pattern)!=-1 and string.find(namesuffix,"exon")!=-1:
                     #check if there is .v2
                     if string.find(file,".v2.")==-1:
                         V2=0
                         for file2 in os.listdir(rootDir+dataDir):
-                            if string.find(file2,altpattern)!=-1:
+                            if string.find(file2,".v2.")!=-1:
                                 V2=1
                                 break
                         if V2:
                             continue
 
-                    #stupid hg18 and hg19 issues, ignore files with hg19 in its name
-                    if string.find(file,"hg19")!=-1:
-                        continue
+                    if string.find(file,".hg19.")==-1:
+                        HG19=0
+                        for file2 in os.listdir(rootDir+dataDir):
+                            if string.find(file2,".hg19.")!=-1:
+                                HG19=1
+                                break
+                        if HG19:
+                            continue
+
                     infile = rootDir+dataDir+"/"+file
                     # bcgsc stupid sample name in file name
                     if dataProducer=="British Columbia Cancer Agency TCGA genome characterization center":
                         sample = string.split(file,".")[0]
                     else:
                         print "please check how to identify sample name"
-                print "2"
+
                 #v2
                 pattern ="rsem.genes.normalized_results"
                 if string.find(file,pattern)!=-1  and string.find(namesuffix,"exon")==-1:
@@ -298,8 +305,6 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
                     else:
                         print "please check how to identify sample name"
 
-                print "file=", file
-                print "sample=", sample
                 if sample=="":
                     continue
                 if sample in allSamples:
@@ -324,7 +329,6 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
                 p=len(allSamples)
                 allSamples[sample]=p
                     
-
         c=0
         dataMatrix=[]
         tmpSamples={}
@@ -349,10 +353,14 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
                                 break
                         if V2:
                             continue
-
-                    if string.find(file,"hg19")!=-1:
-                        continue
-                    #print file
+                    if string.find(file,".hg19.")==-1:
+                        HG19=0
+                        for file2 in os.listdir(rootDir+dataDir):
+                            if string.find(file2,".hg19.")!=-1:
+                                HG19=1
+                                break
+                        if HG19:
+                            continue
 
                     infile = rootDir+dataDir+"/"+file
                     # bcgsc stupid sample name in file name
@@ -378,9 +386,15 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
                         if V2:
                             continue
 
-                    if string.find(file,"hg19")!=-1 :
-                        continue
-                    #print file
+                    if string.find(file,".hg19.")==-1:
+                        HG19=0
+                        for file2 in os.listdir(rootDir+dataDir):
+                            if string.find(file2,".hg19.")!=-1:
+                                HG19=1
+                                break
+                        if HG19:
+                            continue
+
                     infile = rootDir+dataDir+"/"+file
                     # bcgsc stupid sample name in file name
                     if dataProducer=="British Columbia Cancer Agency TCGA genome characterization center":
@@ -390,7 +404,6 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
                     valuePOS=3
                     LOG2=1
                     RANK=0
-
 
 
                 #v2
@@ -518,17 +531,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
                           " Level 3 interpreted level data was downloaded from TCGA data coordination center. This dataset shows the gene-level transcription estimates, "
     else:
         J["dataSubType"]="exon expression RNAseq"
-        ### really stupid thing here
-        #file path for the data
-        if string.find(namesuffix,"V2")==-1:
-            datafile= outDir+cancer+"/"+cgFileName
-            lineNum = Jing_util.file_len(datafile) 
-            if lineNum == 219297:
-                J[":probeMap"]= "bcgsc_v1_exon.hg18"
-            else:
-                J[":probeMap"]= "unc_RNAseq_exon"
-        else:
-            J[":probeMap"]= "unc_RNAseq_exon"
+        J[":probeMap"]= "unc_RNAseq_exon.hg19" #"unc_RNAseq_exon" 
 
         if cancer != "OV":
             J["shortTitle"]= "exon expression RNAseq ("+suffix+")"
