@@ -222,8 +222,7 @@ def flattenEachSampleMap(sMap, bookDic,onlyGenomicSamples):
                     finalClinFeatureJSON["version"]=datetime.date.today().isoformat() 
                     finalClinFeatureJSON["type"]="clinicalFeature"
                     finalClinFeatureJSON["name"]=jsonName
-                    finalClinFeatureJSON["cgDataVersion"]=1
-
+            
     #final clinicalFeature
     if finalClinFeatureJSON:
         fout = open(".tmp",'w')
@@ -318,7 +317,7 @@ def flattenEachSampleMap(sMap, bookDic,onlyGenomicSamples):
             print "fail to remove extra rows"
         else:
             print "after keeping sample with genomic data", finalClinMatrix.getROWnum()
-        
+    
     #add to the clinical matrix any samples with genomic data but no clinical data
     emptyData={}
     for col in finalClinMatrix.getCOLs():
@@ -345,27 +344,26 @@ def flattenEachSampleMap(sMap, bookDic,onlyGenomicSamples):
         
     #identify empty features 
     badFeatures= finalClinMatrix.findBadColsNotRemove()
-    finalBadFeatures=[]
 
-    if finalClinFeature:
-        for feature in badFeatures:
-            #get short label
-            shortTitle = finalClinFeature.getShortTitle(feature)
-            if not shortTitle:
-                print feature,"remove"
-                finalBadFeatures.append(feature)
-            elif shortTitle[:19]!="_DEPRECATED_FEATURE":
-                finalBadFeatures.append(feature)
-            else:
-                print shortTitle,"not remove"
-    else:
-        finalBadFeatures =badFeatures[:]
+    print "emptye features:", badFeatures
+
+    #finalBadFeatures=[]
+    #if finalClinFeature:  ###########  don't understand this
+    #    for feature in badFeatures:
+    #        #get short label
+    #        shortTitle = finalClinFeature.getShortTitle(feature)
+    #        if not shortTitle:
+    #            print feature,"remove"
+    #            finalBadFeatures.append(feature)
+    #        else:
+    #            print shortTitle,"not remove"
+    #else:
+    #    finalBadFeatures =badFeatures[:]
         
     #remove bad features
+    finalBadFeatures= badFeatures
     finalClinMatrix.removeCols(finalBadFeatures)
-    
-    if badFeatures:
-        print "remove features", badFeatures
+    print "remove features", finalBadFeatures
 
     # add _PATIENT col
     if finalClinMatrix.addColRoot(sMap) == None:
@@ -388,7 +386,6 @@ def flattenEachSampleMap(sMap, bookDic,onlyGenomicSamples):
         finalClinFeatureJSON= {}
         finalClinFeatureJSON["version"]=datetime.date.today().isoformat() 
         finalClinFeatureJSON["type"]="clinicalFeature"
-        finalClinFeatureJSON["cgDataVersion"]=1
         finalClinFeatureJSON["name"]=jsonName
         finalClinFeatureJSON["path"]=""
         finalClinFeature = ClinicalFeatureNew (None, finalClinFeatureJSON["name"])

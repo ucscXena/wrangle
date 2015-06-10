@@ -7,7 +7,7 @@ from CGDataUtil import *
 import ClinicalFeatureNew
 
 class ClinicalMatrixNew():
-    def __init__ (self, rFHandle,name,FirstColAuto=False, ClinF=None, SkipLines=[], AllowDupCOL = False):
+    def __init__ (self, rFHandle,name,FirstColAuto=0, ClinF=None, SkipLines=[], AllowDupCOL = False):
         #1stColAuto== True, replace first column with autoincrement index 1,2,3,...
         # return emptySelf if fail to initiate
         self.__name=""
@@ -99,10 +99,10 @@ class ClinicalMatrixNew():
             
             for i in range(0,len(data)):
                 data[i]= string.strip(data[i])
-            if FirstColAuto:
+            if FirstColAuto == "auto":
                 sample=str(lineReader.line_num)
             else:
-                sample=data[0]
+                sample = data[FirstColAuto]  # default to 1st column =0
 
             if sample not in self.__ROWs:
                 self.__ROWs.append(sample)

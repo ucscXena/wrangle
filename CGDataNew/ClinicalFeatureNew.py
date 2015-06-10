@@ -34,8 +34,6 @@ class ClinicalFeatureNew():
         for line in readHandle.readlines():
             if string.strip(line)=="":
                 continue
-            if line[0]=="#":
-                continue
             data = string.split(line[:-1],"\t")
             if len(data)!=3:
                 print "not 3 fields",data

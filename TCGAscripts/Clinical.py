@@ -31,9 +31,11 @@ def Clinical(inDir, outDir, cancer,flog,PATHPATTERN, REALRUN):
 
     dataDir=tmpDir
             
+    os.system("rm -f "+outDir+cancer+"/clinical_*")
+
     #make sure there is data
     if REALRUN and (dataDir =="" or not os.path.exists(dataDir)):
-        os.system("rm -f "+outDir+cancer+"/clinical_*")
+        #os.system("rm -f "+outDir+cancer+"/clinical_*")
         cleanGarbage(garbage)
         return
 
@@ -131,33 +133,40 @@ def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN,  originCancer,REAL
                 fin.close()
                 os.system("cp .tmp "+infile)
                 print pattern
+
                 if pattern=="clinical_follow_up":
                     print file
                     if cancer ==originCancer:
-                        cleanupFollowUpFile(infile, ".tmp")
+                        idCOL=1
+                        cleanupFollowUpFile(infile, ".tmp", idCOL)
                         os.system("cp .tmp "+infile)
 
                 # slide file need to be remade due to the need to duplicate column as top or bottom 
                 if pattern=="biospecimen_slide":
                     print file
                     if cancer ==originCancer:
-                        cleanupSlideFile(infile, ".tmp")
+                        idCOL=1
+                        cleanupSlideFile(infile, ".tmp", idCOL)
                         os.system("cp .tmp "+infile)
 
                 #clinicalMatrix
-                FirstColAuto = False
                 AllowDupCol= True
                 if string.find(pattern,"biospecimen_")!=-1:
                     SkipLines =[2]
                 else:
-                    SkipLines =[1,3]
+                    SkipLines =[1,3]  # 1based
                 
                 if os.path.getsize(infile) ==0:
                     continue
 
-                clinMatrix = ClinicalMatrixNew(infile, "foo", FirstColAuto, None, SkipLines, AllowDupCol)
+                if pattern=="biospecimen_slide":
+                    FirstColAuto = 0  #0 based,  already cleaned
+                    clinMatrix = ClinicalMatrixNew(infile, "foo", FirstColAuto, None, SkipLines, AllowDupCol)
+                else:
+                    FirstColAuto = 1  #0 based,  currently 2nd column is the ID
+                    clinMatrix = ClinicalMatrixNew(infile, "foo", FirstColAuto, None, SkipLines, AllowDupCol)
 
-                clinMatrix.removeCols(["ethnicity","race","jewish_origin","patient_id"])
+                clinMatrix.removeCols(["ethnicity","race","jewish_origin"])#,"patient_id"])
 
                 if pattern =="clinical_sample" or pattern=="biospecimen_sample":
                     if "sample_type" in clinMatrix.getCOLs():
@@ -333,7 +342,7 @@ def cleanGarbage(garbageDirs):
         os.system("rm -rf "+dir+"*")
     return
 
-def cleanupSlideFile(infile, outfile):
+def cleanupSlideFile(infile, outfile, idCOL):
     fin = open(infile,'U')
     fout= open(outfile,'w')
 
@@ -370,7 +379,7 @@ def cleanupSlideFile(infile, outfile):
     #content
     for line in fin.readlines():
         data = string.split(line[:-1],'\t')
-        sample = data[0]
+        sample = data[idCOL]
         if sample not in storedData:
             storedData[sample]=[]
             for i in keepCols:
@@ -397,7 +406,7 @@ def cleanupSlideFile(infile, outfile):
     fin = open(infile,'U')
     #write header
     header =string.split(string.strip(fin.readline()),"\t")
-    fout.write(header[0])
+    fout.write(header[idCOL])
     for i in keepCols:
         for location in section_location:
             key = header[i]+"_"+ location
@@ -411,7 +420,7 @@ def cleanupSlideFile(infile, outfile):
         fout.write("\n")
     fout.close()
 
-def cleanupFollowUpFile(infile, outfile):
+def cleanupFollowUpFile(infile, outfile, idCOL):
     fin = open(infile,'U')
     patients={}
     header =string.split(string.strip(fin.readline()),"\t")
@@ -429,7 +438,7 @@ def cleanupFollowUpFile(infile, outfile):
             
     for line in fin.readlines():
         data = string.split(line,'\t')
-        sample= data[0]
+        sample= data[idCOL]
         parts= string.split(sample,"-")
         patient = string.join(parts[0:3],"-")
         if len(parts)==4:
@@ -479,10 +488,10 @@ def cleanupFollowUpFile(infile, outfile):
     
     fin = open(infile,'U')
     fout= open(outfile,'w')
-    fout.write(string.strip(fin.readline())+"\tFlagForSurvivalAnalysis\n" )
+    fout.write("sampleID\t"+ string.join(string.strip(fin.readline()).split("\t")[1:],"\t")+"\tFlagForSurvivalAnalysis\n" )
     for line in fin.readlines():
         data = string.split(string.strip(line),'\t')
-        sample= data[0]
+        sample= data[idCOL]
         parts= string.split(sample,"-")
         patient = string.join(parts[0:3],"-")
         if len(parts)==4:
