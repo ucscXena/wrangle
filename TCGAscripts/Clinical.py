@@ -41,8 +41,7 @@ def Clinical(inDir, outDir, cancer,flog,PATHPATTERN, REALRUN):
 
     process(inDir, outDir, dataDir, cancer,flog,PATHPATTERN, cancer,REALRUN)
 
-    if REALRUN:
-        survival(outDir+cancer+"/", cancer)
+    survival(outDir+cancer+"/", cancer)
 
     if cancer in ["COAD","READ","LUAD","LUSC","LGG","GBM"]:
         if cancer in ["COAD","READ"]:
@@ -51,9 +50,9 @@ def Clinical(inDir, outDir, cancer,flog,PATHPATTERN, REALRUN):
             deriveCancer="LUNG"
         if cancer in ["LGG","GBM"]:
             deriveCancer="GBMLGG"
+        os.system("rm -f "+outDir+ deriveCancer +"/clinical_survival*")
         process(inDir, outDir, dataDir, deriveCancer,flog,PATHPATTERN,  cancer,REALRUN)
-        if REALRUN:
-            survival(outDir+deriveCancer+"/", deriveCancer)
+        survival(outDir+deriveCancer+"/", deriveCancer)
 
     cleanGarbage(garbage)
     return
