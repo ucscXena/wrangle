@@ -38,7 +38,21 @@ def CAVMid (dir, outDir, cancer,log, REALRUN):
             obj=bookDic[name]
             print obj
             if obj['type'] in ["clinicalMatrix","mutationVector"]:
+                os.system("cp "+obj['path']+".json "+outfile+".json")
+
+                fin = open (outfile+".json",'r')
+                J=json.load(fin)
+                fin.close()
+                if J.has_key(":clinicalFeature"):
+                    cFobj= bookDic[J[":clinicalFeature"]]
+                    outfile = outDir +os.path.basename(cFobj['path'])
+                    os.system("cp "+cFobj['path']+" "+outfile)
+                    os.system("cp "+cFobj['path']+".json "+outfile+".json")
+                
                 if REALRUN ==-1:
+                    continue
+
+                if REALRUN ==0 and obj['type']=="mutationVector":
                     continue
 
                 fin = open(obj['path'],'r')
@@ -62,17 +76,6 @@ def CAVMid (dir, outDir, cancer,log, REALRUN):
                     except:
                         fout.write(line)
                 fout.close()
-                
-                os.system("cp "+obj['path']+".json "+outfile+".json")
-
-                fin = open (outfile+".json",'r')
-                J=json.load(fin)
-                fin.close()
-                if J.has_key(":clinicalFeature"):
-                    cFobj= bookDic[J[":clinicalFeature"]]
-                    outfile = outDir +os.path.basename(cFobj['path'])
-                    os.system("cp "+cFobj['path']+" "+outfile)
-                    os.system("cp "+cFobj['path']+".json "+outfile+".json")
                 
             if obj['type']=="genomicMatrix":
                 fin =open(obj['path'],'U')
@@ -195,7 +198,7 @@ def process(file, outfile,samples, intDic):
 REALRUN= 1
 #1 genomic + clinical 
 #0 only clinical data
-# -1: only genomic json
+# -1: only json
 
 cancer="PANCAN"
 dir="preFreeze/TCGA/"

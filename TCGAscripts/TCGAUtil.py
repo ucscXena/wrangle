@@ -164,44 +164,45 @@ anatomical_origin ={
     "PANCAN12":[]
     }
 
+#https://wiki.nci.nih.gov/display/TCGA/TCGA+MAF+Files
 default_mutation = {
-    "LAML":"TCGA_LAML_mutation_wustl",
     "ACC":"TCGA_ACC_mutation_curated_broad", 
     "BLCA":"TCGA_BLCA_mutation_broad", 
-    "LGG":"TCGA_LGG_mutation_broad", 
-    "BRCA":"TCGA_BRCA_mutation_curated_wustl",
+    "BRCA":"TCGA_BRCA_mutation_wustl",
     "CESC":"TCGA_CESC_mutation_curated_wustl",
+    "CHOL":"TCGA_CHOL_mutation_broad",
     "COAD":"TCGA_COAD_mutation_bcm",
+    "DLBC":"",
     "ESCA":"TCGA_ESCA_mutation_broad",
+    "FPPP":"",  ## need hgsc mixed data
     "GBM":"TCGA_GBM_mutation_broad",
     "HNSC":"TCGA_HNSC_mutation_broad",
     "KICH":"TCGA_KICH_mutation_broad",
-    "KIRC":"TCGA_KIRC_mutation_broad",
+    "KIRC":"TCGA_KIRC_mutation_broad",  #need hgsc mixed
     "KIRP":"TCGA_KIRP_mutation_curated_broad",
-    "KIPAN":"",
+    "LAML":"TCGA_LAML_mutation_wustl",
+    "LGG":"TCGA_LGG_mutation_broad", 
     "LIHC":"TCGA_LIHC_mutation_bcm",
     "LUAD":"TCGA_LUAD_mutation_broad",
     "LUSC":"TCGA_LUSC_mutation_broad",
-    "DLBC":"",
     "LNNH":"",
-    "OV":"TCGA_OV_mutation_wustl",
+    "OV":"TCGA_OV_mutation_broad",
     "PAAD":"TCGA_PAAD_mutation_broad",
-    "PRAD":"TCGA_PRAD_mutation_curated_broad",
+    "PCPG":"TCGA_PCPG_mutation_broad",
+    "PRAD":"TCGA_PRAD_mutation_broad",
     "READ":"TCGA_READ_mutation_bcm",
-    "SARC":"",
+    "SARC":"TCGA_SARC_mutation_broad",
     "SKCM":"TCGA_SKCM_mutation_broad",
     "STAD":"TCGA_STAD_mutation_curated_broad",
+    "TGCT":"TCGA_TGCT_mutation_broad",
     "THCA":"TCGA_THCA_mutation_broad",
+    "THYM":"TCGA_THYM_mutation_broad",
     "UCEC":"TCGA_UCEC_mutation_wustl",
-    "CHOL":"TCGA_CHOL_mutation_broad",
     "LCLL":"",
     "LCML":"",
     "MESO":"",
-    "PCPG":"TCGA_PCPG_mutation_broad",
     "UCS":"TCGA_UCS_mutation_broad",
     "UVM":"TCGA_UVM_mutation_broad",
-    "TGCT":"TCGA_TGCT_mutation_broad",
-    "THYM":"",
     "":""
     }
 

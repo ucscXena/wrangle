@@ -12,6 +12,9 @@ def TCGASampleMap (dir, outDir, cancer,log, REALRUN):
     #print status
     print cancer, __name__
 
+    #if cancer in ["PANCAN","PANCAN12"]:
+    #    return
+
     ignore =1
     bookDic = cgWalk(dir,ignore)
     
@@ -56,19 +59,22 @@ def TCGASampleMap (dir, outDir, cancer,log, REALRUN):
                     if sample not in samples:
                         samples.append(sample)
                 fin.close()
-            elif obj['type']=="clinicalMatrix":
-                cMa = ClinicalMatrixNew(obj['path'],name)
-                for sample in cMa.getROWs():
-                    if sample not in samples:
-                        samples.append(sample)
-            elif obj['type']=="mutationVector":
+            #elif obj['type']=="clinicalMatrix":
+            #    cMa = ClinicalMatrixNew(obj['path'],name)
+            #    for sample in cMa.getROWs():
+            #        if sample not in samples:
+            #            samples.append(sample)
+            elif obj['type'] in ["mutationVector","clinicalMatrix"]:
                 path = obj['path']
-                fin=open(path,'r')
+                os.system("cut -f 1 "+path+ " |sort |uniq > .tmp")
+                fin=open('.tmp','r')
                 fin.readline()
                 for line in fin.readlines():
-                    if string.strip(line)=="":
+                    #if string.strip(line)=="":
+                    #    break
+                    sample = string.strip(line) #string.split(line,'\t')[0]
+                    if sample =="":
                         break
-                    sample = string.split(line,'\t')[0]
                     if sample not in samples:
                         samples.append(sample)
 
