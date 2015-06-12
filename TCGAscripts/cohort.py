@@ -125,7 +125,7 @@ def cohort_variable (var, value, inDir, outDir, cancer, flog,REALRUN):
     J["version"]= datetime.date.today().isoformat()
     J["name"]="TCGA_"+cancer+"_"+var
     J["type"]= "clinicalMatrix" 
-    J[":dataSubType"]="phenotype"
+    J["dataSubType"]="phenotype"
     J[":sampleMap"]="TCGA."+cancer+".sampleMap"
     J["cohort"]="TCGA "+TCGAUtil.cancerHumanReadable[cancer]
     if withClinF:

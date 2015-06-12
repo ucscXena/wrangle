@@ -149,6 +149,7 @@ def processClin (filename, dir,outDir, CANCER,flog, REALRUN):
         J['name']=feature+"_"+CANCER
         J['type']="clinicalMatrix"
         J[":sampleMap"]="TCGA."+CANCER+".sampleMap"
+        J["dataSubType"]="phenotype"
 
         if TCGAUtil.featurePriority.has_key(CANCER) or TCGAUtil.valueType.has_key(feature):
             featureConfig=0
