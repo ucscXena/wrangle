@@ -219,13 +219,13 @@ def radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix,
     #change description
     if string.find(PATHPATTERN, "curated")!=-1 :
         J["label"]= "somatic mutation SNPs and small INDELs ("+suffix+" curated vcf)"
-        J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") nonsilent somatic mutation ("+suffix+" curated vcf)"
+        J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") somatic mutation ("+suffix+" curated vcf)"
     elif string.find(PATHPATTERN, "automated")!=-1 :
         J["label"]= "somatic mutation SNPs and small INDELs ("+suffix+" automated vcf)"
-        J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") nonsilent somatic mutation ("+suffix+" automated vcf)"
+        J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") somatic mutation ("+suffix+" automated vcf)"
     else:
         J["label"]= "somatic mutation SNPs and small INDELs ("+suffix+" vcf)"
-        J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") nonsilent somatic mutation ("+suffix+" vcf)"
+        J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") somatic mutation ("+suffix+" vcf)"
 
     J["assembly"]="hg19"
     J["wholeGenome"]= True

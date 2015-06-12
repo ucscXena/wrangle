@@ -106,11 +106,11 @@ $FIREHOSEDATE_ana_version
 0	0	cohort	cohort	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
 
 #merging LUAD and LUSC to LUNG ; COAD READ to COADREAD
-1	1	Merge	genomic	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
+0	0	Merge	genomic	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
 
 
 #PANCAN dataset both PANCAN and individual cancer
-0	0	MergePANCAN	RNAseq	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
+1	0	MergePANCAN	RNAseq	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
 #PANCAN dataset just PANCAN
 0	0	MergePANCAN	Gistic2	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
 0	0	MergePANCAN	HiSeqV2	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP

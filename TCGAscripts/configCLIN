@@ -4,4 +4,4 @@
 $TMP=preFreeze/TCGA/
 
 #DCC data
-1	1	Clinical	ClinicalPublicBioTab	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/bcr/biotab/	$TMP
+1	1	Clinical	ClinicalPublicBioTab	/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/bcr/	$TMP

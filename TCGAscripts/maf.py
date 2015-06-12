@@ -412,7 +412,6 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
     oHandle = open(outDir+cancer+"/"+cgFileName+".json","w")
     J={}
     #stable
-    J["cgDataVersion"]=1
     J["dataSubType"]="somatic mutation (SNPs and small INDELs)"
     J["redistribution"]= distribution
     J["dataProducer"]= dataProducer
@@ -445,13 +444,13 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
     #change description
     if string.find(PATHPATTERN, "curated")!=-1 :
         J["label"]= "somatic mutation SNPs and small INDELs ("+suffix+" curated)"
-        J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") nonsilent somatic mutation ("+suffix+" curated)"
+        J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") somatic mutation ("+suffix+" curated)"
     elif string.find(PATHPATTERN, "automated")!=-1 :
         J["label"]= "somatic mutation SNPs and small INDELs ("+suffix+" automated)"
-        J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") nonsilent somatic mutation ("+suffix+" automated)"
+        J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") somatic mutation ("+suffix+" automated)"
     else:
         J["label"]= "somatic mutation SNPs and small INDELs ("+suffix+")"
-        J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") nonsilent somatic mutation ("+suffix+")"
+        J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") somatic mutation ("+suffix+")"
 
     J["assembly"]="hg19"
     J["wholeGenome"]= True
