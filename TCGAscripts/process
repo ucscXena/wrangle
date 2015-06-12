@@ -20,4 +20,4 @@ python runFlattenTCGA.py --inDir=/inside/home/jzhu/cgDataJing/TCGAscripts/preFre
 
 python convertCAVM.py --inDir=data_flatten/public/TCGA/  --outDir=CAVM/public/TCGA/ --CAVM=1 --TCGA=1 --REALRUN=1
 
-#virtual cohort on PANCAN mutation?
+python virtualData.py "somatic mutation" PANCAN_mutation CAVM/public/TCGA/

@@ -126,7 +126,7 @@ def process (outDir, cancer, c1, c2, file, REALRUN,type):
         cfile = gMoutput+".matrix.json"
         iHandle =open(cfile,"r")
         Jinput= json.loads(iHandle.read())
-        J[":dataSubType"]=  Jinput[":dataSubType"]
+        J["dataSubType"]=  Jinput["dataSubType"]
         J["version"]=  Jinput["version"]
         J["type"]=  Jinput["type"]
         J["cgDataVersion"]=     Jinput["cgDataVersion"]

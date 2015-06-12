@@ -38,6 +38,7 @@ def CAVMid (dir, outDir, cancer,log, REALRUN):
             obj=bookDic[name]
             print obj
             if obj['type'] in ["clinicalMatrix","mutationVector"]:
+                outfile = outDir +os.path.basename(obj['path'])
                 os.system("cp "+obj['path']+".json "+outfile+".json")
 
                 fin = open (outfile+".json",'r')
@@ -63,7 +64,6 @@ def CAVMid (dir, outDir, cancer,log, REALRUN):
                         samples.append(sample)
                 buildSampleDic (samples, sMap, intDic, sampleDic, aliquote_dic)
 
-                outfile = outDir +os.path.basename(obj['path'])
                 fin = open(obj['path'],'r')
                 fout = open(outfile,'w')
                 fout.write(fin.readline())

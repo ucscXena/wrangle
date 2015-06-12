@@ -254,7 +254,7 @@ def output (dir, finalClinMatrix, survivalMatrix, cancer):
     J["type"]= "clinicalMatrix"
     J[":sampleMap"]="TCGA."+cancer+".sampleMap"
     J["cohort"]="TCGA "+TCGAUtil.cancerHumanReadable[cancer]
-    J[":dataSubType"]="phenotype"
+    J["dataSubType"]="phenotype"
 
     #cFjson
     cFJ={}
