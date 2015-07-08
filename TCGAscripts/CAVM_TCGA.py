@@ -36,7 +36,9 @@ def CAVMid (dir, outDir, cancer,log, REALRUN):
             intDic={}#keyed on CAVMid
             sampleDic={} #keyd on original sample id
             obj=bookDic[name]
-            print obj
+
+            print obj["name"]
+
             if obj['type'] in ["clinicalMatrix","mutationVector"]:
                 outfile = outDir +os.path.basename(obj['path'])
                 os.system("cp "+obj['path']+".json "+outfile+".json")
@@ -46,9 +48,9 @@ def CAVMid (dir, outDir, cancer,log, REALRUN):
                 fin.close()
                 if J.has_key(":clinicalFeature"):
                     cFobj= bookDic[J[":clinicalFeature"]]
-                    outfile = outDir +os.path.basename(cFobj['path'])
-                    os.system("cp "+cFobj['path']+" "+outfile)
-                    os.system("cp "+cFobj['path']+".json "+outfile+".json")
+                    cFoutfile = outDir +os.path.basename(cFobj['path'])
+                    os.system("cp "+cFobj['path']+" "+cFoutfile)
+                    os.system("cp "+cFobj['path']+".json "+cFoutfile+".json")
                 
                 if REALRUN ==-1:
                     continue
