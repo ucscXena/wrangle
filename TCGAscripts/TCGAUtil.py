@@ -80,7 +80,7 @@ cancerHumanReadable={
     "CNTL":"Controls",
     "COAD":"Colon Cancer",
     "COADREAD":"Colon and Rectal Cancer",
-    "ESCA":"Esophageal Caner",
+    "ESCA":"Esophageal Cancer",
     "GBM":"Glioblastoma",
     "HNSC":"Head and Neck Cancer",
     "KICH":"Kidney Chromophobe",
@@ -110,7 +110,7 @@ cancerHumanReadable={
     "PCPG":"Pheochromocytoma & Paraganglioma",
     "UCS":"Uterine Carcinosarcoma",
     "UVM":"Ocular melanomas",
-    "TGCT":"Testicular Cancaer",
+    "TGCT":"Testicular Cancer",
     "THYM":"thymoma",
     "PANCAN":"Pan-Cancer",
     "PANCAN12":"PANCAN12"

@@ -23,3 +23,7 @@ python convertCAVM.py --inDir=data_flatten/public/TCGA/  --outDir=CAVM/public/TC
 python virtualData.py "somatic mutation" PANCAN_mutation CAVM/public/TCGA/
 
 python xenaToMatrix.py PANCAN_mutation_gene PANCAN_mutation
+
+cp PANCAN_mutation_gene CAVM/public/TCGA/TCGA.PANCAN.sampleMap/
+
+cp PANCAN_mutation CAVM/public/TCGA/TCGA.PANCAN.sampleMap/

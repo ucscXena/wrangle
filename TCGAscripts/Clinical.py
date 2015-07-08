@@ -57,6 +57,14 @@ def Clinical(inDir, outDir, cancer,flog,PATHPATTERN, REALRUN):
     cleanGarbage(garbage)
     return
 
+def findIDCol(infile):
+    fin = open(infile,'r')
+    data = string.split(fin.readline(),"\t")
+    fin.close()
+    for i in range(0,len(data)):
+        if data[i]=="bcr_patient_barcode":
+            return i
+    return -1
 
 def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN,  originCancer,REALRUN):
     #print status
@@ -162,8 +170,12 @@ def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN,  originCancer,REAL
                     FirstColAuto = 0  #0 based,  already cleaned
                     clinMatrix = ClinicalMatrixNew(infile, "foo", FirstColAuto, None, SkipLines, AllowDupCol)
                 else:
-                    FirstColAuto = 1  #0 based,  currently 2nd column is the ID
-                    clinMatrix = ClinicalMatrixNew(infile, "foo", FirstColAuto, None, SkipLines, AllowDupCol)
+                    FirstColAuto = findIDCol(infile)
+                    if FirstColAuto == -1:
+                        print infile, "bad header line"
+                        continue
+                    else:
+                        clinMatrix = ClinicalMatrixNew(infile, "foo", FirstColAuto, None, SkipLines, AllowDupCol)
 
                 clinMatrix.removeCols(["ethnicity","race","jewish_origin"])#,"patient_id"])
 

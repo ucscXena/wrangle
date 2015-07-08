@@ -101,6 +101,7 @@ def processClin (filename, dir,outDir, CANCER,flog, REALRUN):
     features=["sample_type","sample_type_id","gender","_cohort","age_at_initial_pathologic_diagnosis",
               "_OS","_OS_IND","_RFS","_RFS_IND","_EVENT","_TIME_TO_EVENT","_anatomical_origin","_primary_disease"]        
 
+
     for feature in features:
         print feature
         if REALRUN:
