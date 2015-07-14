@@ -6,8 +6,11 @@ Download ICGC datasets.
 import sys, os, argparse, string, json
 from icgcLib import *
 
-def downloadUrl(project, fileIn):
-    return 'https://dcc.icgc.org/repository/icgc/' + repInfo['release'] + '/Projects/' + project + '/' + fileIn+'.gz'
+def downloadUrl(project, repoName):
+    return 'https://dcc.icgc.org/api/v1/download?fn=/' + repInfo['release'] + '/Projects/' + project + '/' + repoName+"."+project+'.tsv.gz'
+
+def downloadUrlFromFile (project, fileIn):
+    return 'https://dcc.icgc.org/api/v1/download?fn=/' + repInfo['release'] + '/Projects/' + project + '/' + fileIn + '.gz'
 
 def downloadIt(projects, dataTypes):
     for p in projects:
@@ -15,12 +18,12 @@ def downloadIt(projects, dataTypes):
             url = downloadUrl(p, t)
             file = t + '.' + p + '.tsv.gz'
             try:
-                resp = subprocess.check_output(['curl', '--remote-name', '--silent', '--fail', url])
+                resp = subprocess.check_output(['curl', '--silent', '--fail', '-o', file, url])
             except subprocess.CalledProcessError:
                 continue # TODO assuming the file does not exist
 
             try:
-                resp = subprocess.check_output(['curl', '--remote-name', '--silent', url])
+                resp = subprocess.check_output(['curl', '--silent',  '-o',file, url])
             except subprocess.CalledProcessError:
                 error('Curl call failed for file: ' + file)
                 continue
@@ -46,4 +49,4 @@ if __name__ == '__main__':
     initIcgcLib()
     downloadOriginals()
 
-    os.system("gunzip -f "+dirs.orig+"/*")
+    os.system("gunzip -f "+dirs.orig+"/*gz")

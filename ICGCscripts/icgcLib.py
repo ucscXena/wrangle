@@ -9,60 +9,60 @@ from cfg import *
 from repoMeta import *
 
 projects = [ # ICGC projects
-#    'ALL-US',
+    'ALL-US',
     'AML-US',
-#    'BLCA-CN',
-#    'BOCA-FR',
-#    'BOCA-UK',
-#    'BRCA-EU',
-#    'BRCA-UK',
-#    'BTCA-SG',
+    'BLCA-CN',
+    'BOCA-FR',
+    'BOCA-UK',
+    'BRCA-EU',
+    'BRCA-UK',
+    'BTCA-SG',
     'CLLE-ES',
-#    'CCSK-US',
-#    'CMDI-UK',
-#    'COCA-CN',
-#    'EOPC-DE',
-#    'ESAD-UK',
-#    'ESCA-CN',
-#    'GACA-CN',
-#    'LAML-KR',
-#    'LIAD-FR',
-#    'LICA-FR',
-#    'LIHM-FR',
-#    'LINC-JP',
-#    'LIRI-JP',
-#    'LUSC-CN',
-#    'LUSC-KR',
-#    'MALY-DE',
-#    'MELA-AU',
-#    'NBL-US',
-#    'ORCA-IN',
-#    'OV-AU',
-#    'PACA-AU',
-#    'PACA-CA',
-#    'PACA-IT',
-#    'PAEN-AU',
-#    'PBCA-DE',
-#    'PRAD-CA',
-#    'PRAD-UK',
-#    'RECA-CN',
-#    'RECA-EU',
-#    'SKCA-BR',
-#    'THCA-SA',
-#    'WT-US'
+    'CCSK-US',
+    'CMDI-UK',
+    'COCA-CN',
+    'EOPC-DE',
+    'ESAD-UK',
+    'ESCA-CN',
+    'GACA-CN',
+    'LAML-KR',
+    'LIAD-FR',
+    'LICA-FR',
+    'LIHM-FR',
+    'LINC-JP',
+    'LIRI-JP',
+    'LUSC-CN',
+    'LUSC-KR',
+    'MALY-DE',
+    'MELA-AU',
+    'NBL-US',
+    'ORCA-IN',
+    'OV-AU',
+    'PACA-AU',
+    'PACA-CA',
+    'PACA-IT',
+    'PAEN-AU',
+    'PBCA-DE',
+    'PRAD-CA',
+    'PRAD-UK',
+    'RECA-CN',
+    'RECA-EU',
+    'SKCA-BR',
+    'THCA-SA',
+    'WT-US'
 ]
 
 icgcDataTypes = [ # only the dataset types of interest
-    'specimen',
-    'donor',
-    'donor_exposure',
-    'donor_family',
-    'donor_therapy',
-    'exp_array',
-    'exp_seq',
-    'mirna_seq',
-    'meth_array',
-    'simple_somatic_mutation.open',
+#    'specimen',
+#    'donor',
+#    'donor_exposure',
+#    'donor_family',
+#    'donor_therapy',
+#    'exp_array',
+#    'exp_seq',
+#    'mirna_seq',
+#    'meth_array',
+#    'simple_somatic_mutation.open',
     'mutGene'
 ]
 
@@ -130,10 +130,8 @@ def getDsInfo():
         return info
 
 def initConfig():
-    global cohortInfo, dsInfo
+    global cohortInfo
     cohortInfo = getCohortInfo()
-    dsInfo = getDsInfo()
-
 
 def snpEff(eGene):
     try:
@@ -259,6 +257,14 @@ def findDataSubType(fileIn):
         return 'invalid'
     return dataSubTypeInfo
 
+def findRepoName(fileIn):
+    base = os.path.basename(fileIn)
+    reqDsName = base[:base.index('.')]
+
+    if reqDsName == 'simple_somatic_mutation':
+        reqDsName += '.open'
+    return reqDsName
+
 def findRepDataType(dataSubType):
     for type in dataSubTypes:
         if dataSubTypes[type]['name'] == dataSubType:
@@ -274,7 +280,6 @@ def buildDatasetCoreMetadata(repName, url, cohort):
     """
     Build the core dataset metadata given a dataSubType (dst) and cohort.
     """
-    cohortName = getCohortName(cohort)
     xenaCohort = xenaCohortName(cohort)
 
     repoInfo = repoMeta[repName] 
@@ -351,7 +356,7 @@ def writeMetadata(fields, fileOut):
         fOut.write(json.dumps(metadata, indent=4, sort_keys=True) + '\n')
 
 def initIcgcLib():
-    global cohortInfo, dsInfo
+    global cohortInfo
     initConfig()
 
 initIcgcLib()

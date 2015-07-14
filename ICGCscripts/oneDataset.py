@@ -11,9 +11,7 @@ from mutGene import mutGene
 from download import *
 
 def oneDataset(fileIn, dirIn, dirOut,  xenaIds_specimen, xenaIds_donor):
-
     if fileIn[-4:] == '.tsv' or fileIn[-7:] == '.tsv.gz' or fileIn.count('/') > 0:
-        infoTime('*** processing file: ' + fileIn)
         error("Input file must be without a directory and without a '.tsv' or '.tsv.gz' extension.")
         return
 
@@ -36,6 +34,8 @@ def oneDataset(fileIn, dirIn, dirOut,  xenaIds_specimen, xenaIds_donor):
                 return
 
             infoTime('Finished gunzip.')
+        if not os.path.exists(fileIn):
+            return 
 
     stat = {
         'geneCache': {},
@@ -46,14 +46,13 @@ def oneDataset(fileIn, dirIn, dirOut,  xenaIds_specimen, xenaIds_donor):
         'geneXlateFx': 'snpEff(eGene)',
     }
 
+
     # write the xena-ready dataset file
     dataSubType = findDataSubType(fileIn)
+
     if dataSubType == 'invalid':
         infoTime('Failed processing file: ' + os.path.basename(fileIn))
         return
-
-    if not os.path.exists(fileIn):
-        return 
 
     fields = eval(dataSubType['dsFx'] + '(fileIn, fileOut, xenaIds_specimen, xenaIds_donor, stat)')
     if fields == None:
@@ -63,8 +62,8 @@ def oneDataset(fileIn, dirIn, dirOut,  xenaIds_specimen, xenaIds_donor):
     cohort = findCohort(fileIn)
     info('writing cohort json for ' + cohort)
     writeCohortMetadata(cohort, dirOut)
-    repName= string.join(string.split(os.path.basename(fileIn),".")[0:-2],".")
-    url = downloadUrl(cohort,os.path.basename(fileIn))
+    repName= findRepoName (fileIn)
+    url = downloadUrlFromFile(cohort, os.path.basename(fileIn))
     fields  = buildDatasetCoreMetadata(repName, url, cohort)
     writeMetadata(fields, fileOut)
     if 'geneTrans' in fields and fields['geneTrans']:

@@ -221,11 +221,14 @@ def transformToXena(a, sortedFile, fileOut):
     os.system('rm ' + dataFileOut)
 
 def mutGene(fileIn, fileOut, unused, unused2, unused3):
-    print fileIn, fileOut
     infoTime('Starting mutGene.py')
     proj = findCohort(fileIn)
     base = os.path.basename(fileOut)
     fileIn = dirs.xena + 'simple_somatic_mutation.open.' + proj + '.tsv'
+    print fileIn, fileOut
+
+    if not os.path.exists(fileIn):
+        return 
     initConfig()
     fields = ['gene', '#sample', 'effect']
     transFile = dirs.xLate + base

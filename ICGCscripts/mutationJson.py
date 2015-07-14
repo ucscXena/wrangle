@@ -31,7 +31,7 @@ def genomicVector(fileIn, fileOut, fields, stat):
 
     return meta
 
-def mutationJson(fileIn, fileOut, unused, stat):
+def mutationJson(fileIn, fileOut, unused1, unused2, stat):
     """
     Generate json metadata from an original mutation file.
     """

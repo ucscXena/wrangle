@@ -35,7 +35,7 @@ repoMeta = {
         "assembly":"hg19",
         "label":"Somatic mutation (SNPs and small INDELs)",
         },
-    "geneMut":{
+    "mutGene":{
         "dataSubType":"somatic non-silent mutation (gene-level)",
         "type":"genomicMatrix",
         ":probeMap":"hugo_hg18",

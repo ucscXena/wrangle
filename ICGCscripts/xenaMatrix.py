@@ -19,7 +19,6 @@ def xenaMatrix(dirIn, dirOut):
                 origFile = dirIn + '/' + fileBase + '.tsv'
                 if not os.path.exists(origFile) and not os.path.exists(origFile + '.gz'):
                     continue
-
             oneDataset(fileBase, dirIn, dirOut, xenaIds_specimen, xenaIds_donor)
 
     infoTime('Finished xenaMatrix.py')

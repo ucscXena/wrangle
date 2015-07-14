@@ -19,12 +19,16 @@ def oneSamp(sampFile, proj, parsedFile):
 def snpEffParse():
     for p in projects:
         aGlob = dirs.snp + p + '*.eff.vcf'
+        files = glob.glob(aGlob)
+
+        if len(files)==0:
+            continue
+
         parsedFile = dirs.xena + 'simple_somatic_mutation.open.' + p + '.tsv'
         with open(parsedFile,'w') as fOut:
             fOut = csv.writer(fOut, delimiter='\t')
             fOut.writerow(['#sample', 'chr', 'start', 'end', 'reference', 'alt', 'gene', 'effect', 'DNA_VAF', 'RNA_VAF', 'amino_acid'])
 
-        files = glob.glob(aGlob)
         for sampFile in files:
             oneSamp(sampFile, p, parsedFile)
 
