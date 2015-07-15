@@ -9,9 +9,6 @@ from icgcLib import *
 def downloadUrl(project, repoName):
     return 'https://dcc.icgc.org/api/v1/download?fn=/' + repInfo['release'] + '/Projects/' + project + '/' + repoName+"."+project+'.tsv.gz'
 
-def downloadUrlFromFile (project, fileIn):
-    return 'https://dcc.icgc.org/api/v1/download?fn=/' + repInfo['release'] + '/Projects/' + project + '/' + fileIn + '.gz'
-
 def downloadIt(projects, dataTypes):
     for p in projects:
         for t in dataTypes:

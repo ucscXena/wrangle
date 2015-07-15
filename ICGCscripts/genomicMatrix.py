@@ -118,13 +118,16 @@ def extractColumns(fileIn, transFile, fields, stat):
         fOut.writerow([pos, samp, row[valN]])
 
         repoName= findRepoName(fileIn)
+
         a.meta = fieldMetaInit(fieldsIn, row, fields)
-        if 'normalization_algorithm' in row and 'log' not in row['normalization_algorithm'] and repoName in ["exp_array","exp_seq"]: #'RMA' not in row['normalization_algorithm']:
-            a.meta['log2'] = True
-            info('log2 transform will be applied')
-        else:
-            a.meta['log2'] = False
-            info('log2 transform will NOT be applied')
+        if repoName in ["exp_array","exp_seq","mirna_seq"]:
+            LOG, value = alreadyLogged (fileIn)
+            if LOG:
+                a.meta['log2'] = False
+                info(value + ' log2 transform will NOT be applied')
+            else:
+                a.meta['log2'] = True
+                info(value + ' log2 transform will be applied')
 
         # process each row
         for row in fIn:

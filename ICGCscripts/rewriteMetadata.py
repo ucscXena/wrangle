@@ -18,20 +18,8 @@ def oneFile(fileIn, proj, type):
                 jsonString += row
         obj = json.loads(jsonString)
 
-    xenaCohort = repInfo['name'] + ' ' + cohortInfo[proj]['xenaSuffix'] +" (" + proj+")"
+    obj = buildDatasetCoreMetadata(fileIn, proj)
 
-    dataSubType = dataSubTypes[type]['name']
-    obj['cohort'] = xenaCohort
-    obj['description'] = repInfo['dsDescrPrefix'] + xenaCohort +  ' - ' + dataSubType + repInfo['descrSuffix']
-    obj['name'] = xenaCohort + ' - ' + dataSubType
-    obj['dataSubType'] = dataSubType
-    for key in dsInfo[dataSubType]:
-        obj[key]=dsInfo[dataSubType][key]
-    if dataSubType=="somatic non-silent mutation (gene-level)":
-        if  obj.has_key("ICGC"):
-            obj.pop("ICGC")
-        obj["url"]=obj["url"].replace("mutGene","simple_somatic_mutation")
-    # write out the new json
     with open(fileIn+".json", 'w') as fOut:
         fOut.write(json.dumps(obj, indent=2) + '\n')
 

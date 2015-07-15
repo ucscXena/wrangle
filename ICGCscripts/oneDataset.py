@@ -62,12 +62,7 @@ def oneDataset(fileIn, dirIn, dirOut,  xenaIds_specimen, xenaIds_donor):
     cohort = findCohort(fileIn)
     info('writing cohort json for ' + cohort)
     writeCohortMetadata(cohort, dirOut)
-    repName= findRepoName (fileIn)
-    url = downloadUrlFromFile(cohort, os.path.basename(fileIn))
-    LOG = False
-    if fields.has_key('meta') and fields.meta.has_key('log2') and fields.meta.log2:
-        LOG=True
-    fields  = buildDatasetCoreMetadata(repName, url, cohort, LOG)
+    fields  = buildDatasetCoreMetadata(fileIn, cohort)
     writeMetadata(fields, fileOut)
     if 'geneTrans' in fields and fields['geneTrans']:
         uniqueGenes = len(stat['geneCache'])
