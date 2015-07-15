@@ -53,16 +53,16 @@ projects = [ # ICGC projects
 ]
 
 icgcDataTypes = [ # only the dataset types of interest
-#    'specimen',
-#    'donor',
-#    'donor_exposure',
-#    'donor_family',
-#    'donor_therapy',
-#    'exp_array',
-#    'exp_seq',
-#    'mirna_seq',
-#    'meth_array',
-#    'simple_somatic_mutation.open',
+    'specimen',
+    'donor',
+    'donor_exposure',
+    'donor_family',
+    'donor_therapy',
+    'exp_array',
+    'exp_seq',
+    'mirna_seq',
+    'meth_array',
+    'simple_somatic_mutation.open',
     'mutGene'
 ]
 
@@ -276,7 +276,7 @@ def myArgParse(parser):
     parser.add_argument('--dirOut', metavar="Directory of xena-ready files.", default=dirs.xena)
     return parser.parse_args()
 
-def buildDatasetCoreMetadata(repName, url, cohort):
+def buildDatasetCoreMetadata(repName, url, cohort, LOG):
     """
     Build the core dataset metadata given a dataSubType (dst) and cohort.
     """
@@ -285,13 +285,25 @@ def buildDatasetCoreMetadata(repName, url, cohort):
     repoInfo = repoMeta[repName] 
     label = repoInfo["label"]
 
+    if repName == "simple_somatic_mutation.open":
+        wrangle = "Data downloaded from dcc.icgc.org , converted to xena mutationVectorformats, loaded to UCSC xena database."
+
+    elif repName == "mutGene":
+        wrangle = "Data downloaded from dcc.icgc.org , converted to binary data to non-silent and non-silent mutations, binary results are loaded to UCSC xena database."
+
+    else:
+        if LOG:
+            wrangle = "Data downloaded from dcc.icgc.org , converted to tab-delimited spread-sheet form, loaded to UCSC xena database."
+        else:
+            wrangle = "Data downloaded from dcc.icgc.org, converted tab-delimited spread-sheet/matrix form, values are log2(x+1) transformed, loaded to UCSC xena database."
+
     meta = {
         'cohort': repInfo['name'] + ' ' + xenaCohort,
         'description': repInfo['dsDescrPrefix'] + xenaCohort +  ' - ' + label + repInfo['descrSuffix'],
         'version': repInfo['version'],
         'url': url, 
+        'wrangling_procedure':wrangle,
     }
-
 
     for key in repoInfo:
         meta[key]=repoInfo[key]
