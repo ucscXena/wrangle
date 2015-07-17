@@ -2,7 +2,7 @@ import string,os,sys
 import icgcLib
 
 def process(info, infile, fout):
-    project = os.path.basename(infile)[9:].replace(".tsv","")
+    project = icgcLib.findCohort(infile)  #    project = os.path.basename(infile)[9:].replace(".tsv","")
     cohort=  info[project]["xenaSuffix"]
     primary_disease = info[project]["primary_disease"]
 
@@ -12,7 +12,7 @@ def process(info, infile, fout):
         if line =="":
             break
         sample = string.split(line,"\t")[0]
-        fout.write(sample+"\t"+cohort+"\t"+primary_disease+"\n")
+        fout.write(sample+"\t"+project+"\t"+cohort+"\t"+primary_disease+"\n")
     return
 
 if __name__ == '__main__' :
@@ -29,7 +29,7 @@ if __name__ == '__main__' :
     info =icgcLib.getCohortInfo() #xenaSuffix primary_disease
 
     fout = open(outfile,"w")
-    fout.write("Sample\t_Cohort\t_primary_disease\n")
+    fout.write("Sample\tProject_code\t_Cohort\t_Primary_disease\n")
 
     for infile in inFiles:
         process(info, infile, fout)

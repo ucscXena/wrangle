@@ -33,6 +33,9 @@ class probeseg:
 
 
 if __name__ == "__main__":
+    if len(sys.argv[:])!= 4:
+        print "python segToMatrix.py inputSegmentFile refGeneFile outputBase\n"
+        sys.exit()
     seg = CGData.GenomicSegment.GenomicSegment()
     seg.load(sys.argv[1])
     

@@ -53,7 +53,8 @@ typeDic={
 
 #xena data file
 #ALLGENE_FILE = "/inside/home/jzhu/scripts/name2/RefGene.name2"
-ALLGENE_FILE = "/data/TCGA/tcgaDataOneOff/Genomic/PANCAN/genes"
+#ALLGENE_FILE = "/data/TCGA/tcgaDataOneOff/Genomic/PANCAN/genes"
+ALLGENE_FILE = "gencode_genes"
 
 def allGeneList(file):
     fin = open(file,'r')
@@ -125,7 +126,7 @@ def output (outfile, samples, genes, dic):
 
 if __name__ == '__main__':
     if len(sys.argv[:]) < 3:
-        print "python mafToMatrix.py matrixOUTPUT mafTypeFilen\n"
+        print "python xenaToMatrix.py matrixOUTPUT mafTypeFilen\n"
         sys.exit()
 
     outfile = sys.argv[1]

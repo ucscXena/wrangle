@@ -1,7 +1,7 @@
 """
 Process a clinicalMatrix file.
 """
-import sys, os, string, csv
+import sys, os, string, csv, json
 from icgcLib import *
 
 cI = {
@@ -92,7 +92,7 @@ def buildXenaRow(prev, specIds, rows, xenaIds, fields, survivalHead):
 def donor (fileIn, fileOut, xenaIds_specimen, xenaIds_donor, stat=None):
     print fileIn, fileOut
 
-    fin = open(fileIn,'r')
+    fin = open(fileIn,'rU')
     fout = open(fileOut,'w')
 
     header= string.split(string.strip(fin.readline()),'\t')
@@ -104,7 +104,7 @@ def donor (fileIn, fileOut, xenaIds_specimen, xenaIds_donor, stat=None):
     fout.write("\n")
 
     for line in fin.readlines():
-        data = string.split(line,'\t')
+        data = string.split(line[:-1],'\t')
         donor_id = data[0]
         xena_ids = xenaIds_donor[donor_id]
         for xena_id in xena_ids:
@@ -114,7 +114,62 @@ def donor (fileIn, fileOut, xenaIds_specimen, xenaIds_donor, stat=None):
             fout.write("\n")
     fin.close()
     fout.close()
+
+    #survial
+    if string.find(os.path.basename(fileIn),"donor.")!=-1:
+        proj = findCohort(fileIn)
+        survivalFile = os.path.dirname(fileOut)+"/survival."+proj+".tsv"
+        survival(fileOut, survivalFile)
+
     return{}
+
+def survival (fileIn, fileOut):
+    print fileIn, fileOut
+
+    fin = open(fileIn,'rU')
+
+    col_donor_survival_time = -1
+    col_donor_vital_status =-1 
+
+    header= string.split(string.strip(fin.readline()),'\t')
+    for i in range(1,len(header)):
+        if header[i]=="donor_survival_time":
+            col_donor_survival_time = i
+        if header[i]=="donor_vital_status":
+            col_donor_vital_status = i
+    if col_donor_survival_time ==-1 or  col_donor_vital_status ==-1:
+        return 
+
+    fout = open(fileOut,'w')
+    fout.write("xena_id\tdonor_survival_time\t_TIME_TO_EVENT\tdonor_vital_status\t_EVENT\n")
+
+    for line in fin.readlines():
+        data = string.split(line,'\t')
+        id = data[0]
+        time = data[col_donor_survival_time]
+        event = data[col_donor_vital_status]
+        if event =="alive":
+            fout.write(string.join([id, time, time, event, "0"],"\t")+"\n")
+        elif event =="deceased":
+            fout.write(string.join([id, time, time, event, "1"],"\t")+"\n")
+    fin.close()
+    fout.close()
+
+    #json
+    fout = open(fileOut+".json",'w')
+    proj = findCohort(fileIn)
+    xenaCohort = xenaCohortName(proj)
+    obj= {
+        "version": date.today().isoformat(),
+        "dataSubType":"phenotype",
+        "type":"clinicalMatrix",
+        'cohort': repInfo['name'] + ' ' + xenaCohort,
+        'label':"phenotype overall survival",
+        ':clinicalFeature':"clinicalFeature",
+    }
+    fout.write(json.dumps(obj, indent=4, sort_keys=True) + '\n')
+    fout.close()
+    return
 
 def specimen (fileIn, fileOut, xenaIds_specimen, xenaIds_donor,  stat=None):
     print fileIn, fileOut

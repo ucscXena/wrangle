@@ -53,13 +53,13 @@ projects = [ # ICGC projects
 
 icgcDataTypes = [ # only the dataset types of interest
 #    'specimen',
-#    'donor',
+    'donor',
 #    'donor_exposure',
 #    'donor_family',
 #    'donor_therapy',
-    'exp_array',
-    'exp_seq',
-    'mirna_seq',
+#    'exp_array',
+#    'exp_seq',
+#    'mirna_seq',
 #    'meth_array',
 #    'simple_somatic_mutation.open',
 #    'mutGene'

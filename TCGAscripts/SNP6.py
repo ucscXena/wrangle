@@ -154,7 +154,7 @@ def SNP6 (inDir, outDir, cancer,flog, REALRUN):
         fout.close()
         if samples!=[]:
             # segToMatrix
-            os.system("python seg2matrix/segToMatrix.py "+outfile +" seg2matrix/refGene_hg18 "+ gMoutput)
+            os.system("python seg2matrix/segToMatrix.py "+outfile +" seg2matrix/refGene_hg19 "+ gMoutput)
         else:
             os.system("rm -f "+outfile)
             os.system("rm -f "+outfile+".json")
