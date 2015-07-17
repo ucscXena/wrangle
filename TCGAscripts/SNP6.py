@@ -85,14 +85,6 @@ def SNP6 (inDir, outDir, cancer,flog, REALRUN):
     #print status
     print cancer, __name__
 
-    #identify which version of SNP6 data
-    new=0
-    for dataDir in os.listdir(rootDir):
-        for file in os.listdir(rootDir+dataDir):
-            if string.find(file,".hg18.seg.txt")!=-1:
-                new=1
-                break
-
     #mage-tab processing for id mapping
     lastMageTab=0
     for file in os.listdir(inDir):
@@ -121,10 +113,8 @@ def SNP6 (inDir, outDir, cancer,flog, REALRUN):
     for dirpath, dirnames, filenames in os.walk(rootDir):
         for file in filenames:
             if string.find(file,"sdrf.txt")!=-1:
-                if new:
-                    mapping= processMageTab(mapping, dirpath+"/"+file,7)
-                else:
-                    mapping= processMageTab(mapping, dirpath+"/"+file,6)
+                mapping= processMageTab(mapping, dirpath+"/"+file,7)
+
     #make sure there is data
     if REALRUN and (rootDir =="" or not os.path.exists(rootDir)):
         cleanGarbage(garbage)
@@ -144,10 +134,7 @@ def SNP6 (inDir, outDir, cancer,flog, REALRUN):
         samples=[]
         for dataDir in os.listdir(rootDir):
             for file in os.listdir(rootDir+dataDir):
-                if not new:
-                    pattern ="seg."
-                else:
-                    pattern =".hg18.seg."
+                pattern =".hg19.seg."
                 if string.find(file,pattern)!=-1:
                     infile = rootDir+dataDir+"/"+file
                     process(samples,cancer,infile,flog,mapping, fout)
@@ -174,39 +161,40 @@ def SNP6 (inDir, outDir, cancer,flog, REALRUN):
         oHandle = open(gMoutput+".probeMap.json","w")
         makeProbeJSON(oHandle,cancer,noCNV)
     
-    if new:
-        outfile =  outDir+cancer+"/"+"SNP6_nocnv_genomicSegment"
-        gMoutput = outDir+cancer+"/"+"SNP6_nocnv"
-        if REALRUN:
-            fout=open(outfile,'w')
-            samples=[]
-            for dataDir in os.listdir(rootDir):
-                for file in os.listdir(rootDir+dataDir):
-                    pattern ="nocnv_hg18.seg."
-                    if string.find(file,pattern)!=-1:
-                        infile = rootDir+dataDir+"/"+file
-                        process(samples,cancer,infile,flog,mapping, fout)
-            fout.close()
-            if samples!=[]:
-                # segToMatrix
-                os.system("python seg2matrix/segToMatrix.py "+outfile +" seg2matrix/refGene_hg18 "+ gMoutput)
-            else:
-                os.system("rm -f "+outfile)
-                os.system("rm -f "+outfile+".json")
-                os.system("rm -f "+gMoutput+".matrix")
-                os.system("rm -f "+gMoutput+".probeMap")
-                os.system("rm -f "+gMoutput+".matrix.json")
-                os.system("rm -f "+gMoutput+".probeMap.json")
-        noCNV=1
-        if os.path.exists(outfile):
-            oHandle = open(outfile+".json","w")
-            makeJSON(oHandle,cancer,lastMageTab,inDir,noCNV,"genomicSegment")
-        if os.path.exists(gMoutput+".matrix"):
-            oHandle = open(gMoutput+".matrix.json","w")
-            makeJSON(oHandle,cancer,lastMageTab,inDir,noCNV,"genomicMatrix")
-            #probeMap
-            oHandle = open(gMoutput+".probeMap.json","w")
-            makeProbeJSON(oHandle,cancer,noCNV)
+
+
+    outfile =  outDir+cancer+"/"+"SNP6_nocnv_genomicSegment"
+    gMoutput = outDir+cancer+"/"+"SNP6_nocnv"
+    if REALRUN:
+        fout=open(outfile,'w')
+        samples=[]
+        for dataDir in os.listdir(rootDir):
+            for file in os.listdir(rootDir+dataDir):
+                pattern ="nocnv_hg19.seg."
+                if string.find(file,pattern)!=-1:
+                    infile = rootDir+dataDir+"/"+file
+                    process(samples,cancer,infile,flog,mapping, fout)
+        fout.close()
+        if samples!=[]:
+            # segToMatrix
+            os.system("python seg2matrix/segToMatrix.py "+outfile +" seg2matrix/refGene_hg19 "+ gMoutput)
+        else:
+            os.system("rm -f "+outfile)
+            os.system("rm -f "+outfile+".json")
+            os.system("rm -f "+gMoutput+".matrix")
+            os.system("rm -f "+gMoutput+".probeMap")
+            os.system("rm -f "+gMoutput+".matrix.json")
+            os.system("rm -f "+gMoutput+".probeMap.json")
+    noCNV=1
+    if os.path.exists(outfile):
+        oHandle = open(outfile+".json","w")
+        makeJSON(oHandle,cancer,lastMageTab,inDir,noCNV,"genomicSegment")
+    if os.path.exists(gMoutput+".matrix"):
+        oHandle = open(gMoutput+".matrix.json","w")
+        makeJSON(oHandle,cancer,lastMageTab,inDir,noCNV,"genomicMatrix")
+        #probeMap
+        oHandle = open(gMoutput+".probeMap.json","w")
+        makeProbeJSON(oHandle,cancer,noCNV)
             
     cleanGarbage(garbage)
     return
@@ -230,7 +218,7 @@ def makeProbeJSON(oHandle,cancer,noCNV):
     J["name"]=mName+"_probeMap"
     J["type"]="probeMap"
     J["version"]= datetime.date.today().isoformat()
-    J["assembly"]="hg18"
+    J["assembly"]="hg19"
     oHandle.write( json.dumps( J, indent=-1 ) )
     oHandle.close()
     
@@ -272,7 +260,7 @@ def makeJSON(oHandle,cancer,lastMageTab,inDir,noCNV,type):
         J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") segmented copy number variation profile after removing common germline copy number variation.<br><br>"
     else:
         J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") segmented copy number variation profile.<br><br>"
-    J["description"]=J["description"]+" Copy number profile was measured experimentally using the Affymetrix Genome-Wide Human SNP Array 6.0 platform at the Broad TCGA genome characterization center. Raw copy numbers were estimated at each of the SNP and copy-number markers. <a href=\"http://www.ncbi.nlm.nih.gov/pubmed/15475419\" target=\"_blank\"><u>Circular binary segmentation</u></a> was then used to segment the copy number data. Segments are mapped to hg18 genome assembly at Broad."
+    J["description"]=J["description"]+" Copy number profile was measured experimentally using the Affymetrix Genome-Wide Human SNP Array 6.0 platform at the Broad TCGA genome characterization center. Raw copy numbers were estimated at each of the SNP and copy-number markers. <a href=\"http://www.ncbi.nlm.nih.gov/pubmed/15475419\" target=\"_blank\"><u>Circular binary segmentation</u></a> was then used to segment the copy number data. Segments are mapped to hg19 genome assembly at Broad."
     if noCNV:
         J["description"] = J["description"]+" A fixed set of common germline cnv probes were removed prior to segmentation."
     J["description"]=J["description"]+" Reference to the algorithm used by Broad to produce the dataset: <a href =\"https://tcga-data.nci.nih.gov/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/"+string.lower(cancer)+"/cgcc/broad.mit.edu/genome_wide_snp_6/snp/broad.mit.edu_"+cancer+".Genome_Wide_SNP_6.mage-tab.1."+ str(lastMageTab)+".0/DESCRIPTION.txt\" target=\"_blank\"> <u>DCC description</u></a> and <a href=\"http://www.nature.com/nature/journal/vaop/ncurrent/suppinfo/nature07385.html\" target=\"_blank\"><u>nature 2008</u></a> ."
@@ -303,7 +291,7 @@ def makeJSON(oHandle,cancer,lastMageTab,inDir,noCNV,type):
 
     J["type"]= type
     if type=="genomicSegment":
-        J["assembly"]= "hg18"
+        J["assembly"]= "hg19"
     if type=="genomicMatrix":
         J[":probeMap"]=J['name']+"_probeMap"
         if noCNV:

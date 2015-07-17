@@ -52,11 +52,11 @@ projects = [ # ICGC projects
 ]
 
 icgcDataTypes = [ # only the dataset types of interest
-#    'specimen',
+    'specimen',
     'donor',
-#    'donor_exposure',
-#    'donor_family',
-#    'donor_therapy',
+    'donor_exposure',
+    'donor_family',
+    'donor_therapy',
 #    'exp_array',
 #    'exp_seq',
 #    'mirna_seq',
