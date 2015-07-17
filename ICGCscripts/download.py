@@ -7,7 +7,7 @@ import sys, os, argparse, string, json
 from icgcLib import *
 
 def downloadUrl(project, repoName):
-    return 'https://dcc.icgc.org/api/v1/download?fn=/' + repInfo['release'] + '/Projects/' + project + '/' + repoName+"."+project+'.tsv.gz'
+    return repInfo['download'] + repInfo['release'] + '/Projects/' + project + '/' + repoName+"."+project+'.tsv.gz'
 
 def downloadIt(projects, dataTypes):
     for p in projects:

@@ -97,12 +97,14 @@ def survival (fileIn, fileOut):
     proj = findCohort(fileIn)
     xenaCohort = xenaCohortName(proj)
     obj= {
+        ':clinicalFeature':"clinicalFeature",
         "version": date.today().isoformat(),
         "dataSubType":"phenotype",
         "type":"clinicalMatrix",
         'cohort': repInfo['name'] + ' ' + xenaCohort,
         'label':"Phenotype overall survival",
-        ':clinicalFeature':"clinicalFeature",
+        'url': repInfo['download'] + repInfo['release'] + '/Projects/' + proj + '/donor.'+ proj+'.tsv.gz',
+        'wrangling_procedure':"Donor data downloaded from dcc.icgc.org, extracted <b>donor_survival_time </b>and <b>donor_vital_status </b>information, loaded to UCSC xena database. donor_survival_time is _TIME_TO_EVENT.  donor_vital_status is _EVENT (deceased =1, alive =0).",
     }
     fout.write(json.dumps(obj, indent=4, sort_keys=True) + '\n')
     fout.close()

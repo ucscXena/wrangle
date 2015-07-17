@@ -57,12 +57,12 @@ icgcDataTypes = [ # only the dataset types of interest
     'donor_exposure',
     'donor_family',
     'donor_therapy',
-#    'exp_array',
-#    'exp_seq',
-#    'mirna_seq',
-#    'meth_array',
-#    'simple_somatic_mutation.open',
-#    'mutGene'
+    'exp_array',
+    'exp_seq',
+    'mirna_seq',
+    'meth_array',
+    'simple_somatic_mutation.open',
+    'mutGene'
 ]
 
 dataSubTypes = { # referenced by repository data type name
@@ -83,12 +83,14 @@ dataSubTypes = { # referenced by repository data type name
 silent = False # Silent means silent execution requested, log only to file
 
 repInfo  = { # ICGC repository information
-    'release': 'release_19', # exact format to construct download URLs
+    'release': 'release_19', 
     'version': date.today().isoformat(),
     'name': 'ICGC',
     'cohortDescrPrefix': 'This cohort is ',
-    'dsDescrPrefix': 'This dataset is '
+    'dsDescrPrefix': 'This dataset is ',
+    'download':'https://dcc.icgc.org/api/v1/download?fn=/',
 }
+
 repInfo['descrSuffix'] = ", "+ repInfo['release'] + '.'
 
 def downloadUrlFromFile (repName, project, fileIn):
@@ -96,7 +98,7 @@ def downloadUrlFromFile (repName, project, fileIn):
         outsideFile =string.replace(fileIn,'mutGene','simple_somatic_mutation.open')
     else:
         outsideFile = fileIn
-    return 'https://dcc.icgc.org/api/v1/download?fn=/' + repInfo['release'] + '/Projects/' + project + '/' + outsideFile + '.gz'
+    return repInfo['download'] + repInfo['release'] + '/Projects/' + project + '/' + outsideFile + '.gz'
 
 
 def getCohortInfo():
@@ -303,10 +305,10 @@ def buildDatasetCoreMetadata(fileIn, cohort):
     LOG, value = alreadyLogged(fileIn)
     
     if repName == "simple_somatic_mutation.open":
-        wrangle = "Data downloaded from dcc.icgc.org , converted to xena mutationVectorformats, loaded to UCSC xena database."
+        wrangle = "Data downloaded from dcc.icgc.org, converted to xena mutationVectorformats, loaded to UCSC xena database."
 
     elif repName == "mutGene":
-        wrangle = "Data downloaded from dcc.icgc.org , converted to binary data to non-silent and non-silent mutations, binary results are loaded to UCSC xena database."
+        wrangle = "Data downloaded from dcc.icgc.org, converted to binary data to non-silent and non-silent mutations, binary results are loaded to UCSC xena database."
 
     elif repName in ["exp_array","exp_seq","mirna_seq"]:    
         if value =="":
@@ -314,13 +316,13 @@ def buildDatasetCoreMetadata(fileIn, cohort):
         else:
             value = value + " transformed value"
         if LOG: # already log transformed
-            wrangle = "Data downloaded from dcc.icgc.org , converted to tab-delimited spread-sheet form, loaded to UCSC xena database."
+            wrangle = "Data downloaded from dcc.icgc.org, converted to tab-delimited spread-sheet form, loaded to UCSC xena database."
             meta['unit']= value
         else:
             wrangle = "Data downloaded from dcc.icgc.org, converted tab-delimited spread-sheet/matrix form, values are log2(x+1) transformed, loaded to UCSC xena database."
             meta['unit']= "log2(x+1) of " + value 
     else:
-        wrangle = "Data downloaded from dcc.icgc.org , converted to tab-delimited spread-sheet form, loaded to UCSC xena database."
+        wrangle = "Data downloaded from dcc.icgc.org, converted to tab-delimited spread-sheet form, loaded to UCSC xena database."
 
     meta['wrangling_procedure'] = wrangle
 
