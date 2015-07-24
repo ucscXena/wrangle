@@ -78,19 +78,19 @@ class CGObjectBase(dict):
         
         if self.zip is None:
             if os.path.exists(path):
-                dhandle = open(path)
+                dhandle = open(path,'rU')
                 self.read(dhandle, **kw)
                 dhandle.close()
         else:
             z = ZipFile(self.zip)
-            dhandle = z.open(self.path)
+            dhandle = z.open(self.path, 'rU')
             self.read(dhandle, **kw)
             dhandle.close()
             z.close()
             
         self.path = path
         if (os.path.exists(path + ".json")):
-            mhandle = open(path + ".json")
+            mhandle = open(path + ".json",'rU')
             meta = json.loads(mhandle.read())
             meta = dict((k, v) for k, v in meta.iteritems() if v != None)
             self.update(meta)
@@ -128,14 +128,14 @@ class CGObjectBase(dict):
         if self.path is not None:
             if self.zip is None:
                 if os.path.exists(self.path):
-                    dhandle = open(self.path)
+                    dhandle = open(self.path, 'rU')
                     out = self.read_keyset(dhandle, key_predicate)
                     for a in out:
                         yield a
                     dhandle.close()
             else:
                 z = ZipFile(self.zip)
-                dhandle = z.open(self.path)
+                dhandle = z.open(self.path, 'rU')
                 out = self.read_keyset(dhandle, key_predicate)
                 for a in out:
                     yield a
@@ -302,7 +302,7 @@ def load(path, zip=None):
     data_path = re.sub(r'.json$', '', path)
 
     try:
-        handle = open(path)
+        handle = open(path, 'rU')
         meta = json.loads(handle.read())
     except IOError:
         raise FormatException("Meta-info (%s) file not found" % (path))
@@ -328,13 +328,13 @@ def light_load(path, zip=None):
 
     if zip is None:
         try:
-            handle = open(path)
+            handle = open(path, 'rU')
             meta = json.loads(handle.read())
         except IOError:
             raise FormatException("Meta-info (%s) file not found" % (path))
     else:
         z = ZipFile(zip)
-        handle = z.open(path)
+        handle = z.open(path,'rU')
         meta = json.loads(handle.read())
         handle.close()
         z.close()
