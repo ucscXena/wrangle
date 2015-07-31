@@ -7,9 +7,6 @@ from ClinicalMatrixNew  import *
 from ClinicalFeatureNew  import *
 from CGDataUtil import *
 
-inDir="CAVMold"
-outfile ="statReport"
-
 def genomicMatrixSampleNumber(file):
     fin = open(file,'r')
     n =len(string.split(fin.readline(),"\t"))-1
@@ -34,41 +31,43 @@ def runRepoStats(inDir, outfile):
         if obj["type"] !="genomicMatrix":
             continue
         name= obj["name"]
-        groupTitle= obj["groupTitle"]
-        dataSubType = obj[":dataSubType"]
+
+        dataSubType = obj["dataSubType"]
         path=obj["path"]
         tDataset = tDataset +1
         if dataSubType not in dataSubTypes:
             dataSubTypes.append(dataSubType)
-        if statDic.has_key(groupTitle):
-            if statDic[groupTitle].has_key(dataSubType):
-                statDic[groupTitle][dataSubType]= statDic[groupTitle][dataSubType]+genomicMatrixSampleNumber(path)
-            else:
-                statDic[groupTitle][dataSubType]= genomicMatrixSampleNumber(path)
+        if statDic.has_key(dataSubType):
+            statDic[dataSubType]= statDic[dataSubType]+genomicMatrixSampleNumber(path)
         else:
-            statDic[groupTitle]={}
-            statDic[groupTitle][dataSubType]= genomicMatrixSampleNumber(path)
+            statDic[dataSubType]= genomicMatrixSampleNumber(path)
 
     #output stats
-    fout=open(outfile,"w")
     dataSubTypes.sort()
-    fout.write("data group\t"+string.join(dataSubTypes,"\t")+"\n")
     index = statDic.keys()
     index.sort()
     tSample=0
-    for groupTitle in index:
-        fout.write(groupTitle)
-        for dataSubType in dataSubTypes:
-            if statDic[groupTitle].has_key(dataSubType):
-                fout.write("\t"+str(statDic[groupTitle][dataSubType]))
-                tSample= tSample +statDic[groupTitle][dataSubType]
-            else:
-                fout.write("\t")
+
+    for dataSubType in dataSubTypes:
+        fout.write(dataSubType+"\t"+str(statDic[dataSubType]))
+        tSample= tSample +statDic[dataSubType]
         fout.write("\n")
+
     fout.write("total dataset = "+ str(tDataset)+"\n")
     fout.write("total sample = "+ str(tSample)+"\n")
-    fout.close()
 
-runRepoStats(inDir, outfile)
+
+outfile ="statReport"
+fout=open(outfile,"w")
+
+fout.write("all data\n")
+inDir="CAVM/"
+runRepoStats(inDir, fout)
+
+fout.write("\nopen data\n")
+inDir="CAVM/public"
+runRepoStats(inDir, fout)
+
+fout.close()
 
 
