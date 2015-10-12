@@ -141,7 +141,8 @@ def SNP6 (inDir, outDir, cancer,flog, REALRUN):
         fout.close()
         if samples!=[]:
             # segToMatrix
-            os.system("python seg2matrix/segToMatrix.py "+outfile +" seg2matrix/refGene_hg19 "+ gMoutput)
+            #os.system("python seg2matrix/segToMatrix.py "+outfile +" seg2matrix/refGene_hg19 "+ gMoutput)
+            os.system("python seg2matrix/segToMatrixGalaxy.py "+outfile +" seg2matrix/refGene_hg19 "+ gMoutput+".matrix "+gMoutput+".probeMap 0")
         else:
             os.system("rm -f "+outfile)
             os.system("rm -f "+outfile+".json")
@@ -177,7 +178,8 @@ def SNP6 (inDir, outDir, cancer,flog, REALRUN):
         fout.close()
         if samples!=[]:
             # segToMatrix
-            os.system("python seg2matrix/segToMatrix.py "+outfile +" seg2matrix/refGene_hg19 "+ gMoutput)
+            #os.system("python seg2matrix/segToMatrix.py "+outfile +" seg2matrix/refGene_hg19 "+ gMoutput)
+            os.system("python seg2matrix/segToMatrixGalaxy.py "+outfile +" seg2matrix/refGene_hg19 "+ gMoutput+".matrix "+gMoutput+".probeMap 0")
         else:
             os.system("rm -f "+outfile)
             os.system("rm -f "+outfile+".json")
@@ -367,6 +369,7 @@ def process(samples,cancer,infile,flog, mapping,fout):
 
     fin=open(infile,'U')
     line = fin.readline()
+    fout.write("sample"+"\t"+"chr"+"\t"+"start"+"\t"+"end"+"\t"+"strand"+"\t"+"value"+"\n")
     for line in fin.readlines():
         sample,chr,start, end, numMark, segMean = string.split(line[:-1],"\t")
         sample=mapping[sample]
