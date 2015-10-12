@@ -32,7 +32,11 @@ def cgWalk(dir, ignore):
             #load .json
             J = json.loads(open(root+"/"+base+".json").read())
             J['path']= root+"/"+base
-            name = J['name']
+            if J.has_key("name"):
+                name = J['name']
+            else:
+                name = root+"/"+base
+                J["name"]= name
             if not J.has_key('type'):
                 J['type']=None
 

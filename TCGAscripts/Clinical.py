@@ -333,7 +333,7 @@ def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN,  originCancer,REAL
                 cFJ["type"]="clinicalFeature"
                 J["type"]= "clinicalMatrix" 
                 J[":sampleMap"]="TCGA."+cancer+".sampleMap"
-                J["cohort"]="TCGA "+TCGAUtil.cancerHumanReadable[cancer]
+                J["cohort"]="TCGA "+TCGAUtil.cancerHumanReadable[cancer]+" ("+cancer+")"
                 J[":clinicalFeature"] = cFJ["name"]
                 if pattern =="clinical_follow_up":
                     if cancer != originCancer:
