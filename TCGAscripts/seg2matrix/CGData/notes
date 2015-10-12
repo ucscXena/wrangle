@@ -1,1 +1,0 @@
-g++ -fPIC --shared CsegToMatrix.cc -o CsegToMatrix.so
