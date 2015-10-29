@@ -103,8 +103,10 @@ def overallSurvival (dir, finalClinMatrix, survivalMatrix, cancer):
             break
 
     survivalMatrix.addNewRows(finalClinMatrix.getROWs(),{})
+    survivalMatrix.addOneColWithSameValue("_TIME_TO_EVENT_UNIT","days")
     survivalMatrix.addOneColWithSameValue("_TIME_TO_EVENT","")
     survivalMatrix.addOneColWithSameValue("_EVENT","")
+    survivalMatrix.addOneColWithSameValue("_OS_UNIT","days")
     survivalMatrix.addOneColWithSameValue("_OS","")
     survivalMatrix.addOneColWithSameValue("_OS_IND","")
 
@@ -163,6 +165,7 @@ def RFS  (dir, finalClinMatrix, survivalMatrix, cancer):
         print "no new_tumor_event_after_initial_treatment info, can not compute _RFS, _RFS_ind"
         return 0
 
+    survivalMatrix.addOneColWithSameValue("_RFS_UNIT","days")
     survivalMatrix.addOneColWithSameValue("_RFS","")
     survivalMatrix.addOneColWithSameValue("_RFS_IND","")
 
@@ -232,7 +235,7 @@ def RFS  (dir, finalClinMatrix, survivalMatrix, cancer):
                 continue
 
     if minGood<5:
-        survivalMatrix.removeCols(["_RFS","_RFS_IND"])
+        survivalMatrix.removeCols(["_RFS","_RFS_IND","_RFS_UNIT"])
 
     return 1
                 

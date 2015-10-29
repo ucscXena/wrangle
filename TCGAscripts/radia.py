@@ -210,8 +210,13 @@ def radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix,
         J["method"]= ""
 
     #multiple dirs
-    J["url"]=TCGAUtil.remoteBase \
-              +string.replace(inDir,TCGAUtil.localBase,"")
+    if string.find(inDir,TCGAUtil.localBase)!=-1:
+        J["url"]=TCGAUtil.remoteBase \
+            +string.replace(inDir,TCGAUtil.localBase,"")
+    else:
+        J["url"]=TCGAUtil.remoteBase \
+            +string.replace(inDir,"/inside/depot/","")
+
     J["version"]= datetime.date.today().isoformat()
     J["wrangler"]= "TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
     J["wrangling_procedure"] ="Download .vcf file from TCGA DCC, select somatic mutations overlapping with exon region, removed all calls from WGS samples, processed into UCSC Xena muation format, stored in the UCSC Xena repository"
@@ -232,7 +237,7 @@ def radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix,
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
     J["sample_type"]=["tumor"]
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
-    J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]
+    J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]+" ("+cancer+")"
     J['domain']="TCGA"
     J['tags']=["cancer"]+ TCGAUtil.tags[cancer]
     J['gdata_tags'] = [dataProducer]
@@ -284,8 +289,13 @@ def nonSilentMatrixJson (jsonFile, inDir, suffix, cancer, namesuffix, dataProduc
         J["method"]= ""
 
     #multiple dirs
-    J["url"]=TCGAUtil.remoteBase \
-              +string.replace(inDir,TCGAUtil.localBase,"")
+    if string.find(inDir,TCGAUtil.localBase)!=-1:
+        J["url"]=TCGAUtil.remoteBase \
+            +string.replace(inDir,TCGAUtil.localBase,"")
+    else:
+        J["url"]=TCGAUtil.remoteBase \
+            +string.replace(inDir,"/inside/depot/","")
+
     J["version"]= datetime.date.today().isoformat()
     J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
     J["wrangling_procedure"] ="Download .vcf files from TCGA DCC, select somatic mutations overlapping with exon region, removed all calls from WGS samples, processed into gene by sample matrix of non-silent mutations at UCSC, stored in the UCSC Xena repository"
@@ -304,7 +314,7 @@ def nonSilentMatrixJson (jsonFile, inDir, suffix, cancer, namesuffix, dataProduc
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
     J["sample_type"]=["tumor"]
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
-    J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]
+    J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]+" ("+cancer+")"
     J['domain']="TCGA"
     J['tags']=["cancer"]+ TCGAUtil.tags[cancer]
     J['gdata_tags'] = [dataProducer]

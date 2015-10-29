@@ -1,3 +1,4 @@
+
 cd /inside/home/jzhu/cgDataJing/TCGAscripts
 
 python run.py config log
