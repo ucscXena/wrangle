@@ -11,6 +11,8 @@ import TCGAUtil
 sys.path.insert(0,"../CGDataNew")
 from CGDataUtil import *
 
+garbage=["tmpMethylation450/"]
+
 #/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/jhu-usc.edu/humanmethylation450/methylation/
 #/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/jhu-usc.edu/humanmethylation27/methylation/
 
@@ -22,7 +24,6 @@ def humanmethylation450 (inDir, outDir, cancer,flog,REALRUN):
 
         
 def humanmethylation (inDir, outDir, cancer,flog,PATHPATTERN,BETAOFFSET,REALRUN):
-    garbage=["tmptmp/"]
     os.system("rm -rf tmp_*")
     if os.path.exists( "tmptmp/" ):
         os.system("rm -rf tmptmp/*")
@@ -169,15 +170,13 @@ def humanmethylation (inDir, outDir, cancer,flog,PATHPATTERN,BETAOFFSET,REALRUN)
     #stable
     suffix=PATHPATTERN
     
-    J["cgDataVersion"]=1
-        
     J["label"]= "DNA methylation (Methylation450k)"
     namesuffix="hMethyl450" 
 
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
     J["sample_type"]=["tumor"]
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
-    J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]
+    J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]+" ("+cancer+")"
     J['domain']="TCGA"
     J['tags']=["cancer"]+ TCGAUtil.tags[cancer]
     J['owner']="TCGA"
@@ -192,7 +191,7 @@ def humanmethylation (inDir, outDir, cancer,flog,PATHPATTERN,BETAOFFSET,REALRUN)
     J["url"]=TCGAUtil.remoteBase \
               +string.replace(inDir,TCGAUtil.localBase,"")
     J["version"]= datetime.date.today().isoformat()
-    J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
+    J["wrangler"]= "xena TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
     J["valOffset"] = BETAOFFSET
     
     #change description
@@ -203,14 +202,14 @@ def humanmethylation (inDir, outDir, cancer,flog,PATHPATTERN,BETAOFFSET,REALRUN)
     elif suffix =="HumanMethylation450":
         J["PLATFORM"]= "Illumina Infinium HumanMethylation450"
         
-    J["wrangling_procedure"]= "Level_3 data download from TCGA DCC, processed at UCSC into cgData repository"
+    J["wrangling_procedure"]= "Level_3 data download from TCGA DCC, processed at UCSC into Xena repository"
 
     J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+")"\
                       " DNA methylation data.<br><br>"+ \
-                      " DNA methylation profile was measured experimentally using the "+J["PLATFORM"]+" platform. Beta values were derived at the Johns Hopkins University and University of Southern California TCGA genome characterization center. DNA methylation values, described as beta values, are recorded for each array probe in each sample via BeadStudio software. DNA methylation beta values are continuous variables between 0 and 1, representing the ratio of the intensity of the methylated bead type to the combined locus intensity. Thus higher beta values represent higher level of DNA methylation, i.e. hypermethylation and lower beta values represent lower level of DNA methylation, i.e. hypomethylation.\n\n We observed a bimodal distribution of the beta values from both methylation27 and methylation450 platforms, with two peaks around 0.1 and 0.9 and a relatively flat valley around 0.2-0.8.  The bimodal distribution is far more pronounced and balanced in methylation450 than methylation27 platform. In the methylation27 platform, the lower beta peak is much stronger than the higher beta peak, while the two peaks are of similar hight in the methylation450 platform."
+                      " DNA methylation profile was measured experimentally using the "+J["PLATFORM"]+" platform. Beta values were derived at the Johns Hopkins University and University of Southern California TCGA genome characterization center. DNA methylation values, described as beta values, are recorded for each array probe in each sample via BeadStudio software. DNA methylation beta values are continuous variables between 0 and 1, representing the ratio of the intensity of the methylated bead type to the combined locus intensity. Thus higher beta values represent higher level of DNA methylation, i.e. hypermethylation and lower beta values represent lower level of DNA methylation, i.e. hypomethylation.\n\n We observed a bimodal distribution of the beta values from both methylation27 and methylation450 platforms, with two peaks around 0.1 and 0.9 and a relatively flat valley around 0.2-0.8.  The bimodal distribution is far more pronounced and balanced in methylation450 than methylation27 platform. In the methylation27 platform, the lower beta peak is much stronger than the higher beta peak, while the two peaks are of similar height in the methylation450 platform."
     
     if suffix =="HumanMethylation450":
-        J["description"]= J["description"] +" Microarray probes are mapped onto the human genome coordinates using cgData probeMap derived from GEO GPL13534 record."
+        J["description"]= J["description"] +" Microarray probes are mapped onto the human genome coordinates using xena probeMap derived from GEO GPL13534 record."
     J["description"]=J["description"]+" Here is a <a href=\"http://www.illumina.com/documents/products/appnotes/appnote_dna_methylation_analysis_infinium.pdf\" target=\"_blank\"><u>reference</u></a> to Illumina Infinium BeadChip DNA methylation platform beta value."
 
     J["description"] = J["description"] +"<br><br>"

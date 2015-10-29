@@ -121,13 +121,12 @@ def cohort_variable (var, value, inDir, outDir, cancer, flog,REALRUN):
             
     #data josn
     J={}
-    J["cgDataVersion"]=1
     J["version"]= datetime.date.today().isoformat()
     J["name"]="TCGA_"+cancer+"_"+var
     J["type"]= "clinicalMatrix" 
     J["dataSubType"]="phenotype"
     J[":sampleMap"]="TCGA."+cancer+".sampleMap"
-    J["cohort"]="TCGA "+TCGAUtil.cancerHumanReadable[cancer]
+    J["cohort"]="TCGA "+TCGAUtil.cancerHumanReadable[cancer]+" ("+cancer+")"
     if withClinF:
         J[":clinicalFeature"]=  "TCGA_"+ cancer+"_"+var+"_clinFeat"
 
@@ -176,7 +175,6 @@ def doDerivedCancer( var, outDir, cancer, derived_cancer, flog,REALRUN):
 
 
     J={}
-    J["cgDataVersion"]=1
     J["version"]= datetime.date.today().isoformat()
     J["name"]="TCGA_"+derived_cancer+"_"+var+"_"+cancer
     J["type"]= "clinicalMatrix" 

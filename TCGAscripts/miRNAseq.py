@@ -13,7 +13,7 @@ sys.path.insert(0,"../CGDataNew")
 from CGDataUtil import *
 from processRSEM2percentile import *
 
-tmpDir="tmptmp/"
+tmpDir="tmpmiRNA/"
 
 # /data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/bcgsc.ca/illuminaga_mirnaseq/mirnaseq/
 # /data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/uvm/cgcc/bcgsc.ca/illuminahiseq_mirnaseq/mirnaseq/
@@ -83,25 +83,25 @@ def mergeGA_Hiseq (inDir, outDir, cancer, flog, REALRUN):
 
     #change description
     J["description"]=""
-    J[":probeMap"]= "miRBase_primary_transcript_hg18"
+    #J[":probeMap"]= "miRBase_primary_transcript_hg18"
     J["dataSubType"]="miRNA expression RNAseq"
     J["label"]= "miRNA expression (GA, HiSeq)"
     J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") miRNA expression by RNAseq (Illumina GA, HiSeq)"
     J["description"]= J["description"] +"TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") miRNA expression by RNAseq.<br><br>"+ \
         " The miRNA expression profile was measured experimentally using the "+platformTitle+" by the "+ dataProducer +"." + \
-        " Level 3 interpreted level data was downloaded from TCGA data coordination center. This dataset shows the miRNA transcription estimates in log2(reads per million miRNA mapped)."
-    J["description"] = J["description"] + " miRNA primary transcripts are mapped onto the human genome coordinates using UCSC cgData miRBase miRNA_primary_transcript probeMap."
+        " Level 3 interpreted level data was downloaded from TCGA data coordination center. This dataset shows the miRNA transcription estimates in log2 (reads per million miRNA mapped)."
+    #J["description"] = J["description"] + " miRNA primary transcripts are mapped onto the human genome coordinates using UCSC cgData miRBase miRNA_primary_transcript probeMap."
 
     J["description"] = J["description"] +\
-                       "<br><br>In order to more easily view the differential expression between samples, we set the default view to center each miRNA to zero by independently subtracting the mean of the genomic location on the fly. Users can view the original non-normalized values by adjusting visualization settings. For more information on how to use the cancer browser, please refer to the help page."
+                       "<br><br>In order to more easily view the differential expression between samples, we set the default view to center each miRNA to zero by independently subtracting the mean of each miRNA across the cohort on the fly. Users can view the original non-normalized values by adjusting visualization settings."
     J["description"] = J["description"] +"<br><br>"
 
-    J["wrangling_procedure"]= "Level_3 Data (file names: *.mirna.quantification.txt) download from TCGA DCC, log2(x+1) transformed, and processed at UCSC into cgData repository."
+    J["wrangling_procedure"]= "Level_3 Data (file names: *.mirna.quantification.txt) download from TCGA DCC, log2(x+1) transformed, and processed at UCSC into Xena repository."
 
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
     J["sample_type"]=["tumor"]
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
-    J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]
+    J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]+" ("+cancer+")"
     J['domain']="TCGA"
     J['tags']=["cancer"]+ TCGAUtil.tags[cancer]
     J['owner']="TCGA"
@@ -346,25 +346,25 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
 
     #change description
     J["description"]=""
-    J[":probeMap"]= "miRBase_primary_transcript_hg18"
+    #J[":probeMap"]= "miRBase_primary_transcript_hg18"
     J["dataSubType"]="miRNA expression RNAseq"
     J["label"]= "miRNA expression ("+suffix+")"
     J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") miRNA expression by RNAseq ("+suffix+")"
     J["description"]= J["description"] +"TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") miRNA expression by RNAseq.<br><br>"+ \
         " The miRNA expression profile was measured experimentally using the "+platformTitle+" by the "+ dataProducer +"." + \
-        " Level 3 interpreted level data was downloaded from TCGA data coordination center. This dataset shows the miRNA transcription estimates in log2(reads per million miRNA mapped)."
-    J["description"] = J["description"] + " miRNA primary transcripts are mapped onto the human genome coordinates using UCSC cgData miRBase miRNA_primary_transcript probeMap."
+        " Level 3 interpreted level data was downloaded from TCGA data coordination center. This dataset shows the miRNA transcription estimates in log2 (reads per million miRNA mapped)."
+    #J["description"] = J["description"] + " miRNA primary transcripts are mapped onto the human genome coordinates using UCSC cgData miRBase miRNA_primary_transcript probeMap."
 
     J["description"] = J["description"] +\
-                       "<br><br>In order to more easily view the differential expression between samples, we set the default view to center each miRNA to zero by independently subtracting the mean of the genomic location on the fly. Users can view the original non-normalized values by adjusting visualization settings. For more information on how to use the cancer browser, please refer to the help page."
+                       "<br><br>In order to more easily view the differential expression between samples, we set the default view to center each miRNA to zero by independently subtracting the mean of each miRNA across the cohort on the fly. Users can view the original non-normalized values by adjusting visualization settings."
     J["description"] = J["description"] +"<br><br>"
 
-    J["wrangling_procedure"]= "Level_3 Data (file names: *.mirna.quantification.txt) download from TCGA DCC, log2(x+1) transformed, and processed at UCSC into cgData repository."
+    J["wrangling_procedure"]= "Level_3 Data (file names: *.mirna.quantification.txt) download from TCGA DCC, log2(x+1) transformed, and processed at UCSC into Xena repository."
 
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
     J["sample_type"]=["tumor"]
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
-    J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]
+    J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]+" ("+cancer+")"
     J['domain']="TCGA"
     J['tags']=["cancer"]+ TCGAUtil.tags[cancer]
     J['owner']="TCGA"

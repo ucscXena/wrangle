@@ -118,7 +118,7 @@ def process (inDir,outDir,cancer,flog,PATHPATTERN,originCancer):
             J['name'] = J['name'] +"_"+originCancer
 
         J[":sampleMap"]="TCGA."+cancer+".sampleMap"
-        J["cohort"]="TCGA "+TCGAUtil.cancerHumanReadable[cancer]
+        J["cohort"]="TCGA "+TCGAUtil.cancerHumanReadable[cancer]+" ("+cancer+")"
         name = trackName_fix(J['name'])
         if name ==False:
             message = "bad object name, need fix otherwise break loader, too long "+J["name"]

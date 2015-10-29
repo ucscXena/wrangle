@@ -26,8 +26,9 @@ def unc_mixed_dnaseq_cont_automated (inDir, outDir, cancer,flog,REALRUN):
     mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
     clean =0
+    VAF= True
     namesuffix = "mutation_unc"
-    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
+    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution,VAF)
 
 #vcf protected germline
 def germline_ucsc_illuminaga_dnaseq_cont (inDir, outDir, cancer,flog,REALRUN):
@@ -124,8 +125,9 @@ def broad_illuminaga_dnaseq_automated (inDir, outDir, cancer,flog,REALRUN):
     mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
     clean =0
+    VAF=True
     namesuffix = "mutation_broad"
-    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
+    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution, VAF)
 
 def broad_illuminaga_dnaseq_curated (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
@@ -200,8 +202,9 @@ def hgsc_illuminaga_dnaseq_automated (inDir, outDir, cancer,flog,REALRUN):
     mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
     clean =0
+    VAF =True
     namesuffix = "mutation_bcm"
-    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
+    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution, VAF)
 
 def hgsc_illuminaga_dnaseq_curated (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
@@ -245,8 +248,9 @@ def wustl_illuminaga_dnaseq_automated (inDir, outDir, cancer,flog,REALRUN):
     mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
     clean =0
+    VAF = True
     namesuffix = "mutation_wustl"
-    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
+    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution, VAF)
 
 def wustl_illuminaga_dnaseq_curated (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
@@ -291,7 +295,8 @@ def bcgsc_illuminahiseq_dnaseq_automated (inDir, outDir, cancer,flog,REALRUN):
 
     clean =0
     namesuffix = "mutation_bcgsc"
-    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
+    VAF = True
+    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution, VAF)
 
 def bcgsc_illuminahiseq_dnaseq_curated (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
@@ -308,7 +313,7 @@ def bcgsc_illuminahiseq_dnaseq_curated (inDir, outDir, cancer,flog,REALRUN):
     namesuffix = "mutation_curated_bcgsc"
     mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
-def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM, distribution):
+def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM, distribution, VAF=False):
     garbage=[tmpDir]
     os.system("rm -rf tmp_*")
     if os.path.exists( tmpDir ):
@@ -392,19 +397,19 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
         os.makedirs( outDir+cancer+"/" )
 
     cgFileName= namesuffix
-
+    assembly=""
     #data processing multiple dirs mode
     if REALRUN:
         xena = outDir+cancer+"/"+cgFileName
         fout= open(xena,'w')
-        fout.write("#"+string.join(["sample","chr","start","end","reference","alt","gene","effect","DNA_VAF","RNA_VAF","Amino_Acid_Change"],"\t")+"\n")
+        fout.write(string.join(["sample","chr","start","end","reference","alt","gene","effect","DNA_VAF","RNA_VAF","Amino_Acid_Change"],"\t")+"\n")
         for dataDir in os.listdir(rootDir):
             for file in os.listdir(rootDir+dataDir):
                 pattern =".maf"
                 if string.find(file,pattern)!=-1:
                     infile = rootDir+dataDir+"/"+file
                     print infile
-                    process_xena (infile, fout)
+                    assembly = process_xena (infile, fout, VAF)
         fout.close()
 
     if not os.path.exists(outDir+cancer+"/"+cgFileName):
@@ -435,8 +440,13 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
         J["method"]= ""
 
     #multiple dirs
-    J["url"]=TCGAUtil.remoteBase \
-              +string.replace(inDir,TCGAUtil.localBase,"")
+    if string.find(inDir,TCGAUtil.localBase)!=-1:
+        J["url"]=TCGAUtil.remoteBase \
+            +string.replace(inDir,TCGAUtil.localBase,"")
+    else:
+        J["url"]=TCGAUtil.remoteBase \
+            +string.replace(inDir,"/inside/depot/","")
+
     J["version"]= datetime.date.today().isoformat()
     J["wrangler"]= "TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
     J["wrangling_procedure"] ="Download .maf file from TCGA DCC, removed any calls from WGS samples, processed into UCSC Xena mutation format, stored in the UCSC Xena repository"
@@ -452,18 +462,20 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
         J["label"]= "somatic mutation SNPs and small INDELs ("+suffix+")"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") somatic mutation ("+suffix+")"
 
-    J["assembly"]="hg19"
+    J["assembly"]=assembly
     J["wholeGenome"]= True
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
     J["sample_type"]=["tumor"]
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
-    J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]
+    J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]+" ("+cancer+")"
     J['domain']="TCGA"
     J['tags']=["cancer"]+ TCGAUtil.tags[cancer]
     J['gdata_tags'] = [dataProducer]
     J['owner']="TCGA"
 
     J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") somatic mutation data. Sequencing data are generated on a "+PLATFORM +" system. The calls are generated at "+dataProducer+" using the "+ J["method"] +" method."
+    if VAF:
+        J["description"]= J["description"] + " When variant allele frequency information is available, only calls with VAF >10% are kept."
 
     #change cgData
     J["name"]="TCGA_"+cancer+"_"+namesuffix
@@ -620,8 +632,13 @@ def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, data
         J["method"]= ""
 
     #multiple dirs
-    J["url"]=TCGAUtil.remoteBase \
-              +string.replace(inDir,TCGAUtil.localBase,"")
+    if string.find(inDir,TCGAUtil.localBase)!=-1:
+        J["url"]=TCGAUtil.remoteBase \
+            +string.replace(inDir,TCGAUtil.localBase,"")
+    else:
+        J["url"]=TCGAUtil.remoteBase \
+            +string.replace(inDir,"/inside/depot/","")
+
     J["version"]= datetime.date.today().isoformat()
     J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
     J["wrangling_procedure"] ="Download .maf file from TCGA DCC, processed into gene by sample matrix at UCSC, stored in the UCSC Xena repository"
@@ -640,7 +657,7 @@ def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, data
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
     J["sample_type"]=["tumor"]
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
-    J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]
+    J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]+" ("+cancer+")"
     J['domain']="TCGA"
     J['tags']=["cancer"]+ TCGAUtil.tags[cancer]
     J['gdata_tags'] = [dataProducer]
@@ -730,9 +747,10 @@ def outputMatrix(samples, genes, dic, outfile):
         fout.write("\n")
     fout.close()
 
-def process_xena (file, fout):
+def process_xena (file, fout, VAF):
     fin =open(file, 'r')
     header=""
+    ASSEMBLY=""
     for line in fin.readlines():
         if line[0] == "#":
             continue
@@ -779,6 +797,14 @@ def process_xena (file, fout):
         if data[Sequence_Source]=="WGS":
             continue
 
+        if ASSEMBLY =="":
+            if data[NCBI_Build] in ["hg38","38"]:
+                ASSEMBLY = "hg38"
+            if data[NCBI_Build] in ["hg19","37"]:
+                ASSEMBLY = "hg19"
+            if data[NCBI_Build] in ["hg18","36"]:
+                ASSEMBLY = "hg18"
+
         # use the maf input
         sample = data[Tumor_Sample_Barcode]
         chrom= data[Chromosome]
@@ -792,6 +818,9 @@ def process_xena (file, fout):
         mtype = data[Variant_Classification]
         try:
             DNA_VAF = float(data[t_alt_count])/float(data[t_ref_count]+data[t_alt_count])
+            if VAF: #require > 10%  to secure data accuracy
+                if DNA_VAF <0.1:
+                    continue
         except:
             DNA_VAF= ""
         RNA_VAF= ""
@@ -802,4 +831,4 @@ def process_xena (file, fout):
         fout.write(string.join([sample,chrom,start,end, ref, alt, gene, mtype, str(DNA_VAF), str(RNA_VAF),AA_Change],"\t")+"\n")
 
     fin.close()
-
+    return ASSEMBLY

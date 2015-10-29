@@ -7,6 +7,8 @@ import TCGAUtil
 sys.path.insert(0,"../CGDataNew")
 from CGDataUtil import *
 
+garbage=["tmptmp/"]
+
 #in the SDRF file, Extract  column will use UUIDs in addition to TCGA barcodes. 
 #This can result in an SDRF file that has mixed UUIDs and TCGA barcodes in this column.Namethe 
 
@@ -14,8 +16,6 @@ from CGDataUtil import *
 PATHPATTERN = "Genome_Wide_SNP_6"
 
 def SNP6 (inDir, outDir, cancer,flog, REALRUN):
-    garbage=["tmptmp/"]
-
     if os.path.exists( "tmptmp/" ):
         os.system("rm -rf tmptmp/*")
     else:
@@ -369,7 +369,7 @@ def process(samples,cancer,infile,flog, mapping,fout):
 
     fin=open(infile,'U')
     line = fin.readline()
-    fout.write("sample"+"\t"+"chr"+"\t"+"start"+"\t"+"end"+"\t"+"strand"+"\t"+"value"+"\n")
+    fout.write("sample"+"\t"+"chr"+"\t"+"start"+"\t"+"end"+"\t"+"segment_mean"+"\n")
     for line in fin.readlines():
         sample,chr,start, end, numMark, segMean = string.split(line[:-1],"\t")
         sample=mapping[sample]
@@ -383,4 +383,4 @@ def process(samples,cancer,infile,flog, mapping,fout):
             chr="chr"+chr
         start = str(int(float(start)))
         end = str(int(float(end)))
-        fout.write(sample+"\t"+chr+"\t"+start+"\t"+end+"\t"+"."+"\t"+segMean+"\n")
+        fout.write(sample+"\t"+chr+"\t"+start+"\t"+end+"\t"+segMean+"\n")

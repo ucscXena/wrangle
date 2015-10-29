@@ -102,13 +102,13 @@ def RPPA_RBN (inDir, outDir, cancer,flog,REALRUN):
         J["tags"]= J["tags"]+origin
 
     J["label"] = J["shortTitle"]        
-    J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]
+    J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]+" ("+cancer+")"
     J['domain']="TCGA"
     J['owner']="TCGA"
     
     J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") protein expression data for 131 proteins, measured by RPPA (reverse phase protein array) technology. These data have been normalized by RBN (replicate-base normalization) method developed by MDACC. Details: https://www.synapse.org/#!Synapse:syn1750330 and http://bioinformatics.mdanderson.org/main/TCPA:Overview."
     J["description"] = J["description"] +"<br><br>"
-    J["wrangling_procedure"]= "Data download from https://www.synapse.org/#!Synapse:syn1759392, processed into antibody by sample matrix at UCSC into cgData repository"
+    J["wrangling_procedure"]= "Data download from https://www.synapse.org/#!Synapse:syn1759392, processed into antibody by sample matrix at UCSC into Xena repository"
 
     #change cgData
     J["name"]="TCGA_"+cancer+"_"+namesuffix

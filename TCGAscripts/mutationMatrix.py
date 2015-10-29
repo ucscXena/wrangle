@@ -60,7 +60,6 @@ def mutationMatrix (inDir, outDir, cancer,flog,REALRUN):
 
     J={}
     #stable
-    J["cgDataVersion"]=1
     J["dataSubType"]="somatic non-silent mutation (gene-level)"
     J["redistribution"]= True
     J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
@@ -71,12 +70,11 @@ def mutationMatrix (inDir, outDir, cancer,flog,REALRUN):
     #multiple dirs
     J["url"]="https://www.synapse.org/#!Synapse:syn1729383"
     J["version"]= datetime.date.today().isoformat()
-    J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
+    J["wrangler"]= "Xena TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
     J[":probeMap"]= "hugo"
-    J["gain"]=10
     
     J["sample_type"]=["tumor"]
-    J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]
+    J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]+" ("+cancer+")"
     J['domain']="TCGA"
     J['tags']=["cancer"]+ TCGAUtil.tags[cancer]
     J['owner']="TCGA"
@@ -135,7 +133,7 @@ def mutationMatrix (inDir, outDir, cancer,flog,REALRUN):
     J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") somatic mutation data. Red (=1) indicates that a non-silent somatic mutation (nonsense, missense, frame-shif indels, splice site mutations, stop codon readthroughs) was identified in the protein coding region of a gene, or any mutation identified in a non-coding gene. White (=0) indicates that none of the above mutation calls were made in this gene for the specific sample.<br><br>Somatic mutations calls (even on the same tumor DNA extract) are affected by many factors including library prep, sequencing process, read mapping method, reference genome used, genome annotation, calling algorithms, and ad-hoc pre/postprocessing such as black list genes, target selection regions, and black list samples. This dataset is the best effort made by the TCGA PANCANCER Analysis Working Group. Raw PANCAN mutation data can be downloaded at the url site shown below."
     J["description"] = J["description"] +"<br><br>"
     
-    J["wrangling_procedure"]= "TCGA PANCAN strictly filtered maf files (file names: *_cleaned_filtered.maf) download from Synapse, processed into gene by sample matrix at UCSC into cgData repository"
+    J["wrangling_procedure"]= "TCGA PANCAN strictly filtered maf files (file names: *_cleaned_filtered.maf) download from Synapse, processed into gene by sample matrix at UCSC into Xena repository"
 
     #change cgData
     J["name"]="TCGA_"+cancer+"_"+namesuffix
