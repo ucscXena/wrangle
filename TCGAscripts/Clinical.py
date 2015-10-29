@@ -64,6 +64,9 @@ def findIDCol(infile):
     for i in range(0,len(data)):
         if data[i]=="bcr_patient_barcode":
             return i
+    for i in range(0,len(data)):
+        if data[i]=="bcr_sample_barcode":
+            return i
     return -1
 
 def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN,  originCancer,REALRUN):

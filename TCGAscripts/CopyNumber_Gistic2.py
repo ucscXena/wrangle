@@ -114,7 +114,7 @@ def CopyNumber_Gistic2 (inDir, outDir, cancer,flog,REALRUN):
         J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
         J["sample_type"]=["tumor"]
         J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
-        J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]
+        J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]+" ("+cancer+")"
         J['domain']="TCGA"
         J['tags']=["cancer"]+ TCGAUtil.tags[cancer]
         J['owner']="TCGA"

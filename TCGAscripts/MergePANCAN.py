@@ -46,6 +46,13 @@ def mutation_broad  ( dir, outDir, cancer,flog,REALRUN):
     filename = "mutation_broad"
     processMutationData (filename, dir,outDir, cancer,flog, REALRUN)
 
+def mutation_wustl  ( dir, outDir, cancer,flog,REALRUN):
+    if cancer !="PANCAN":
+        return
+    print cancer, sys._getframe().f_code.co_name
+    filename = "mutation_wustl"
+    processMutationData (filename, dir,outDir, cancer,flog, REALRUN)
+
 def mutation_bcgsc  ( dir, outDir, cancer,flog,REALRUN):
     if cancer !="PANCAN":
         return
@@ -99,7 +106,10 @@ def processClin (filename, dir,outDir, CANCER,flog, REALRUN):
         inFiles[cancer]= cancerFile
 
     features=["sample_type","sample_type_id","gender","_cohort","age_at_initial_pathologic_diagnosis",
-              "_OS","_OS_IND","_RFS","_RFS_IND","_EVENT","_TIME_TO_EVENT","_anatomical_origin","_primary_disease"]        
+              "_OS","_OS_IND","_OS_UNIT",
+              "_RFS","_RFS_IND","_RFS_UNIT",
+              "_EVENT","_TIME_TO_EVENT","_TIME_TO_EVENT_UNIT",
+              "_anatomical_origin","_primary_disease"]   
 
 
     for feature in features:
@@ -204,7 +214,7 @@ def processClin (filename, dir,outDir, CANCER,flog, REALRUN):
         fout.write(json.dumps(J,indent=-1))
         fout.close()
         
-def processFiles (filename, dir,outDir, cancer ):
+def processFiles (filename, dir,outDir, cancer , MUTATION= False):
     inFiles =[]
 
     for cancer in os.listdir(outDir):
@@ -213,6 +223,7 @@ def processFiles (filename, dir,outDir, cancer ):
 
         cancerDir= outDir+ cancer
         cancerFile = cancerDir+"/"+filename
+
         if not os.path.exists(cancerFile):
             if filename =="miRNA":
                 cancerFile = cancerDir+"/"+filename+"_HiSeq"
@@ -227,6 +238,12 @@ def processFiles (filename, dir,outDir, cancer ):
             else:
                 continue
 
+        if MUTATION:
+            fin = open(cancerFile+".json",'r')
+            J= json.loads(fin.read())
+            if (not J.has_key("assembly")) or J["assembly"]!="hg19":
+                continue
+
         inFiles.append(cancerFile)
     return inFiles
 
@@ -239,8 +256,8 @@ def convertToMatrix(infile,cancer):
     xenaToMatrix.process (infile, samples, allGeneList, dic) 
     xenaToMatrix.output(outfile, samples, genes, dic)
 
-def processMutationData (filename, dir,outDir, cancer,flog, REALRUN):
-    inFiles =processFiles (filename, dir,outDir, cancer )
+def processMutationData (filename, dir, outDir, cancer,flog, REALRUN):
+    inFiles =processFiles (filename, dir, outDir, cancer , True)
 
     cancer="PANCAN"
     outfile = outDir +cancer + "/"+filename
@@ -277,6 +294,8 @@ def processMutationData (filename, dir,outDir, cancer,flog, REALRUN):
         mutation_ucsc_vcfJSON(J,cancer,genelevel)
     elif filename=="mutation_bcgsc":
         mutation_bcgscJSON(J,cancer,genelevel)
+    elif filename=="mutation_wustl":
+        mutation_wustlSON(J,cancer,genelevel)
     commonJSON(J, cancer)
     J["dataSubType"]="somatic mutation (SNPs and small INDELs)"
     fout.write(json.dumps(J,indent=-1))
@@ -297,6 +316,8 @@ def processMutationData (filename, dir,outDir, cancer,flog, REALRUN):
         mutation_ucsc_vcfJSON(J,cancer,genelevel)
     elif filename=="mutation_bcgsc":
         mutation_bcgscJSON(J,cancer,genelevel)
+    elif filename=="mutation_wustl":
+        mutation_wustlSON(J,cancer,genelevel)
     J[":probeMap"]="hugo"
     J["dataSubType"]="somatic non-silent mutation (gene-level)"
     commonJSON(J, cancer)
@@ -349,7 +370,7 @@ def processMatrix (filename, dir,outDir, cancer,flog, REALRUN):
 def commonJSON(J, cancer):
     J['dataProducer']="UCSC Xena team"
     J["sample_type"]=["tumor"]
-    J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]
+    J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]+" ("+cancer+")"
     J['domain']="TCGA"
     J['tags']=["cancer"]+TCGAUtil.tags[cancer]
     J['owner']="TCGA"
@@ -378,6 +399,17 @@ def mutation_bcgscJSON(J,cancer,genelevel):
         J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+genelevel+" nonsilent somatic mutation (bcgsc)"
     J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" somatic mutation data. The calls are generated at Michael Smith Genome Sciences Centre (British Columbia Genome Sciences Centre, BCGSC) using the BCGSC pipeline method. BCGSC's calls from various TCGA cohorts are combined to produce this dataset."
     J["description"] = J["description"] +"<br><br>"    
+
+def mutation_wustlSON (J, cancer,genelevel):
+    J['name']= "TCGA_PANCAN_mutation_wustl"+string.strip(genelevel).replace("-","")
+    if genelevel =="":
+        J["label"]= "somatic mutation SNPs and small INDELs (wustl)"
+        J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+genelevel+" somatic mutation (wustl)"
+    else:
+        J["label"]= "somatic gene-level non-silent mutation (wustl)"
+        J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+genelevel+" nonsilent somatic mutation (wustl)"
+    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" somatic mutation data. The calls are generated at Washington University Genome Center using the WashU pipeline method. BCGSC's calls from various TCGA cohorts are combined to produce this dataset."
+    J["description"] = J["description"] +"<br><br>"
 
 def mutation_ucsc_vcfJSON(J,cancer,genelevel):
     J['name']= "TCGA_PANCAN_mutation_ucsc_vcf"+string.strip(genelevel).replace("-","")
@@ -575,7 +607,7 @@ def processRNA (filename, dir,outDir, cancer,flog, REALRUN):
         J['name']= J['name']+"_PANCAN"
         J['dataProducer']="UCSC Xena team"
         J["sample_type"]="tumor"
-        J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]
+        J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]+" ("+cancer+")"
         J['domain']="TCGA"
         J['owner']="TCGA"
         J[":sampleMap"]="TCGA."+cancer+".sampleMap"
@@ -583,8 +615,9 @@ def processRNA (filename, dir,outDir, cancer,flog, REALRUN):
         
         J['label']="gene expression RNAseq (IlluminaHiSeq pancan normalized)"
         J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression by RNAseq (IlluminaHiSeq), pancan normalized"
-        J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression by RNAseq, mean-normalized (per gene) across all TCGA cohorts.<br><br>."
-        J["wrangling_procedure"]="Level_3 data (file names: *.rsem.genes.normalized_results) are download from TCGA DCC, log2(x+1) transformed, normalized across all TCGA cancer cohorts (all *.rsem.genes.normalized_results) , and deposited into UCSC Xena repository"
+        J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression by RNAseq, mean-normalized (per gene) across all TCGA cohorts."
+        J["description"]= J["description"] +"<br><br>For comparing data within this cohort, we recommend to use the \"gene expression RNAseq\" dataset. For comparing with other TCGA cohorts, we recommend to use the pancan normalized version of the \"gene expression RNAseq\" data. For comparing with data outside TCGA, we recommend using the percentile version if the non-TCGA data is normalized by percentile ranking."
+        J["wrangling_procedure"]="Level_3 data (file names: *.rsem.genes.normalized_results) are download from TCGA DCC, log2(x+1) transformed, normalized across all TCGA cancer cohorts (all *.rsem.genes.normalized_results) per gene, and deposited into UCSC Xena repository."
         J['tags']=["cancer"] + TCGAUtil.tags[cancer]
 
         if cancer!="PANCAN":
