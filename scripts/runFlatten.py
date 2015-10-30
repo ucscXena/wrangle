@@ -12,7 +12,7 @@ onlyGenomicSamples =1
 REALRUN = -1
 #1 : full
 #0 : clinical data only, full json
-# -1: only copy genomic JSON
+# -1: only copy genomic JSON, no clinical json and no probeMap json
 # -2: only clinical feature data
 
 parser = optparse.OptionParser()

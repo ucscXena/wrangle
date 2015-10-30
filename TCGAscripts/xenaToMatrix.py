@@ -54,7 +54,7 @@ typeDic={
 #xena data file
 #ALLGENE_FILE = "/inside/home/jzhu/scripts/name2/RefGene.name2"
 #ALLGENE_FILE = "/data/TCGA/tcgaDataOneOff/Genomic/PANCAN/genes"
-ALLGENE_FILE = "gencode_genes"
+ALLGENE_FILE = "/inside/home/jzhu/cgDataJing/TCGAscripts/gencode_genes"
 
 def allGeneList(file):
     fin = open(file,'r')

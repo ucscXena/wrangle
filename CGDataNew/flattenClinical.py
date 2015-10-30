@@ -467,7 +467,8 @@ def outputEachSampleMapRelated(outDir, bookDic, sMap,
     fout.close()
         
     #copy clincalMatrix json
-    finalClinMatrixJSON.pop('path')
+    if finalClinMatrixJSON.has_key("path"):
+        finalClinMatrixJSON.pop('path')
     fout = open(dataPackageDir+"/"+sampleMapBaseName(sMap)+"_clinicalMatrix.json",'w')
     if finalClinFeatureJSON != None:
         finalClinMatrixJSON[':clinicalFeature']= finalClinFeatureJSON["name"]

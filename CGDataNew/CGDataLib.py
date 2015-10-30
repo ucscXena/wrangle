@@ -120,43 +120,26 @@ def collectMissingSampleMaps(bookDic):
 
 
 def cgDataMergeJSON(J1, J2, name):
-    J3 = copy.deepcopy(J1)
-    if J2.has_key('version') and J2['version']!=None:
-        d2= makeDate(J2['version'])
-    else:
-        d2=None
-    if J3.has_key('version') and J3['version']!=None:
-        d3= makeDate(J3['version'])
-    else:
-        d3=None
-        
-    if d2 != None and d3 == None:
-        J3['version']=str(d2)
-    elif d3 and d2 == None:
-        J3['version']=str(d3)
-    elif d2 == None and d3==None:
-        J3['version']=None
-    elif d3< d2:
-        J3['version']=str(d2)
-        
+    J3 = {}
+    for key in J1.keys():
+        if key =="url":
+            J3["url"]= J1["url"]
+        if key =="cohort":
+            J3["cohort"]= J1["cohort"]
+
     for key in J2.keys():
-        if key =="version": #SEE above
-            continue
-        if key =="redistribution":
-            if J3.has_key(key)  and J3[key] not in [True, False]:
-                print "Error", J3
-                continue
-            if J2.has_key(key)  and J2[key] not in [True, False]:
-                print "Error", J2
-                continue
-        if not J3.has_key(key):
-            J3[key]=J2[key]
-        elif J3[key]==J2[key]:
-            pass
-        else:
-            J3[key] = str(J3[key])+","+str(J2[key])
+        if key =="cohort":
+            J3["cohort"]= J2["cohort"]
+        if key =="url":
+            if J3.has_key("url") and string.find(J3["url"],J2["url"])==-1:
+                J3["url"]= J3["url"]+", " +J2["url"]
+            else:
+                J3["url"]= J2["url"]
 
     J3['name']=name
+    J3['type']="clinicalMatrix"
+    J3[':sampleMap']=J1[":sampleMap"]
+    J3["dataSubType"] = "phenotype"
     return J3
 
 def checkIdsAllIn(sMap, bookDic):

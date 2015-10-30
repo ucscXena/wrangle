@@ -125,39 +125,34 @@ def AgilentG4502A (inDir, outDir, cancer,flog,PATHPATTERN,REALRUN):
     J={}
     #stable
     suffix=PATHPATTERN
-    J["cgDataVersion"]=1
     J["label"]="gene expression ("+suffix+")"
     J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression ("+suffix+" array)"
     J["dataSubType"]="gene expression array"
     J["redistribution"]= True
-    J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
-    #J["priority"]= TCGAUtil.browserPriority[cancer]
     J["dataProducer"]= "University of North Carolina TCGA genome characterization center"
     #multiple dirs
     J["url"]=TCGAUtil.remoteBase \
               +string.replace(inDir,TCGAUtil.localBase,"")
     J["version"]=  datetime.date.today().isoformat()
-    J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
+    J["wrangler"]= "xena TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
 
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
     J["sample_type"]=["tumor"]
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
     J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]+" ("+cancer+")"
-    J['domain']="TCGA"
     J['tags']=["cancer"]+ TCGAUtil.tags[cancer]
-    J['owner']="TCGA"
     J['gdata_tags'] =["transcription"]
     
     #change description
     J["colNormalization"]=True    
     J["PLATFORM"]= suffix
-    J["wrangling_procedure"]= "Level_3 Data download from TCGA DCC, processed at UCSC into cgData repository"
+    J["wrangling_procedure"]= "Level_3 Data download from TCGA DCC, processed at UCSC into xena repository"
     J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+")"\
                       " gene expression data by agilent array.<br><br>"+ \
                       " The gene expression profile was measured experimentally using Agilent 244K custom gene expression "+string.upper(PATHPATTERN[7:])+" microarrays by the University of North Carolina TCGA genomic characterization center. "+\
                       " Level 3 interpreted level data was downloaded from TCGA data coordination center. This dataset shows the gene level transcription estimates (level 3 data), as in log2 lowess normalized ratio of sample signal to reference signal (cy5/cy3) collapsed by gene."+\
-                      " Genes are mapped onto the human genome coordinates using UCSC cgData HUGO probeMap."+\
-                      "<br><br>In order to more easily view the differential gene expression between samples, we set the default view to be gene-level normalized by independently subtracting the mean of the genomic location on the fly. Users can view the original non-normalized values by uncheck the \"Normalize\" option. For more information on how to use the cancer browser, please refer to the help page."
+                      " Genes are mapped onto the human genome coordinates using UCSC xena HUGO probeMap."+\
+                      "<br><br>In order to more easily view the differential expression between samples, we set the default view to center each gene or exon to zero by independently subtracting the mean of each gene or exon on the fly. Users can view the original non-normalized values by adjusting visualization settings."
     
     J["description"] = J["description"] +"<br><br>"
     

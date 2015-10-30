@@ -397,9 +397,10 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
         os.makedirs( outDir+cancer+"/" )
 
     cgFileName= namesuffix
-    assembly=""
+    assembly="hg19"
     #data processing multiple dirs mode
     if REALRUN:
+        found =0
         xena = outDir+cancer+"/"+cgFileName
         fout= open(xena,'w')
         fout.write(string.join(["sample","chr","start","end","reference","alt","gene","effect","DNA_VAF","RNA_VAF","Amino_Acid_Change"],"\t")+"\n")
@@ -409,11 +410,17 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
                 if string.find(file,pattern)!=-1:
                     infile = rootDir+dataDir+"/"+file
                     print infile
+                    found =1
                     assembly = process_xena (infile, fout, VAF)
         fout.close()
 
+        if not found:
+            os.system("rm -f "+xena)
+
     if not os.path.exists(outDir+cancer+"/"+cgFileName):
+        os.system("rm -f "+outDir+cancer+"/"+cgFileName+".json")
         return
+
     oHandle = open(outDir+cancer+"/"+cgFileName+".json","w")
     J={}
     #stable
@@ -607,10 +614,8 @@ def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, data
     oHandle = open(outDir+cancer+"/"+cgFileName+".json","w")
     J={}
     #stable
-    J["cgDataVersion"]=1
     J["dataSubType"]="somatic non-silent mutation (gene-level)"
     J["redistribution"]= distribution
-    J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
     J["dataProducer"]= dataProducer
     J["type"]= "genomicMatrix"
     J[":sampleMap"]="TCGA."+cancer+".sampleMap"
@@ -640,7 +645,7 @@ def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, data
             +string.replace(inDir,"/inside/depot/","")
 
     J["version"]= datetime.date.today().isoformat()
-    J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
+    J["wrangler"]= "xena TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
     J["wrangling_procedure"] ="Download .maf file from TCGA DCC, processed into gene by sample matrix at UCSC, stored in the UCSC Xena repository"
 
     #change
@@ -658,10 +663,8 @@ def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, data
     J["sample_type"]=["tumor"]
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
     J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]+" ("+cancer+")"
-    J['domain']="TCGA"
     J['tags']=["cancer"]+ TCGAUtil.tags[cancer]
     J['gdata_tags'] = [dataProducer]
-    J['owner']="TCGA"
 
     J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") somatic mutation data.  Sequencing data are generated on a "+PLATFORM +" system. The calls are generated at "+dataProducer+" using the "+ J["method"] +" method. <br><br> Red (=1) indicates that a non-silent somatic mutation (nonsense, missense, frame-shif indels, splice site mutations, stop codon readthroughs, change of start codon, inframe indels) was identified in the protein coding region of a gene, or any mutation identified in a non-coding gene. White (=0) indicates that none of the above mutation calls were made in this gene for the specific sample.<br><br>"
 
@@ -798,11 +801,11 @@ def process_xena (file, fout, VAF):
             continue
 
         if ASSEMBLY =="":
-            if data[NCBI_Build] in ["hg38","38"]:
+            if data[NCBI_Build] in ["hg38","38","GRCh38","GRCh38-lite"]:
                 ASSEMBLY = "hg38"
-            if data[NCBI_Build] in ["hg19","37"]:
+            if data[NCBI_Build] in ["hg19","37","GRCh37","GRCh37-lite"]:
                 ASSEMBLY = "hg19"
-            if data[NCBI_Build] in ["hg18","36"]:
+            if data[NCBI_Build] in ["hg18","36","GRCh36","GRCh36-lite"]:
                 ASSEMBLY = "hg18"
 
         # use the maf input

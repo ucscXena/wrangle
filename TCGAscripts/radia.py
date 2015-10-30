@@ -131,7 +131,7 @@ def radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix,
         good=0
         xena = outDir+cancer+"/"+cgFileName
         fout = open (xena,'w')
-        fout.write("#"+string.join(["sample","chr","start","end","reference","alt","gene","effect","DNA_VAF","RNA_VAF","Amino_Acid_Change"],"\t")+"\n")
+        fout.write(string.join(["sample","chr","start","end","reference","alt","gene","effect","DNA_VAF","RNA_VAF","Amino_Acid_Change"],"\t")+"\n")
 
         for dataDir in os.listdir(rootDir):
             tmpout= "xena_out"
@@ -189,7 +189,6 @@ def radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix,
     oHandle = open(outDir+cancer+"/"+cgFileName+".json","w")
     J={}
     #stable
-    J["cgDataVersion"]=1
     J["dataSubType"]="somatic mutation (SNPs and small INDELs)"
     J["redistribution"]= distribution
     J["dataProducer"]= dataProducer

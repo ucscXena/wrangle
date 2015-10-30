@@ -129,15 +129,11 @@ def process (outDir, cancer, c1, c2, file, REALRUN,type):
         J["dataSubType"]=  Jinput["dataSubType"]
         J["version"]=  Jinput["version"]
         J["type"]=  Jinput["type"]
-        J["cgDataVersion"]=     Jinput["cgDataVersion"]
-        s= Jinput["shortTitle"]
+        s= Jinput["label"]
         s = string.replace(s,c1,cancer)
-        J["shortTitle"]= s
-        J["label"] = J["shortTitle"] 
+        J["label"] = s
         J[":probeMap"]=string.replace(Jinput[":probeMap"],c1,cancer)
         
-        if Jinput.has_key("gain"):
-            J["gain"]= Jinput["gain"]
         if Jinput.has_key("min"):
             J["min"]= Jinput["min"]
         if Jinput.has_key("max"):
@@ -147,7 +143,6 @@ def process (outDir, cancer, c1, c2, file, REALRUN,type):
         s = string.replace(s,c1,cancer)
         s = string.replace(s,TCGAUtil.cancerOfficial[c1],TCGAUtil.cancerOfficial[cancer])
         J["longTitle"]=s
-        J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
         J[":sampleMap"]="TCGA."+cancer+".sampleMap"
 
         s = Jinput["name"]

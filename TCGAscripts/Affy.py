@@ -151,20 +151,18 @@ def Affy (inDir, outDir, cancer,flog,REALRUN):
     J={}
     #stable
     suffix="AffyU133a"
-    J["cgDataVersion"]=1
     J["label"]="gene expression ("+suffix+")"
     J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression ("+suffix+" array)"
     J["dataSubType"]="gene expression array"
     J["expressionDataSpace"] = "log", 
     J["redistribution"]= True
-    J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
     J["dataProducer"]= "Broad Institute of MIT and Harvard University cancer genomic characterization center"
 
     #multiple dirs
     J["url"]=TCGAUtil.remoteBase \
               +string.replace(inDir,TCGAUtil.localBase,"")
     J["version"]=  datetime.date.today().isoformat()
-    J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
+    J["wrangler"]= "xena TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
 
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
     J["sample_type"]=["tumor"]
@@ -172,7 +170,6 @@ def Affy (inDir, outDir, cancer,flog,REALRUN):
     J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]+" ("+cancer+")"
     J['domain']="TCGA"
     J['tags']=["cancer"] + TCGAUtil.tags[cancer]
-    J['owner']="TCGA"
     J['gdata_tags'] =["transcription"]
     
     #change description
@@ -183,8 +180,8 @@ def Affy (inDir, outDir, cancer,flog,REALRUN):
                       " gene expression data by AffyU133a array.<br><br>"+ \
                       " The gene expression profile was measured experimentally using the Affymetrix HT Human Genome U133a microarray platform by the " + J["dataProducer"] +"."+\
                       " Level 3 interpreted level data was downloaded from TCGA data coordination center. This dataset shows the gene-level transcription estimates. Data is in log space."+\
-                      " Genes are mapped onto the human genome coordinates using UCSC cgData HUGO probeMap."+\
-                       "<br><br>In order to more easily view the differential gene expression between samples, we set the default view to center each gene to zero by independently subtracting the mean of the genomic location on the fly. Users can view the original non-normalized values by uncheck the \"Normalize\" option. For more information on how to use the cancer browser, please refer to the help page."
+                      " Genes are mapped onto the human genome coordinates using UCSC xena HUGO probeMap."+\
+                       "<br><br>In order to more easily view the differential expression between samples, we set the default view to center each gene or exon to zero by independently subtracting the mean of each gene or exon on the fly. Users can view the original non-normalized values by adjusting visualization settings."
     
     J["description"] = J["description"] +"<br><br>"
     

@@ -528,15 +528,11 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
         J["notes"]= "the probeMap is hugo for the short term, however probably around 10% of the gene symbols are not HUGO names, but ENTRE genes"
         
         J["description"]= J["description"] +"TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression by RNAseq."
-        if  string.find(namesuffix, "percentile")==-1:  #basic
-            pass
-        else:
+        if  string.find(namesuffix, "percentile") != -1:  #percentile
             J["description"]= J["description"] + "<br><br>For each sample, we rank genes RSEM values between 0% to 100%. This dataset is gene expression estimation in percentile rank, which higher value representing higher expression. The dataset can be used to compare this RNAseq data  with other cohorts when the other data is processed in the same way (i.e. percentile ranking)."
-
-        J["description"]= J["description"] +"<br><br>For comparing data within this cohort, we recommend to use the \"gene expression RNAseq\" dataset. For comparing with other TCGA cohorts, we recommend to use the pancan normalized version of the \"gene expression RNAseq\" data. For comparing with data outside TCGA, we recommend using the percentile version if the non-TCGA data is normalized by percentile ranking."
-
-        J["description"]= J["description"] + "<br><br>The gene expression profile was measured experimentally using the "+platformTitle+" by the "+ dataProducer +"." + \
-            " Level 3 data was downloaded from TCGA data coordination center. This dataset shows the gene-level transcription estimates, "
+        else:  #basic
+            J["description"]= J["description"] + "<br><br>The gene expression profile was measured experimentally using the "+platformTitle+" by the "+ dataProducer +"." + \
+                " Level 3 data was downloaded from TCGA data coordination center. This dataset shows the gene-level transcription estimates, "
 
     else:
         J["dataSubType"]="exon expression RNAseq"
@@ -559,30 +555,38 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
                           " Level 3 data was downloaded from TCGA data coordination center. This dataset shows the exon-level transcription estimates, "
         
     if PATHPATTERN in [ "IlluminaHiSeq_RNASeqV2","IlluminaGA_RNASeqV2"] and string.find(namesuffix, "exon")==-1:
-        if  string.find(namesuffix, "percentile")==-1:
+        if  string.find(namesuffix, "percentile")==-1: #basic
             J["description"] = J["description"] + "as in RSEM normalized count."
+            J["expressionDataSpace"]="log2"
             J["wrangling_procedure"]= "Level_3 data (file names: *.rsem.genes.normalized_results) are downloaded from TCGA DCC, log2(x+1) transformed, and processed at UCSC into Xena repository"
-        else:
+        else: #percentile
             J["expressionDataSpace"]="rank"
-            J["description"] = J["description"] + "as in RSEM normalized count, percentile ranked within each sample. "
             J["wrangling_procedure"]= "Level_3 data (file names: *.rsem.genes.normalized_results) are downloaded from TCGA DCC, percentile ranked, and processed at UCSC into Xena repository."
             
-    elif string.find(namesuffix, "exon")!=-1:
+    elif string.find(namesuffix, "exon")!=-1: #exon
         J["description"] = J["description"] + "as in RPKM values (Reads Per Kilobase of exon model per Million mapped reads)."
         J["wrangling_procedure"]= "Level_3 data (file names: *.exon_quantification.txt) are downloaded from TCGA DCC, log2(x+1) transformed, and processed at UCSC into Xena repository."
     else:
         J["description"] = J["description"] + "as in RPKM values (Reads Per Kilobase of exon model per Million mapped reads)."
         J["wrangling_procedure"]= "Level_3 data (file names: *.gene.quantification.txt) are downloaded from TCGA DCC, log2(x+1) transformed, and processed at UCSC into Xena repository."
 
-    if string.find(namesuffix, "exon")==-1:
+    #mapping to genomics region
+    if string.find(namesuffix, "exon")==-1: #gene
         J["description"] = J["description"] + " Genes are mapped onto the human genome coordinates using UCSC Xena HUGO probeMap (see ID/Gene mapping link below for details)."
-    else:
+    else: #exon
         J["description"] = J["description"] + " Exons are mapped onto the human genome coordinates using UCSC Xena unc_RNAseq_exon probeMap (see ID/Gene mapping link below for details."
-        
+    
+    #reference
     if dataProducer =="University of North Carolina TCGA genome characterization center":
         J["description"] = J["description"] +\
                            " Reference to method description from "+dataProducer+": <a href=\"" + TCGAUtil.remoteBase +string.replace(inDir,TCGAUtil.localBase,"") +remoteDataDirExample+"/DESCRIPTION.txt\" target=\"_blank\"><u>DCC description</u></a>"
+    
+    # comparison 
+    if string.find(namesuffix, "exon")==-1: # gene
+        if  string.find(namesuffix, "percentile")!=-1: #percentile gene
+            J["description"]= J["description"] +"<br><br>For comparing data within this cohort, we recommend to use the \"gene expression RNAseq\" dataset. For questions regarding the gene expression of this particular cohort in relation to other types tumors, you can use the pancan normalized version of the \"gene expression RNAseq\" data. For comparing with data outside TCGA, we recommend using the percentile version if the non-TCGA data is normalized by percentile ranking. For more information, please see our Data FAQ: <a href=https://docs.google.com/document/d/1q-7Tkzd7pci4Rz-_IswASRMRzYrbgx1FTTfAWOyHbmk/edit?usp=sharing target=\"_blank\"><u>here</u></a>."
         
+    #viz setting
     J["description"] = J["description"] +\
                        "<br><br>In order to more easily view the differential expression between samples, we set the default view to center each gene or exon to zero by independently subtracting the mean of each gene or exon on the fly. Users can view the original non-normalized values by adjusting visualization settings."
     J["description"] = J["description"] +"<br><br>"

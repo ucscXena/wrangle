@@ -371,11 +371,8 @@ def commonJSON(J, cancer):
     J['dataProducer']="UCSC Xena team"
     J["sample_type"]=["tumor"]
     J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]+" ("+cancer+")"
-    J['domain']="TCGA"
     J['tags']=["cancer"]+TCGAUtil.tags[cancer]
-    J['owner']="TCGA"
     J[":sampleMap"]="TCGA."+cancer+".sampleMap"
-    J["groupTitle"]= "TCGA "+TCGAUtil.cancerGroupTitle[cancer]
     J["wrangling_procedure"]="Data is combined from all TCGA cohorts and deposited into UCSC Xena repository"
     J["version"]= datetime.date.today().isoformat()
     J["primary_disease"]="cancer"
@@ -446,8 +443,7 @@ def mutation_broadJSON(J,cancer,genelevel):
     
 def miRNAJSON(J,cancer):
     J['name']= "TCGA_PANCAN_miRNA"
-    J["shortTitle"]= "miRNA expression"
-    J["label"] = J["shortTitle"] 
+    J["label"]= "miRNA expression"
     J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+" miRNA expression (RNAseq)"
     J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" miRNA expression by RNAseq.<br>"
     J["description"] = J["description"] +"miRNA expression measured using the IlluminaHiSeq and IllunimaGA technology. Data from all TCGA cohorts are combined to produce this dataset."
@@ -459,12 +455,9 @@ def miRNAJSON(J,cancer):
 
 def HiSeqV2JSON (J, cancer):
     J['name']= "HiSeqV2_PANCAN"
-    J["shortTitle"]= "gene expression"
-    J["label"] = J["shortTitle"] 
+    J["label"]= "gene expression"
     J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+" gene expression (IlluminaHiSeq)"
-    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" gene expression by RNAseq.<br>"
-    J["description"] = J["description"] +"Gene expression measured using the IlluminaHiSeq technology. Data from all TCGA cohorts are combined to produce this dataset. Values are log2(x+1) transformed RSEM gene-level expression estimations."
-    J["description"] = J["description"] +"<br><br>"    
+    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" gene expression by RNAseq. Gene expression is measured using the IlluminaHiSeq technology. Data from all TCGA cohorts are combined to produce this dataset. Values are log2(x+1) transformed RSEM values.<br>"
     J[":probeMap"]="hugo"
     J["dataSubType"]="gene expression RNAseq"
     J["colNormalization"]=True
@@ -608,15 +601,14 @@ def processRNA (filename, dir,outDir, cancer,flog, REALRUN):
         J['dataProducer']="UCSC Xena team"
         J["sample_type"]="tumor"
         J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]+" ("+cancer+")"
-        J['domain']="TCGA"
-        J['owner']="TCGA"
         J[":sampleMap"]="TCGA."+cancer+".sampleMap"
-        J["groupTitle"]= "TCGA "+TCGAUtil.cancerGroupTitle[cancer]
-        
         J['label']="gene expression RNAseq (IlluminaHiSeq pancan normalized)"
         J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression by RNAseq (IlluminaHiSeq), pancan normalized"
-        J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression by RNAseq, mean-normalized (per gene) across all TCGA cohorts."
-        J["description"]= J["description"] +"<br><br>For comparing data within this cohort, we recommend to use the \"gene expression RNAseq\" dataset. For comparing with other TCGA cohorts, we recommend to use the pancan normalized version of the \"gene expression RNAseq\" data. For comparing with data outside TCGA, we recommend using the percentile version if the non-TCGA data is normalized by percentile ranking."
+
+        J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression by RNAseq, mean-normalized (per gene) across all TCGA cohorts. Values in this dataset are generated at UCSC by combining \"gene expression RNAseq\" values of all TCGA cohorts, values are then mean-centered per gene, then extracting the converted data only belongs to the this cohort."
+
+        J["description"]= J["description"] +"<br><br>For comparing data within this cohort, we recommend to use the \"gene expression RNAseq\" dataset. For questions regarding the gene expression of this particular cohort in relation to other types tumors, you can use the pancan normalized version of the \"gene expression RNAseq\" data. For comparing with data outside TCGA, we recommend using the percentile version if the non-TCGA data is normalized by percentile ranking. For more information, please see our Data FAQ: <a href=https://docs.google.com/document/d/1q-7Tkzd7pci4Rz-_IswASRMRzYrbgx1FTTfAWOyHbmk/edit?usp=sharing target=\"_blank\"><u>here</u></a>.<br>"
+
         J["wrangling_procedure"]="Level_3 data (file names: *.rsem.genes.normalized_results) are download from TCGA DCC, log2(x+1) transformed, normalized across all TCGA cancer cohorts (all *.rsem.genes.normalized_results) per gene, and deposited into UCSC Xena repository."
         J['tags']=["cancer"] + TCGAUtil.tags[cancer]
 
