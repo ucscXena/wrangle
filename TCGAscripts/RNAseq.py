@@ -514,7 +514,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
         J[":probeMap"]= "hugo"
         J["dataSubType"]="gene expression RNAseq"
 
-        if cancer != "OV":
+        if cancer not in ["OV", "STAD"]:
             J["shortTitle"]= "gene expression RNAseq ("+suffix+")"
             J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression by RNAseq ("+suffix+")"
         else:
@@ -538,7 +538,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
         J["dataSubType"]="exon expression RNAseq"
         J[":probeMap"]= "unc_RNAseq_exon.hg19" #"unc_RNAseq_exon" 
 
-        if cancer != "OV":
+        if cancer not in [ "OV","STAD"]:
             J["shortTitle"]= "exon expression RNAseq ("+suffix+")"
             J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") exon expression by RNAseq ("+suffix+")"
         else:
