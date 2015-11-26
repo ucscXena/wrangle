@@ -510,7 +510,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
 
     #change description
     J["description"]=""
-    if string.find(namesuffix, "exon")==-1:
+    if string.find(namesuffix, "exon")==-1: #gene
         J[":probeMap"]= "hugo"
         J["dataSubType"]="gene expression RNAseq"
 
@@ -534,7 +534,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
             J["description"]= J["description"] + "<br><br>The gene expression profile was measured experimentally using the "+platformTitle+" by the "+ dataProducer +"." + \
                 " Level 3 data was downloaded from TCGA data coordination center. This dataset shows the gene-level transcription estimates, "
 
-    else:
+    else: #exon
         J["dataSubType"]="exon expression RNAseq"
         J[":probeMap"]= "unc_RNAseq_exon.hg19" #"unc_RNAseq_exon" 
 
@@ -543,7 +543,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
             J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") exon expression by RNAseq ("+suffix+")"
         else:
             if dataProducer =="University of North Carolina TCGA genome characterization center":
-                J["shortTitle"]= "exon expression RNAsea ("+suffix+" UNC)"
+                J["shortTitle"]= "exon expression RNAseq ("+suffix+" UNC)"
                 J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") exon expression by RNAseq ("+suffix+" UNC)"
             else:
                 J["shortTitle"]= "exon expression RNAseq ("+suffix+" BC)"
@@ -556,7 +556,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
         
     if PATHPATTERN in [ "IlluminaHiSeq_RNASeqV2","IlluminaGA_RNASeqV2"] and string.find(namesuffix, "exon")==-1:
         if  string.find(namesuffix, "percentile")==-1: #basic
-            J["description"] = J["description"] + "as in RSEM normalized count."
+            J["description"] = J["description"] + "as in log2(x+1) transformed RSEM normalized count."
             J["expressionDataSpace"]="log2"
             J["wrangling_procedure"]= "Level_3 data (file names: *.rsem.genes.normalized_results) are downloaded from TCGA DCC, log2(x+1) transformed, and processed at UCSC into Xena repository"
         else: #percentile
