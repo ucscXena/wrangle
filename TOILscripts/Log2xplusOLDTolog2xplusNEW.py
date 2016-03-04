@@ -1,6 +1,6 @@
 import string, sys, math
 
-def Log2xplusTheta (inputFile, outputFile, theta):
+def Log2xplusOLDTolog2xplusNEW  (inputFile, outputFile, oldtheta, newtheta):
     fin = open(inputFile,'U')
     fout = open(outputFile,'w')
 
@@ -27,20 +27,20 @@ def Log2xplusTheta (inputFile, outputFile, theta):
             if data[i] in ["NA",""]:
                 fout.write("\tNA")
             else:
-                x = float(data[i])
-                value = math.log((x + theta),2)
+                x = math.pow(2,float(data[i]))- oldtheta
+                value = math.log((x + newtheta),2)
                 value = "%.4f" % (value)
                 fout.write("\t"+value)
         fout.write("\n")
     fin.close()
     fout.close()
 
-if len(sys.argv[:])!=4:
-    print "Log2xplusTheta.py input output theta"
+if len(sys.argv[:])!=5:
+    print "Log2xplusOLDTolog2xplusNEW.py input(log2(x+old) output(log2(x+new)) oldtheta newtheta"
     sys.exit()
 
 inputfile = sys.argv[1]
 outputfile = sys.argv[2]
-theta = float(sys.argv[3])
-
-Log2xplusTheta (inputfile, outputfile, theta)
+oldtheta = float(sys.argv[3])
+newtheta = float(sys.argv[4])
+Log2xplusOLDTolog2xplusNEW (inputfile, outputfile, oldtheta, newtheta)
