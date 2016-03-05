@@ -16,7 +16,7 @@ def merge (infile_list, outfile):
         if not os.path.exists(infile):
             print infile, "not exists"
             sys.exit()
-        genes = setGeneOrder (infile,genes)
+        genes = setGeneOrder (infile,genes, tmpDir)
 
     allgenes = posToGene(genes)
     tmpfile = tmpDir+"/0_id"
@@ -28,12 +28,12 @@ def merge (infile_list, outfile):
         c=c+1
         nCOLs = getColumnSize (infile)
         cur_genes={}
-        cur_genes = setGeneOrder (infile,cur_genes)
+        cur_genes = setGeneOrder (infile,cur_genes, tmpDir)
 
         for i in range (2,nCOLs, 250):
             tmpfile = tmpDir+"/"+str(c)+"_tmp_"+str(int(i/250.0))
-            os.system("cut -f "+ str(i)+"-"+str(i+249)+" "+infile +" > tmp")
-            process(cur_genes, "tmp", allgenes, tmpfile)
+            os.system("cut -f "+ str(i)+"-"+str(i+249)+" "+infile +" > "+tmpDir+"/tmp")
+            process(cur_genes, tmpDir+"/tmp", allgenes, tmpfile)
             files.append(tmpfile)
 
     #paste all together
@@ -56,9 +56,9 @@ def outputallgenes(allgenes,outfile):
         fout.write(gene+"\n")
     fout.close()
 
-def setGeneOrder (infile,genes):
-    os.system("cut -f 1 "+infile +" > tmpid")
-    fin=open("tmpid",'U')    
+def setGeneOrder (infile,genes, tmpDir):
+    os.system("cut -f 1 "+infile +" > "+ tmpDir+"/tmpid")
+    fin=open(tmpDir+"/tmpid",'U')    
     fin.readline()
     for line in fin.readlines():
         hugo = line[:-1]
