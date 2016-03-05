@@ -17,21 +17,27 @@ def merge (infile_list, outfile):
             print infile, "not exists"
             sys.exit()
         genes = setGeneOrder (infile,genes)
-    allgenes = posToGene(genes)
 
+    allgenes = posToGene(genes)
+    tmpfile = tmpDir+"/0_id"
+    outputallgenes(allgenes,tmpfile)
+    files.append(tmpfile)
+
+    c=0
     for infile in infile_list:
+        c=c+1
         nCOLs = getColumnSize (infile)
         cur_genes={}
         cur_genes = setGeneOrder (infile,cur_genes)
 
         for i in range (2,nCOLs, 250):
-            tmpfile = tmpDir+"/tmp_"+str(int(i/250.0))
-            os.system("cut -f "+ i+"-"+i+249+" "+infile +" > tmp")
+            tmpfile = tmpDir+"/"+str(c)+"_tmp_"+str(int(i/250.0))
+            os.system("cut -f "+ str(i)+"-"+str(i+249)+" "+infile +" > tmp")
             process(cur_genes, "tmp", allgenes, tmpfile)
             files.append(tmpfile)
 
     #paste all together
-    os.system("paste -d \'\' "+string.join(files," ")+" > "+ outfile)
+    os.system("paste "+string.join(files," ")+" > "+ outfile)
 
     return
 
@@ -40,6 +46,15 @@ def posToGene(genes):
     for gene in genes:
         p = genes[gene]
         allGenes[p]=gene
+    return allGenes
+
+def outputallgenes(allgenes,outfile):
+    fout=open(outfile,'w') 
+    fout.write("sample\n")
+    for i in range(0,len(allgenes)):
+        gene = allgenes[i]
+        fout.write(gene+"\n")
+    fout.close()
 
 def setGeneOrder (infile,genes):
     os.system("cut -f 1 "+infile +" > tmpid")
@@ -55,13 +70,13 @@ def setGeneOrder (infile,genes):
 
 def getColumnSize (infile):
     fin=open(infile,'U')    
-    fin.readline()
+    line =fin.readline()
     fin.close()
     return len(string.split(line[:-1],"\t"))
 
 def process(cur_genes, infile, allgenes, outfile):
-    fin=open(infile,'U')    
-    fout=open(infile,'w') 
+    fin=open(infile,'r')    
+    fout=open(outfile,'w') 
 
     line = fin.readline()
     fout.write(line)
@@ -73,6 +88,7 @@ def process(cur_genes, infile, allgenes, outfile):
     emptyLine =string.join(emptyList,'\t')+"\n"
 
     lines = fin.readlines()
+
     for i in range(0,len(allgenes)):
         gene = allgenes[i]
         if gene in cur_genes:
