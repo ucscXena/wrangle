@@ -69,7 +69,7 @@ repoMeta = {
         "dataSubType":"miRNA expression",
         "type":"genomicMatrix",
         "label":"miRNA expression RNAseq",
-        ":probeMap":"miRBase_primary_transcript_hg19",
+        #":probeMap":"miRBase_primary_transcript_hg19",
         "colNormalization":True,
         },
 }

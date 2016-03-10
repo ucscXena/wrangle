@@ -18,7 +18,7 @@ def donor (fileIn, fileOut, xenaIds_specimen, xenaIds_donor, stat=None):
     fout.write(header[0])
     for i in range(1,len(header)):
         fout.write("\t"+header[i])
-    fout.write("\n")
+    fout.write("\t_PATIENT\n")
 
     for line in fin.readlines():
         data = string.split(line[:-1],'\t')
@@ -28,7 +28,7 @@ def donor (fileIn, fileOut, xenaIds_specimen, xenaIds_donor, stat=None):
             fout.write(xena_id)
             for i in range(1,len(header)):
                 fout.write("\t"+data[i])
-            fout.write("\n")
+            fout.write("\t"+donor_id+"\n")
     fin.close()
     fout.close()
     sortFileByFirstCol (fileOut)
@@ -64,7 +64,7 @@ def survival (fileIn, fileOut):
         return 
 
     fout = open(fileOut,'w')
-    fout.write("xena_id\tdonor_survival_time\t_TIME_TO_EVENT\tdonor_vital_status\t_EVENT\n")
+    fout.write("xena_id\tdonor_survival_time\t_TIME_TO_EVENT\tdonor_vital_status\t_EVENT\t_TIME_TO_EVENT_UNIT\n")
     
     has_data_event=False
     has_data_time=False
@@ -74,12 +74,13 @@ def survival (fileIn, fileOut):
         id = data[0]
         time = data[col_donor_survival_time]
         event = data[col_donor_vital_status]
+        unit = "days"
         if event =="alive":
-            fout.write(string.join([id, time, time, event, "0"],"\t")+"\n")
+            fout.write(string.join([id, time, time, event, "0", unit],"\t")+"\n")
         elif event =="deceased":
-            fout.write(string.join([id, time, time, event, "1"],"\t")+"\n")
+            fout.write(string.join([id, time, time, event, "1", unit],"\t")+"\n")
         else:
-            fout.write(string.join([id, time, time, event, ""],"\t")+"\n")
+            fout.write(string.join([id, time, time, event, "", unit],"\t")+"\n")
         if time !="":
             has_data_time = True
         if event !="":
@@ -104,7 +105,7 @@ def survival (fileIn, fileOut):
         'cohort': repInfo['name'] + ' ' + xenaCohort,
         'label':"Phenotype overall survival",
         'url': repInfo['download'] + repInfo['release'] + '/Projects/' + proj + '/donor.'+ proj+'.tsv.gz',
-        'wrangling_procedure':"Donor data downloaded from dcc.icgc.org, extracted <b>donor_survival_time </b>and <b>donor_vital_status </b>information, loaded to UCSC xena database. donor_survival_time is _TIME_TO_EVENT.  donor_vital_status is _EVENT (deceased =1, alive =0).",
+        'wrangling_procedure':"Donor data downloaded from dcc.icgc.org, extracted <b>donor_survival_time </b>and <b>donor_vital_status </b>information, loaded to UCSC xena database. donor_survival_time is _TIME_TO_EVENT.  donor_vital_status is _EVENT (deceased =1, alive =0). _TIME_TO_EVENT_UNIT is set to days.",
     }
     fout.write(json.dumps(obj, indent=4, sort_keys=True) + '\n')
     fout.close()

@@ -15,6 +15,7 @@ projects = [ # ICGC projects
     'BOCA-UK',
     'BRCA-EU',
     'BRCA-UK',
+    'BTCA-JP',
     'BTCA-SG',
     'CLLE-ES',
     'CCSK-US',
@@ -83,7 +84,7 @@ dataSubTypes = { # referenced by repository data type name
 silent = False # Silent means silent execution requested, log only to file
 
 repInfo  = { # ICGC repository information
-    'release': 'release_19', 
+    'release': 'release_20', 
     'version': date.today().isoformat(),
     'name': 'ICGC',
     'cohortDescrPrefix': 'This cohort is ',

@@ -51,7 +51,7 @@ def sampleMean(sum, count, a):
     """
     Find the sample value mean.
     """
-    if a.meta['log2']:
+    if a.meta.has_key('log2') and a.meta['log2']:
         val = math.log((float(sum) / count + 1), 2)
     else:
         val = float(sum) / count

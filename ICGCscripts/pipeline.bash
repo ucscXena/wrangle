@@ -8,7 +8,7 @@
 ./rewriteMetadata.py
 
 
-# copy over all the icgc pan-cancer .json file back
+# copy over all the icgc pan-cancer .json file back and change version
 python /inside/home/jzhu/scripts/mergeGenomicMatrixFiles.py /data/TCGA/icgcFiles/xena/mutGene.icgc /data/TCGA/icgcFiles/xena/mutGene.*.tsv
 
 python /inside/home/jzhu/scripts/mergeMultipleXenaMutation.py /data/TCGA/icgcFiles/xena/simple_somatic_mutation.open.icgc cohort.icgc errorlog /data/TCGA/icgcFiles/xena/simple_somatic_mutation.open.*tsv
