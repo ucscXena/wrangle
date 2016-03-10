@@ -142,21 +142,18 @@ def process (inDir, outDir, dataDir, cancer,flog,PATHPATTERN,  originCancer,REAL
                 fout.close()
                 fin.close()
                 os.system("cp .tmp "+infile)
-                print pattern
 
                 if pattern=="clinical_follow_up":
                     print file
                     if cancer ==originCancer:
-                        idCOL=1
-                        cleanupFollowUpFile(infile, ".tmp", idCOL)
+                        cleanupFollowUpFile(infile, ".tmp")
                         os.system("cp .tmp "+infile)
 
                 # slide file need to be remade due to the need to duplicate column as top or bottom 
                 if pattern=="biospecimen_slide":
                     print file
                     if cancer ==originCancer:
-                        idCOL=1
-                        cleanupSlideFile(infile, ".tmp", idCOL)
+                        cleanupSlideFile(infile, ".tmp")
                         os.system("cp .tmp "+infile)
 
                 #clinicalMatrix
@@ -356,19 +353,23 @@ def cleanGarbage(garbageDirs):
         os.system("rm -rf "+dir+"*")
     return
 
-def cleanupSlideFile(infile, outfile, idCOL):
+def cleanupSlideFile(infile, outfile):
     fin = open(infile,'U')
     fout= open(outfile,'w')
 
+    idCOL= -1
     section_location_col =-1
     keepCols=[]
     section_location=[]
     header =string.split(string.strip(fin.readline()),"\t")
     for i in range(1, len(header)):
+        if header[i] =="bcr_slide_barcode":
+            idCOL = i
         if header[i] =="section_location":
             section_location_col = i
         if header[i][0:7]== "percent":
             keepCols.append(i)
+    assert(idCOL!=-1)
 
     if section_location_col ==-1 or len(keepCols)==0:
         print "slide file is not what we expected, skip"
@@ -434,22 +435,29 @@ def cleanupSlideFile(infile, outfile, idCOL):
         fout.write("\n")
     fout.close()
 
-def cleanupFollowUpFile(infile, outfile, idCOL):
+def cleanupFollowUpFile(infile, outfile):
     fin = open(infile,'U')
     patients={}
     header =string.split(string.strip(fin.readline()),"\t")
+    idCOL =-1
     col_date_of_form_completion=-1
     col_days_to_last_followup =-1
+    col_days_to_death =-1
     col_days_to_new_tumor_event_after_initial_treatment =-1
     flagPatientsForSurvival=[]
     for i in range (0,len(header)):
+        if header[i]=="bcr_followup_barcode":
+            idCOL =i
         if header[i]=="date_of_form_completion":
             col_date_of_form_completion=i
         if header[i]=="days_to_last_followup":
             col_days_to_last_followup =i
+        if header[i]=="days_to_death":
+            col_days_to_death =i
         if header[i]=="days_to_new_tumor_event_after_initial_treatment":
             col_days_to_new_tumor_event_after_initial_treatment=i
-            
+    assert(idCOL!=-1)
+
     for line in fin.readlines():
         data = string.split(line,'\t')
         sample= data[idCOL]
@@ -461,9 +469,12 @@ def cleanupFollowUpFile(infile, outfile, idCOL):
             findex=0
         if not patients.has_key(patient):
             patients[patient]=[findex,data]
+
         elif findex > patients[patient][0]:
+            patients[patient]=[findex,data]
+            """
             #check sanity that the followup data makes sense, if not , set flag
-            if col_date_of_form_completion != -1 and col_days_to_last_followup !=-1:
+            if col_date_of_form_completion != -1 and (col_days_to_last_followup !=-1 or col_days_to_death!=-1):
                 old_date_of_form_completion = patients[patient][1][col_date_of_form_completion]
                 new_date_of_form_completion = data[col_date_of_form_completion]
                 delta_form = days_delta  (old_date_of_form_completion,new_date_of_form_completion)
@@ -496,8 +507,8 @@ def cleanupFollowUpFile(infile, outfile, idCOL):
                     data[col_days_to_new_tumor_event_after_initial_treatment] = str(old_days_to_new_tumor_event_after_initial_treatment)
                 print data[col_days_to_new_tumor_event_after_initial_treatment]
                 patients[patient]=[findex,data]
+            """
 
-            
     fin.close()
     
     fin = open(infile,'U')

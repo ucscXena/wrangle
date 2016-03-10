@@ -77,26 +77,24 @@ def mergeGA_Hiseq (inDir, outDir, cancer, flog, REALRUN):
               +string.replace(inDir,TCGAUtil.localBase,"")
     J["version"]= datetime.date.today().isoformat()
     J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
-    J["expressionDataSpace"]="log"
+    J["unit"]="log2(reads_per_million_miRNA_mapped+1)"
 
     platformTitle ="Illumina Genome Analyzer and HiSeq 2000 RNA Sequencing platform"
 
     #change description
     J["description"]=""
-    #J[":probeMap"]= "miRBase_primary_transcript_hg18"
     J["dataSubType"]="miRNA expression RNAseq"
     J["label"]= "miRNA expression (GA, HiSeq)"
     J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") miRNA expression by RNAseq (Illumina GA, HiSeq)"
     J["description"]= J["description"] +"TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") miRNA expression by RNAseq.<br><br>"+ \
         " The miRNA expression profile was measured experimentally using the "+platformTitle+" by the "+ dataProducer +"." + \
         " Level 3 interpreted level data was downloaded from TCGA data coordination center. This dataset shows the miRNA transcription estimates in log2 (reads per million miRNA mapped)."
-    #J["description"] = J["description"] + " miRNA primary transcripts are mapped onto the human genome coordinates using UCSC cgData miRBase miRNA_primary_transcript probeMap."
 
     J["description"] = J["description"] +\
                        "<br><br>In order to more easily view the differential expression between samples, we set the default view to center each miRNA to zero by independently subtracting the mean of each miRNA across the cohort on the fly. Users can view the original non-normalized values by adjusting visualization settings."
     J["description"] = J["description"] +"<br><br>"
 
-    J["wrangling_procedure"]= "Level_3 Data (file names: *.mirna.quantification.txt) download from TCGA DCC, log2(x+1) transformed, and processed at UCSC into Xena repository."
+    J["wrangling_procedure"]= "Level_3 Data (file names: *.hg19.mirna.quantification.txt) download from TCGA DCC, log2(x+1) transformed, and processed at UCSC into Xena repository."
 
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
     J["sample_type"]=["tumor"]
@@ -206,12 +204,9 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
                 sample =""
 
                 #bcgsc gene
-                pattern ="mirna.quantification"
+                pattern ="hg19.mirna.quantification"
                 if string.find(file,pattern)!=-1 :
                     infile = rootDir+dataDir+"/"+file
-                    # stupid bcgsc file name with hg19 ---- ignored
-                    if string.find(file,".hg19.")!=-1:
-                        continue
                     # bcgsc stupid sample name in file name
                     if dataProducer=="British Columbia Cancer Agency TCGA genome characterization center":
                         sample = string.split(file,".")[0]
@@ -255,12 +250,9 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
             for file in os.listdir(rootDir+dataDir):
                 sample=""
                 #bcgsc v1 and 
-                pattern ="mirna.quantification"
+                pattern ="hg19.mirna.quantification"
                 if string.find(file,pattern)!=-1:
                     infile = rootDir+dataDir+"/"+file
-                    # stupid bcgsc file name with hg19 ---- ignored
-                    if string.find(file,".hg19.")!=-1:
-                        continue
                     # bcgsc stupid sample name in file name
                     if dataProducer=="British Columbia Cancer Agency TCGA genome characterization center":
                         sample = string.split(file,".")[0]
@@ -337,7 +329,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
               +string.replace(inDir,TCGAUtil.localBase,"")
     J["version"]= datetime.date.today().isoformat()
     J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
-    J["expressionDataSpace"]="log"
+    J["unit"]="log2(reads_per_million_miRNA_mapped+1)"
 
     if PATHPATTERN in ["IlluminaHiSeq_miRNASeq"]:
         platformTitle ="Illumina HiSeq 2000 RNA Sequencing platform"
@@ -346,20 +338,18 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
 
     #change description
     J["description"]=""
-    #J[":probeMap"]= "miRBase_primary_transcript_hg18"
     J["dataSubType"]="miRNA expression RNAseq"
     J["label"]= "miRNA expression ("+suffix+")"
     J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") miRNA expression by RNAseq ("+suffix+")"
     J["description"]= J["description"] +"TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") miRNA expression by RNAseq.<br><br>"+ \
         " The miRNA expression profile was measured experimentally using the "+platformTitle+" by the "+ dataProducer +"." + \
         " Level 3 interpreted level data was downloaded from TCGA data coordination center. This dataset shows the miRNA transcription estimates in log2 (reads per million miRNA mapped)."
-    #J["description"] = J["description"] + " miRNA primary transcripts are mapped onto the human genome coordinates using UCSC cgData miRBase miRNA_primary_transcript probeMap."
 
     J["description"] = J["description"] +\
                        "<br><br>In order to more easily view the differential expression between samples, we set the default view to center each miRNA to zero by independently subtracting the mean of each miRNA across the cohort on the fly. Users can view the original non-normalized values by adjusting visualization settings."
     J["description"] = J["description"] +"<br><br>"
 
-    J["wrangling_procedure"]= "Level_3 Data (file names: *.mirna.quantification.txt) download from TCGA DCC, log2(x+1) transformed, and processed at UCSC into Xena repository."
+    J["wrangling_procedure"]= "Level_3 Data (file names: *.hg19.mirna.quantification.txt) download from TCGA DCC, log2(x+1) transformed, and processed at UCSC into Xena repository."
 
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
     J["sample_type"]=["tumor"]

@@ -1,24 +1,22 @@
-DATE=2014-05-09
+DATE=2015-11-06
 
 FREEZE=cgDataFreeze$DATE
 
 python scriptRepoStats.py 
 
-cp statReport data_flatten/statReport_$DATE
-mv statReport CAVMold/statReport_$DATE
+mv statReport CAVM/statReport_$DATE
 
-rsync -avL --exclude '*~' --exclude 'probeMap' CAVMold/* /data/cancerGenomeData/$FREEZE/
+rsync -avL --exclude '*~'  CAVM/* /data/cancerGenomeData/$FREEZE/
 
-rsync -avL --exclude '*~' data_flatten/probeMap /data/cancerGenomeData/$FREEZE/
-
-rsync -avL --exclude '*~' data_flatten/stat* /data/cancerGenomeData/$FREEZE/
-
-#rsync -avL --exclude '*~' data_flatten/public/TCGA /data/cancerGenomeData/$FREEZE/public/
-
-chmod -R a-wx+X /data/cancerGenomeData/$FREEZE/
+chmod -R go-wx+X /data/cancerGenomeData/$FREEZE/
 
 chgrp -R cancer /data/cancerGenomeData/$FREEZE/
 
 rm -f /data/cancerGenomeData/cgDataFreezeLatest 
 
 ln -sf /data/cancerGenomeData/$FREEZE /data/cancerGenomeData/cgDataFreezeLatest
+
+#probemap
+java -jar xenaServer.jar -r /data/cancerGenomeData/cgDataFreezeLatest/ --json
+
+gzip -r /data/cancerGenomeData/cgDataFreezeLatest/*/

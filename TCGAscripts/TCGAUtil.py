@@ -111,7 +111,7 @@ cancerHumanReadable={
     "UCS":"Uterine Carcinosarcoma",
     "UVM":"Ocular melanomas",
     "TGCT":"Testicular Cancer",
-    "THYM":"thymoma",
+    "THYM":"Thymoma",
     "PANCAN":"Pan-Cancer",
     "PANCAN12":"PANCAN12"
     }
@@ -167,7 +167,7 @@ anatomical_origin ={
 #https://wiki.nci.nih.gov/display/TCGA/TCGA+MAF+Files
 default_mutation = {
     "ACC":["TCGA_ACC_mutation_curated_broad"], 
-    "BLCA":["TCGA_BLCA_mutation_broad"], 
+    "BLCA":["TCGA_BLCA_mutation_broad"],  ########### "TCGA_BLCA_mutation_curated_broad"
     "BRCA":["TCGA_BRCA_mutation_curated_wustl"],
     "CESC":["TCGA_CESC_mutation_curated_wustl"],
     "CHOL":["TCGA_CHOL_mutation_broad"],
@@ -176,25 +176,25 @@ default_mutation = {
     "ESCA":["TCGA_ESCA_mutation_broad"],
     "FPPP":[],  ## need hgsc mixed data
     "GBM":["TCGA_GBM_mutation_ucsc_maf"],
-    "HNSC":["TCGA_HNSC_mutation_broad"],
+    "HNSC":["TCGA_HNSC_mutation_broad"],############ "TCGA_HNSC_mutation_curated_broad""
     "KICH":["TCGA_KICH_mutation_broad"],
     "KIRC":["TCGA_KIRC_mutation_broad"],  #need hgsc mixed
     "KIRP":["TCGA_KIRP_mutation_curated_broad"],
     "LAML":["TCGA_LAML_mutation_wustl"],
-    "LGG":["TCGA_LGG_mutation_ucsc_vcf"], 
-    "LIHC":["TCGA_LIHC_mutation_broad"],
-    "LUAD":["TCGA_LUAD_mutation_broad"],
+    "LGG":["TCGA_LGG_mutation_ucsc_vcf"], ########### "TCGA_LGG_mutation_curated_broad" 
+    "LIHC":["TCGA_LIHC_mutation_bcm"], 
+    "LUAD":["TCGA_LUAD_mutation_broad"], #####"TCGA_LUAD_mutation_curated_broad"
     "LUSC":["TCGA_LUSC_mutation_broad"],
     "LNNH":[],
     "OV":["TCGA_OV_mutation_broad","TCGA_OV_mutation_wustl","TCGA_OV_mutation_curated_bcm_solid"],
     "PAAD":["TCGA_PAAD_mutation_curated_broad"],
-    "PCPG":["TCGA_PCPG_mutation_ucsc_vcf"],
+    "PCPG":["TCGA_PCPG_mutation_broad"],
     "PRAD":["TCGA_PRAD_mutation_curated_broad"],
     "READ":["TCGA_READ_mutation_bcm","TCGA_READ_mutation_bcm_solid"],
     "SARC":["TCGA_SARC_mutation_broad"],
     "SKCM":["TCGA_SKCM_mutation_broad"],
     "STAD":["TCGA_STAD_mutation_curated_broad"],
-    "TGCT":["TCGA_TGCT_mutation_ucsc_vcf"],
+    "TGCT":["TCGA_TGCT_mutation_broad"],
     "THCA":["TCGA_THCA_mutation_broad"],
     "THYM":["TCGA_THYM_mutation_broad"],
     "UCEC":["TCGA_UCEC_mutation_wustl"],
@@ -253,8 +253,9 @@ tags ={
     "PANCAN12":["non-small cell lung cancer","pancancer"]
     }
 
+#primary_disease
 cancerGroupTitle={
-    "FPPP":"FFPE pilot phase II",
+    "FPPP":"",
     "LAML":"acute myeloid leukemia",
     "BLCA":"bladder urothelial carcinoma",
     "LGG":"brain lower grade glioma",

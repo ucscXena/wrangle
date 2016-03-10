@@ -11,6 +11,7 @@ import  TCGAUtil
 import mergeGenomicMatrixFiles
 import xenaToMatrix
 
+#for individual
 def RNAseq (dir,outDir, cancer,flog,REALRUN):
     if cancer !="PANCAN":
         return    
@@ -18,6 +19,7 @@ def RNAseq (dir,outDir, cancer,flog,REALRUN):
     filename = "HiSeqV2"
     processRNA(filename, dir,outDir, cancer,flog, REALRUN)
 
+#for combination
 def HiSeqV2  ( dir, outDir, cancer,flog,REALRUN):
     if cancer !="PANCAN":
         return
@@ -81,6 +83,13 @@ def Gistic2 (dir,outDir, cancer,flog,REALRUN):
     filename = "Gistic2_CopyNumber_Gistic2_all_data_by_genes"
     processMatrix (filename, dir,outDir, cancer,flog, REALRUN)
 
+def Gistic2_threshold (dir,outDir, cancer,flog,REALRUN):
+    if cancer !="PANCAN":
+        return
+    print cancer, sys._getframe().f_code.co_name
+    filename = "Gistic2_CopyNumber_Gistic2_all_thresholded.by_genes"
+    processMatrix (filename, dir,outDir, cancer,flog, REALRUN)
+
 def clin (dir,outDir, cancer,flog,REALRUN):
     if cancer not in ["PANCAN12","PANCAN"]:
         return
@@ -109,8 +118,7 @@ def processClin (filename, dir,outDir, CANCER,flog, REALRUN):
               "_OS","_OS_IND","_OS_UNIT",
               "_RFS","_RFS_IND","_RFS_UNIT",
               "_EVENT","_TIME_TO_EVENT","_TIME_TO_EVENT_UNIT",
-              "_anatomical_origin","_primary_disease"]   
-
+              "_primary_site","_primary_disease"]   
 
     for feature in features:
         print feature
@@ -352,8 +360,11 @@ def processMatrix (filename, dir,outDir, cancer,flog, REALRUN):
 
     cancer="PANCAN"    
     J["type"]= "genomicMatrix"
+    J['url']="https://tcga-data.nci.nih.gov/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/"
     if filename=="Gistic2_CopyNumber_Gistic2_all_data_by_genes":
         gisticJSON(J,cancer)
+    elif filename=="Gistic2_CopyNumber_Gistic2_all_thresholded.by_genes":
+        gistic_thresholdJSON(J,cancer)
     elif filename=="HiSeqV2":
         HiSeqV2JSON(J,cancer)
     elif filename=="HiSeqV2_exon":
@@ -394,7 +405,7 @@ def mutation_bcgscJSON(J,cancer,genelevel):
     else:
         J["label"]= "somatic gene-level non-silent mutation (bcgsc)"
         J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+genelevel+" nonsilent somatic mutation (bcgsc)"
-    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" somatic mutation data. The calls are generated at Michael Smith Genome Sciences Centre (British Columbia Genome Sciences Centre, BCGSC) using the BCGSC pipeline method. BCGSC's calls from various TCGA cohorts are combined to produce this dataset."
+    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" somatic mutation dataa, compiled using data from all TCGA cohorts all TCGA cohorts. The calls are generated at Michael Smith Genome Sciences Centre (British Columbia Genome Sciences Centre, BCGSC) using the BCGSC pipeline method. BCGSC's calls from various TCGA cohorts are combined to produce this dataset."
     J["description"] = J["description"] +"<br><br>"    
 
 def mutation_wustlSON (J, cancer,genelevel):
@@ -405,7 +416,7 @@ def mutation_wustlSON (J, cancer,genelevel):
     else:
         J["label"]= "somatic gene-level non-silent mutation (wustl)"
         J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+genelevel+" nonsilent somatic mutation (wustl)"
-    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" somatic mutation data. The calls are generated at Washington University Genome Center using the WashU pipeline method. BCGSC's calls from various TCGA cohorts are combined to produce this dataset."
+    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" somatic mutation dataa, compiled using data from all TCGA cohorts. The calls are generated at Washington University Genome Center using the WashU pipeline method. BCGSC's calls from various TCGA cohorts are combined to produce this dataset."
     J["description"] = J["description"] +"<br><br>"
 
 def mutation_ucsc_vcfJSON(J,cancer,genelevel):
@@ -416,7 +427,7 @@ def mutation_ucsc_vcfJSON(J,cancer,genelevel):
     else:
         J["label"]= "somatic gene-level non-silent mutation (ucsc automated vcf)"
         J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+ genelevel+" nonsilent somatic mutation (ucsc)"
-    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" somatic mutation data.  The calls are generated at University of Californis Santa Cruz GDAC using the RADIA method. RADIA's calls (vcfs) from various TCGA cohorts are combined to produce this dataset. Reference to RADIA: PMID: 25405470."
+    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" somatic mutation dataa, compiled using data from all TCGA cohorts.  The calls are generated at University of Californis Santa Cruz GDAC using the RADIA method. RADIA's calls (vcfs) from various TCGA cohorts are combined to produce this dataset. Reference to RADIA: PMID: 25405470."
     J["description"] = J["description"] +"<br><br>"    
 
 def mutation_bcmJSON(J,cancer,genelevel):
@@ -427,7 +438,7 @@ def mutation_bcmJSON(J,cancer,genelevel):
     else:
         J["label"]= "somatic gene-level non-silent mutation (bcm)"
         J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+ genelevel+ " nonsilent somatic mutation (bcm)"
-    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" somatic mutation data.  The calls are generated at Baylor College of Medicine Human Genome Sequencing Center using the Baylor pipeline method. Baylor's calls from various TCGA cohorts are combined to produce this dataset."
+    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" somatic mutation dataa, compiled using data from all TCGA cohorts.  The calls are generated at Baylor College of Medicine Human Genome Sequencing Center using the Baylor pipeline method. Baylor's calls from various TCGA cohorts are combined to produce this dataset."
     J["description"] = J["description"] +"<br><br>"    
 
 def mutation_broadJSON(J,cancer,genelevel):
@@ -438,17 +449,17 @@ def mutation_broadJSON(J,cancer,genelevel):
     else:
         J["label"]= "somatic gene-level non-silent mutation (broad)"
         J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+ genelevel+" nonsilent somatic mutation (broad)"
-    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" somatic mutation data.  The calls are generated at Broad Institute Genome Sequencing Center using the MuTect method. MuTect calls from various TCGA cohorts are combined to produce this dataset."
+    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" somatic mutation data, compiled using data from all TCGA cohorts. The calls are generated at Broad Institute Genome Sequencing Center using the MuTect method. MuTect calls from various TCGA cohorts are combined to produce this dataset."
     J["description"] = J["description"] +"<br><br>"    
     
 def miRNAJSON(J,cancer):
     J['name']= "TCGA_PANCAN_miRNA"
     J["label"]= "miRNA expression"
     J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+" miRNA expression (RNAseq)"
-    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" miRNA expression by RNAseq.<br>"
-    J["description"] = J["description"] +"miRNA expression measured using the IlluminaHiSeq and IllunimaGA technology. Data from all TCGA cohorts are combined to produce this dataset."
+    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" miRNA expression by RNAseq, compiled using data from all TCGA cohorts. miRNA expression was measured using the IlluminaHiSeq and IllunimaGA technology. Data from all TCGA cohorts are combined to produce this dataset."
     J["description"] = J["description"] +"<br><br>"    
-    J[":probeMap"]= "miRBase_primary_transcript_hg18"
+    if J.has_key(":probeMap"):
+        J.pop(":probeMap")
     J["dataSubType"]="miRNA expression RNAseq"
     J["colNormalization"]=True
     return
@@ -456,8 +467,8 @@ def miRNAJSON(J,cancer):
 def HiSeqV2JSON (J, cancer):
     J['name']= "HiSeqV2_PANCAN"
     J["label"]= "gene expression"
-    J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+" gene expression (IlluminaHiSeq)"
-    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" gene expression by RNAseq. Gene expression is measured using the IlluminaHiSeq technology. Data from all TCGA cohorts are combined to produce this dataset. Values are log2(x+1) transformed RSEM values.<br>"
+    J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+" gene expression (polyA+ IlluminaHiSeq)"
+    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" gene expression by RNAseq, compiled using data from all TCGA cohorts. Gene expression was measured using the IlluminaHiSeq technology. Data from all TCGA cohorts are combined to produce this dataset. Values are log2(x+1) transformed RSEM values.<br>"
     J[":probeMap"]="hugo"
     J["dataSubType"]="gene expression RNAseq"
     J["colNormalization"]=True
@@ -469,8 +480,7 @@ def HiSeqV2_exonJSON (J, cancer):
     J["shortTitle"]= "exon expression"
     J["label"] = J["shortTitle"] 
     J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+" exon expression (IlluminaHiSeq)"
-    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" exon expression by RNAseq.<br>"
-    J["description"] = J["description"] +"Exon expression measured using the IlluminaHiSeq technology. Data from all TCGA cohorts are combined to produce this dataset. Values are log2(x+1) transformed exon-level transcription estimates in RPKM values (Reads Per Kilobase of exon model per Million mapped reads)."
+    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" exon expression by RNAseq, compiled using data from all TCGA cohorts. Exon expression was measured using the IlluminaHiSeq technology. Data from all TCGA cohorts are combined to produce this dataset. Values are log2(x+1) transformed exon-level transcription estimates in RPKM values (Reads Per Kilobase of exon model per Million mapped reads)."
     J["description"] = J["description"] +"<br><br>"    
     J[":probeMap"]="unc_RNAseq_exon"
     J["dataSubType"]="exon expression RNAseq"
@@ -481,21 +491,30 @@ def HiSeqV2_exonJSON (J, cancer):
 
 def gisticJSON(J,cancer):
     J['name']= "TCGA_PANCAN_gistic2"
-    J["shortTitle"]= "gene-level copy number (gistic2)"
-    J["label"] = J["shortTitle"] 
+    J["label"]= "gene-level copy number (gistic2)"
     J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+" gene-level copy number (gistic2)"
-    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" gene-level copy number variation (CNV) estimated using the GISTIC2 method.<br>"
-    J["description"] = J["description"] +"Copy number profile was measured experimentally using whole genome microarray at Broad TCGA genome characterization center. Subsequently, TCGA FIREHOSE pipeline applied GISTIC2 method to produce segmented CNV data, which was then mapped to genes to produce gene-level estimates. Gistic2 data from all TCGA cohorts are combined to produce this dataset. Reference to GISTIC2 method PMID:21527027."
+    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" gene-level copy number variation (CNV) estimated using the GISTIC2 method, compiled using data from all TCGA cohorts. Copy number was measured experimentally using whole genome microarray at Broad TCGA genome characterization center. Subsequently, TCGA FIREHOSE pipeline applied GISTIC2 method to produce segmented CNV data, which was then mapped to genes to produce gene-level estimates. Gistic2 data from all TCGA cohorts are combined to produce this dataset. Reference to GISTIC2 method PMID:21527027."
     J["description"] = J["description"] +"<br><br>"    
     J[":probeMap"]="hugo"
-    J["dataSubType"]="copy number"
+    J["dataSubType"]="copy number (gene-level)"
+    return
+
+def gistic_thresholdJSON(J,cancer):
+    J['name']= "TCGA_PANCAN_gistic2_threshold"
+    J["label"]= "gene-level copy number (gistic2_thresholded)"
+    J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+" gene-level copy number (gistic2_thresholded)" 
+    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" gene-level copy number variation (CNV) estimated using the GISTIC2 threshold method, compiled using data from all TCGA cohorts. Copy number was measured experimentally using whole genome microarray at a TCGA genome characterization center. Subsequently, GISTIC2 method was applied using the TCGA FIREHOSE pipeline to produce gene-level copy number estimates. GISTIC2 further thresholded the estimated values to -2,-1,0,1,2, representing homozygous deletion, single copy deletion, diploid normal copy, low-level copy number amplification, or high-level copy number amplification. Genes are mapped onto the human genome coordinates using UCSC cgData HUGO probeMap. Reference to GISTIC2 method PMID:21527027."
+    J["description"] = J["description"] +"<br><br>"    
+    J[":probeMap"]="hugo"
+    J["dataSubType"]="copy number (gene-level)"
     return
 
 def processRNA (filename, dir,outDir, cancer,flog, REALRUN):
     inFiles ={}
     outFiles={}
     for cancer in os.listdir(outDir):
-        if cancer in ["LUNG","COADREAD","PANCAN"]:
+        if cancer in ["PANCAN"]:
+        #if cancer in ["LUNG","COADREAD","PANCAN"]:
             continue
 
         cancerDir= outDir+ cancer
@@ -515,8 +534,6 @@ def processRNA (filename, dir,outDir, cancer,flog, REALRUN):
 
     if REALRUN:
         #header:
-        #foutPANCAN= open(outFiles["PANCAN"],"w")
-
         for i in range (0,len(keys)):
             fin = open(inFiles[keys[i]],'r')
             fout= open(outFiles[keys[i]],'w')
@@ -525,12 +542,6 @@ def processRNA (filename, dir,outDir, cancer,flog, REALRUN):
             line = fin.readline()
             fout.write(line)
 
-            #if i==0:
-            #    foutPANCAN.write(string.join(string.split(line[:-1],"\t"),"\t"))
-            #else:
-            #    foutPANCAN.write("\t"+string.join(string.split(line[:-1],"\t")[1:],"\t") )
-        #foutPANCAN.write("\n")
-                
         #data normalization per gene
         while 1:
             dataDic={}
@@ -569,20 +580,13 @@ def processRNA (filename, dir,outDir, cancer,flog, REALRUN):
                 data = dataDic[keys[i]]
                 fout= outFiles[keys[i]]
                 fout.write(data[0])
-                #if i==0:
-                #    foutPANCAN.write(data[0])
                 for i in range(1,len(data)):
                     if data[i]=="":
                         fout.write("\t")
-                        #foutPANCAN.write("\t")
                         continue
                     fout.write("\t"+str(data[i]-average))
-                    #foutPANCAN.write("\t"+str(data[i]-average))
                 fout.write("\n")
 
-            #foutPANCAN.write("\n")
-
-    #keys.append("PANCAN")
     J={}
     for key in keys:
         cancer=key
@@ -596,14 +600,15 @@ def processRNA (filename, dir,outDir, cancer,flog, REALRUN):
 
         if J.has_key("colNormalization"):
             J.pop("colNormalization")
-
+        
+        J["RNAtype"]="ployA+"
         J['name']= J['name']+"_PANCAN"
         J['dataProducer']="UCSC Xena team"
         J["sample_type"]="tumor"
         J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]+" ("+cancer+")"
         J[":sampleMap"]="TCGA."+cancer+".sampleMap"
-        J['label']="gene expression RNAseq (IlluminaHiSeq pancan normalized)"
-        J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression by RNAseq (IlluminaHiSeq), pancan normalized"
+        J['label']="gene expression RNAseq ("+ J["RNAtype"]+ " IlluminaHiSeq pancan normalized)"
+        J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression by RNAseq ("+ J["RNAtype"]+" IlluminaHiSeq), pancan normalized"
 
         J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression by RNAseq, mean-normalized (per gene) across all TCGA cohorts. Values in this dataset are generated at UCSC by combining \"gene expression RNAseq\" values of all TCGA cohorts, values are then mean-centered per gene, then extracting the converted data only belongs to the this cohort."
 

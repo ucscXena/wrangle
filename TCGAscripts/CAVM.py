@@ -197,7 +197,7 @@ def process(file, outfile,samples, intDic):
     return
 
 
-REALRUN= 0
+REALRUN= 1
 #1 genomic + clinical 
 #0 only clinical data
 # -1: only json

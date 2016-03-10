@@ -13,6 +13,7 @@ import xenaToMatrix
 import radia
 
 tmpDir="tmpTry/"
+VAF_cut =0.04
 
 def unc_mixed_dnaseq_cont_automated (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
@@ -26,7 +27,7 @@ def unc_mixed_dnaseq_cont_automated (inDir, outDir, cancer,flog,REALRUN):
     mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
     clean =0
-    VAF= True
+    VAF= False
     namesuffix = "mutation_unc"
     mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution,VAF)
 
@@ -116,16 +117,16 @@ def broad_illuminaga_dnaseq (inDir, outDir, cancer,flog,REALRUN):
 def broad_illuminaga_dnaseq_automated (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
     distribution = True
+    VAF= True
     PATHPATTERN= "IlluminaGA_DNASeq_automated"
     PLATFORM = "IlluminaGA"
     suffix     = "broad"
     namesuffix = "mutation_broad_gene"
     dataProducer = "Broad Institute Genome Sequencing Center"
     clean=1
-    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
+    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution, VAF)
 
     clean =0
-    VAF=True
     namesuffix = "mutation_broad"
     mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution, VAF)
 
@@ -202,7 +203,7 @@ def hgsc_illuminaga_dnaseq_automated (inDir, outDir, cancer,flog,REALRUN):
     mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
     clean =0
-    VAF =True
+    VAF= False
     namesuffix = "mutation_bcm"
     mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution, VAF)
 
@@ -248,7 +249,7 @@ def wustl_illuminaga_dnaseq_automated (inDir, outDir, cancer,flog,REALRUN):
     mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
     clean =0
-    VAF = True
+    VAF= False
     namesuffix = "mutation_wustl"
     mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution, VAF)
 
@@ -295,7 +296,7 @@ def bcgsc_illuminahiseq_dnaseq_automated (inDir, outDir, cancer,flog,REALRUN):
 
     clean =0
     namesuffix = "mutation_bcgsc"
-    VAF = True
+    VAF= False
     mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution, VAF)
 
 def bcgsc_illuminahiseq_dnaseq_curated (inDir, outDir, cancer,flog,REALRUN):
@@ -313,7 +314,7 @@ def bcgsc_illuminahiseq_dnaseq_curated (inDir, outDir, cancer,flog,REALRUN):
     namesuffix = "mutation_curated_bcgsc"
     mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
-def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM, distribution, VAF=False):
+def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM, distribution, VAF= False):
     garbage=[tmpDir]
     os.system("rm -rf tmp_*")
     if os.path.exists( tmpDir ):
@@ -324,6 +325,7 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
 
     #multiple files in dir mode
     lastRelease={}
+    onlyArchive=0
     for file in os.listdir(inDir):
         #find the file
         if string.find(file,PATHPATTERN)!=-1 and string.find(file,LEVEL)!=-1 and string.find(file,".tar.gz")!=-1 and string.find(file,"md5")==-1:
@@ -340,6 +342,9 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
         archive = info [-5]
         release = int(info [-4])
 
+        if archive =="100":
+            onlyArchive = "100"
+
         if not lastRelease.has_key(archive):
             lastRelease[archive]= release
         else:
@@ -350,6 +355,7 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
     rootDir =""
     lastDate=None
     remoteDataDirExample =""
+
     for file in os.listdir(inDir):
         #find the file
         if string.find(file,PATHPATTERN)!=-1 and string.find(file,LEVEL)!=-1 and string.find(file,".tar.gz")!=-1 and string.find(file,"md5")==-1:
@@ -367,6 +373,11 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
 
         if release != lastRelease[archive]:
             continue
+
+
+        if onlyArchive and archive!=onlyArchive:
+             continue
+
 
         #file latest date
         newDate=  datetime.date.fromtimestamp(os.stat(inDir+file).st_mtime)
@@ -386,6 +397,7 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
             rootDir =tmpDir
 
     #make sure there is data
+
     if REALRUN and (rootDir =="" or not os.path.exists(rootDir)):
         print "ERROR expect data, but wrong dirpath", rootDir, cancer, __name__
         return
@@ -398,7 +410,7 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
 
     cgFileName= namesuffix
     assembly="hg19"
-    #data processing multiple dirs mode
+    #data procesing multiple dirs mode
     if REALRUN:
         found =0
         xena = outDir+cancer+"/"+cgFileName
@@ -482,7 +494,7 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
 
     J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") somatic mutation data. Sequencing data are generated on a "+PLATFORM +" system. The calls are generated at "+dataProducer+" using the "+ J["method"] +" method."
     if VAF:
-        J["description"]= J["description"] + " When variant allele frequency information is available, only calls with VAF >10% are kept."
+        J["description"]= J["description"] + " When variant allele frequency information is available, only calls with VAF >"+ str(VAF_cut*100) +"% are kept."
 
     #change cgData
     J["name"]="TCGA_"+cancer+"_"+namesuffix
@@ -499,7 +511,7 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
     oHandle.close()
     return
 
-def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataProducer,REALRUN, clean, PLATFORM, distribution):
+def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataProducer,REALRUN, clean, PLATFORM, distribution, VAF=False):
     garbage=[tmpDir]
     os.system("rm -rf tmp_*")
     if os.path.exists( tmpDir ):
@@ -510,6 +522,8 @@ def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, data
 
     #multiple files in dir mode
     lastRelease={}
+    onlyArchive=0
+
     for file in os.listdir(inDir):
         #find the file
         if string.find(file,PATHPATTERN)!=-1 and string.find(file,LEVEL)!=-1 and string.find(file,".tar.gz")!=-1 and string.find(file,"md5")==-1:
@@ -525,6 +539,9 @@ def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, data
         info = string.split(file,".")
         archive = info [-5]
         release = int(info [-4])
+
+        if archive =="100":
+            onlyArchive = "100"
 
         if not lastRelease.has_key(archive):
             lastRelease[archive]= release
@@ -551,6 +568,9 @@ def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, data
         release = int(info [-4])
 
         if release != lastRelease[archive]:
+            continue
+
+        if onlyArchive and archive!=onlyArchive:
             continue
 
         #file latest date
@@ -603,7 +623,7 @@ def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, data
                 if string.find(file,pattern)!=-1:
                     infile = rootDir+dataDir+"/"+file
                     print infile
-                    process (infile, allGenes, samples, genes, dic)
+                    process (infile, allGenes, samples, genes, dic, VAF)
 
         if len(samples)!=0:
             outputMatrix(samples, genes, dic, outDir+cancer+"/"+cgFileName)
@@ -683,7 +703,7 @@ def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, data
     oHandle.close()
     return
 
-def process (file, allGenes, samples, genes, dic):
+def process (file, allGenes, samples, genes, dic, VAF):
     fin =open(file, 'r')
 
     header=""
@@ -704,7 +724,10 @@ def process (file, allGenes, samples, genes, dic):
                     Variant_Classification =i
                 if header[i]=="Tumor_Sample_Barcode":
                     Tumor_Sample_Barcode =i
-
+                if string.lower(header[i])=="t_alt_count":
+                    t_alt_count =i
+                if string.lower(header[i])=="t_ref_count":
+                    t_ref_count =i
             continue
 
         gene = data[Hugo_Symbol]
@@ -716,7 +739,21 @@ def process (file, allGenes, samples, genes, dic):
         except:
             print "mutation type not seen before", data[Variant_Classification]
             continue
+
+
+        try:
+            DNA_VAF = float(data[t_alt_count])/(float(data[t_ref_count])+float(data[t_alt_count]))
+            if DNA_VAF >1.0:
+                continue # crappy data
+
+            if VAF: #require > VAF_cut to secure data accuracy
+                if DNA_VAF <VAF_cut:
+                    continue
+        except:
+            pass
+
         sample = data[Tumor_Sample_Barcode]
+
         if sample not in samples:
             samples.append(sample)
         if gene not in genes:
@@ -820,9 +857,12 @@ def process_xena (file, fout, VAF):
         gene = data[Hugo_Symbol]
         mtype = data[Variant_Classification]
         try:
-            DNA_VAF = float(data[t_alt_count])/float(data[t_ref_count]+data[t_alt_count])
-            if VAF: #require > 10%  to secure data accuracy
-                if DNA_VAF <0.1:
+            DNA_VAF = float(data[t_alt_count])/(float(data[t_ref_count])+float(data[t_alt_count]))
+            if DNA_VAF >1.0:
+                continue #crappy data
+
+            if VAF: #require > VAF_cut to secure data accuracy
+                if DNA_VAF <VAF_cut:
                     continue
         except:
             DNA_VAF= ""
