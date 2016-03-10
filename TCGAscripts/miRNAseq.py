@@ -65,7 +65,6 @@ def mergeGA_Hiseq (inDir, outDir, cancer, flog, REALRUN):
     
     J["cgDataVersion"]=1
     J["redistribution"]= True
-    J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
     J["dataProducer"]= dataProducer
     J["colNormalization"]=True
     J["PLATFORM"]= "IlluminaGA and IlluminaHiSeq miRNAseq"
@@ -196,15 +195,26 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
 
     #data processing multiple dirs mode
     if REALRUN:
-        
-        allSamples={}
+        #hg19 or not
+        pattern =".hg19.mirna.quantification"
+        HG19= 0
+        for dataDir in os.listdir(rootDir):
+            for file in os.listdir(rootDir+dataDir):
+                if string.find(file,pattern)!=-1 :
+                    HG19=1
+                    break
+            if HG19:
+                break
+        if HG19:
+            pattern =".hg19.mirna.quantification"
+        else:
+            pattern =".mirna.quantification"
 
+        allSamples={}        
         for dataDir in os.listdir(rootDir):
             for file in os.listdir(rootDir+dataDir):
                 sample =""
-
                 #bcgsc gene
-                pattern ="hg19.mirna.quantification"
                 if string.find(file,pattern)!=-1 :
                     infile = rootDir+dataDir+"/"+file
                     # bcgsc stupid sample name in file name
@@ -249,8 +259,6 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
         for dataDir in os.listdir(rootDir):
             for file in os.listdir(rootDir+dataDir):
                 sample=""
-                #bcgsc v1 and 
-                pattern ="hg19.mirna.quantification"
                 if string.find(file,pattern)!=-1:
                     infile = rootDir+dataDir+"/"+file
                     # bcgsc stupid sample name in file name
@@ -317,7 +325,6 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     #stable    
     J["cgDataVersion"]=1
     J["redistribution"]= True
-    J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
     J["dataProducer"]= dataProducer
     J["colNormalization"]=True
     J["PLATFORM"]= PATHPATTERN

@@ -15,22 +15,6 @@ import radia
 tmpDir="tmpTry/"
 VAF_cut =0.04
 
-def unc_mixed_dnaseq_cont_automated (inDir, outDir, cancer,flog,REALRUN):
-    print cancer, sys._getframe().f_code.co_name
-    distribution = False
-    PATHPATTERN= "Mixed_DNASeq_Cont_automated."
-    PLATFORM = "mixed"
-    suffix     = "unc"
-    namesuffix = "mutation_unc_gene"
-    dataProducer = "University of North Carolina"
-    clean=1
-    mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
-
-    clean =0
-    VAF= False
-    namesuffix = "mutation_unc"
-    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution,VAF)
-
 #vcf protected germline
 def germline_ucsc_illuminaga_dnaseq_cont (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name

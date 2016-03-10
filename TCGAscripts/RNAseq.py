@@ -521,7 +521,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
 
     if string.find(PATHPATTERN, "IlluminaHiSeq")!=-1: #IlluminaHiSeq
         platformTitle ="Illumina HiSeq 2000 RNA Sequencing platform"
-    elif string.find(PATHPATTERN, "IlluminaHiGA")!=-1: #IlluminaGA
+    elif string.find(PATHPATTERN, "IlluminaGA")!=-1: #IlluminaGA
         platformTitle =" Illumina Genome Analyzer RNA Sequencing platform"
     assert platformTitle
 
