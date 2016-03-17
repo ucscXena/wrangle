@@ -26,7 +26,7 @@ def parseFreezeFile (infile):
             if i in reg:
                 if string.strip(data[i])!="":
                     fout = reg[i]
-                    fout.write(data[i]+'\t'+data[i+1]+'\n')
+                    fout.write(data[i]+'\t'+data[i+1]+'\t'+data[i+2]+'\n')
 
     fin.close()
     for i in reg:

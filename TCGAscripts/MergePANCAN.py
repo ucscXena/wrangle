@@ -32,7 +32,8 @@ def HiSeqV2_exon  ( dir, outDir, cancer,flog,REALRUN):
         return
     print cancer, sys._getframe().f_code.co_name
     filename = "HiSeqV2_exon"
-    processMatrix (filename, dir,outDir, cancer,flog, REALRUN)
+    memVersion = True
+    processMatrix (filename, dir, outDir, cancer,flog, REALRUN, memVersion)
 
 def miRNA  ( dir, outDir, cancer,flog,REALRUN):
     if cancer !="PANCAN":
@@ -335,7 +336,7 @@ def processMutationData (filename, dir, outDir, cancer,flog, REALRUN):
 
     return
 
-def processMatrix (filename, dir,outDir, cancer,flog, REALRUN):
+def processMatrix (filename, dir,outDir, cancer,flog, REALRUN, memVersion = False):
     inFiles =processFiles (filename, dir,outDir, cancer )
 
     cancer="PANCAN"
@@ -343,17 +344,18 @@ def processMatrix (filename, dir,outDir, cancer,flog, REALRUN):
 
     if REALRUN:
         #header:
-        foutPANCAN= open(outfile,"w")
-        
-        genes={}
-        samples={}
-        dataMatrix=[]
+        if memVersion:
+            os.system("python mergeGenomicMatrixFiles_memEfficient.py "+outfile+" "+string.join(inFiles,' '))
+        else:
+            genes={}
+            samples={}
+            dataMatrix=[]
 
-        for infile in inFiles:
-            mergeGenomicMatrixFiles.header (samples, infile)
-        for infile in inFiles:
-            mergeGenomicMatrixFiles.process(genes, samples, dataMatrix, infile)
-        mergeGenomicMatrixFiles.outputMatrix(dataMatrix, samples, genes, outfile)                
+            for infile in inFiles:
+                mergeGenomicMatrixFiles.header (samples, infile)
+            for infile in inFiles:
+                mergeGenomicMatrixFiles.process(genes, samples, dataMatrix, infile)
+            mergeGenomicMatrixFiles.outputMatrix(dataMatrix, samples, genes, outfile) 
 
     J={}
     fout = open(outfile+".json","w")
@@ -472,7 +474,8 @@ def HiSeqV2JSON (J, cancer):
     J[":probeMap"]="hugo"
     J["dataSubType"]="gene expression RNAseq"
     J["colNormalization"]=True
-    J["wrangling_procedure"] = "Level_3 data (file names: *.rsem.genes.normalized_results) are downloaded from each cancer project at TCGA DCC, log2(x+1) transformed, and then combined at UCSC into Xena repository."
+    J["unit"]="log2(normalized_count+1)"
+    J["wrangling_procedure"] = "Level_3 data (file names: *.rsem.genes.normalized_results) are downloaded from each cancer project at TCGA DCC, log2(normalized_count+1) transformed, and then combined at UCSC into Xena repository."
     return
 
 def HiSeqV2_exonJSON (J, cancer):
@@ -480,11 +483,12 @@ def HiSeqV2_exonJSON (J, cancer):
     J["shortTitle"]= "exon expression"
     J["label"] = J["shortTitle"] 
     J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+" exon expression (IlluminaHiSeq)"
-    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" exon expression by RNAseq, compiled using data from all TCGA cohorts. Exon expression was measured using the IlluminaHiSeq technology. Data from all TCGA cohorts are combined to produce this dataset. Values are log2(x+1) transformed exon-level transcription estimates in RPKM values (Reads Per Kilobase of exon model per Million mapped reads)."
+    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" exon expression by RNAseq, compiled using data from all TCGA cohorts. Exon expression was measured using the IlluminaHiSeq technology. Data from all TCGA cohorts are combined to produce this dataset. Values are log2(RPKM+1) transformed exon-level transcription estimates in RPKM values (Reads Per Kilobase of exon model per Million mapped reads)."
     J["description"] = J["description"] +"<br><br>"    
     J[":probeMap"]="unc_RNAseq_exon"
     J["dataSubType"]="exon expression RNAseq"
     J["colNormalization"]=True
+    J["unit"]="log2(RPKM+1)"
     J["wrangling_procedure"] = "Level_3 data (file names: *.exon_quantification.txt) are downloaded from each cancer project at TCGA DCC, log2(x+1) transformed, and then combined at UCSC into Xena repository."
     return
 

@@ -159,7 +159,6 @@ def RPPA (inDir, outDir, cancer, flog,REALRUN):
     #stable
     J["dataSubType"]="protein expression RPPA"
     J["redistribution"]= True
-    J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
     J["dataProducer"]= dataProducer
     J["colNormalization"]=True
     J["PLATFORM"]= "M.D. Anderson Reverse Phase Protein Array Core platform"

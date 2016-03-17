@@ -236,7 +236,6 @@ def makeJSON(oHandle,cancer,lastMageTab,inDir,noCNV,type):
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") segmented copy number"
     J["dataSubType"]="copy number"
     J["redistribution"]= True
-    J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
 
     J["dataProducer"]= "Broad Institute of MIT and Harvard University cancer genomic characterization center"
     J["url"]=TCGAUtil.remoteBase \
