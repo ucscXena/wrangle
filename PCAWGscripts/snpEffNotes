@@ -1,0 +1,4 @@
+#re-load regulation for 37, current one sucks
+#ftp://ftp.ensembl.org/pub/grch37/update//regulation/homo_sapiens/
+
+java -jar -Xmx20g /inside/home/jzhu/cgDataJing/snpEff/snpEff.jar -fileList GRCh37.75 snv_mnv_fileList
