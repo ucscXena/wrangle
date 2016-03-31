@@ -66,11 +66,12 @@ def parseVCF(sample, file, header, fout):
         ANN =getValue (info, 'ANN')
         Annotation, impact, gene, Feature_Type, aa, distance = parseSnpEffANN(alt, ANN, header)
         if Annotation =="sequence_feature":
-            continue
+            Annotation =""
+            gene =""
         if Annotation =="intergenic_region":
-            continue
+            gene =""
         if Annotation =="intron_variant":
-            continue
+            gene =""
         if Annotation == "TF_binding_site_variant":
             Annotation = Feature_Type +" "+Annotation
         outputlist= [sample, chr, start, end, ref, alt, gene, Annotation, medianVAF, aa, impact, distance]
