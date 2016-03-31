@@ -106,4 +106,5 @@ if len(sys.argv[:])<3:
 
 outfile = sys.argv[1]
 infile_list =sys.argv[2:]
+print infile_list, outfile
 merge (infile_list, outfile)
