@@ -30,7 +30,7 @@ def merge (infile_list, outfile):
         cur_genes={}
         cur_genes = setGeneOrder (infile,cur_genes, tmpDir)
 
-        for i in range (2,nCOLs, 250):
+        for i in range (2,nCOLs+1, 250):
             tmpfile = tmpDir+"/"+str(c)+"_tmp_"+str(int(i/250.0))
             os.system("cut -f "+ str(i)+"-"+str(i+249)+" "+infile +" > "+tmpDir+"/tmp")
             process(cur_genes, tmpDir+"/tmp", allgenes, tmpfile)
