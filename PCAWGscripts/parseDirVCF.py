@@ -79,12 +79,14 @@ def parseVCF(sample, file, header, fout):
     fin.close()
 
 def findFiles(inDir, endPattern):
-    files =[]
-    for file in os.listdir(inDir):
-        if file[-len(endPattern):]!=endPattern:
-            continue
-        files.append(file)
-    return files
+    retfiles =[]
+    for root, dirs, files in os.walk(inDir):
+        for file in files:
+            if file[-len(endPattern):]!=endPattern:
+                continue
+            print(os.path.join(root, file))
+            retfiles.append(os.path.join(root, file))
+    return retfiles
 
 if len(sys.argv[:])!= 3:
     print "python parseDirVCF.py inDir outputfile"
@@ -100,8 +102,8 @@ fout = open(sys.argv[2],'w')
 outputList=["sample", "chr", "start","end","reference","alt", "gene", "effect","DNA_VAF", "Amino_Acid_Change","impact","distance"]
 fout.write(string.join(outputList,'\t')+'\n')
 
-for file in files[1:]:
-    sample = string.split(file,'.')[0]
+for file in files:
+    sample = string.split(os.path.basename(file),'.')[0]  # pcawg specific
     print sample
-    parseVCF(sample, inDir+"/"+file, header, fout)
+    parseVCF(sample, file, header, fout)
 fout.close()
