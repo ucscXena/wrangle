@@ -9,8 +9,7 @@ fout = open(sys.argv[2],'w')
 
 fout.write(fin.readline())
 for line in fin.readlines():
-    print line
-    olds, news = string.split(string.strip(line),'\t')
+    olds, news = string.split(line[:-1],'\t')
     olds = string.replace(olds,'"','')
     news = string.replace(news,'"','')
     olds = string.split(olds,',')
