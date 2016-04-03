@@ -60,7 +60,7 @@ def parseVCF(sample, file, header, fout):
             chr = "chr"+chr[3:]
 
         start = pos
-        end = str(int(pos)+len(ref))
+        end = str(int(pos)+len(ref))-1
         info = parseInfo(infoLine)
         medianVAF =getValue (info, 'medianVAF')
         ANN =getValue (info, 'ANN')
