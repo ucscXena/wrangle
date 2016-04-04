@@ -16,11 +16,9 @@ def keepIDs (inputFile, outputFile, keep_list):
     goodPos=[]
     ids = string.split(fin.readline()[:-1],'\t')
     for i in range (0, len(ids)):
-        for id in keep_list:
-            if string.find(ids[i], id)!=-1:
-                goodPos.append(i)
-                print ids[i], id, i
-                break
+        if ids[i] in keep_list:
+            goodPos.append(i)
+            print ids[i], i
     fin.close()
 
     fin = open(inputFile,'U')
@@ -43,7 +41,7 @@ if len(sys.argv[:])!=4:
     sys.exit()
 
 listfile = sys.argv[3]
-remove_list  = listing (listfile)
+keep_list  = listing (listfile)
 
 inputfile = sys.argv[1]
 outputfile = sys.argv[2]
