@@ -8,18 +8,22 @@ def findTarball(tarball):
     return True
 
 def buildLocalDir (dirname,method):
-    os.system("mkdir "+dirname)
+    if not os.path.exists(dirname):
+        os.system("mkdir "+dirname)
     items = string.split(method,'/')
     if len(items)==1:
-        os.system("mkdir "+dirname+"/"+method)
+        if not os.path.exists(dirname+"/"+method):
+            os.system("mkdir "+dirname+"/"+method)
     elif len(items)==2:
-        os.system("mkdir "+dirname+"/"+items[0])
-        os.system("mkdir "+dirname+"/"+items[0]+"/"+items[1])
+        if not os.path.exists(dirname+"/"+items[0]):
+            os.system("mkdir "+dirname+"/"+items[0])
+        if not os.path.exists(dirname+"/"+items[0]+"/"+items[1]):
+            os.system("mkdir "+dirname+"/"+items[0]+"/"+items[1])
     else:
         print "ERROR: dir setup problem"
         sys.exit()
 
-def getData(tarball, localDir,method,suffixDic):
+def getData(tarball, localDir, method, suffixDic):
     filename = string.replace(string.split(tarball,"/")[-1],".tar.gz","")
     os.system("s3cmd get --requester-pays -r --force "+ tarball +" "+localDir+"/")
     os.system("tar -zxf "+localDir+"/"+filename+".tar.gz -C "+localDir)
@@ -33,10 +37,10 @@ if len(sys.argv[:])!=3:
     print "python getTOILdata.py listinput localdir"
     sys.exit()
 
-METHOD="Kallisto"
+METHOD="RSEM"
 
 SUFFIX = {
-"RSEM":".rsem.genes.norm_counts.tab",
+"RSEM":".rsem_isoforms.results",
 "RSEM/Hugo":".rsem.genes.norm_counts.hugo.tab",
 "Kallisto":".abundance.tsv"
 }
@@ -51,4 +55,3 @@ for line in fin.readlines():
         continue
     print tarball
     getData(tarball, localdir, METHOD,SUFFIX)
-    
