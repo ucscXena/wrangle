@@ -225,5 +225,5 @@ elif method =="RSEM_tpm":
 elif method =="RSEM_IsoPct":
     RSEM_IsoPct (inDir,sys.argv[2])
 else:
-    print "bad method"
+    print "available method: RSEM_Hugo Kallisto_est_counts Kallisto_tpm RSEM_tpm RSEM_IsoPct"
     sys.exit()
