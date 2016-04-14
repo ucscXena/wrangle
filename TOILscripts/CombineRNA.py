@@ -4,37 +4,57 @@ import math
 import copy
 import uuid
 
+def RSEM_IsoPct (inDir, outfile):
+    PATHPATTERN= ".rsem_isoforms.results"
+    valuePOS=7
+    LOG2=0
+    UNIT = "IsoPct"
+    theta=0
+    dataSubType="transcript expression RNAseq"
+    geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT, dataSubType)
+    return
+
+def RSEM_tpm (inDir, outfile):
+    PATHPATTERN= ".rsem_isoforms.results"
+    valuePOS=4
+    LOG2=1
+    UNIT = "tpm"
+    theta=0.001
+    dataSubType="transcript expression RNAseq"
+    geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT,dataSubType)
+    return
+
 def RSEM_Hugo_TOIL_norm_counts (inDir, outfile):
     PATHPATTERN= ".rsem.genes.norm_counts.hugo.tab"
-    dataProducer = "UCSC TOIL RSEM run"
     valuePOS=1
     LOG2=1
     UNIT = "norm_counts"
     theta=1
-    geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT, dataProducer)
+    dataSubType="gene expression RNAseq"
+    geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT, dataSubType)
     return
 
 def Kallisto_est_counts (inDir, outfile):
     PATHPATTERN= ".abundance.tsv"
-    dataProducer = "UCSC TOIL Kallisto run"
     valuePOS=3
     LOG2=1
     theta=1
     UNIT="est_counts"
-    geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT, dataProducer)
+    dataSubType="transcript expression RNAseq"
+    geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT, dataSubType)
     return
 
 def Kallisto_tpm (inDir, outfile):
     PATHPATTERN= ".abundance.tsv"
-    dataProducer = "UCSC TOIL Kallisto run"
     valuePOS=4
     LOG2=1
     theta=0.001
     UNIT = "tpm"
-    geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT, dataProducer)
+    dataSubType="transcript expression RNAseq"
+    geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT, dataSubType)
     return
 
-def geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT, dataProducer):
+def geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT, dataSubType):
     allSamples={}
     c=0
     dataMatrix=[]
@@ -98,12 +118,12 @@ def geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT, dataProd
     oHandle = open(outfile+".json","w")    
     J={}
     J["redistribution"]= True
-    J["dataProducer"]= dataProducer
+    J["dataProducer"]= "UCSC TOIL RNA-seq recompute"
     J["colNormalization"]=True
     J["type"]= "genomicMatrix" 
     J["version"]= datetime.date.today().isoformat()
     J["wrangler"]= "Xena scripts processed on "+ datetime.date.today().isoformat()
-    J["dataSubType"]="gene expression RNAseq"
+    J["dataSubType"]= dataSubType 
     if LOG2:
         J["unit"]="log2("+UNIT+"+"+str(theta)+")"
         J["wrangling_procedure"]= "Data (file names: *"+PATHPATTERN+") are downloaded, "+ UNIT+" values are extracted, log2(x+"+str(theta)+") transformed, and combined."
@@ -184,15 +204,26 @@ def outputMatrix(dataMatrix, samples, genes, oldgenes,outfile):
     fout.close()
     return 0
 
-if len(sys.argv[:])!=3:
-    print "python CombineRNA.py inDir outfile"
+if len(sys.argv[:])!=4:
+    print "python CombineRNA.py inDir outfile method"
     sys.exit()
 
 inDir = sys.argv[1]
+method = sys.argv[3]
 if not os.path.exists( inDir ):
     print inDir+" not found"
     sys.exit()
 
-#RSEM_Hugo_TOIL_norm_counts (inDir, sys.argv[2])
-#Kallisto_est_counts (inDir,sys.argv[2])
-Kallisto_tpm (inDir,sys.argv[2])
+if method =="RSEM_Hugo":
+    RSEM_Hugo_TOIL_norm_counts (inDir, sys.argv[2])
+elif method =="Kallisto_est_counts":
+    Kallisto_est_counts (inDir,sys.argv[2])
+elif method =="Kallisto_tpm":
+    Kallisto_tpm (inDir,sys.argv[2])
+elif method =="RSEM_tpm":
+    RSEM_tpm (inDir,sys.argv[2])
+elif method =="RSEM_IsoPct":
+    RSEM_IsoPct (inDir,sys.argv[2])
+else:
+    print "bad method"
+    sys.exit()
