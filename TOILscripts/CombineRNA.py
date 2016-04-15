@@ -14,9 +14,19 @@ def RSEM_IsoPct (inDir, outfile):
     geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT, dataSubType)
     return
 
+def RSEM_fpkm (inDir, outfile):
+    PATHPATTERN= ".rsem_isoforms.results"
+    valuePOS=6
+    LOG2=1
+    UNIT = "fpkm"
+    theta=0.001
+    dataSubType="transcript expression RNAseq"
+    geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT,dataSubType)
+    return
+
 def RSEM_tpm (inDir, outfile):
     PATHPATTERN= ".rsem_isoforms.results"
-    valuePOS=4
+    valuePOS=5
     LOG2=1
     UNIT = "tpm"
     theta=0.001
@@ -129,7 +139,7 @@ def geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT, dataSubT
         J["wrangling_procedure"]= "Data (file names: *"+PATHPATTERN+") are downloaded, "+ UNIT+" values are extracted, log2(x+"+str(theta)+") transformed, and combined."
     else:
         J["unit"]=UNIT
-        J["wrangling_procedure"]= "Data (file names: *"+PATHPATTERN+") are downloaded, "+ UNIT + "values are extracted and combined."
+        J["wrangling_procedure"]= "Data (file names: *"+PATHPATTERN+") are downloaded, "+ UNIT + " values are extracted and combined."
 
     J["label"] = ""
     J["cohort"] =""
@@ -222,8 +232,10 @@ elif method =="Kallisto_tpm":
     Kallisto_tpm (inDir,sys.argv[2])
 elif method =="RSEM_tpm":
     RSEM_tpm (inDir,sys.argv[2])
+elif method =="RSEM_fpkm":
+    RSEM_fpkm (inDir,sys.argv[2])
 elif method =="RSEM_IsoPct":
     RSEM_IsoPct (inDir,sys.argv[2])
 else:
-    print "available method: RSEM_Hugo Kallisto_est_counts Kallisto_tpm RSEM_tpm RSEM_IsoPct"
+    print "available method: RSEM_Hugo Kallisto_est_counts Kallisto_tpm RSEM_tpm RSEM_fpkm RSEM_IsoPct"
     sys.exit()
