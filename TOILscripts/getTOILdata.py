@@ -28,8 +28,9 @@ def getData(tarball, localDir, method, suffixDic):
     os.system("s3cmd get --requester-pays -r --force "+ tarball +" "+localDir+"/")
     os.system("tar -zxf "+localDir+"/"+filename+".tar.gz -C "+localDir)
     os.system("rm "+localDir+"/"+filename+".tar.gz")
-    datafile = localDir+"/"+filename+"/"+method+"/"+filename+suffixDic[method]
-    os.system("mv "+ datafile+" "+localDir+"/"+method+"/")
+    for suffix in suffixDic[method]:
+        datafile = localDir+"/"+filename+"/"+method+"/"+filename+suffix
+        os.system("mv "+ datafile+" "+localDir+"/"+method+"/")
     os.system("rm -rf " +localDir+"/"+filename)
     print datafile
 
@@ -40,9 +41,10 @@ if len(sys.argv[:])!=3:
 METHOD="RSEM"
 
 SUFFIX = {
-"RSEM":".rsem_isoforms.results",
-"RSEM/Hugo":".rsem.genes.norm_counts.hugo.tab",
-"Kallisto":".abundance.tsv"
+#    "RSEM":[".rsem_isoforms.results",".rsem_genes.results",".rsem.isoform.norm_counts.tab"],
+    "RSEM":[".rsem_genes.results",".rsem.isoform.norm_counts.tab"],
+    "RSEM/Hugo":[".rsem.genes.norm_counts.hugo.tab"],
+    "Kallisto":[".abundance.tsv"]
 }
 
 fin =open(sys.argv[1],'r')
@@ -54,4 +56,4 @@ for line in fin.readlines():
     if not findTarball (tarball):
         continue
     print tarball
-    getData(tarball, localdir, METHOD,SUFFIX)
+    getData(tarball, localdir, METHOD, SUFFIX)
