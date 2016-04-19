@@ -4,6 +4,17 @@ import math
 import copy
 import uuid
 
+def RSEM_norm_counts (inDir, outfile):
+    PATHPATTERN= ".rsem.isoform.norm_counts.tab"
+    valuePOS=1
+    LOG2=1
+    UNIT = "norm_counts"
+    theta=1
+    dataSubType="gene expression RNAseq"
+    geneParse = lambda x: string.split(x,"/")[1]
+    geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT, dataSubType, geneParse, geneParse)
+    return
+
 def RSEM_IsoPct (inDir, outfile):
     PATHPATTERN= ".rsem_isoforms.results"
     valuePOS=7
@@ -11,7 +22,8 @@ def RSEM_IsoPct (inDir, outfile):
     UNIT = "IsoPct"
     theta=0
     dataSubType="transcript expression RNAseq"
-    geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT, dataSubType)
+    geneParse = lambda x: x
+    geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT, dataSubType, geneParse)
     return
 
 def RSEM_fpkm (inDir, outfile):
@@ -21,7 +33,8 @@ def RSEM_fpkm (inDir, outfile):
     UNIT = "fpkm"
     theta=0.001
     dataSubType="transcript expression RNAseq"
-    geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT,dataSubType)
+    geneParse = lambda x: x
+    geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT,dataSubType, geneParse)
     return
 
 def RSEM_tpm (inDir, outfile):
@@ -31,7 +44,8 @@ def RSEM_tpm (inDir, outfile):
     UNIT = "tpm"
     theta=0.001
     dataSubType="transcript expression RNAseq"
-    geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT,dataSubType)
+    geneParse = lambda x: x
+    geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT,dataSubType, geneParse)
     return
 
 def RSEM_Hugo_TOIL_norm_counts (inDir, outfile):
@@ -41,7 +55,8 @@ def RSEM_Hugo_TOIL_norm_counts (inDir, outfile):
     UNIT = "norm_counts"
     theta=1
     dataSubType="gene expression RNAseq"
-    geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT, dataSubType)
+    geneParse = lambda x: x
+    geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT, dataSubType, geneParse)
     return
 
 def RSEM_gene_tpm (inDir, outfile):
@@ -51,7 +66,8 @@ def RSEM_gene_tpm (inDir, outfile):
     UNIT = "tpm"
     theta=0.001
     dataSubType="gene expression RNAseq"
-    geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT, dataSubType)
+    geneParse = lambda x: x
+    geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT, dataSubType, geneParse)
     return
 
 def Kallisto_est_counts (inDir, outfile):
@@ -61,7 +77,8 @@ def Kallisto_est_counts (inDir, outfile):
     theta=1
     UNIT="est_counts"
     dataSubType="transcript expression RNAseq"
-    geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT, dataSubType)
+    geneParse = lambda x: x
+    geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT, dataSubType, geneParse)
     return
 
 def Kallisto_tpm (inDir, outfile):
@@ -71,10 +88,11 @@ def Kallisto_tpm (inDir, outfile):
     theta=0.001
     UNIT = "tpm"
     dataSubType="transcript expression RNAseq"
-    geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT, dataSubType)
+    geneParse = lambda x: x
+    geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT, dataSubType, geneParse)
     return
 
-def geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT, dataSubType):
+def geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT, dataSubType, geneParse):
     allSamples={}
     c=0
     dataMatrix=[]
@@ -113,7 +131,7 @@ def geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT, dataSubT
         c=c+1
         print c, sample
 
-        process(dataMatrix,tmpSamples,sample,genes, infile,valuePOS,LOG2,theta,250)
+        process(dataMatrix,tmpSamples,sample,genes, infile,valuePOS,LOG2,theta,250, geneParse)
         if (c % 250)==0:
             tmpout= tmpDir+"/"+"tmp_"+ str(int(c/250.0))
             ERROR =outputMatrix(dataMatrix, tmpSamples, genes, oldgenes, tmpout)
@@ -159,7 +177,7 @@ def geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT, dataSubT
     
     return
 
-def process(dataMatrix,samples, sample,genes, infile,valuePOS, LOG2, theta, maxLength):
+def process(dataMatrix,samples, sample,genes, infile,valuePOS, LOG2, theta, maxLength, geneParse):
     # one sample a file  
     fin=open(infile,'U')    
     fin.readline()
@@ -167,7 +185,7 @@ def process(dataMatrix,samples, sample,genes, infile,valuePOS, LOG2, theta, maxL
         data =string.split(line[:-1],"\t")
         hugo = data[0]
         value= data[valuePOS]
-        hugo = string.split(hugo,"|")[0]
+        hugo = geneParse(hugo) #string.split(hugo,"|")[0]
 
         if hugo not in genes:
             p=len(genes)
@@ -248,6 +266,9 @@ elif method =="RSEM_fpkm":
     RSEM_fpkm (inDir,sys.argv[2])
 elif method =="RSEM_IsoPct":
     RSEM_IsoPct (inDir,sys.argv[2])
+elif method =="RSEM_norm_counts":
+    RSEM_norm_counts (inDir,sys.argv[2])
 else:
-    print "available method: RSEM_Hugo RSEM_gene_tpm Kallisto_est_counts Kallisto_tpm RSEM_tpm RSEM_fpkm RSEM_IsoPct"
+    print "available method: RSEM_Hugo RSEM_gene_tpm Kallisto_est_counts Kallisto_tpm RSEM_tpm RSEM_fpkm RSEM_IsoPct RSEM_norm_counts"
     sys.exit()
+
