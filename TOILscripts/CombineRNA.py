@@ -12,7 +12,7 @@ def RSEM_norm_counts (inDir, outfile):
     theta=1
     dataSubType="gene expression RNAseq"
     geneParse = lambda x: string.split(x,"/")[1]
-    geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT, dataSubType, geneParse, geneParse)
+    geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT, dataSubType, geneParse)
     return
 
 def RSEM_IsoPct (inDir, outfile):
