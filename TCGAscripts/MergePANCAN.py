@@ -7,7 +7,7 @@ from ClinicalMatrixNew import *
 from ClinicalFeatureNew import *
 from CGDataUtil import *
 from CGDataLib import *
-import  TCGAUtil
+import TCGAUtil
 import mergeGenomicMatrixFiles
 import xenaToMatrix
 
@@ -32,6 +32,22 @@ def HiSeqV2_exon  ( dir, outDir, cancer,flog,REALRUN):
         return
     print cancer, sys._getframe().f_code.co_name
     filename = "HiSeqV2_exon"
+    memVersion = True
+    processMatrix (filename, dir, outDir, cancer,flog, REALRUN, memVersion)
+
+def Methylation27 ( dir, outDir, cancer,flog,REALRUN):
+    if cancer !="PANCAN":
+        return
+    print cancer, sys._getframe().f_code.co_name
+    filename = "HumanMethylation27"
+    memVersion = True
+    processMatrix (filename, dir, outDir, cancer,flog, REALRUN, memVersion)
+
+def Methylation450 ( dir, outDir, cancer,flog,REALRUN):
+    if cancer !="PANCAN":
+        return
+    print cancer, sys._getframe().f_code.co_name
+    filename = "HumanMethylation450"
     memVersion = True
     processMatrix (filename, dir, outDir, cancer,flog, REALRUN, memVersion)
 
@@ -343,19 +359,19 @@ def processMatrix (filename, dir,outDir, cancer,flog, REALRUN, memVersion = Fals
     outfile = outDir +cancer + "/"+filename
 
     if REALRUN:
-        #header:
-        if memVersion:
-            os.system("python mergeGenomicMatrixFiles_memEfficient.py "+outfile+" "+string.join(inFiles,' '))
-        else:
-            genes={}
-            samples={}
-            dataMatrix=[]
-
-            for infile in inFiles:
-                mergeGenomicMatrixFiles.header (samples, infile)
-            for infile in inFiles:
-                mergeGenomicMatrixFiles.process(genes, samples, dataMatrix, infile)
-            mergeGenomicMatrixFiles.outputMatrix(dataMatrix, samples, genes, outfile) 
+        os.system("python mergeGenomicMatrixFiles_memEfficient.py "+outfile+" "+string.join(inFiles,' '))
+        #if memVersion:
+        #    os.system("python mergeGenomicMatrixFiles_memEfficient.py "+outfile+" "+string.join(inFiles,' '))
+        #else:
+        #    genes={}
+        #    samples={}
+        #    dataMatrix=[]
+        #
+        #    for infile in inFiles:
+        #        mergeGenomicMatrixFiles.header (samples, infile)
+        #    for infile in inFiles:
+        #        mergeGenomicMatrixFiles.process(genes, samples, dataMatrix, infile)
+        #    mergeGenomicMatrixFiles.outputMatrix(dataMatrix, samples, genes, outfile) 
 
     J={}
     fout = open(outfile+".json","w")
@@ -373,6 +389,10 @@ def processMatrix (filename, dir,outDir, cancer,flog, REALRUN, memVersion = Fals
         HiSeqV2_exonJSON(J,cancer)
     elif filename=="miRNA":
         miRNAJSON(J,cancer)
+    elif filename=="HumanMethylation27":
+        HumanMethylation27JSON(J,cancer)
+    elif filename=="HumanMethylation450":
+        HumanMethylation450JSON(J,cancer)
  
     commonJSON(J, cancer)
 
@@ -466,6 +486,28 @@ def miRNAJSON(J,cancer):
     J["colNormalization"]=True
     return
 
+def HumanMethylation27JSON(J,cancer):
+    J['name']= "TCGA_PANCAN_HumanMethylation27"
+    J["label"]= "DNA methylation (Methylation27K)"
+    J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+" DNA methylation (HumanMethylation27K)"
+    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" DNA methylation 27K array beta values, compiled by combining available data from all TCGA cohorts. DNA methylation profile was measured experimentally using the Illumina Infinium HumanMethylation27 platform."
+    J["description"] = J["description"] +"<br><br>"    
+    J[":probeMap"]="illuminaMethyl27K_hg18_gpl8490"
+    J["dataSubType"]="DNA methylation"
+    J["unit"]="beta value"
+    return
+
+def HumanMethylation450JSON(J,cancer):
+    J['name']= "TCGA_PANCAN_HumanMethylation450"
+    J["label"]= "DNA methylation (Methylation450K)"
+    J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+" DNA methylation (HumanMethylation450K)"
+    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" DNA methylation 450K array beta values, compiled by combining available data from all TCGA cohorts. DNA methylation profile was measured experimentally using the Illumina Infinium HumanMethylation450 platform."
+    J["description"] = J["description"] +"<br><br>"    
+    J[":probeMap"]="illuminaMethyl450_hg19_GPL16304"
+    J["dataSubType"]="DNA methylation"
+    J["unit"]="beta value"
+    return
+
 def HiSeqV2JSON (J, cancer):
     J['name']= "HiSeqV2_PANCAN"
     J["label"]= "gene expression"
@@ -491,7 +533,6 @@ def HiSeqV2_exonJSON (J, cancer):
     J["unit"]="log2(RPKM+1)"
     J["wrangling_procedure"] = "Level_3 data (file names: *.exon_quantification.txt) are downloaded from each cancer project at TCGA DCC, log2(x+1) transformed, and then combined at UCSC into Xena repository."
     return
-
 
 def gisticJSON(J,cancer):
     J['name']= "TCGA_PANCAN_gistic2"

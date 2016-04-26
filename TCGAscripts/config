@@ -8,7 +8,7 @@ $TMP=preFreeze/TCGA/
 
 #####ucsc (protected) maf and vcf
 #illuminaga_dnaseq_cont_automated
-0	0	maf	ucsc_illuminaga_dnaseq_cont_automated	/inside/depot/tcgafiles/tcga4yeo/tumor/*/gsc/ucsc.edu/illuminaga_dnaseq_cont_automated/mutations_protected/	$TMP
+#0	0	maf	ucsc_illuminaga_dnaseq_cont_automated	/inside/depot/tcgafiles/tcga4yeo/tumor/*/gsc/ucsc.edu/illuminaga_dnaseq_cont_automated/mutations_protected/	$TMP
 
 #maf mutation open
 #ucsc   : illuminaga_dnaseq_automated
@@ -48,7 +48,6 @@ $FIREHOSEDATE_ana_version
 0	0	CopyNumber_Gistic2	CopyNumber_Gistic2	/data/TCGA/tcgafiles/firehose/analyses__$FIREHOSEDATE_ana/*/$FIREHOSEDATE_ana_version/	$TMP
 
 
-
 0	0	Methylation450	humanmethylation450	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/jhu-usc.edu/humanmethylation450/methylation/	$TMP
 
 0	0	RNAseq	illuminahiseq_rnaseqV2_unc	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/unc.edu/illuminahiseq_rnaseqv2/rnaseqv2/	$TMP
@@ -76,14 +75,16 @@ $FIREHOSEDATE_ana_version
 
 
 #PANCAN dataset for individual cancer
-1	0	MergePANCAN	RNAseq	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
+0	0	MergePANCAN	RNAseq	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
 
 #PANCAN dataset for PANCAN
-0	0	MergePANCAN	Gistic2	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
-0	0	MergePANCAN	Gistic2_threshold	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
-0	0	MergePANCAN	HiSeqV2	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
-0	0	MergePANCAN	miRNA	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
-1	0	MergePANCAN	HiSeqV2_exon	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
+1	1	MergePANCAN	Gistic2	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
+1	1	MergePANCAN	Gistic2_threshold	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
+1	1	MergePANCAN	HiSeqV2	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
+1	1	MergePANCAN	miRNA	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
+1	1	MergePANCAN	HiSeqV2_exon	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
+1	1	MergePANCAN	DNAmethylation27	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
+1	1	MergePANCAN	DNAmethylation450	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
 
 0	0	MergePANCAN	mutation_broad	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
 0	0	MergePANCAN	mutation_bcm	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP

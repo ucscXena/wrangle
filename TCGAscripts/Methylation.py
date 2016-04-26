@@ -3,7 +3,6 @@ import json,datetime
 import inspect
 
 LEVEL="Level_3"
-BETAOFFSET =0.0
 BETA_POS=1
 
 import TCGAUtil
@@ -12,22 +11,15 @@ from CGDataUtil import *
 
 garbage=["tmpMethylation/"]
 
-#/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/jhu-usc.edu/humanmethylation450/methylation/
 #/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/jhu-usc.edu/humanmethylation27/methylation/
-
-def humanmethylation450 (inDir, outDir, cancer,flog,REALRUN):
-    print cancer, inspect.stack()[0][3]     
-    PATHPATTERN= "HumanMethylation450"
-    humanmethylation (inDir, outDir, cancer,flog, PATHPATTERN,BETAOFFSET,REALRUN)
-    return
 
 def humanmethylation27 (inDir, outDir, cancer,flog,REALRUN):
     print cancer, inspect.stack()[0][3] 
     PATHPATTERN= "HumanMethylation27"
-    humanmethylation (inDir, outDir, cancer,flog, PATHPATTERN,BETAOFFSET,REALRUN)
+    humanmethylation (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN)
     return
         
-def humanmethylation (inDir, outDir, cancer,flog,PATHPATTERN,BETAOFFSET,REALRUN):
+def humanmethylation (inDir, outDir, cancer,flog,PATHPATTERN, REALRUN):
     if os.path.exists( "tmptmp/" ):
         os.system("rm -rf tmptmp/*")
     else:
@@ -124,7 +116,7 @@ def humanmethylation (inDir, outDir, cancer,flog,PATHPATTERN,BETAOFFSET,REALRUN)
                     infile = rootDir+dataDir+"/"+file
                     total, count = betaMean(total, count,samples, probes, cancer,infile,flog)
         average = total/count
-        print average,BETAOFFSET
+        print average
     
         dataMatrix=[]
         for i in range(0,len(probes)):
@@ -138,7 +130,7 @@ def humanmethylation (inDir, outDir, cancer,flog,PATHPATTERN,BETAOFFSET,REALRUN)
                 pattern =PATHPATTERN
                 if string.find(file,pattern)!=-1:
                     infile = rootDir+dataDir+"/"+file
-                    process(dataMatrix,samples,probes, cancer,infile,flog,BETAOFFSET)
+                    process(dataMatrix,samples,probes, cancer,infile,flog,0)
 
         outfile = outDir+cancer+"/"+cgFileName
         outputMatrix(dataMatrix, samples, probes,outfile, flog)
@@ -182,8 +174,9 @@ def humanmethylation (inDir, outDir, cancer,flog,PATHPATTERN,BETAOFFSET,REALRUN)
               +string.replace(inDir,TCGAUtil.localBase,"")
     J["version"]= datetime.date.today().isoformat()
     J["wrangler"]= "xena TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
-    J["valOffset"] = BETAOFFSET
     J["mean"]= average
+    J["unit"]="beta value"
+
     #change description
     J["min"]=0
     J["max"]=1
@@ -217,10 +210,7 @@ def humanmethylation (inDir, outDir, cancer,flog,PATHPATTERN,BETAOFFSET,REALRUN)
         return
     else:
         J["name"]=name        
-    if suffix =="HumanMethylation27":
-        J[":probeMap"]= "illuminaMethyl27_GPL8490_GPL13534"
-    if suffix =="HumanMethylation450":
-        J[":probeMap"]= "illuminaHumanMethylation450_GPL13534"
+    J[":probeMap"]= "illuminaMethyl27K_hg18_gpl8490"
     J["type"]= "genomicMatrix" 
     J[":sampleMap"]="TCGA."+cancer+".sampleMap"
     oHandle.write( json.dumps( J, indent=-1 ) )
@@ -282,7 +272,7 @@ def betaMean(total, count,samples, probes,cancer,infile,flog):
     fin.close()
     return total, count
 
-def process(dataMatrix,samples, probes,cancer,infile,flog, offset):
+def process(dataMatrix,samples, probes,cancer,infile,flog,offset):
     # one sample a file
     fin=open(infile,'r')
     line = fin.readline()

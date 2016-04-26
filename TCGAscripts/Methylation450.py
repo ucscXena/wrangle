@@ -4,7 +4,6 @@ import inspect
 import copy
 
 LEVEL="Level_3"
-BETAOFFSET =0.0
 BETA_POS=1
 
 import TCGAUtil
@@ -19,11 +18,11 @@ garbage=["tmpMethylation450/"]
 def humanmethylation450 (inDir, outDir, cancer,flog,REALRUN):
     print cancer, inspect.stack()[0][3]     
     PATHPATTERN= "HumanMethylation450"
-    humanmethylation (inDir, outDir, cancer,flog, PATHPATTERN,BETAOFFSET,REALRUN)
+    humanmethylation (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN)
     return
 
         
-def humanmethylation (inDir, outDir, cancer,flog,PATHPATTERN,BETAOFFSET,REALRUN):
+def humanmethylation (inDir, outDir, cancer,flog,PATHPATTERN, REALRUN):
     os.system("rm -rf tmp_*")
     if os.path.exists( "tmptmp/" ):
         os.system("rm -rf tmptmp/*")
@@ -126,7 +125,7 @@ def humanmethylation (inDir, outDir, cancer,flog,PATHPATTERN,BETAOFFSET,REALRUN)
                 pattern =PATHPATTERN
                 if string.find(file,pattern)!=-1:
                     infile = rootDir+dataDir+"/"+file
-                    new_c = process(c, dataMatrix,allSamples,tmpSamples, probes, cancer,infile,flog, BETA_POS,BETAOFFSET,100)
+                    new_c = process(c, dataMatrix,allSamples,tmpSamples, probes, cancer,infile,flog, BETA_POS, 0, 100)
                     #skip
                     if new_c == c:
                         continue
@@ -192,8 +191,8 @@ def humanmethylation (inDir, outDir, cancer,flog,PATHPATTERN,BETAOFFSET,REALRUN)
               +string.replace(inDir,TCGAUtil.localBase,"")
     J["version"]= datetime.date.today().isoformat()
     J["wrangler"]= "xena TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
-    J["valOffset"] = BETAOFFSET
-    
+    J["unit"]="beta value"
+
     #change description
     J["min"]=0.0
     J["max"]=1.0
@@ -225,7 +224,7 @@ def humanmethylation (inDir, outDir, cancer,flog,PATHPATTERN,BETAOFFSET,REALRUN)
     else:
         J["name"]=name        
     if suffix =="HumanMethylation450":
-        J[":probeMap"]= "illuminaHumanMethylation450_GPL13534"  
+        J[":probeMap"]= "illuminaMethyl450_hg19_GPL16304"  
     J["type"]= "genomicMatrix" 
     J[":sampleMap"]="TCGA."+cancer+".sampleMap"
     oHandle.write( json.dumps( J, indent=-1 ) )

@@ -39,6 +39,7 @@ def merge (infile_list, outfile):
     #paste all together
     os.system("paste "+string.join(files," ")+" > "+ outfile)
 
+    os.system("rm -rf "+ tmpDir)
     return
 
 def posToGene(genes):
