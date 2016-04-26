@@ -22,8 +22,8 @@ def pushDown (inputFile, outputFile, mapDic):
     #header
     data = string.split(fin.readline(),'\t')
     N= len(data)
-    data[0]= "xena_sample"
-    fout.write(string.join(data,'\t'))
+    fout.write("xena_sample\t_PATIENT\t")
+    fout.write(string.join(data[1:],'\t'))
 
     #data
     for line in fin.readlines():
@@ -33,8 +33,9 @@ def pushDown (inputFile, outputFile, mapDic):
         patientID = data[0]
         if patientID in mapDic:
             for sample in mapDic[patientID]:
-                data[0] = sample
-                fout.write(string.join(data,'\t'))
+                donor = data[0]
+                fout.write(sample+'\t'+donor+'\t')
+                fout.write(string.join(data[1:],'\t'))
         else:
             fout.write(line)
 
@@ -42,7 +43,7 @@ def pushDown (inputFile, outputFile, mapDic):
     fout.close()
 
 if len(sys.argv[:])!= 4:
-    print "python clinicalPushDown.py patientFile mapping(sample patient) sampleFile"
+    print "python clinicalPushDown.py patientLevelFile mapping(sample patient) sampleLevelFile"
     sys.exit()
 
 mappingfile = sys.argv[2]

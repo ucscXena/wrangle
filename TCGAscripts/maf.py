@@ -3,6 +3,7 @@ import json,datetime
 import math
 import inspect
 import copy
+import uuid
 
 LEVEL="Level_2"
 
@@ -12,7 +13,7 @@ from CGDataUtil import *
 import xenaToMatrix
 import radia
 
-tmpDir="tmpTry/"
+tmpDir =str(uuid.uuid4())+"/"
 VAF_cut =0.04
 
 #vcf protected germline
@@ -51,7 +52,7 @@ def ucsc_illuminaga_dnaseq_cont_automated (inDir, outDir, cancer,flog,REALRUN):
     type ="somatic"
     radia.radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution,type)
 
-#maf open
+#maf open ucsc
 def ucsc_illuminaga_dnaseq_automated (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
     distribution = True
@@ -187,9 +188,8 @@ def hgsc_illuminaga_dnaseq_automated (inDir, outDir, cancer,flog,REALRUN):
     mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
     clean =0
-    VAF= False
     namesuffix = "mutation_bcm"
-    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution, VAF)
+    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
 def hgsc_illuminaga_dnaseq_curated (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
@@ -233,9 +233,8 @@ def wustl_illuminaga_dnaseq_automated (inDir, outDir, cancer,flog,REALRUN):
     mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
     clean =0
-    VAF= False
     namesuffix = "mutation_wustl"
-    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution, VAF)
+    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
 def wustl_illuminaga_dnaseq_curated (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
@@ -280,8 +279,7 @@ def bcgsc_illuminahiseq_dnaseq_automated (inDir, outDir, cancer,flog,REALRUN):
 
     clean =0
     namesuffix = "mutation_bcgsc"
-    VAF= False
-    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution, VAF)
+    mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
 def bcgsc_illuminahiseq_dnaseq_curated (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
@@ -299,6 +297,7 @@ def bcgsc_illuminahiseq_dnaseq_curated (inDir, outDir, cancer,flog,REALRUN):
     mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
 def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM, distribution, VAF= False):
+    #VAF =true is saying use VAF_cut, for broad data mostly 
     garbage=[tmpDir]
     os.system("rm -rf tmp_*")
     if os.path.exists( tmpDir ):
@@ -394,10 +393,10 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
 
     cgFileName= namesuffix
     assembly="hg19"
+    xena = outDir+cancer+"/"+cgFileName
     #data procesing multiple dirs mode
     if REALRUN:
         found =0
-        xena = outDir+cancer+"/"+cgFileName
         fout= open(xena,'w')
         fout.write(string.join(["sample","chr","start","end","reference","alt","gene","effect","DNA_VAF","RNA_VAF","Amino_Acid_Change"],"\t")+"\n")
         for dataDir in os.listdir(rootDir):
@@ -413,11 +412,11 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
         if not found:
             os.system("rm -f "+xena)
 
-    if not os.path.exists(outDir+cancer+"/"+cgFileName):
-        os.system("rm -f "+outDir+cancer+"/"+cgFileName+".json")
+    if not os.path.exists(xena):
+        os.system("rm -f "+xena+".json")
         return
 
-    oHandle = open(outDir+cancer+"/"+cgFileName+".json","w")
+    oHandle = open(xena+".json","w")
     J={}
     #stable
     J["dataSubType"]="somatic mutation (SNPs and small INDELs)"
@@ -496,6 +495,7 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
     return
 
 def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataProducer,REALRUN, clean, PLATFORM, distribution, VAF=False):
+    #VAF =true is saying use VAF_cut, for broad data mostly 
     garbage=[tmpDir]
     os.system("rm -rf tmp_*")
     if os.path.exists( tmpDir ):
@@ -804,8 +804,16 @@ def process_xena (file, fout, VAF):
                     Tumor_Seq_Allele2 =i
                 if string.lower(header[i])=="t_alt_count":
                     t_alt_count =i
+                if string.lower(header[i])=="tumor_alt_count":
+                    t_alt_count =i
                 if string.lower(header[i])=="t_ref_count":
                     t_ref_count =i
+                if string.lower(header[i])=="tumor_ref_count":
+                    t_ref_count =i
+                if string.lower(header[i])=="rna_tumor_alt_count":
+                    rna_t_alt_count =i
+                if string.lower(header[i])=="rna_tumor_ref_count":
+                    rna_t_ref_count =i
                 if header[i]=="Tumor_Sample_Barcode":
                     Tumor_Sample_Barcode =i
                 ## aa change
@@ -850,12 +858,17 @@ def process_xena (file, fout, VAF):
                     continue
         except:
             DNA_VAF= ""
-        RNA_VAF= ""
+        try:
+            RNA_VAF = float(data[rna_t_alt_count])/(float(data[rna_t_ref_count])+float(data[rna_t_alt_count]))
+            if RNA_VAF >1.0:
+                continue #crappy data
+        except:
+            RNA_VAF= ""
         try:
             AA_Change= data[Protein_Change]
         except:
             AA_Change= ""
-        fout.write(string.join([sample,chrom,start,end, ref, alt, gene, mtype, str(DNA_VAF), str(RNA_VAF),AA_Change],"\t")+"\n")
+        fout.write(string.join([sample,chrom,start,end, ref, alt, gene, mtype, str(DNA_VAF), str(RNA_VAF), AA_Change],"\t")+"\n")
 
     fin.close()
     return ASSEMBLY
