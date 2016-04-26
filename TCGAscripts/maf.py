@@ -393,6 +393,8 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
 
     cgFileName= namesuffix
     assembly="hg19"
+    totalThrowout =0
+    totalKept =0
     xena = outDir+cancer+"/"+cgFileName
     #data procesing multiple dirs mode
     if REALRUN:
@@ -406,7 +408,9 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
                     infile = rootDir+dataDir+"/"+file
                     print infile
                     found =1
-                    assembly = process_xena (infile, fout, VAF)
+                    assembly, throwout, kept = process_xena (infile, fout, VAF)
+                    totalKept = totalKept +kept
+                    totalThrowout = totalThrowout +throwout
         fout.close()
 
         if not found:
@@ -477,7 +481,7 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
 
     J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") somatic mutation data. Sequencing data are generated on a "+PLATFORM +" system. The calls are generated at "+dataProducer+" using the "+ J["method"] +" method."
     if VAF:
-        J["description"]= J["description"] + " When variant allele frequency information is available, only calls with VAF >"+ str(VAF_cut*100) +"% are kept."
+        J["description"]= J["description"] + " When variant allele frequency information is available, only calls with VAF >"+ str(VAF_cut*100) +"% are kept, resulting in "+ str(totalKept) +" calls are kept and "+ str(totalThrowout) +" calls are removed."
 
     #change cgData
     J["name"]="TCGA_"+cancer+"_"+namesuffix
@@ -775,6 +779,8 @@ def process_xena (file, fout, VAF):
     fin =open(file, 'r')
     header=""
     ASSEMBLY=""
+    throwout=0
+    kept =0
     for line in fin.readlines():
         if line[0] == "#":
             continue
@@ -851,10 +857,12 @@ def process_xena (file, fout, VAF):
         try:
             DNA_VAF = float(data[t_alt_count])/(float(data[t_ref_count])+float(data[t_alt_count]))
             if DNA_VAF >1.0:
+                throwout =throwout+1
                 continue #crappy data
 
             if VAF: #require > VAF_cut to secure data accuracy
                 if DNA_VAF <VAF_cut:
+                    throwout =throwout+1
                     continue
         except:
             DNA_VAF= ""
@@ -868,7 +876,8 @@ def process_xena (file, fout, VAF):
             AA_Change= data[Protein_Change]
         except:
             AA_Change= ""
+        kept = kept + 1
         fout.write(string.join([sample,chrom,start,end, ref, alt, gene, mtype, str(DNA_VAF), str(RNA_VAF), AA_Change],"\t")+"\n")
 
     fin.close()
-    return ASSEMBLY
+    return ASSEMBLY, throwout, kept
