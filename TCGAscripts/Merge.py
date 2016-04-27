@@ -9,7 +9,7 @@ from CGDataUtil import *
 from CGDataLib import *
 import  TCGAUtil
 
-def genomic (dir,outDir, cancer,flog,REALRUN):
+def matrix (dir,outDir, cancer,flog,REALRUN):
     if cancer not in ["LUNG","COADREAD","GBMLGG"]:
         return
 
@@ -25,11 +25,14 @@ def genomic (dir,outDir, cancer,flog,REALRUN):
         c1 ="LGG"
         c2 ="GBM"
 
+    type= "matrix"
+
     for file in [
         "mutation",
         "HiSeqV2",
         "HiSeqV2_exon",
         "AgilentG4502A_07_3",
+        "miRNA",
         "Gistic2_CopyNumber_Gistic2_all_data_by_genes",
         "Gistic2_CopyNumber_Gistic2_all_thresholded.by_genes",
         "HumanMethylation27",
@@ -41,7 +44,31 @@ def genomic (dir,outDir, cancer,flog,REALRUN):
         if file =="mutation" and cancer =="COADREAD": #PANCAN AWG mutation
             continue
 
-        type= "matrix"
+        process (outDir, cancer, c1, c2, file, REALRUN,type)
+    return
+
+def SNP6 (dir,outDir, cancer,flog,REALRUN):
+    if cancer not in ["LUNG","COADREAD","GBMLGG"]:
+        return
+
+    print cancer, sys._getframe().f_code.co_name
+
+    if cancer =="LUNG":
+        c1 ="LUSC"
+        c2 ="LUAD"
+    if cancer =="COADREAD":
+        c1 ="COAD"
+        c2 ="READ"
+    if cancer =="GBMLGG":
+        c1 ="LGG"
+        c2 ="GBM"
+
+    type= "SNP6_genomicSegment"
+
+    for file in [
+        "SNP6_genomicSegment",
+        "SNP6_nocnv_genomicSegment",
+        ]:
 
         process (outDir, cancer, c1, c2, file, REALRUN,type)
     return
@@ -68,9 +95,12 @@ def process (outDir, cancer, c1, c2, file, REALRUN,type):
             # segToMatrix
             outfile=outDir+cancer+"/"+file
             gMoutput = outDir+cancer+"/"+string.replace(file,"_genomicSegment","")
-            os.system("python seg2matrix/segToMatrix.py "+outfile +" seg2matrix/refGene_hg18 "+ gMoutput)
+            #os.system("python seg2matrix/segToMatrix.py "+outfile +" seg2matrix/refGene_hg19 "+ gMoutput)
+            os.system("python seg2matrix/segToMatrixGalaxy.py "+outfile +" seg2matrix/refGene_hg19 "+ gMoutput+".matrix "+gMoutput+".probeMap 0")
         else: 
-            os.system("python mergeGenomicMatrixFiles.py "+outDir+cancer+"/"+file + " "+c1file +" "+ c2file)
+            #os.system("python mergeGenomicMatrixFiles.py "+outDir+cancer+"/"+file + " "+c1file +" "+ c2file)
+            root = "/data/TCGA/"
+            os.system("python mergeGenomicMatrixFiles_memEfficient.py "+outDir+cancer+"/"+file + " "+root+" "+c1file +" "+ c2file) 
 
     J={}
     iHandle =open(c1file+".json","r")
@@ -82,7 +112,7 @@ def process (outDir, cancer, c1, c2, file, REALRUN,type):
     s= Jinput["label"]
     s = string.replace(s,c1,cancer)
     J["label"]= s
-    if J["type"] not in ["genomicSegment","mutationVector","clinicalMatrix"]:
+    if Jinput.has_key(":probeMap"):
         J[":probeMap"]=Jinput[":probeMap"]
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
     J["sample_type"]=["tumor"]
@@ -110,7 +140,6 @@ def process (outDir, cancer, c1, c2, file, REALRUN,type):
     s = string.replace(s,"("+c1+")","("+cancer+")")
     s = string.replace(s,TCGAUtil.cancerOfficial[c1],TCGAUtil.cancerOfficial[cancer])
     J["description"]= "The dataset is combined from TCGA "+ TCGAUtil.cancerOfficial[c1]+" and "+ TCGAUtil.cancerOfficial[c2]+" datasets. "+ s
-    J["groupTitle"]="TCGA "+TCGAUtil.cancerGroupTitle[cancer]
     J[":sampleMap"]="TCGA."+cancer+".sampleMap"
 
     s = Jinput["name"]
@@ -123,7 +152,7 @@ def process (outDir, cancer, c1, c2, file, REALRUN,type):
     if type =="SNP6_genomicSegment":
         J={}
         gMoutput = outDir+cancer+"/"+string.replace(file,"_genomicSegment","")
-        cfile = gMoutput+".matrix.json"
+        cfile = string.replace(c1file,"_genomicSegment","") + ".matrix.json"
         iHandle =open(cfile,"r")
         Jinput= json.loads(iHandle.read())
         J["dataSubType"]=  Jinput["dataSubType"]
@@ -148,17 +177,17 @@ def process (outDir, cancer, c1, c2, file, REALRUN,type):
         s = Jinput["name"]
         s = string.replace(s,c1,cancer)
         J["name"]=s
-        output = open(outDir+cancer+"/"+gMoutput+".matrix.json","w")
+        output = open(gMoutput+".matrix.json","w")
         output.write(json.dumps(J,indent=-1))
         output.close()
 
         J={}
-        cfile = c1dir+gMoutput+".probeMap.json"
-        iHandle =open(cfile+".json","r")
+        cfile = string.replace(c1file,"_genomicSegment","") + ".probeMap.json"
+        iHandle =open(cfile,"r")
         Jinput= json.loads(iHandle.read())
         J=Jinput
         J["name"]=string.replace(J["name"],c1, cancer)
-        output = open(outDir+cancer+"/"+gMoutput+".probeMap.json","w")
+        output = open(gMoutput+".probeMap.json","w")
         output.write(json.dumps(J,indent=-1))
         output.close()
     return

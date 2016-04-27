@@ -4,11 +4,14 @@ import math
 import copy
 import uuid
 
-def merge (infile_list, outfile):
+def merge (infile_list, outfile, root ="./"):
     genes={}
     allgenes={}
     files=[]
-    tmpDir =str(uuid.uuid4())
+
+    if root[-1]!="/":
+        root = root +"/"
+    tmpDir =root + str(uuid.uuid4())
 
     os.system("mkdir "+ tmpDir)
 
@@ -101,11 +104,12 @@ def process(cur_genes, infile, allgenes, outfile):
     fout.close()
     return 
 
-if len(sys.argv[:])<3:
-    print "python mergeGenomicMatrixFiles_memEfficient.py outfile infiles"
+if len(sys.argv[:])<4:
+    print "python mergeGenomicMatrixFiles_memEfficient.py outfile tmpDirRoot infiles"
     sys.exit()
 
 outfile = sys.argv[1]
-infile_list =sys.argv[2:]
-print infile_list, outfile
-merge (infile_list, outfile)
+root = sys.argv[2]
+infile_list =sys.argv[3:]
+print root, infile_list, outfile
+merge (infile_list, outfile, root)

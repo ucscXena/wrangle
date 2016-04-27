@@ -8,7 +8,6 @@ from ClinicalFeatureNew import *
 from CGDataUtil import *
 from CGDataLib import *
 import TCGAUtil
-import mergeGenomicMatrixFiles
 import xenaToMatrix
 
 #for individual
@@ -359,7 +358,8 @@ def processMatrix (filename, dir,outDir, cancer,flog, REALRUN, memVersion = Fals
     outfile = outDir +cancer + "/"+filename
 
     if REALRUN:
-        os.system("python mergeGenomicMatrixFiles_memEfficient.py "+outfile+" "+string.join(inFiles,' '))
+        root = "/data/TCGA/"
+        os.system("python mergeGenomicMatrixFiles_memEfficient.py "+outfile+" "+root+" " + string.join(inFiles,' '))
         #if memVersion:
         #    os.system("python mergeGenomicMatrixFiles_memEfficient.py "+outfile+" "+string.join(inFiles,' '))
         #else:
