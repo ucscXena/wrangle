@@ -166,7 +166,6 @@ def geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT, dataSubT
 
     oHandle = open(outfile+".json","w")    
     J={}
-    J["redistribution"]= True
     J["dataProducer"]= "UCSC TOIL RNA-seq recompute"
     J["colNormalization"]=True
     J["type"]= "genomicMatrix" 
