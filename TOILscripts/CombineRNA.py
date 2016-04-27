@@ -70,6 +70,17 @@ def RSEM_gene_tpm (inDir, outfile):
     geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT, dataSubType, geneParse)
     return
 
+def RSEM_gene_fpkm (inDir, outfile):
+    PATHPATTERN= ".rsem_genes.results"
+    valuePOS=6
+    LOG2=1
+    UNIT = "fpkm"
+    theta=0.001
+    dataSubType="gene expression RNAseq"
+    geneParse = lambda x: x
+    geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT, dataSubType, geneParse)
+    return
+
 def Kallisto_est_counts (inDir, outfile):
     PATHPATTERN= ".abundance.tsv"
     valuePOS=3
@@ -256,6 +267,8 @@ if method =="RSEM_Hugo":
     RSEM_Hugo_TOIL_norm_counts (inDir, sys.argv[2])
 elif method =="RSEM_gene_tpm":
     RSEM_gene_tpm (inDir, sys.argv[2])
+elif method =="RSEM_gene_fpkm":
+    RSEM_gene_fpkm (inDir, sys.argv[2])
 elif method =="Kallisto_est_counts":
     Kallisto_est_counts (inDir,sys.argv[2])
 elif method =="Kallisto_tpm":
@@ -269,6 +282,6 @@ elif method =="RSEM_IsoPct":
 elif method =="RSEM_norm_counts":
     RSEM_norm_counts (inDir,sys.argv[2])
 else:
-    print "available method: RSEM_Hugo RSEM_gene_tpm Kallisto_est_counts Kallisto_tpm RSEM_tpm RSEM_fpkm RSEM_IsoPct RSEM_norm_counts"
+    print "available method: RSEM_Hugo RSEM_gene_tpm RSEM_gene_fpkm Kallisto_est_counts Kallisto_tpm RSEM_tpm RSEM_fpkm RSEM_IsoPct RSEM_norm_counts"
     sys.exit()
 
