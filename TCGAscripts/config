@@ -71,24 +71,24 @@ $FIREHOSEDATE_ana_version
 0	0	cohort	cohort	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
 
 #merging LUAD and LUSC to LUNG ; COAD READ to COADREAD; LGG GBM to GBMLGG
-0	0	Merge	genomic	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
-
+0	0	Merge	matrix	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
+0	0	Merge	SNP6	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
 
 #PANCAN dataset for individual cancer
 0	0	MergePANCAN	RNAseq	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
 
 #PANCAN dataset for PANCAN
-1	1	MergePANCAN	Gistic2	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
-1	1	MergePANCAN	Gistic2_threshold	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
-1	1	MergePANCAN	HiSeqV2	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
-1	1	MergePANCAN	miRNA	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
-1	1	MergePANCAN	HiSeqV2_exon	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
-1	1	MergePANCAN	DNAmethylation27	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
-1	1	MergePANCAN	DNAmethylation450	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
+0	0	MergePANCAN	Gistic2	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
+0	0	MergePANCAN	Gistic2_threshold	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
+0	0	MergePANCAN	HiSeqV2	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
+0	0	MergePANCAN	miRNA	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
+0	0	MergePANCAN	HiSeqV2_exon	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
+0	0	MergePANCAN	Methylation27	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
+0	0	MergePANCAN	Methylation450	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
 
 0	0	MergePANCAN	mutation_broad	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
 0	0	MergePANCAN	mutation_bcm	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
-0	0	MergePANCAN	mutation_ucsc_vcf	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
+0	0	MergePANCAN	mutation_ucsc_maf	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
 0	0	MergePANCAN	mutation_bcgsc	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
 0	0	MergePANCAN	mutation_wustl	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
 

@@ -85,11 +85,11 @@ def mutation_bcm  ( dir, outDir, cancer,flog,REALRUN):
     filename = "mutation_bcm"
     processMutationData (filename, dir,outDir, cancer,flog, REALRUN)
 
-def mutation_ucsc_vcf  ( dir, outDir, cancer,flog,REALRUN):
+def mutation_ucsc_maf  ( dir, outDir, cancer,flog,REALRUN):
     if cancer !="PANCAN":
         return
     print cancer, sys._getframe().f_code.co_name
-    filename = "mutation_ucsc_vcf"
+    filename = "mutation_ucsc_maf"
     processMutationData (filename, dir,outDir, cancer,flog, REALRUN)
 
 def Gistic2 (dir,outDir, cancer,flog,REALRUN):
@@ -314,8 +314,8 @@ def processMutationData (filename, dir, outDir, cancer,flog, REALRUN):
         mutation_broadJSON(J,cancer,genelevel)
     elif filename=="mutation_bcm":
         mutation_bcmJSON(J,cancer,genelevel)
-    elif filename=="mutation_ucsc_vcf":
-        mutation_ucsc_vcfJSON(J,cancer,genelevel)
+    elif filename=="mutation_ucsc_maf":
+        mutation_ucsc_mafJSON(J,cancer,genelevel)
     elif filename=="mutation_bcgsc":
         mutation_bcgscJSON(J,cancer,genelevel)
     elif filename=="mutation_wustl":
@@ -336,8 +336,8 @@ def processMutationData (filename, dir, outDir, cancer,flog, REALRUN):
         mutation_broadJSON(J,cancer,genelevel)
     elif filename=="mutation_bcm":
         mutation_bcmJSON(J,cancer,genelevel)
-    elif filename=="mutation_ucsc_vcf":
-        mutation_ucsc_vcfJSON(J,cancer,genelevel)
+    elif filename=="mutation_ucsc_maf":
+        mutation_ucsc_mafJSON(J,cancer,genelevel)
     elif filename=="mutation_bcgsc":
         mutation_bcgscJSON(J,cancer,genelevel)
     elif filename=="mutation_wustl":
@@ -441,15 +441,15 @@ def mutation_wustlSON (J, cancer,genelevel):
     J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" somatic mutation dataa, compiled using data from all TCGA cohorts. The calls are generated at Washington University Genome Center using the WashU pipeline method. BCGSC's calls from various TCGA cohorts are combined to produce this dataset."
     J["description"] = J["description"] +"<br><br>"
 
-def mutation_ucsc_vcfJSON(J,cancer,genelevel):
-    J['name']= "TCGA_PANCAN_mutation_ucsc_vcf"+string.strip(genelevel).replace("-","")
+def mutation_ucsc_mafJSON(J,cancer,genelevel):
+    J['name']= "TCGA_PANCAN_mutation_ucsc_maf"+string.strip(genelevel).replace("-","")
     if genelevel =="":
-        J["label"]= "somatic mutation SNPs and small INDELs (ucsc automated vcf)"
+        J["label"]= "somatic mutation SNPs and small INDELs (ucsc)"
         J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+ genelevel+" somatic mutation (ucsc)"
     else:
-        J["label"]= "somatic gene-level non-silent mutation (ucsc automated vcf)"
+        J["label"]= "somatic gene-level non-silent mutation (ucsc)"
         J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+ genelevel+" nonsilent somatic mutation (ucsc)"
-    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" somatic mutation dataa, compiled using data from all TCGA cohorts.  The calls are generated at University of Californis Santa Cruz GDAC using the RADIA method. RADIA's calls (vcfs) from various TCGA cohorts are combined to produce this dataset. Reference to RADIA: PMID: 25405470."
+    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" somatic mutation dataa, compiled using data from all TCGA cohorts.  The calls are generated at University of Californis Santa Cruz GDAC using the RADIA method. RADIA's calls (mafs) from various TCGA cohorts are combined to produce this dataset. Reference to RADIA: PMID: 25405470."
     J["description"] = J["description"] +"<br><br>"    
 
 def mutation_bcmJSON(J,cancer,genelevel):

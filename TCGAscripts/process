@@ -5,7 +5,8 @@ python run.py config log
 
 cd /inside/home/jzhu/cgDataJing/scripts/
 
-python runFlattenTCGA.py --inDir=data/public/TCGA/ --outDir=data_flatten/public/TCGA/
+./flattenParrallel
+#python runFlattenTCGA.py --inDir=data/public/TCGA/ --outDir=data_flatten/public/TCGA/
 
 cd /inside/home/jzhu/cgDataJing/TCGAscripts
 
