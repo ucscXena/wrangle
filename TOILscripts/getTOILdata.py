@@ -41,7 +41,7 @@ if len(sys.argv[:])!=3:
 METHOD="RSEM"
 
 SUFFIX = {
-    "RSEM":[".rsem_isoforms.results",".rsem_genes.results",".rsem.isoform.norm_counts.tab"],
+    "RSEM":[".rsem_isoforms.results",".rsem_genes.results"], #".rsem.isoform.norm_counts.tab"],
     "RSEM/Hugo":[".rsem.genes.norm_counts.hugo.tab"],
     "Kallisto":[".abundance.tsv"]
 }
