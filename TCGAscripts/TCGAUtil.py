@@ -181,7 +181,7 @@ default_mutation = {
     "KIRC":["TCGA_KIRC_mutation_broad"],  #need hgsc mixed
     "KIRP":["TCGA_KIRP_mutation_curated_broad"],
     "LAML":["TCGA_LAML_mutation_wustl"],
-    "LGG":["TCGA_LGG_mutation_ucsc_vcf"], ########### "TCGA_LGG_mutation_curated_broad" 
+    "LGG":["TCGA_LGG_mutation_ucsc_maf"], ########### "TCGA_LGG_mutation_curated_broad" 
     "LIHC":["TCGA_LIHC_mutation_bcm"], 
     "LUAD":["TCGA_LUAD_mutation_broad"], #####"TCGA_LUAD_mutation_curated_broad"
     "LUSC":["TCGA_LUSC_mutation_broad"],
