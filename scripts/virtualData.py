@@ -16,8 +16,10 @@ if dataType not in ["somatic mutation"]:
     sys.exit()
 
 outputFileType = sys.argv[2]
-
 print dataType
+
+outfile = sys.argv[3]
+
 bookDic={}
 for dir in sys.argv[4:]:
     dic = CGDataLib.cgWalk(dir,1)
@@ -93,7 +95,7 @@ if len(mutationVectorDatasets)!=0:
             for i in range(0,len(data)):
                 if data[i] =="DNA_VAF":
                     DNA_VAF_col =i
-            fout=open(sys.argv[3],'w')
+            fout=open(outfile,'w')
             fout.write(HEADER)
         if header != HEADER:
             print "error, different header\n"
@@ -109,9 +111,9 @@ if len(mutationVectorDatasets)!=0:
                     fout.write(line)
             else:
                 fout.write(line)
-            #os.system ("more +2 "+ path +" >> "+ sys.argv[3])
         fin.close()
     fout.close()
 
 if len(genomicMatrixDatasets)!=0:
-    os.system("python mergeGenomicMatrixFiles.py "+ sys.argv[3]+" " + string.join(genomicMatrixDatasets," "))
+    #os.system("python mergeGenomicMatrixFiles.py "+ output+" " + string.join(genomicMatrixDatasets," "))
+    os.system("python mergeGenomicMatrixFiles_memEfficient.py "+outfile + " . " +string.join(genomicMatrixDatasets," "))

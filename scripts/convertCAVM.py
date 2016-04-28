@@ -319,7 +319,8 @@ def convertCAVM (inDir, outD ,REALRUN, CAVM, TCGA, MAPID=1):
                     if TCGA:
                         fin.close()
                         fout.close()
-                        os.system("more +2 "+obj['path']+" >> "+outfile)
+                        os.system("cat "+obj['path']+" |sed 1d >> "+outfile)
+                        #os.system("more +2 "+obj['path']+" >> "+outfile)
                     else:
                         while 1:
                             line = fin.readline()

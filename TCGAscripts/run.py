@@ -3,14 +3,15 @@ import sys,os,string, glob
 print "python run.py configfile logfile"
 print
 
+#analysis run version firehose website: http://gdac.broadinstitute.org/runs/analyses__latest/reports/ 
 def FHANAdate():
     l=string.strip(os.popen("/inside/home/jzhu/scripts/firehose_get -r |grep analyses |tail -n 1").read())
-    #return "2013_05_23"
     return l[10:]
+    #return "2015_04_02"
 
 def FHANAdateVersion():
+    print FHANAdate()
     return string.replace(FHANAdate(),"_","")
-
     
 fin = open(sys.argv[1],'r')
 flog = open(sys.argv[2],'w')
@@ -32,6 +33,7 @@ for line in fin.readlines():
                 v=FHANAdateVersion()
         kvArgs[k]=v
 fin.close()
+
 
 fin = open(sys.argv[1],'r')
 for line in fin.readlines():
@@ -60,8 +62,8 @@ for line in fin.readlines():
                 outDir= string.replace(outDir, k, v)
             
         pattern= string.split(inDir,"*")
+        #PAAD=0
 
-        #LUSC=0
         for dir in glob.glob(inDir):
             cancer =dir
             for p in pattern:
@@ -70,14 +72,13 @@ for line in fin.readlines():
             cancer = string.replace(cancer,"TCGA.","")
             cancer = string.replace(cancer,".SAMPLEMAP","")
 
-            #if cancer not in ["UCEC"]:
+            #if cancer not in ["LUAD"]:
             #    continue
 
             """
-            if cancer in ["LUSC"]:
-                LUSC=1
-                continue
-            if not LUSC:
+            if cancer in ["PAAD"]:
+                PAAD=1
+            if not PAAD:
                 continue
             """
             if run:
