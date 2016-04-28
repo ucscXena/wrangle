@@ -18,10 +18,11 @@ cd /inside/home/jzhu/cgDataJing/scripts/
 
 python runFlattenTCGA.py --inDir=/inside/home/jzhu/cgDataJing/TCGAscripts/preFreezeCAVM/TCGA/PANCAN/ --outDir=data_flatten/public/TCGA/
 
-python runFlattenTCGA.py --inDir=/inside/home/jzhu/cgDataJing/TCGAscripts/preFreezeCAVM/TCGA/PANCAN12/ --outDir=data_flatten/public/TCGA/
+#no need to run anymore
+#python runFlattenTCGA.py --inDir=/inside/home/jzhu/cgDataJing/TCGAscripts/preFreezeCAVM/TCGA/PANCAN12/ --outDir=data_flatten/public/TCGA/
 
-python convertCAVM.py --inDir=data_flatten/public/TCGA/  --outDir=CAVM/public/TCGA/ --CAVM=1 --TCGA=1 --REALRUN=1
-
+./convertCAVMParrallel
+#python convertCAVM.py --inDir=data_flatten/public/TCGA/  --outDir=CAVM/public/TCGA/ --CAVM=1 --TCGA=1 --REALRUN=1
 
 python virtualData.py "somatic mutation" mutationVector PANCAN_mutation CAVM/public/TCGA/
 #python virtualData.py "somatic mutation" PANCAN_mutation CAVM/public/TCGA/
