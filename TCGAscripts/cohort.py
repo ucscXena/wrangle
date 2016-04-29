@@ -10,7 +10,7 @@ def cohort (inDir, outDir, cancer, flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
         
     variable ="_cohort"
-    value = "TCGA "+TCGAUtil.cancerHumanReadable[cancer]
+    value = "TCGA "+TCGAUtil.cancerHumanReadable[cancer]+" ("+cancer+")"
     cohort_variable (variable, value, inDir, outDir, cancer, flog,REALRUN)
     
 def primary_site (inDir, outDir, cancer, flog,REALRUN):

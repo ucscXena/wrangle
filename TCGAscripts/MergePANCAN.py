@@ -242,7 +242,7 @@ def processFiles (filename, dir,outDir, cancer , MUTATION= False):
     inFiles =[]
 
     for cancer in os.listdir(outDir):
-        if cancer in ["LUNG","COADREAD","PANCAN","GBMLGG","PANCAN12"]:
+        if cancer in ["FPPP", "LUNG","COADREAD","PANCAN","GBMLGG","PANCAN12"]:
             continue
 
         cancerDir= outDir+ cancer
@@ -512,6 +512,7 @@ def HiSeqV2JSON (J, cancer):
     J['name']= "HiSeqV2_PANCAN"
     J["label"]= "gene expression"
     J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+" gene expression (polyA+ IlluminaHiSeq)"
+    J["RNAtype"]="polyA+",
     J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" gene expression by RNAseq, compiled using data from all TCGA cohorts. Gene expression was measured using the IlluminaHiSeq technology. Data from all TCGA cohorts are combined to produce this dataset. Values are log2(x+1) transformed RSEM values.<br>"
     J[":probeMap"]="hugo"
     J["dataSubType"]="gene expression RNAseq"
@@ -524,7 +525,8 @@ def HiSeqV2_exonJSON (J, cancer):
     J['name']= "HiSeqV2_exon_PANCAN"
     J["shortTitle"]= "exon expression"
     J["label"] = J["shortTitle"] 
-    J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+" exon expression (IlluminaHiSeq)"
+    J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+" exon expression (polyA+ IlluminaHiSeq)"
+    J["RNAtype"]="polyA+",
     J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" exon expression by RNAseq, compiled using data from all TCGA cohorts. Exon expression was measured using the IlluminaHiSeq technology. Data from all TCGA cohorts are combined to produce this dataset. Values are log2(RPKM+1) transformed exon-level transcription estimates in RPKM values (Reads Per Kilobase of exon model per Million mapped reads)."
     J["description"] = J["description"] +"<br><br>"    
     J[":probeMap"]="unc_RNAseq_exon.hg19"
@@ -559,7 +561,6 @@ def processRNA (filename, dir,outDir, cancer,flog, REALRUN):
     outFiles={}
     for cancer in os.listdir(outDir):
         if cancer in ["PANCAN"]:
-        #if cancer in ["LUNG","COADREAD","PANCAN"]:
             continue
 
         cancerDir= outDir+ cancer
@@ -572,9 +573,6 @@ def processRNA (filename, dir,outDir, cancer,flog, REALRUN):
         inFiles[cancer]= cancerFile
         outFiles[cancer]= cancerOutFile
 
-    #cancer="PANCAN"
-    #outFiles[cancer]= outDir+"/"+cancer+"/"+filename+"_PANCAN" 
-        
     keys = inFiles.keys()
 
     if REALRUN:

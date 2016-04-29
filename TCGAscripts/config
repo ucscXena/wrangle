@@ -80,9 +80,9 @@ $FIREHOSEDATE_ana_version
 #PANCAN dataset for PANCAN
 0	0	MergePANCAN	Gistic2	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
 0	0	MergePANCAN	Gistic2_threshold	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
-0	0	MergePANCAN	HiSeqV2	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
-0	0	MergePANCAN	miRNA	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
-0	0	MergePANCAN	HiSeqV2_exon	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
+1	0	MergePANCAN	HiSeqV2	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
+1	0	MergePANCAN	HiSeqV2_exon	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
+1	1	MergePANCAN	miRNA	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
 0	0	MergePANCAN	Methylation27	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
 0	0	MergePANCAN	Methylation450	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
 
@@ -100,13 +100,6 @@ $FIREHOSEDATE_ana_version
 
 #PANCAN dataset done after new data compiled
 0	0	MergePANCAN	clin	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
-
-
-
-
-
-
-
 
 
 
