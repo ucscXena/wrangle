@@ -130,7 +130,7 @@ def processClin (filename, dir,outDir, CANCER,flog, REALRUN):
 
         inFiles[cancer]= cancerFile
 
-    features=["sample_type","sample_type_id","gender","_cohort","age_at_initial_pathologic_diagnosis",
+    features=["sample_type","sample_type_id","gender","age_at_initial_pathologic_diagnosis",
               "_OS","_OS_IND","_OS_UNIT",
               "_RFS","_RFS_IND","_RFS_UNIT",
               "_EVENT","_TIME_TO_EVENT","_TIME_TO_EVENT_UNIT",
