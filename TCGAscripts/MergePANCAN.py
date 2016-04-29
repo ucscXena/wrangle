@@ -527,7 +527,7 @@ def HiSeqV2_exonJSON (J, cancer):
     J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+" exon expression (IlluminaHiSeq)"
     J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" exon expression by RNAseq, compiled using data from all TCGA cohorts. Exon expression was measured using the IlluminaHiSeq technology. Data from all TCGA cohorts are combined to produce this dataset. Values are log2(RPKM+1) transformed exon-level transcription estimates in RPKM values (Reads Per Kilobase of exon model per Million mapped reads)."
     J["description"] = J["description"] +"<br><br>"    
-    J[":probeMap"]="unc_RNAseq_exon"
+    J[":probeMap"]="unc_RNAseq_exon.hg19"
     J["dataSubType"]="exon expression RNAseq"
     J["colNormalization"]=True
     J["unit"]="log2(RPKM+1)"
