@@ -559,7 +559,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
 
     else: #exon
         J["dataSubType"]="exon expression RNAseq"
-        J[":probeMap"]= "unc_RNAseq_exon.hg19" #"unc_RNAseq_exon" 
+        J[":probeMap"]= "unc_RNAseq_exon.hg19" 
 
         if cancer not in [ "OV","STAD"]:
             J["shortTitle"]= "exon expression RNAseq ("+ J["RNAtype"] + " "+ suffix+")"
