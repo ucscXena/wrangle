@@ -11,27 +11,30 @@ def cohort (inDir, outDir, cancer, flog,REALRUN):
         
     variable ="_cohort"
     value = "TCGA "+TCGAUtil.cancerHumanReadable[cancer]+" ("+cancer+")"
-    cohort_variable (variable, value, inDir, outDir, cancer, flog,REALRUN)
-    
+    doDerived=0
+    cohort_variable (variable, value, inDir, outDir, cancer, REALRUN, doDerived)
+
 def primary_site (inDir, outDir, cancer, flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
+    if cancer in ["COADREAD","LUNG","PANCAN","PANCAN12","GBMLGG"]:
+        return
         
     variable ="_primary_site"
     value = string.join(TCGAUtil.anatomical_origin[cancer],",")
-    cohort_variable (variable, value, inDir, outDir, cancer, flog,REALRUN)
+    doDerived =1
+    cohort_variable (variable, value, inDir, outDir, cancer, REALRUN, doDerived)
 
 def primary_disease (inDir, outDir, cancer, flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
+    if cancer in ["COADREAD","LUNG","PANCAN","PANCAN12","GBMLGG"]:
+        return
         
     variable ="_primary_disease"
     value = TCGAUtil.cancerGroupTitle[cancer]
-    cohort_variable (variable, value, inDir, outDir, cancer, flog,REALRUN)
+    doDerived =1
+    cohort_variable (variable, value, inDir, outDir, cancer, REALRUN)
 
-def cohort_variable (var, value, inDir, outDir, cancer, flog,REALRUN):
-    #print status
-    if cancer in ["COADREAD","LUNG","PANCAN","PANCAN12","GBMLGG"]:
-        return
-
+def cohort_variable (var, value, inDir, outDir, cancer, REALRUN, doDerived):
     print inDir
     print outDir
 
@@ -59,7 +62,7 @@ def cohort_variable (var, value, inDir, outDir, cancer, flog,REALRUN):
         samples =[]
         for name in missingMaps[map]:
             obj=bookDic[name]
-                
+            
             if obj['type']=="genomicMatrix":
                 fin =open(obj['path'],'U')
                 for sample in string.split(fin.readline()[:-1],"\t")[1:]:
@@ -69,7 +72,22 @@ def cohort_variable (var, value, inDir, outDir, cancer, flog,REALRUN):
                     if sample not in samples:
                         samples.append(sample)
                 fin.close()
-                
+            
+            #take too long
+                """
+            if obj['type']=="mutationVector":
+                fin =open(obj['path'],'U')
+                fin.readline()
+                while 1:
+                    line = fin.readline()
+                    if string.strip(line) =="":
+                        break
+                    sample = string.split(line,'\t')[0]
+                    if sample not in samples:
+                        samples.append(sample)
+                        print sample, obj['path']
+                fin.close()
+            """
         intDic={}
         for sample in samples:
             #TCGA uuid handling
@@ -110,17 +128,18 @@ def cohort_variable (var, value, inDir, outDir, cancer, flog,REALRUN):
     oHandle.write( json.dumps( J, indent=-1 ) )
     oHandle.close()
 
-    if cancer in ["LUAD","LUSC"]:
-        derived_cancer="LUNG"
-        doDerivedCancer(var, outDir, cancer, derived_cancer, flog,REALRUN)
-    if cancer in ["COAD","READ"]:
-        derived_cancer="COADREAD"
-        doDerivedCancer(var, outDir, cancer, derived_cancer, flog,REALRUN)
-    if cancer in ["GBM","LGG"]:
-        derived_cancer="GBMLGG"
-        doDerivedCancer(var, outDir, cancer, derived_cancer, flog,REALRUN)
+    if doDerived:
+        if cancer in ["LUAD","LUSC"]:
+            derived_cancer="LUNG"
+            doDerivedCancer(var, outDir, cancer, derived_cancer, REALRUN)
+        if cancer in ["COAD","READ"]:
+            derived_cancer="COADREAD"
+            doDerivedCancer(var, outDir, cancer, derived_cancer, REALRUN)
+        if cancer in ["GBM","LGG"]:
+            derived_cancer="GBMLGG"
+            doDerivedCancer(var, outDir, cancer, derived_cancer, REALRUN)
 
-def doDerivedCancer( var, outDir, cancer, derived_cancer, flog,REALRUN):
+def doDerivedCancer( var, outDir, cancer, derived_cancer, REALRUN):
     if derived_cancer =="":
         return
     
