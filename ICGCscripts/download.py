@@ -1,49 +1,41 @@
 #!/usr/bin/env python
-"""
-Download ICGC datasets.
-"""
 
-import sys, os, argparse, string, json
-from icgcLib import *
+bigDir = "/inside/depot/icgcFiles/"
+smallDir = "/data/TCGA/icgcFiles/"
 
-def downloadUrl(project, repoName):
-    return repInfo['download'] + repInfo['release'] + '/Projects/' + project + '/' + repoName+"."+project+'.tsv.gz'
+import os, string, subprocess
+from icgcLib import projects, icgcDataTypes
 
-def downloadIt(projects, dataTypes):
+def downloadUrl(project, dataType):
+    #https://dcc.icgc.org/api/v1/download?fn=/release_20/Projects/PACA-CA/copy_number_somatic_mutation.PACA-CA.tsv.gz
+    download ="https://dcc.icgc.org/api/v1/download?fn=/"
+    release = "release_20"
+    return download + release  + '/Projects/' + project + '/' + dataType +"."+project+'.tsv.gz'
+
+def downloadOriginals(projects, dataTypes):
     for p in projects:
         for t in dataTypes:
             url = downloadUrl(p, t)
             file = t + '.' + p + '.tsv.gz'
+            outdir = smallDir
+            if string.find(t,"meth_")!=-1:
+                outdir = bigDir
             try:
-                resp = subprocess.check_output(['curl', '--silent', '--fail', '-o', file, url])
+                resp = subprocess.check_output(['curl', '--silent', '--fail', '-o', outdir + file, url])
             except subprocess.CalledProcessError:
                 continue # TODO assuming the file does not exist
 
             try:
-                resp = subprocess.check_output(['curl', '--silent',  '-o',file, url])
+                print url
+                print outdir +file
+                resp = subprocess.check_output(['curl', '--silent',  '-o',outdir + file, url])
             except subprocess.CalledProcessError:
                 error('Curl call failed for file: ' + file)
                 continue
 
-            info('downloaded: ' + file)
-
-def downloadOriginals():
-    """
-    Download *.gz files from the repository to the relative directory specified.
-    Files are selected based on icgcDataTypes and projects.
-    """
-    os.chdir(dirOut)
-
-    downloadIt(projects, icgcDataTypes)
-    #downloadIt(tcgaProjects, tcgaDataTypes)
+            print 'downloaded: ' + file
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Download ICGC datasets.')
-    parser.add_argument('--dirOut', metavar="Directory to write original files from ICGC.", default=dirs.orig)
-    args = parser.parse_args()
-    dirOut = args.dirOut
-
-    initIcgcLib()
-    downloadOriginals()
-
-    os.system("gunzip -f "+dirs.orig+"/*gz")
+    downloadOriginals(projects, icgcDataTypes)
+    os.system("gunzip -f "+smallDir+"*gz")
+    os.system("gunzip -f "+bigDir+"*gz")

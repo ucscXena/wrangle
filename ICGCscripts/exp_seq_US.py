@@ -12,7 +12,7 @@ def outputMatrix(outfile, matrix, row, column, Garray, Sarray):
         values=[]
         gene = Garray[i]
         for j in range (0, column):
-            values.append(string(matrix[i][j]))
+            values.append(str(matrix[i][j]))
         line =gene +"\t"+string.join(values,"\t")+"\n"
         fout.write(line)
     fout.close()
@@ -22,7 +22,7 @@ def buildMatrix(infile, outfile):
     samples={}
     genes ={}
     matrix =[]
-    lowest =0
+    lowest =1
 
     sampleFile ="tmpSamples"
     geneFile ="tmpGenes"
@@ -56,13 +56,12 @@ def buildMatrix(infile, outfile):
 
     fin =open(infile,'r')
     while 1:
-        line = fin.readline()
+        line = fin.readline()[:-1]
         if line =="":
             break
         sample, gene, value = string.split(line,'\t')
-        print value
         value = float(value)
-        if value < lowest:
+        if value < lowest and value !=0:
             lowest =value
         sampleP = samples[sample]
         geneP = genes[gene]
@@ -89,4 +88,5 @@ if len (sys.argv[:])!=3:
 
 infile = sys.argv[1]
 outfile = sys.argv[2]
-buildMatrix(infile, outfile)
+low = buildMatrix(infile, outfile)
+print low
