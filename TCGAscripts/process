@@ -18,6 +18,10 @@ cd /inside/home/jzhu/cgDataJing/scripts/
 
 python runFlattenTCGA.py --inDir=/inside/home/jzhu/cgDataJing/TCGAscripts/preFreezeCAVM/TCGA/PANCAN/ --outDir=data_flatten/public/TCGA/
 
+#autoStateOrder
+python ../support/autoStateOrderFeatureFile.py /data/TCGA/CAVM/public/TCGA/TCGA.PANCAN.sampleMap/PANCAN_clinicalMatrix new /data/TCGA/CAVM/public/TCGA/TCGA.PANCAN.sampleMap/PANCAN_clinicalFeature
+mv new /data/TCGA/CAVM/public/TCGA/TCGA.PANCAN.sampleMap/PANCAN_clinicalFeature
+
 #no need to run anymore
 #python runFlattenTCGA.py --inDir=/inside/home/jzhu/cgDataJing/TCGAscripts/preFreezeCAVM/TCGA/PANCAN12/ --outDir=data_flatten/public/TCGA/
 

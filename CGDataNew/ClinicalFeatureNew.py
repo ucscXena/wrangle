@@ -8,7 +8,6 @@ class ClinicalFeatureNew():
     def __init__ (self, rFHandle,name):
         # return emptySelf if fail to initiate
         self.__name=""
-        self.__FEATURE=0
         self.__FEATUREs=[]
         self.__DATA={}
         self.__CONTROLVOC =["shortTitle","longTitle",
@@ -51,7 +50,6 @@ class ClinicalFeatureNew():
                 continue
             if  key not in self.__CONTROLVOC:
                 continue
-            self.__FEATURE=self.__FEATURE+1
             if feature not in self.__FEATUREs:
                 self.__FEATUREs.append(feature)
                 self.__DATA[feature]={}
@@ -95,6 +93,7 @@ class ClinicalFeatureNew():
 
     def isValid(self):
         return self.__VALID
+
     def getShortTitle(self,feature):
         if feature in self.__FEATUREs:
             if self.__DATA[feature].has_key("shortTitle"):
@@ -146,6 +145,11 @@ class ClinicalFeatureNew():
         
     def getFeatures(self):
         return copy.deepcopy(self.__FEATUREs)
+
+    def addFeature (self, feature):
+        if feature not in self.__FEATUREs:
+            self.__DATA[feature]={}
+            self.__FEATUREs.append(feature)
 
     def setFeatureShortTitle(self, feature, shortTitle):
         if feature not in self.__FEATUREs:
@@ -240,7 +244,6 @@ class ClinicalFeatureNew():
             print "pop from clinicalFeature due to empty state", feature
             self.__DATA.pop(feature)
             self.__FEATUREs.remove(feature)
-            self.__FEATURE=self.__FEATURE-1
             
     def removeFeatures(self, features):
         for feature in features:
@@ -248,7 +251,6 @@ class ClinicalFeatureNew():
                 continue
             self.__DATA.pop(feature)
             self.__FEATUREs.remove(feature)
-            self.__FEATURE=self.__FEATURE-1
 
     def replaceFeatureName(self, oldName, newName):
         if oldName ==newName:
@@ -369,7 +371,6 @@ class ClinicalFeatureNew():
         for feature in allFeatures:
             if feature not in self.__FEATUREs:
                 self.__FEATUREs.append(feature)
-                self.__FEATURE = self.__FEATURE+1
                 self.__DATA[feature]={}
         return
     
