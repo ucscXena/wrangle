@@ -494,7 +494,7 @@ class ClinicalFeatureNew():
         return
     
     def store(self, fout):
-        fout.write("#feature\tattribute\tvalue\n")
+        fout.write("feature\tattribute\tvalue\n")
         for feature in self.__FEATUREs:
             if self.__DATA[feature].has_key("shortTitle"):
                 fout.write(feature+"\tshortTitle\t"+self.__DATA[feature]["shortTitle"]+"\n")
@@ -512,10 +512,6 @@ class ClinicalFeatureNew():
                     fout.write("\""+self.__DATA[feature]["stateOrder"][-1]+"\"\n")
             if self.__DATA[feature].has_key("valueType") and self.__DATA[feature]["valueType"]=="float" : 
                 fout.write(feature+"\tvalueType\tfloat\n")
-            if self.__DATA[feature].has_key("priority"):
-                fout.write(feature+"\tpriority\t"+self.__DATA[feature]["priority"]+"\n")
-            if self.__DATA[feature].has_key("visibility"):
-                fout.write(feature+"\tvisibility\t"+self.__DATA[feature]["visibility"]+"\n")
             if self.__DATA[feature].has_key("stateOrderRelax"):
                 fout.write(feature+"\tstateOrderRelax\t"+self.__DATA[feature]["stateOrderRelax"]+"\n")
             if self.__DATA[feature].has_key("sameAs"):
