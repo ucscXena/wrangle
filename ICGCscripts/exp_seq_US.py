@@ -22,7 +22,6 @@ def buildMatrix(infile, outfile):
     samples={}
     genes ={}
     matrix =[]
-    lowest =1
 
     sampleFile ="tmpSamples"
     geneFile ="tmpGenes"
@@ -52,7 +51,7 @@ def buildMatrix(infile, outfile):
         gene_array.append("")
         
     for i in range(0,len(genes)):
-        matrix.append(gene_array)
+        matrix.append(list(gene_array))
 
     fin =open(infile,'r')
     while 1:
@@ -61,8 +60,6 @@ def buildMatrix(infile, outfile):
             break
         sample, gene, value = string.split(line,'\t')
         value = float(value)
-        if value < lowest and value !=0:
-            lowest =value
         sampleP = samples[sample]
         geneP = genes[gene]
         matrix[geneP][sampleP]= value
@@ -80,7 +77,6 @@ def buildMatrix(infile, outfile):
         Garray[genes[gene]]=gene
 
     outputMatrix(outfile, matrix, len(genes),len(samples), Garray, Sarray)
-    return lowest
 
 if len (sys.argv[:])!=3:
     print "python exp_seq_US.py infile outfile"
@@ -88,5 +84,4 @@ if len (sys.argv[:])!=3:
 
 infile = sys.argv[1]
 outfile = sys.argv[2]
-low = buildMatrix(infile, outfile)
-print low
+buildMatrix(infile, outfile)

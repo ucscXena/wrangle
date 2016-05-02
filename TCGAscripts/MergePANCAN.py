@@ -155,8 +155,6 @@ def processClin (filename, dir,outDir, CANCER,flog, REALRUN):
                 if os.path.exists(featureFile):
                     clinFeature = ClinicalFeatureNew.ClinicalFeatureNew(featureFile,"tmpName")
                     longTitle= clinFeature.getLongTitle(feature)
-                    if longTitle and string.find(longTitle,"_DEPRECATED_")!=-1:
-                        continue
                 
                 fin = open(file,'r')
                 POS = 0
@@ -190,11 +188,8 @@ def processClin (filename, dir,outDir, CANCER,flog, REALRUN):
             
             if TCGAUtil.featurePriority[CANCER].has_key(feature):
                 cfout =open(outDir+"/"+CANCER+"/"+feature+"_"+CANCER+"_clinFeature","w")
-                cfout.write("#feature\tattribute\tvalue\n")
+                cfout.write("feature\tattribute\tvalue\n")
                 featureConfig=1
-                priority= TCGAUtil.featurePriority[CANCER][feature]
-                cfout.write(feature+"\tpriority\t"+str(priority)+"\n")
-                cfout.write(feature+"\tvisibility\ton\n")
 
             stateOrder=None
             if TCGAUtil.featureStateOrder.has_key(feature):
