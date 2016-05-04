@@ -317,6 +317,7 @@ def processMutationData (filename, dir, outDir, cancer,flog, REALRUN):
         mutation_wustlSON(J,cancer,genelevel)
     commonJSON(J, cancer)
     J["dataSubType"]="somatic mutation (SNPs and small INDELs)"
+    J["assembly"]="hg19"
     fout.write(json.dumps(J,indent=-1))
     fout.close()
 
@@ -355,18 +356,6 @@ def processMatrix (filename, dir,outDir, cancer,flog, REALRUN, memVersion = Fals
     if REALRUN:
         root = "/data/TCGA/"
         os.system("python mergeGenomicMatrixFiles_memEfficient.py "+outfile+" "+root+" " + string.join(inFiles,' '))
-        #if memVersion:
-        #    os.system("python mergeGenomicMatrixFiles_memEfficient.py "+outfile+" "+string.join(inFiles,' '))
-        #else:
-        #    genes={}
-        #    samples={}
-        #    dataMatrix=[]
-        #
-        #    for infile in inFiles:
-        #        mergeGenomicMatrixFiles.header (samples, infile)
-        #    for infile in inFiles:
-        #        mergeGenomicMatrixFiles.process(genes, samples, dataMatrix, infile)
-        #    mergeGenomicMatrixFiles.outputMatrix(dataMatrix, samples, genes, outfile) 
 
     J={}
     fout = open(outfile+".json","w")
