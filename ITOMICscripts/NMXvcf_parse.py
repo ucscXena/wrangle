@@ -9,10 +9,6 @@ def findSamples(vcffile):
     return vcf_reader.samples
 
 def EXP_data (vcffile, sample, outdir, sampleLabel):
-    if sample not in samples:
-        print "bad sample name"
-        sys.exi()
-
     parseIsoformGeneLabel = lambda x: string.split(x,'/')
     EXP_I_PCT_dic ={}
     EXP_I_CNT_dic ={}
@@ -52,21 +48,19 @@ def EXP_data (vcffile, sample, outdir, sampleLabel):
 
     fin.close()
 
-    output_dic (sampleLabel, "IsoPct", "transcript expression RNAseq", EXP_I_PCT_dic, outdir+ sample+"_EXP_I_PCT")
-    output_dic (sampleLabel, "expected_count",  "transcript expression RNAseq", EXP_I_CNT_dic, outdir+ sample+"_EXP_I_CNT")
-    output_dic (sampleLabel, "tpm",  "transcript expression RNAseq", EXP_I_TPM_dic, outdir+ sample+"_EXP_I_TPM")
-    output_dic (sampleLabel, "fpkm",  "transcript expression RNAseq", EXP_I_FPKM_dic, outdir+ sample+"_EXP_I_FPKM")
-    output_dic (sampleLabel, "expected_count",  "gene expression RNAseq", EXP_G_CNT_dic, outdir+ sample+"_EXP_G_CNT")
-    output_dic (sampleLabel, "tpm",  "gene expression RNAseq", EXP_G_TPM_dic, outdir+ sample+"_EXP_G_TPM")
-    output_dic (sampleLabel, "fpkm",  "gene expression RNAseq", EXP_G_FPKM_dic, outdir+ sample+"_EXP_G_FPKM")
+    output_dic (sampleLabel, "IsoPct", "transcript expression RNAseq", EXP_I_PCT_dic, outdir+ sampleLabel+"_EXP_I_PCT")
+    output_dic (sampleLabel, "expected_count",  "transcript expression RNAseq", EXP_I_CNT_dic, outdir+ sampleLabel+"_EXP_I_CNT")
+    output_dic (sampleLabel, "tpm",  "transcript expression RNAseq", EXP_I_TPM_dic, outdir+ sampleLabel+"_EXP_I_TPM")
+    output_dic (sampleLabel, "fpkm",  "transcript expression RNAseq", EXP_I_FPKM_dic, outdir+ sampleLabel+"_EXP_I_FPKM")
+    output_dic (sampleLabel, "expected_count",  "gene expression RNAseq", EXP_G_CNT_dic, outdir+ sampleLabel+"_EXP_G_CNT")
+    output_dic (sampleLabel, "tpm",  "gene expression RNAseq", EXP_G_TPM_dic, outdir+ sampleLabel+"_EXP_G_TPM")
+    output_dic (sampleLabel, "fpkm",  "gene expression RNAseq", EXP_G_FPKM_dic, outdir+ sampleLabel+"_EXP_G_FPKM")
 
 
 def CNV_data (vcffile, sampleTumor, sampleNormal, outdir, sampleLabel):
-    if sampleTumor not in samples or sampleNormal not in samples:
-        print "bad sample name"
-        sys.exit()
-
-    parseIsoformGeneLabel = lambda x: string.split(x,'/')
+    output = outdir+ sampleLabel+"_CNV"
+    fout = open(output,'w')
+    fout.write(string.join(["chr", "start", "end", "TUMOR_CNV_RC", "TUMOR_AF", "TUMOR_AFN"],'\t')+'\n')
 
     fin=open(vcffile, 'r')
     vcf_reader = vcf.Reader(fin)
@@ -92,9 +86,10 @@ def CNV_data (vcffile, sampleTumor, sampleNormal, outdir, sampleLabel):
             if TUMOR_AFN==0:
                 TUMOR_AF=""
                 TUMOR_AFN=""
-            print chr, start, end, TUMOR_CNV_RC, TUMOR_AF, TUMOR_AFN
+            fout.write( string.join([chr, str(start), str(end), str(TUMOR_CNV_RC), str(TUMOR_AF), str(TUMOR_AFN)],'\t')+'\n')
 
     fin.close()
+
 
 def output_dic (sample, unit, dataSubType, dataDic, file):
     fout=open(file,'w')
@@ -111,15 +106,31 @@ def output_dic (sample, unit, dataSubType, dataDic, file):
     fout.write( json.dumps( j, indent=-1 ) )
     fout.close()
 
-vcffile = "DNARNA"
-sampleTumorRNA = "TUMOR_RNA"
-sampleTumor = "TUMOR"
-sampleNormal = "NORMAL"
-sampleLabel = "13-1-B1_RNA"
+if len(sys.argv[:])!=3:
+    print "python NMXvcf_parse.py vcf dataType(EXP,CNV)"
+    sys.exit()
+
+vcffile = sys.argv[1]
+dataType = sys.argv[2]
 outdir ="./"
 
 samples =  findSamples(vcffile)
 print samples
 
-#EXP_data(vcffile, sampleTumorRNA, outdir, sampleLabel)
-CNV_data(vcffile, sampleTumor, sampleNormal, outdir, sampleLabel)
+sampleTumorRNA = "TUMOR_RNA"
+sampleTumor = "TUMOR"
+sampleNormal = "NORMAL"
+sampleLabel = "13-1-B1"
+
+if sampleTumor not in samples or sampleNormal not in samples:
+    print "bad sample name"
+    sys.exit()
+
+if sampleTumorRNA not in samples:
+    print "bad sample name"
+    sys.exi()
+
+if dataType == "EXP":
+    EXP_data(vcffile, sampleTumorRNA, outdir, sampleLabel)
+elif dataType =="CNV":
+    CNV_data(vcffile, sampleTumor, sampleNormal, outdir, sampleLabel)

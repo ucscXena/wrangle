@@ -197,7 +197,7 @@ default_mutation = {
     "TGCT":["TCGA_TGCT_mutation_broad"],
     "THCA":["TCGA_THCA_mutation_broad"],
     "THYM":["TCGA_THYM_mutation_broad"],
-    "UCEC":["TCGA_UCEC_mutation_broad"],
+    "UCEC":["TCGA_UCEC_mutation_wustl"],
     "LCLL":[],
     "LCML":[],
     "MESO":["TCGA_MESO_mutation_bcgsc"],

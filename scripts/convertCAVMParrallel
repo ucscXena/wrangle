@@ -35,3 +35,5 @@ python convertCAVM.py --inDir=data_flatten/public/TCGA/THYM/  --outDir=CAVM/publ
 python convertCAVM.py --inDir=data_flatten/public/TCGA/UCEC/  --outDir=CAVM/public/TCGA/ --CAVM=1 --TCGA=1 --REALRUN=1 &
 python convertCAVM.py --inDir=data_flatten/public/TCGA/UCS/  --outDir=CAVM/public/TCGA/ --CAVM=1 --TCGA=1 --REALRUN=1 &
 python convertCAVM.py --inDir=data_flatten/public/TCGA/UVM/  --outDir=CAVM/public/TCGA/ --CAVM=1 --TCGA=1 --REALRUN=1 &
+python convertCAVM.py --inDir=data_flatten/public/TCGA/PANCAN/  --outDir=CAVM/public/TCGA/ --CAVM=1 --TCGA=1 --REALRUN=1 &
+python convertCAVM.py --inDir=data_flatten/public/TCGA/PANCAN12/  --outDir=CAVM/public/TCGA/ --CAVM=1 --TCGA=1 --REALRUN=1 &

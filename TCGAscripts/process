@@ -1,12 +1,10 @@
-
 cd /inside/home/jzhu/cgDataJing/TCGAscripts
 
 python run.py config log
 
 cd /inside/home/jzhu/cgDataJing/scripts/
 
-./flattenParrallel
-#python runFlattenTCGA.py --inDir=data/public/TCGA/ --outDir=data_flatten/public/TCGA/
+./flattenParrallel   #python runFlattenTCGA.py --inDir=data/public/TCGA/ --outDir=data_flatten/public/TCGA/
 
 cd /inside/home/jzhu/cgDataJing/TCGAscripts
 
@@ -25,18 +23,13 @@ mv new /data/TCGA/CAVM/public/TCGA/TCGA.PANCAN.sampleMap/PANCAN_clinicalFeature
 #no need to run anymore
 #python runFlattenTCGA.py --inDir=/inside/home/jzhu/cgDataJing/TCGAscripts/preFreezeCAVM/TCGA/PANCAN12/ --outDir=data_flatten/public/TCGA/
 
-./convertCAVMParrallel
-#python convertCAVM.py --inDir=data_flatten/public/TCGA/  --outDir=CAVM/public/TCGA/ --CAVM=1 --TCGA=1 --REALRUN=1
+./convertCAVMParrallel #python convertCAVM.py --inDir=data_flatten/public/TCGA/  --outDir=CAVM/public/TCGA/ --CAVM=1 --TCGA=1 --REALRUN=1
 
-python convertCAVM.py --inDir=data_flatten/public/TCGA/PANCAN/  --outDir=CAVM/public/TCGA/ --CAVM=1 --TCGA=1 --REALRUN=1 &
+#python convertCAVM.py --inDir=data_flatten/public/TCGA/PANCAN/  --outDir=CAVM/public/TCGA/ --CAVM=1 --TCGA=1 --REALRUN=1 &
 
-python virtualData.py "somatic mutation" mutationVector PANCAN_mutation CAVM/public/TCGA/
+python virtualData.py "somatic mutation" PANCAN_mutation CAVM/public/TCGA/
 
-python virtualData.py "somatic mutation" genomicMatrix PANCAN_mutation_gene CAVM/public/TCGA/
-#python xenaToMatrix.py PANCAN_mutation_gene PANCAN_mutation
-
-cp PANCAN_mutation_gene CAVM/public/TCGA/TCGA.PANCAN.sampleMap/
-
-cp PANCAN_mutation CAVM/public/TCGA/TCGA.PANCAN.sampleMap/
+mv PANCAN_mutation CAVM/public/TCGA/TCGA.PANCAN.sampleMap/
+mv PANCAN_mutation_gene CAVM/public/TCGA/TCGA.PANCAN.sampleMap/
 
 # change pancan mutation version manually
