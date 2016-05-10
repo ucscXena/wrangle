@@ -1,6 +1,5 @@
 import os, sys
 
-
 sys.path.insert(0, os.path.dirname(sys.argv[0])+"/../CGDataNew")
 from ClinicalMatrixNew import *
 from ClinicalFeatureNew import *
