@@ -2,7 +2,7 @@ import string,sys
 
 #return a dictionary of  hugo:[{(id,)(chr,), (start,), (end,)},]
 def parseGenePredToGene(fin):
-    dic={}
+    chromDic={}
     for line in fin.readlines():
         data = string.split(line[:-1],'\t')
         id =data[1]
@@ -11,24 +11,28 @@ def parseGenePredToGene(fin):
         start = data[4]
         end =data[5]
         hugo =data[12]
-        data['id']=id
-        data['chr']=chr
-        data['strand']=strand
-        data['start']= start
-        data['end']=end
+        item ={}
+        item['id']=id
+        item['chr']=chr
+        item['strand']=strand
+        item['start']= float(start)
+        item['end']=float(end)
+
+        if chr not in chromDic:
+            chromDic[chr]={}
+
+        dic = chromDic[chr]
+
         if hugo!="":
-            if hugo in dic:
-                dic[hugo].append(data)
-            else:
-                dic[hugo]=[data]
+            if hugo not in dic:
+                dic[hugo]=[]
+            dic[hugo].append(item)
+
     fin.close()
-    return dic 
+    return chromDic
 
 
-def parseProbeMapToGene(file):
-    dic={}
-    fin = open(file,'r')
+def parseProbeMapToGene(fin):
     fin.readline()
-    parseGenePredToGene(fin)
-    return dic 
+    return parseGenePredToGene(fin)
 
