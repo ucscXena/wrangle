@@ -9,7 +9,7 @@ import xenaVCF
 import probMap_genePred
 
 #annotation a SV : if SV cut within a gene +- Nbp
-def annotate_SV(chr, start, end, padding, annDic):
+def annotate_SV(chr, start, end, start_padding, end_padding, annDic):
     genes = []
     #gene annotation
     for hugo in annDic[chr].keys():
@@ -17,14 +17,20 @@ def annotate_SV(chr, start, end, padding, annDic):
             chrHugo = item['chr']
             startHugo = item ['start']
             endHugo = item['end']
+            strand = item['strand']
             if  chrHugo != chr:
                 continue
-            if start - padding <= endHugo and end +padding > startHugo:
-                if hugo not in genes:
-                    genes.append(hugo)
+            if strand =="+":
+                if start <= endHugo  + end_padding  and end  > startHugo - start_padding:
+                    if hugo not in genes:
+                        genes.append(hugo)
+            if strand =="-":
+                if start <= endHugo +start_padding  and end  > startHugo - end_padding:
+                    if hugo not in genes:
+                        genes.append(hugo)
     return genes
 
-def parse_BND (vcffile, padding, annDic):
+def parse_BND (vcffile, start_padding, end_padding, annDic):
     fin=open(vcffile, 'r')
     vcf_reader = vcf.Reader(fin)
     ret_data =[]
@@ -46,7 +52,7 @@ def parse_BND (vcffile, padding, annDic):
             end = start + len(record.REF) -1
             ref = record.REF
             alt = record.ALT[0]
-            genes = annotate_SV(chr, start, end, padding, annDic)
+            genes = annotate_SV(chr, start, end, start_padding, end_padding, annDic)
             for gene in genes:
                 data['chr']= chr
                 data['start']= start
@@ -103,7 +109,8 @@ fout = open(sys.argv[3],'w')
 sampleTumor = "TUMOUR"
 sampleNormal = "NORMAL"
 ann_url = "https://reference.xenahubs.net/download/gencode_good_hg19"
-sv_padding = 2000
+start_sv_padding = 2000
+end_sv_padding = 0
 
 stream = urllib2.urlopen(ann_url)
 annDic = probMap_genePred.parseProbeMapToGene(stream)
@@ -121,7 +128,7 @@ for infile in flist.readlines():
     tumorMetaData = xenaVCF.findSampleMetaData(vcffile,sampleTumor)
     sampleLabel = tumorMetaData['SampleName']
     if dataType =="BND":
-        xenaRecords=  parse_BND (vcffile, sv_padding, annDic)
+        xenaRecords=  parse_BND (vcffile, start_sv_padding, end_sv_padding,  annDic)
         outputputMutationVector (sampleLabel, xenaRecords, fout)
         os.system("rm -f "+ vcffile)
 
