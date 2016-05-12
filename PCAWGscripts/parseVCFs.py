@@ -9,7 +9,7 @@ import xenaVCF
 import probMap_genePred
 
 #annotation a SV : if SV cut within a gene +- Nbp
-def annotate_SV(chr, start, end, annDic):
+def annotate_SV(chr, start, end, padding, annDic):
     genes = []
     #gene annotation
     for hugo in annDic[chr].keys():
@@ -19,12 +19,12 @@ def annotate_SV(chr, start, end, annDic):
             endHugo = item['end']
             if  chrHugo != chr:
                 continue
-            if start <= endHugo and end > startHugo:
+            if start - padding <= endHugo and end +padding > startHugo:
                 if hugo not in genes:
                     genes.append(hugo)
     return genes
 
-def parse_BND (vcffile, annDic):
+def parse_BND (vcffile, padding, annDic):
     fin=open(vcffile, 'r')
     vcf_reader = vcf.Reader(fin)
     ret_data =[]
@@ -46,7 +46,7 @@ def parse_BND (vcffile, annDic):
             end = start + len(record.REF) -1
             ref = record.REF
             alt = record.ALT[0]
-            genes = annotate_SV(chr, start, end, annDic)
+            genes = annotate_SV(chr, start, end, padding, annDic)
             for gene in genes:
                 data['chr']= chr
                 data['start']= start
@@ -54,6 +54,7 @@ def parse_BND (vcffile, annDic):
                 data['ref']= ref
                 data['alt']= alt
                 data['gene']=gene
+                data['effect']="SV"
                 ret_data.append(data)
     fin.close()
     return ret_data
@@ -82,6 +83,7 @@ def outputputMutationVector (sample, dataList, fout):
         fout.write(str(item['ref'])+'\t')
         fout.write(str(item['alt'])+'\t')
         fout.write(str(item['gene'])+'\t')
+        fout.write(str(item['effect'])+'\t')
         fout.write('\n')
 
 def cleanPCAWGvcf(file): #stupid
@@ -101,6 +103,8 @@ fout = open(sys.argv[3],'w')
 sampleTumor = "TUMOUR"
 sampleNormal = "NORMAL"
 ann_url = "https://reference.xenahubs.net/download/gencode_good_hg19"
+sv_padding = 2000
+
 stream = urllib2.urlopen(ann_url)
 annDic = probMap_genePred.parseProbeMapToGene(stream)
 stream.close()
@@ -117,7 +121,7 @@ for infile in flist.readlines():
     tumorMetaData = xenaVCF.findSampleMetaData(vcffile,sampleTumor)
     sampleLabel = tumorMetaData['SampleName']
     if dataType =="BND":
-        xenaRecords=  parse_BND (vcffile, annDic)
+        xenaRecords=  parse_BND (vcffile, sv_padding, annDic)
         outputputMutationVector (sampleLabel, xenaRecords, fout)
         os.system("rm -f "+ vcffile)
 
