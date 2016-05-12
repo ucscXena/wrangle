@@ -2,11 +2,15 @@
 import sys, os, string
 import vcf, json, uuid
 import urllib2
-
 sys.path.insert(0, os.path.dirname(sys.argv[0])+"../support/")
-
 import xenaVCF
 import probMap_genePred
+
+sampleTumor = "TUMOUR"
+sampleNormal = "NORMAL"
+start_sv_padding = 2000
+end_sv_padding = 0
+ann_url = "https://reference.xenahubs.net/download/gencode_good_hg19"
 
 #annotation a SV : if SV cut within a gene +- Nbp
 def annotate_SV(chr, start, end, start_padding, end_padding, annDic):
@@ -36,7 +40,6 @@ def parse_BND (vcffile, start_padding, end_padding, annDic):
     ret_data =[]
     for record in vcf_reader:
         #print record.ALT, len(record.ALT), record.ALT[0].type 
-        data={}
         type =  record.ALT[0].type
         if type in ["BND"]:
             # assuming no filter is passing
@@ -54,6 +57,7 @@ def parse_BND (vcffile, start_padding, end_padding, annDic):
             alt = record.ALT[0]
             genes = annotate_SV(chr, start, end, start_padding, end_padding, annDic)
             for gene in genes:
+                data={}
                 data['chr']= chr
                 data['start']= start
                 data['end']= end
@@ -106,16 +110,9 @@ flist = open(sys.argv[1],'r')
 dataType = sys.argv[2]
 fout = open(sys.argv[3],'w')
 
-sampleTumor = "TUMOUR"
-sampleNormal = "NORMAL"
-ann_url = "https://reference.xenahubs.net/download/gencode_good_hg19"
-start_sv_padding = 2000
-end_sv_padding = 0
-
 stream = urllib2.urlopen(ann_url)
 annDic = probMap_genePred.parseProbeMapToGene(stream)
 stream.close()
-
 
 for infile in flist.readlines():
     infile = infile[:-1]
