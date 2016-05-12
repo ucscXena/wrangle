@@ -25,14 +25,14 @@ def buildLocalDir (dirname,method):
 
 def getData(tarball, localDir, method, suffixDic):
     filename = string.replace(string.split(tarball,"/")[-1],".tar.gz","")
-    os.system("s3cmd get --requester-pays -r --force "+ tarball +" "+localDir+"/")
+    os.system("s3cmd get --requester-pays --force "+ tarball +" "+localDir+"/")
     os.system("tar -zxf "+localDir+"/"+filename+".tar.gz -C "+localDir)
     os.system("rm "+localDir+"/"+filename+".tar.gz")
     for suffix in suffixDic[method]:
         datafile = localDir+"/"+filename+"/"+method+"/"+filename+suffix
-        os.system("mv "+ datafile+" "+localDir+"/"+method+"/")
+        os.system("mv -f "+ datafile+" "+localDir+"/"+method+"/")
+        print datafile
     os.system("rm -rf " +localDir+"/"+filename)
-    print datafile
 
 if len(sys.argv[:])!=3:
     print "python getTOILdata.py listinput localdir"
