@@ -48,6 +48,17 @@ def RSEM_tpm (inDir, outfile):
     geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT,dataSubType, geneParse)
     return
 
+def RSEM_expected_count (inDir, outfile):
+    PATHPATTERN= ".rsem_isoforms.results"
+    valuePOS=4
+    LOG2=1
+    UNIT = "expected_count"
+    theta=0
+    dataSubType="transcript expression RNAseq"
+    geneParse = lambda x: x
+    geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT,dataSubType, geneParse)
+    return
+
 def RSEM_Hugo_TOIL_norm_counts (inDir, outfile):
     PATHPATTERN= ".rsem.genes.norm_counts.hugo.tab"
     valuePOS=1
@@ -80,6 +91,18 @@ def RSEM_gene_fpkm (inDir, outfile):
     geneParse = lambda x: x
     geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT, dataSubType, geneParse)
     return
+
+def RSEM_gene_expected_count (inDir, outfile):
+    PATHPATTERN= ".rsem_genes.results"
+    valuePOS=4
+    LOG2=1
+    UNIT = "expected_count"
+    theta= 0
+    dataSubType="gene expression RNAseq"
+    geneParse = lambda x: x
+    geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT, dataSubType, geneParse)
+    return
+
 
 def Kallisto_est_counts (inDir, outfile):
     PATHPATTERN= ".abundance.tsv"
@@ -173,8 +196,13 @@ def geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT, dataSubT
     J["wrangler"]= "Xena scripts processed on "+ datetime.date.today().isoformat()
     J["dataSubType"]= dataSubType 
     if LOG2:
-        J["unit"]="log2("+UNIT+"+"+str(theta)+")"
-        J["wrangling_procedure"]= "Data (file names: *"+PATHPATTERN+") are downloaded, "+ UNIT+" values are extracted, log2(x+"+str(theta)+") transformed, and combined."
+        if theta !=0:
+            J["unit"]="log2("+UNIT+"+"+str(theta)+")"
+            J["wrangling_procedure"]= "Data (file names: *"+PATHPATTERN+") are downloaded, "+ UNIT+" values are extracted, log2(x+"+str(theta)+") transformed, and combined."
+        else:
+            J["unit"]="log2("+UNIT+")"
+            J["wrangling_procedure"]= "Data (file names: *"+PATHPATTERN+") are downloaded, "+ UNIT+" values are extracted, log2(x) transformed, and combined."
+
     else:
         J["unit"]=UNIT
         J["wrangling_procedure"]= "Data (file names: *"+PATHPATTERN+") are downloaded, "+ UNIT + " values are extracted and combined."
@@ -268,6 +296,8 @@ elif method =="RSEM_gene_tpm":
     RSEM_gene_tpm (inDir, sys.argv[2])
 elif method =="RSEM_gene_fpkm":
     RSEM_gene_fpkm (inDir, sys.argv[2])
+elif method =="RSEM_gene_expected_count":
+    RSEM_gene_expected_count (inDir, sys.argv[2])
 elif method =="Kallisto_est_counts":
     Kallisto_est_counts (inDir,sys.argv[2])
 elif method =="Kallisto_tpm":
@@ -276,11 +306,13 @@ elif method =="RSEM_tpm":
     RSEM_tpm (inDir,sys.argv[2])
 elif method =="RSEM_fpkm":
     RSEM_fpkm (inDir,sys.argv[2])
+elif method =="RSEM_expected_count":
+    RSEM_expected_count (inDir,sys.argv[2])
 elif method =="RSEM_IsoPct":
     RSEM_IsoPct (inDir,sys.argv[2])
 elif method =="RSEM_norm_counts":
     RSEM_norm_counts (inDir,sys.argv[2])
 else:
-    print "available method: RSEM_Hugo RSEM_gene_tpm RSEM_gene_fpkm Kallisto_est_counts Kallisto_tpm RSEM_tpm RSEM_fpkm RSEM_IsoPct RSEM_norm_counts"
+    print "available method: RSEM_Hugo RSEM_gene_tpm RSEM_gene_fpkm RSEM_gene_expected_count Kallisto_est_counts Kallisto_tpm RSEM_tpm RSEM_fpkm RSEM_expected_count RSEM_IsoPct RSEM_norm_counts"
     sys.exit()
 
