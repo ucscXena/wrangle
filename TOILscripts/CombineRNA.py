@@ -53,7 +53,7 @@ def RSEM_expected_count (inDir, outfile):
     valuePOS=4
     LOG2=1
     UNIT = "expected_count"
-    theta=0
+    theta=0.01
     dataSubType="transcript expression RNAseq"
     geneParse = lambda x: x
     geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT,dataSubType, geneParse)
@@ -97,7 +97,7 @@ def RSEM_gene_expected_count (inDir, outfile):
     valuePOS=4
     LOG2=1
     UNIT = "expected_count"
-    theta= 0
+    theta= 0.01
     dataSubType="gene expression RNAseq"
     geneParse = lambda x: x
     geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT, dataSubType, geneParse)
@@ -196,13 +196,8 @@ def geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT, dataSubT
     J["wrangler"]= "Xena scripts processed on "+ datetime.date.today().isoformat()
     J["dataSubType"]= dataSubType 
     if LOG2:
-        if theta !=0:
-            J["unit"]="log2("+UNIT+"+"+str(theta)+")"
-            J["wrangling_procedure"]= "Data (file names: *"+PATHPATTERN+") are downloaded, "+ UNIT+" values are extracted, log2(x+"+str(theta)+") transformed, and combined."
-        else:
-            J["unit"]="log2("+UNIT+")"
-            J["wrangling_procedure"]= "Data (file names: *"+PATHPATTERN+") are downloaded, "+ UNIT+" values are extracted, log2(x) transformed, and combined."
-
+        J["unit"]="log2("+UNIT+"+"+str(theta)+")"
+        J["wrangling_procedure"]= "Data (file names: *"+PATHPATTERN+") are downloaded, "+ UNIT+" values are extracted, log2(x+"+str(theta)+") transformed, and combined."
     else:
         J["unit"]=UNIT
         J["wrangling_procedure"]= "Data (file names: *"+PATHPATTERN+") are downloaded, "+ UNIT + " values are extracted and combined."
