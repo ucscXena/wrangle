@@ -1,0 +1,35 @@
+./download.py
+
+#US RNAseq
+#RNAseq US specimen level: exp_seq.*US.tsv
+#column 3, 8, 9
+cut -f 3,8,9 /data/TCGA/icgcFiles/exp_seq.*US.tsv | grep -v icgc_specimen_id > /data/TCGA/icgcFiles/pancan/tmp_exp_seq_specimen_US
+
+python exp_seq_US.py
+
+python ~/cgDataJing/support/samplingGenomicMatrix.py  exp_seq_specimen_US 100000 exp_seq_specimen_US_sampling
+
+#1e-8
+python ../support/Log2xplusTheta.py /data/TCGA/icgcFiles/pancan/exp_seq_specimen_US /data/TCGA/icgcFiles/pancan/tmp_exp_seq_specimen_US_log2 1e-8
+
+#stateOrder
+python ../support/autoStateOrderFeatureFile.py /data/TCGA/icgcFiles/pancan/donor.all_projects.phenotype_transfer_specimen new
+mv new
+
+python ~/cgDataJing/support/autoStateOrderFeatureFile.py  specimen.all_projects.phenotype new
+mv new
+
+
+#phenotype:
+manual : shared with PCAWG
+
+#SNV
+cd /data/TCGA/icgcFiles
+
+snv_parse.bash
+
+cat SNV.header SNV.xena > pancan/SNV.xena
+
+
+
+
