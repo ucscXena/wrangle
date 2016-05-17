@@ -2,7 +2,7 @@
 
 bigDir = "/inside/depot/icgcFiles/"
 smallDir = "/data/TCGA/icgcFiles/"
-release = "release_20"
+release = "release_21"
 
 import os, string, subprocess
 import config
@@ -47,11 +47,12 @@ def downloadSummary(dataTypes):
     for t in dataTypes:
         url = downloadSummaryUrl(t)
         file = t + '.all_projects.tsv.gz'
+        print file
         outdir = smallDir
         curlDownload(outdir, file, url)
 
 if __name__ == '__main__':
-    #downloadOriginals(config.projects, config.icgcDataTypes)
-    downloadSummary(config.icgcDataTypes)
+    downloadOriginals(config.projects, config.icgcDataTypes)
+    #downloadSummary(config.icgcDataTypes)
     os.system("gunzip -f "+smallDir+"*gz")
     os.system("gunzip -f "+bigDir+"*gz")

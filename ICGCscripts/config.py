@@ -27,9 +27,11 @@ projects = [ # ICGC projects
 "KIRC-US",
 "KIRP-US",
 "LAML-KR",
+"LAML-CN",
 "LAML-US",
 "LGG-US",
 "LIAD-FR",
+"LICA-CN",
 "LICA-FR",
 "LIHC-US",
 "LIHM-FR",
@@ -48,7 +50,7 @@ projects = [ # ICGC projects
 "PAAD-US",
 "PACA-AU",
 "PACA-CA",
-"PACA-IT",
+"PAEN-IT",
 "PAEN-AU",
 "PBCA-DE",
 "PRAD-CA",
@@ -74,14 +76,16 @@ icgcDataTypes = [ # only the dataset types of interest
     #'donor_exposure',
     #'donor_family',
     #'donor_therapy',
-    'copy_number_somatic_mutation',
+
     #'exp_array',
-    'exp_seq',
     #'mirna_seq',
     #'meth_array',
     #'meth_seq',
-    'protein_expression',
-    #'simple_somatic_mutation.open',
-    'structural_somatic_mutation',
-    'splice_variant'
+
+    #'copy_number_somatic_mutation',
+    'exp_seq',
+    #'protein_expression',
+    'simple_somatic_mutation.open',
+    #'structural_somatic_mutation',
+    #'splice_variant'
 ]
