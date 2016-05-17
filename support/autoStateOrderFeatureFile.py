@@ -37,9 +37,6 @@ if len(sys.argv[:])==4:
     clinFeatureFile = sys.argv[3]
     if os.path.exists(clinFeatureFile):
         clinFeature = ClinicalFeatureNew(clinFeatureFile,'feature')
-        #autoStateOrder(clinMatrix, clinFeature)
-        #fout = open(output,'w')
-        #clinFeature.store(fout)
     else:
         print sys.argv[3],"does not exist"
         sys.exit()

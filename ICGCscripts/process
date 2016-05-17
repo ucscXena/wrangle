@@ -1,21 +1,25 @@
 ./download.py
 
-#US RNAseq
+######US RNAseq
 #RNAseq US specimen level: exp_seq.*US.tsv
 #column 3, 8, 9
 cut -f 3,8,9 /data/TCGA/icgcFiles/exp_seq.*US.tsv | grep -v icgc_specimen_id > /data/TCGA/icgcFiles/pancan/tmp_exp_seq_specimen_US
 
-python ~/cgDataJing/exp_seq_US.py /data/TCGA/icgcFiles/pancan/tmp_exp_seq_specimen_US /data/TCGA/icgcFiles/pancan/exp_seq_specimen_US
+python ~/cgDataJing/ICGCscripts/exp_seq_US.py /data/TCGA/icgcFiles/pancan/tmp_exp_seq_specimen_US /data/TCGA/icgcFiles/pancan/exp_seq_specimen_US
 
 python ~/cgDataJing/support/samplingGenomicMatrix.py  /data/TCGA/icgcFiles/pancan/exp_seq_specimen_US 100000 /data/TCGA/icgcFiles/pancan/exp_seq_specimen_US_sampling
 
 #remove all zeros and find 1% rank #1e-8
-python ~/cgDataJing/support/Log2xplusTheta.py /data/TCGA/icgcFiles/pancan/exp_seq_specimen_US /data/TCGA/icgcFiles/pancan/exp_seq_specimen_US_log2 1e-8
+python ~/cgDataJing/support/Log2xplusTheta.py /data/TCGA/icgcFiles/pancan/exp_seq_specimen_US /data/TCGA/icgcFiles/pancan/tmp_exp_seq_specimen_US_log2 1e-8
 
+sed 2d /data/TCGA/icgcFiles/pancan/tmp_exp_seq_specimen_US_log2 > /data/TCGA/icgcFiles/pancan/exp_seq_specimen_US_log2
 
-#phenotype
+##### Phenotype
 manual : shared with PCAWG
 cut -f 1,2,5,6,7,8,9,15 donor.all_projects |sed -e 's/$/\tICGC/'> donor.all_projects.phenotype
+manual change feature to _cohort
+
+python  ~/cgDataJing/ICGCscripts/addPhenotypeByAPI.py /data/TCGA/icgcFiles/donor.all_projects.phenotype new
 
 #stateOrder
 python ../support/autoStateOrderFeatureFile.py /data/TCGA/icgcFiles/pancan/donor.all_projects.phenotype_transfer_specimen new

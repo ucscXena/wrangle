@@ -43,9 +43,7 @@ def getPrimarySite():
             dic [p]= J["primarySite"]
         except:
             dic[p]=""
-        print p, dic[p]
     return dic
-
 
 def getPrimaryDisease():
     projects = getProjects()
@@ -64,6 +62,5 @@ def getPrimaryDisease():
         except:
             pass
         dic[p]=disease
-        print p, dic[p]
     return dic
 
