@@ -53,7 +53,7 @@ def parseProbeMapToGene(fin):
         item['strand']=strand
         item['start']= float(start)
         item['end']=float(end)
-        item['hugo']= string.split(hugo,','):
+        item['hugo']= string.split(hugo,',')
 
         if id not in dic:
             dic[id]=[]

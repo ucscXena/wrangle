@@ -68,20 +68,20 @@ projects = [ # ICGC projects
 ]
 
 icgcDataTypes = [ # only the dataset types of interest
-    'sample',
-    'specimen',
-    'donor',
-    'donor_exposure',
-    'donor_family',
-    'donor_therapy',
+    #'sample',
+    #'specimen',
+    #'donor',
+    #'donor_exposure',
+    #'donor_family',
+    #'donor_therapy',
     'copy_number_somatic_mutation',
-    'exp_array',
+    #'exp_array',
     'exp_seq',
-    'mirna_seq',
-    'meth_array',
-    'meth_seq',
+    #'mirna_seq',
+    #'meth_array',
+    #'meth_seq',
     'protein_expression',
-    'simple_somatic_mutation.open',
+    #'simple_somatic_mutation.open',
     'structural_somatic_mutation',
     'splice_variant'
 ]
