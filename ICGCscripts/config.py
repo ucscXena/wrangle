@@ -1,73 +1,6 @@
-projects = [ # ICGC projects
-"ALL-US",
-"AML-US",
-"BLCA-CN",
-"BLCA-US",
-"BOCA-FR",
-"BOCA-UK",
-"BRCA-EU",
-"BRCA-UK",
-"BRCA-US",
-"BTCA-JP",
-"BTCA-SG",
-"CCSK-US",
-"CESC-US",
-"CLLE-ES",
-"CMDI-UK",
-"COAD-US",
-"COCA-CN",
-"DLBC-US",
-"EOPC-DE",
-"ESAD-UK",
-"ESCA-CN",
-"GACA-CN",
-"GBM-US",
-"HNSC-US",
-"KICH-US",
-"KIRC-US",
-"KIRP-US",
-"LAML-KR",
-"LAML-CN",
-"LAML-US",
-"LGG-US",
-"LIAD-FR",
-"LICA-CN",
-"LICA-FR",
-"LIHC-US",
-"LIHM-FR",
-"LINC-JP",
-"LIRI-JP",
-"LUAD-US",
-"LUSC-CN",
-"LUSC-KR",
-"LUSC-US",
-"MALY-DE",
-"MELA-AU",
-"NBL-US",
-"ORCA-IN",
-"OV-AU",
-"OV-US",
-"PAAD-US",
-"PACA-AU",
-"PACA-CA",
-"PAEN-IT",
-"PAEN-AU",
-"PBCA-DE",
-"PRAD-CA",
-"PRAD-UK",
-"PRAD-US",
-"READ-US",
-"RECA-CN",
-"RECA-EU",
-"SARC-US",
-"SKCA-BR",
-"SKCM-US",
-"STAD-US",
-"THCA-SA",
-"THCA-US",
-"UCEC-US",
-"WT-US"
-]
+import urllib2,sys,json
+
+MAX_projects =100
 
 icgcDataTypes = [ # only the dataset types of interest
     #'sample',
@@ -89,3 +22,48 @@ icgcDataTypes = [ # only the dataset types of interest
     #'structural_somatic_mutation',
     #'splice_variant'
 ]
+
+def getProjects():
+    projects=[]
+    url = 'https://dcc.icgc.org/api/v1/projects?size='+str(MAX_projects)
+    response = urllib2.urlopen(url).read()
+    J= json.loads(response)
+    for hit in J['hits']:
+        projects.append(hit['id'])
+    return projects
+
+def getPrimarySite():
+    projects = getProjects()
+    dic={}
+    for p in projects:
+        url = 'https://dcc.icgc.org/api/v1/projects/'+p
+        response = urllib2.urlopen(url).read()
+        J= json.loads(response)
+        try:
+            dic [p]= J["primarySite"]
+        except:
+            dic[p]=""
+        print p, dic[p]
+    return dic
+
+
+def getPrimaryDisease():
+    projects = getProjects()
+    dic={}
+    for p in projects:
+        url = 'https://dcc.icgc.org/api/v1/projects/'+p
+        response = urllib2.urlopen(url).read()
+        J= json.loads(response)
+        try:
+            disease = J["tumourType"]
+        except:
+            disease =""
+
+        try:
+            disease = disease +" : "+J["tumourSubtype"]
+        except:
+            pass
+        dic[p]=disease
+        print p, dic[p]
+    return dic
+

@@ -5,12 +5,12 @@
 #column 3, 8, 9
 cut -f 3,8,9 /data/TCGA/icgcFiles/exp_seq.*US.tsv | grep -v icgc_specimen_id > /data/TCGA/icgcFiles/pancan/tmp_exp_seq_specimen_US
 
-python exp_seq_US.py
+python ~/cgDataJing/exp_seq_US.py /data/TCGA/icgcFiles/pancan/tmp_exp_seq_specimen_US /data/TCGA/icgcFiles/pancan/exp_seq_specimen_US
 
-python ~/cgDataJing/support/samplingGenomicMatrix.py  exp_seq_specimen_US 100000 exp_seq_specimen_US_sampling
+python ~/cgDataJing/support/samplingGenomicMatrix.py  /data/TCGA/icgcFiles/pancan/exp_seq_specimen_US 100000 /data/TCGA/icgcFiles/pancan/exp_seq_specimen_US_sampling
 
-#1e-8
-python ../support/Log2xplusTheta.py /data/TCGA/icgcFiles/pancan/exp_seq_specimen_US /data/TCGA/icgcFiles/pancan/tmp_exp_seq_specimen_US_log2 1e-8
+#remove all zeros and find 1% rank #1e-8
+python ~/cgDataJing/support/Log2xplusTheta.py /data/TCGA/icgcFiles/pancan/exp_seq_specimen_US /data/TCGA/icgcFiles/pancan/exp_seq_specimen_US_log2 1e-8
 
 
 #phenotype

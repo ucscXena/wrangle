@@ -52,7 +52,7 @@ def downloadSummary(dataTypes):
         curlDownload(outdir, file, url)
 
 if __name__ == '__main__':
-    downloadOriginals(config.projects, config.icgcDataTypes)
+    downloadOriginals(config.getProjects(), config.icgcDataTypes)
     #downloadSummary(config.icgcDataTypes)
     os.system("gunzip -f "+smallDir+"*gz")
     os.system("gunzip -f "+bigDir+"*gz")
