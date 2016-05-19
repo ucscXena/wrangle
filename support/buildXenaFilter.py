@@ -1,7 +1,7 @@
 import string, os, sys
 import uuid, json
 
-def generateFilters (input,  column, states, cohort, outdir):
+def generateFilters (input,  column, states, filePrefix, cohort, outdir):
     def f1 (x): 
         if str.isalnum (x):
             return x
@@ -18,13 +18,13 @@ def generateFilters (input,  column, states, cohort, outdir):
             else:
                 cleaned.append(s)
         cState = string.join(cleaned,'')
-        fout = open(outdir+"filter_"+cState,'w')
+        fout = open(outdir+"filter_"+filePrefix+"_"+cState,'w')
         fout.write("sample\n")
         outfile[state]=fout
         #json
-        fout = open(outdir+"filter_"+cState+".json",'w')
+        fout = open(outdir+"filter_"+filePrefix+"_"+cState+".json",'w')
         J= buildJson(cohort,state)
-        fout.write( json.dumps( J, indent=-1 ) )
+        fout.write( json.dumps( J, indent=2 ) )
         fout.close()
 
     fin = open(input,'r')
@@ -69,8 +69,8 @@ def buildJson(cohort, state):
     J["label"]=state
     return J
 
-if len(sys.argv[:])!= 5:
-    print "python buildXenaFilter.py clinicalMatrix feature cohort(use_in_json) outputDir"
+if len(sys.argv[:])< 5:
+    print "python buildXenaFilter.py clinicalMatrix feature cohort(use_in_json) outputDir optional_filenamePrefix(e.g.GTEX->filter_GTEX_xxx)"
     sys.exit()
 
 input = sys.argv[1]
@@ -86,9 +86,13 @@ if not column:
 if outdir[-1]!="/":
     outdir=outdir+"/"
 
+filePrefix =""
+if len(sys.argv[:]) ==6:
+    filePrefix = sys.argv[5]
+
 output = str(uuid.uuid4())
 os.system("cut -f "+str(column+1)+" " +input +" |sed 1d | sort |uniq > "+ output)
 states = getStates(output)
 os.system("rm -f "+output)
 
-generateFilters (input,  column, states, cohort, outdir)
+generateFilters (input,  column, states, filePrefix, cohort, outdir)
