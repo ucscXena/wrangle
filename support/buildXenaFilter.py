@@ -9,20 +9,26 @@ def generateFilters (input,  column, states, filePrefix, cohort, outdir):
             return "_"
 
     outfile ={}
+    prefix = "filter_"
+    if filePrefix :
+        prefix = prefix +filePrefix+"_"
+
     for state in states:
-        cleaned =[]
-        for letter in state:
+        cleaned =["_"]
+        for i in range(0, len(state)):
+            letter = state[i]
             s = f1 (letter)
             if s =="_" and cleaned[-1]=="_":
-                pass
-            else:
-                cleaned.append(s)
-        cState = string.join(cleaned,'')
-        fout = open(outdir+"filter_"+filePrefix+"_"+cState,'w')
+                continue
+            cleaned.append(s)
+        if cleaned[-1]=="_":
+            cleaned = cleaned[:-1]
+        cState = string.join(cleaned[1:],'')
+        fout = open(prefix+cState,'w')
         fout.write("sample\n")
         outfile[state]=fout
         #json
-        fout = open(outdir+"filter_"+filePrefix+"_"+cState+".json",'w')
+        fout = open(prefix+cState+".json",'w')
         J= buildJson(cohort,state)
         fout.write( json.dumps( J, indent=2 ) )
         fout.close()
