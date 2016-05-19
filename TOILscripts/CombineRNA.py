@@ -53,7 +53,7 @@ def RSEM_expected_count (inDir, outfile):
     valuePOS=4
     LOG2=1
     UNIT = "expected_count"
-    theta=0.01
+    theta=1
     dataSubType="transcript expression RNAseq"
     geneParse = lambda x: x
     geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT,dataSubType, geneParse)
@@ -97,7 +97,7 @@ def RSEM_gene_expected_count (inDir, outfile):
     valuePOS=4
     LOG2=1
     UNIT = "expected_count"
-    theta= 0.01
+    theta= 1
     dataSubType="gene expression RNAseq"
     geneParse = lambda x: x
     geneRPKM (inDir, outfile, PATHPATTERN, valuePOS, LOG2, theta, UNIT, dataSubType, geneParse)

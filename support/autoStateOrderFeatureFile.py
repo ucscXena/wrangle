@@ -1,4 +1,4 @@
-import os, sys
+import os, sys, json
 
 sys.path.insert(0, os.path.dirname(sys.argv[0])+"/../CGDataNew")
 from ClinicalMatrixNew import *
@@ -42,8 +42,12 @@ if len(sys.argv[:])==4:
         sys.exit()
 else:
     clinFeature = ClinicalFeatureNew(None,'feature')
+    fout = open(output+".json",'w')
+    J={}
+    J["type"]="clinicalFeature"
+    fout.write(json.dumps(J, indent=2))
+    fout.close()
     
-if clinFeature:
-    autoStateOrder(clinMatrix, clinFeature)
-    fout = open(output,'w')
-    clinFeature.store(fout)
+autoStateOrder(clinMatrix, clinFeature)
+fout = open(output,'w')
+clinFeature.store(fout)
