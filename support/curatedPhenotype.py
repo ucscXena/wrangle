@@ -1,4 +1,4 @@
-import os, sys,json
+import os, sys,json,getopt
 
 sys.path.insert(0, os.path.dirname(sys.argv[0])+"/../CGDataNew")
 from ClinicalMatrixNew import *
@@ -24,6 +24,11 @@ def getCuratedPhenotype():
         "_gender":{
             "shortTitle":"gender",
             "longTitle":"gender",
+            "type":"category"
+        },
+        "_sample_type":{
+            "shortTitle":"sample type",
+            "longTitle":"sample type",
             "type":"category"
         },
         "_OS_IND":{
@@ -61,20 +66,32 @@ def curatedPhenotypeClinFeature (clinFeature):
             clinFeature.setFeatureValueType(feature, featureType)
     return
 
-if len(sys.argv[:]) <2:
-    print "python curatedPhenotype.py newClinFeature clinFeatureIn(optional)"
+
+#http://www.tutorialspoint.com/python/python_command_line_arguments.htm
+#https://docs.python.org/3.1/library/getopt.html
+try:
+    opts, args = getopt.getopt(sys.argv[1:],"",["run"])
+except getopt.GetoptError:
+    print "python curatedPhenotype.py originalClinFeature(optional) --run"
     sys.exit()
 
-output = sys.argv[1]
 
+if opts==[]:
+    print "python curatedPhenotype.py originalClinFeature(optional) --run"
+    print "add --run to execute"
+    print 
+    sys.exit()
+
+output = "newClinFeature"
 clinFeature = None
 
-if len(sys.argv[:])==3:
-    clinFeatureFile = sys.argv[2]
+
+if len(args)==1:
+    clinFeatureFile = args[0]
     if os.path.exists(clinFeatureFile):
         clinFeature = ClinicalFeatureNew(clinFeatureFile,'feature')
     else:
-        print sys.argv[3],"does not exist"
+        print args[0],"does not exist"
         sys.exit()
 else:
     clinFeature = ClinicalFeatureNew(None,'feature')
@@ -88,3 +105,4 @@ curatedPhenotypeClinFeature(clinFeature)
 
 fout = open(output,'w')
 clinFeature.store(fout)
+print "output:", output
