@@ -11,7 +11,11 @@ typeDic={
     "Splice_Site":2,
     "splice_acceptor_variant":4,
     "splice_donor_variant":4,
+    'splice_acceptor_variant&intron_variant':4,
+    'splice_donor_variant&intron_variant':4,
+    
     "splice_region_variant":4,
+    "splice_region_variant&intron_variant": 4,
     "missense_variant":5,
     "Missense_Mutation":5,
     "missense":5,
@@ -25,6 +29,7 @@ typeDic={
     "De_novo_Start_InFrame":6,
     "5_prime_UTR_premature_start_codon_gain_variant":6,
     "disruptive_inframe_deletion":7,
+    "disruptive_inframe_insertion":7,
     "In_Frame_Del":7,
     "inframe_deletion":7,
     "In_Frame_Ins":8, 
@@ -32,7 +37,7 @@ typeDic={
     "Indel":8,
     "RNA":9,
     "non_coding_exon_variant": 9,
-    "exon_variant":9, #non-coding 
+
     "Silent":100 ,##
     "synonymous_variant":100, ##
     "stop_retained_variant":100, ##
@@ -44,6 +49,7 @@ typeDic={
     "3'UTR":100,##
     "downstream_gene_variant":100, ##
     "upstream_gene_variant":100,##
+    "exon_variant":100, ##
     "intergenic_region":100, ##
     "intron_variant": 100, ##
     "Intron":100, ##
@@ -126,7 +132,7 @@ def output (outfile, samples, genes, dic):
 
 if __name__ == '__main__':
     if len(sys.argv[:]) < 3:
-        print "python xenaToMatrix.py matrixOUTPUT mafTypeFilen\n"
+        print "python xenaToMatrix.py matrixOut xenaFile(s)\n"
         sys.exit()
 
     outfile = sys.argv[1]

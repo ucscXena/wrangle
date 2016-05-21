@@ -16,10 +16,22 @@ sed 2d /data/TCGA/icgcFiles/pancan/tmp_exp_seq_specimen_US_log2 > /data/TCGA/icg
 
 ##### Phenotype
 manual : shared with PCAWG
+#specimen
+cut -f 1,7 /data/TCGA/icgcFiles/specimen.all_projects > /data/TCGA/icgcFiles/pancan/specimen.all_projects.phenotype
+
 cut -f 1,2,5,6,7,8,9,15 donor.all_projects |sed -e 's/$/\tICGC/'> donor.all_projects.phenotype
 manual change feature to _cohort
 
+#add primary disease and primary site
 python  ~/cgDataJing/ICGCscripts/addPhenotypeByAPI.py /data/TCGA/icgcFiles/donor.all_projects.phenotype new
+mv new /data/TCGA/icgcFiles/pancan/donor.all_projects.phenotype
+
+#clinical donor pushdown
+python ~/cgDataJing/support/clinicalPushDown.py /data/TCGA/icgcFiles/pancan/donor.all_projects.phenotype  /data/TCGA/PCAWG/mapping_icgcSpecimen_donor /data/TCGA/icgcFiles/pancan/donor.all_projects.phenotype_transfer_specimen
+
+#clinFeature
+python ../support/autoStateOrderFeatureFile.py /data/TCGA/icgcFiles/pancan/donor.all_projects.phenotype_transfer_specimen new /data/TCGA/icgcFiles/pancan/donor.all_projects.phenotype_transfer_specimen_clinFeature
+mv new 
 
 #stateOrder
 python ../support/autoStateOrderFeatureFile.py /data/TCGA/icgcFiles/pancan/donor.all_projects.phenotype_transfer_specimen new
