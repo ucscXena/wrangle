@@ -50,6 +50,7 @@ snv_parse.bash
 
 cat SNV.header SNV.xena > pancan/SNV.xena
 
-
+#SNV gene level --- not a good idea
+#python xenaToMatrix.py
 
 
