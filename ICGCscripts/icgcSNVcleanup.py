@@ -1,10 +1,13 @@
 import sys,os, string
 import urllib2
 
+sys.path.insert(0, os.path.dirname(sys.argv[0])+"/../support/")
+import probMap_genePred
+
 ensemblCanonical_url = "http://xena-probemap.s3.amazonaws.com/reference_master/ensemblCanonical"
 ensemblBasic_url ="http://xena-probemap.s3.amazonaws.com/reference_master/ensemblBasic"
 gencodeGene_url = "http://xena-probemap.s3.amazonaws.com/probemap-master/gencode.v19.annotation.gene.probemap"
-#gencodeTranscript_url = "http://xena-probemap.s3.amazonaws.com/probemap-master/gencode.v23.annotation.transcript.probemap"
+upstream =200
 
 typeRank ={
     "stop_gained":0,
@@ -26,6 +29,7 @@ typeRank ={
     "coding_sequence_variant":2,
     "3_prime_UTR_variant":3,
     "5_prime_UTR_variant":3,
+    "upstream_gene_variant":4,
     "exon_variant":4,
     "intragenic_variant":5
 }
@@ -52,7 +56,7 @@ def collectT(fin):
     fin.close()
     return transcripts
 
-def parseSNV(fin):
+def parseSNV(fin, emsemblGeneDic, upstreamDis):
     dic ={}
     for line in fin.readlines():
         data = string.split(line[:-1],'\t')
@@ -61,8 +65,23 @@ def parseSNV(fin):
         start = data[2]
         end = data[3]
         alt = data[5]
+        type = data[6]
         enGene = data[8]
         transcript = data[9]
+
+        #only keep upstreamDis variants:
+        if type =="upstream_gene_variant":
+            if enGene not in emsemblGeneDic:
+                print enGene, "bad eneGene"
+                continue
+            item = emsemblGeneDic[enGene]
+            if item['strand']=="+":
+                if int(end) < item['start']-upstreamDis:
+                    continue
+            if item['strand']=="-":
+                if int(start) > item['end']+upstreamDis:
+                    continue
+
         record ={}
         record[transcript]=data
         id = string.join([sample, chr, start, end, alt, enGene],"_")
@@ -96,11 +115,15 @@ basicTranscripts = collectT(fin)
 fin = urllib2.urlopen(gencodeGene_url)
 idToHugo = enemblIDtoHugo(fin)
 
-#fin = urllib2.urlopen(gencodeTranscript_url)
-#idToHugo.update(enemblIDtoHugo(fin))
+fin = urllib2.urlopen(gencodeGene_url)
+g = lambda key: string.split(key,'.')[0]
+emsemblGeneDic = probMap_genePred.parseProbeMapToGene(fin, g)
+
 
 fin = open(infile,'r')
-data = parseSNV(fin)
+#######parse
+data = parseSNV(fin, emsemblGeneDic, upstream)
+
 fout = open(outfile,'w')
 
 for key in data:

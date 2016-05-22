@@ -1,3 +1,8 @@
+#to use
+#sys.path.insert(0, os.path.dirname(sys.argv[0])+"../support/")
+#import probMap_genePred
+
+
 import string,sys
 
 #return a dictionary of  {chrom:
@@ -36,12 +41,14 @@ def parseGenePredToGene(fin):
 #id	gene	chrom	chromStart	chromEnd	strand
 #ENSG00000223972.5	DDX11L1	chr1	11869	14409	+
 
-def parseProbeMapToGene(fin):
+def parseProbeMapToGene(fin, idParserFunction=None):
     fin.readline()
     dic={}
     for line in fin.readlines():
         data = string.split(line[:-1],'\t')
         id =data[0]
+        if idParserFunction:
+            id = idParserFunction(id)
         chr=data[2]
         strand =data[5]
         start = data[3]
@@ -56,7 +63,6 @@ def parseProbeMapToGene(fin):
         item['hugo']= string.split(hugo,',')
 
         if id not in dic:
-            dic[id]=[]
             dic[id]=item
             
     fin.close()
