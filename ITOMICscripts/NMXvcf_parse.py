@@ -106,12 +106,13 @@ def output_dic (sample, unit, dataSubType, dataDic, file):
     fout.write( json.dumps( j, indent=-1 ) )
     fout.close()
 
-if len(sys.argv[:])!=3:
-    print "python NMXvcf_parse.py vcf dataType(EXP,CNV)"
+if len(sys.argv[:])!=4:
+    print "python NMXvcf_parse.py vcf dataType(EXP,CNV) sampleLabel"
     sys.exit()
 
 vcffile = sys.argv[1]
 dataType = sys.argv[2]
+sampleLabel = sys.argv[3]
 outdir ="./"
 
 samples =  findSamples(vcffile)
@@ -120,7 +121,6 @@ print samples
 sampleTumorRNA = "TUMOR_RNA"
 sampleTumor = "TUMOR"
 sampleNormal = "NORMAL"
-sampleLabel = "13-1-B1"
 
 if sampleTumor not in samples or sampleNormal not in samples:
     print "bad sample name"

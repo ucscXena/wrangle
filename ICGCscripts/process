@@ -16,11 +16,16 @@ sed 2d /data/TCGA/icgcFiles/pancan/tmp_exp_seq_specimen_US_log2 > /data/TCGA/icg
 
 ##### Phenotype
 manual : shared with PCAWG
-#specimen
+#manul specimen
 cut -f 1,7 /data/TCGA/icgcFiles/specimen.all_projects > /data/TCGA/icgcFiles/pancan/specimen.all_projects.phenotype
 
 cut -f 1,2,5,6,7,8,9,15 donor.all_projects |sed -e 's/$/\tICGC/'> donor.all_projects.phenotype
 manual change feature to _cohort
+
+#manul survival
+cut -f 1,6,17 ../donor.all_projects |sed 's/$/\tdays/' > new
+manual change feature to _EVENT _TIME_TO_EVEN _TIME_TO_EVENT_UNIT
+cut -f 1,3,4,5 new  > donor.all_projects.overallSurvival_transfer_specimen
 
 #add primary disease and primary site
 python  ~/cgDataJing/ICGCscripts/addPhenotypeByAPI.py /data/TCGA/icgcFiles/donor.all_projects.phenotype new
@@ -48,7 +53,8 @@ cd /data/TCGA/icgcFiles
 
 snv_parse.bash
 
-cat SNV.header SNV.xena > pancan/SNV.xena
+cat SNV.header *.xena > SNV.xena
+mv
 
 #SNV gene level --- not a good idea
 #python xenaToMatrix.py
