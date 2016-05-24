@@ -2,6 +2,8 @@
 import sys, os, string
 import vcf, json
 
+refGeneTranscriptParse = lambda x: string.split(x,".")[0]
+
 def findSamples(vcffile):
     fin=open(vcffile, 'r')
     vcf_reader = vcf.Reader(fin)
@@ -24,7 +26,7 @@ def EXP_data (vcffile, sample, outdir, sampleLabel):
         type = record.ALT[0].type
         if type == "EXP":
             data = parseIsoformGeneLabel(record.INFO["ISO"])
-            isoform = data[0]
+            isoform = refGeneTranscriptParse(data[0])
             hugos= data[1:]
             #if record.INFO.has_key("CANONICAL"):
             #    print record.INFO["CANONICAL"]
