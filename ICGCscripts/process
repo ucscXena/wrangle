@@ -46,14 +46,13 @@ python ~/cgDataJing/support/autoStateOrderFeatureFile.py  specimen.all_projects.
 mv new
 
 
-
-
 #SNV
 cd /data/TCGA/icgcFiles
 
 snv_parse.bash
 
-cat SNV.header *.xena > SNV.xena
+cat SNV.header *.donor.xena > SNV.donor.xena
+cat SNV.header *.sp.xena > SNV.sp.xena
 mv
 
 #SNV gene level --- not a good idea

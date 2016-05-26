@@ -29,16 +29,13 @@ def totalDatasets(hubs):
   print "total datasets:", len(totalDatasets)
 
 
-hubs = ["https://genome-cancer.ucsc.edu/proj/public/xena",
+hubs = [
+  #"https://genome-cancer.ucsc.edu/proj/public/xena",
   "https://tcga.xenahubs.net",
   "https://icgc.xenahubs.net",
-  "https://toil.xenahubs.net"
+  "https://toil.xenahubs.net",
+  "https://ucscpublic.xenahubs.net"
 ]
 totalSamples(hubs)
 
-hubs = ["https://genome-cancer.ucsc.edu/proj/public/xena",
-  #"https://tcga.xenahubs.net",
-  #"https://icgc.xenahubs.net",
-  "https://toil.xenahubs.net"
-]
 totalDatasets(hubs)

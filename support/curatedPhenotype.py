@@ -76,17 +76,10 @@ except getopt.GetoptError:
     sys.exit()
 
 
-if opts==[]:
-    print "python curatedPhenotype.py originalClinFeature(optional) --run"
-    print "add --run to execute"
-    print 
-    sys.exit()
-
 output = "newClinFeature"
 clinFeature = None
 
-
-if len(args)==1:
+if len(args)!=0:
     clinFeatureFile = args[0]
     if os.path.exists(clinFeatureFile):
         clinFeature = ClinicalFeatureNew(clinFeatureFile,'feature')
