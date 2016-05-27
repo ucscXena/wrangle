@@ -4,17 +4,18 @@ def copyOriginalFile (filename):
     os.system("cp " +filename +" "+filename+"_BK")
     return filename+"_BK"
 
-def mapping (mfile):
+#new old
+#old MUST be uniq
+def mapping (mfile):  
     fin = open(mfile,'U')
     mapDic ={}
     for line in fin.readlines():
         data = string.split(line[:-1],'\t')
-        if len(data)==2:
-            xenaSampleID, sourceID = data
-            if sourceID not in mapDic:
-                mapDic [sourceID]=xenaSampleID
-            else:
-                print "ERROR", sourceID, "exists"
+        xenaSampleID, sourceID = data[0:2]
+        if sourceID not in mapDic:
+            mapDic [sourceID]=xenaSampleID
+        else:
+            print "ERROR", sourceID, "exists"
     fin.close()
     return mapDic
 
@@ -41,11 +42,18 @@ def switchFirstlineIDs (inputFile, outputFile, mapDic):
     fout.close()
 
 if len(sys.argv[:])!=3:
-    print "xenaIDreplaceGenomicMatrix.py matrixfile mappingfile(new current)"
+    print 
+    print "python xenaIDreplaceGenomicMatrix.py matrixfile mappingfile(new current)"
+    print "mapping file: no header"
+    print "              new_id old_id"
+    print 
     sys.exit()
 
 mappingfile = sys.argv[2]
-mapDic = mapping (mappingfile)
 inputfile = sys.argv[1]
+
 backupfile = copyOriginalFile(inputfile)
+
+mapDic = mapping (mappingfile)
 switchFirstlineIDs (backupfile, inputfile, mapDic)
+

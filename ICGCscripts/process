@@ -59,3 +59,5 @@ mv
 #python xenaToMatrix.py
 
 
+# id mapping
+cut -f 1,5 specimen.all_projects > mapping_icgc_specimen_donor
