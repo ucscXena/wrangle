@@ -1,5 +1,5 @@
 #https://github.com/jamescasbon/PyVCF
-import sys, os, string
+import sys, os, string, copy
 import vcf, json, uuid
 import urllib2
 sys.path.insert(0, os.path.dirname(sys.argv[0])+"/../support/")
@@ -9,7 +9,8 @@ import probMap_genePred
 sampleTumor = "TUMOUR"
 sampleNormal = "NORMAL"
 start_sv_padding = 2000
-end_sv_padding = 0
+promoter_padding = 1000
+end_padding = 0
 ann_url = "https://reference.xenahubs.net/download/gencode_good_hg19"
 
 #annotation a SV : if SV cut within a gene +- Nbp
@@ -34,6 +35,46 @@ def annotate_SV(chr, start, end, start_padding, end_padding, annDic):
                         genes.append(hugo)
     return genes
 
+def annotate_SNV_extended_exon (chr, start, end, start_padding, end_padding, annDic):
+    genes = []
+    #gene annotation
+    for hugo in annDic[chr].keys():
+        if hugo in genes:
+            continue
+        for item in annDic[chr][hugo]:
+            chrHugo = item['chr']
+            startHugo = item ['start']
+            endHugo = item['end']
+            strand = item['strand']
+            exonStarts = copy.deepcopy(item['exonStarts'])
+            exonEnds = copy.deepcopy(item['exonEnds'])
+            exonCount = item['exonCount']
+
+            if  chrHugo != chr:
+                continue
+
+            if strand =="+":
+                exonStarts[0]=exonStarts[0] - start_padding
+                exonEnds[-1]=exonEnds[-1]+end_padding
+
+            if strand =="-":
+                exonStarts[0] = exonStarts[0] - end_padding
+                exonEnds[-1] = exonEnds[-1] + start_padding
+
+            if start <= exonStarts[0] or end  > exonEnds[-1]: # outside the gene region
+                continue
+
+            for i in range (0, exonCount):
+                if start <= exonEnds[i]  and end  > exonStarts[i]:
+                    if hugo not in genes:
+                        genes.append(hugo)
+                        break
+
+            if hugo in genes:
+                break
+
+    return genes
+
 def parse_BND (vcffile, start_padding, end_padding, annDic):
     fin=open(vcffile, 'r')
     vcf_reader = vcf.Reader(fin)
@@ -55,7 +96,7 @@ def parse_BND (vcffile, start_padding, end_padding, annDic):
             end = start + len(record.REF) -1
             ref = record.REF
             alt = record.ALT[0]
-            genes = annotate_SV(chr, start, end, start_padding, end_padding, annDic)
+            genes =  (chr, start, end, start_padding, end_padding, annDic)
             for gene in genes:
                 data={}
                 data['chr']= chr
@@ -80,16 +121,45 @@ def parse_SNV (vcffile, start_padding, end_padding, annDic):
         if type in ["SNV"]:
             # assuming no filter is passing
             if record.FILTER and len(record.FILTER)!=0: 
-                print record, record.FILTER
+                #print record, record.FILTER
                 continue
-            continue
+
             chr = "chr" + record.CHROM
             start = record.POS
             end = start + len(record.REF) -1
             ref = record.REF
             alt = record.ALT[0]
-            genes = annotate_SV(chr, start, end, start_padding, end_padding, annDic)
-            for gene in genes:
+            effect =""
+            aa =""
+
+            #promoter, UTR, noncoding 
+            all_genes = annotate_SNV_extended_exon  (chr, start, end, start_padding, end_padding, annDic)
+            
+            if len(all_genes) ==0:
+                continue
+
+            url = "http://www.cravat.us/rest/service/query?mutation="+chr+"_"+str(start)+"_+_"+ref+ "_" + str(alt)
+            cravat = urllib2.urlopen(url)
+            ann=  json.loads(cravat.read())
+            cravat.close()
+
+            if ann["HUGO symbol"]!="Non-Coding":
+                coding_genes = [ann["HUGO symbol"]]
+            else:
+                coding_genes = []
+            
+            #CRAVAT analysis
+            #http://www.cravat.us/help.jsp
+            #FI, FD, SG, SS, SL, II, ID, CS, MS, and SY.
+            if ann["Sequence ontology"]!="":
+                effect = ann["Sequence ontology"]
+                if effect in xenaVCF.CRAVAT_SO_code:
+                    effect = xenaVCF.CRAVAT_SO_code[effect]
+
+            if ann["Sequence ontology protein change"]!="":
+                aa = ann["Sequence ontology protein change"]
+            
+            for gene in coding_genes:
                 data={}
                 data['chr']= chr
                 data['start']= start
@@ -97,11 +167,26 @@ def parse_SNV (vcffile, start_padding, end_padding, annDic):
                 data['ref']= ref
                 data['alt']= alt
                 data['gene']=gene
-                data['effect']="SNV"
+                data['aa']= aa
+                data['effect']=effect
                 ret_data.append(data)
+
+            for gene in all_genes:
+                if gene not in coding_genes:
+                    data={}
+                    data['chr']= chr
+                    data['start']= start
+                    data['end']= end
+                    data['ref']= ref
+                    data['alt']= alt
+                    data['gene']=gene
+                    data['aa']= ""
+                    data['effect']=""
+                    ret_data.append(data)
+
+
     fin.close()
     return ret_data
-
 
 def output_dic (sample, unit, dataSubType, dataDic, file):
     fout=open(file,'w')
@@ -120,26 +205,22 @@ def output_dic (sample, unit, dataSubType, dataDic, file):
 
 def outputputMutationVector (sample, dataList, fout):
     for item in dataList:
-        fout.write(sample+'\t')
-        fout.write(item['chr']+'\t')
-        fout.write(str(item['start'])+'\t')
-        fout.write(str(item['end'])+'\t')
-        fout.write(str(item['ref'])+'\t')
-        fout.write(str(item['alt'])+'\t')
-        fout.write(str(item['gene'])+'\t')
-        fout.write(str(item['effect'])+'\t')
+        fout.write(sample)
+        fout.write('\t'+ item['chr'])
+        fout.write('\t'+ str(item['start']))
+        fout.write('\t'+ str(item['end']))
+        fout.write('\t'+ str(item['ref']))
+        fout.write('\t'+ str(item['alt']))
+        fout.write('\t'+ str(item['gene']))
+        fout.write(str('\t'+ item['effect']))
+        if ("aa" in item):
+            fout.write('\t'+str(item['aa']))
         fout.write('\n')
 
 def cleanSVPCAWGvcf(file): #stupid
     output = str(uuid.uuid4())
     os.system("grep -v ^##contig "+ file +" |grep -v ^##pcawg > "+output)
     return output
-
-def cpPCAWGvcf(file): #stupid
-    output = str(uuid.uuid4())
-    os.system("cp "+ file +" "+ output)
-    return output
-
 
 if len(sys.argv[:])!=4:
     print "python parseVCFs.py listFile(one_filename_perline) dataType(BND,SNV) outputfile"
@@ -150,8 +231,9 @@ dataType = sys.argv[2]
 fout = open(sys.argv[3],'w')
 
 stream = urllib2.urlopen(ann_url)
-annDic = probMap_genePred.parseProbeMapToGene(stream)
+annDic = probMap_genePred.parseGenePredToGene(stream)
 stream.close()
+
 
 for infile in flist.readlines():
     infile = infile[:-1]
@@ -165,13 +247,14 @@ for infile in flist.readlines():
         tumorMetaData = xenaVCF.findSampleMetaData(vcffile,sampleTumor)
         sampleLabel = tumorMetaData['SampleName']
         if dataType =="BND":
-            xenaRecords=  parse_BND (vcffile, start_sv_padding, end_sv_padding,  annDic)
+            xenaRecords=  parse_BND (vcffile, start_sv_padding, end_padding,  annDic)
             outputputMutationVector (sampleLabel, xenaRecords, fout)
 
     elif dataType == "SNV":
-        vcffile = cpPCAWGvcf(infile)
-        xenaRecords=  parse_SNV (vcffile, start_sv_padding, end_sv_padding,  annDic)
-        os.system("rm -f "+ vcffile)
+        sampleLabel = string.split(os.path.basename(infile),'.')[0] # stupid PCAWG SNV VCFS
+        print sampleLabel
+        xenaRecords=  parse_SNV (infile, promoter_padding, end_padding, annDic)
+        outputputMutationVector (sampleLabel, xenaRecords, fout)
 
 flist.close()
 fout.close()

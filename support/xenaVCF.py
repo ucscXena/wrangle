@@ -42,3 +42,16 @@ def printRecordInfo(vcf_record, vcf_reader):#vcf_record
             print key, vcf_record.INFO[key], infos[key]
         else:
             print key, vcf_record.INFO[key]
+
+#http://www.cravat.us/help.jsp
+CRAVAT_SO_code ={
+    "SY":"synonymous_variant",
+    "SL":"stop_lost",
+    "SG":"stop_gained",
+    "MS":"missense_variant",
+    "II":"inframe_insertion",
+    "FI":"Frame_Shift_Ins",
+    "ID":"inframe_deletion",
+    "FD":"Frame_Shift_Del",
+    "CS":"Complex Substitution"
+}
