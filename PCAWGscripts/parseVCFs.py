@@ -51,12 +51,12 @@ def annotate_SNV_extended_exon (chr, start, end, start_padding, end_padding, ann
             strand = item['strand']
 
             if strand =="+":
-                start <= startHugo - start_padding  or end  > endHugo + end_padding : # outside the gene region
-                continue
+                if start <= startHugo - start_padding  or end  > endHugo + end_padding : # outside the gene region
+                    continue
 
             if strand =="-":
-                start <= startHugo - end_padding  or end  > endHugo + start_padding : # outside the gene region
-                continue
+                if start <= startHugo - end_padding  or end  > endHugo + start_padding : # outside the gene region
+                    continue
 
             exonStarts = copy.deepcopy(item['exonStarts'])
             exonEnds = copy.deepcopy(item['exonEnds'])
@@ -149,22 +149,24 @@ def parse_SNV (vcffile, start_padding, end_padding, annDic):
             cravat = urllib2.urlopen(url)
             ann=  json.loads(cravat.read())
             cravat.close()
+            try:
+                if ann["HUGO symbol"]!="Non-Coding":
+                    coding_genes = [ann["HUGO symbol"]]
+                else:
+                    coding_genes = []
+                
+                #CRAVAT analysis
+                #http://www.cravat.us/help.jsp
+                #FI, FD, SG, SS, SL, II, ID, CS, MS, and SY.
+                if ann["Sequence ontology"]!="":
+                    effect = ann["Sequence ontology"]
+                    if effect in xenaVCF.CRAVAT_SO_code:
+                        effect = xenaVCF.CRAVAT_SO_code[effect]
 
-            if ann["HUGO symbol"]!="Non-Coding":
-                coding_genes = [ann["HUGO symbol"]]
-            else:
-                coding_genes = []
-            
-            #CRAVAT analysis
-            #http://www.cravat.us/help.jsp
-            #FI, FD, SG, SS, SL, II, ID, CS, MS, and SY.
-            if ann["Sequence ontology"]!="":
-                effect = ann["Sequence ontology"]
-                if effect in xenaVCF.CRAVAT_SO_code:
-                    effect = xenaVCF.CRAVAT_SO_code[effect]
-
-            if ann["Sequence ontology protein change"]!="":
-                aa = ann["Sequence ontology protein change"]
+                if ann["Sequence ontology protein change"]!="":
+                    aa = ann["Sequence ontology protein change"]
+            except:
+                coding_genes =[]
             
             for gene in coding_genes:
                 data={}
