@@ -43,26 +43,33 @@ def annotate_SNV_extended_exon (chr, start, end, start_padding, end_padding, ann
             continue
         for item in annDic[chr][hugo]:
             chrHugo = item['chr']
+            if  chrHugo != chr:
+                continue
+
             startHugo = item ['start']
             endHugo = item['end']
             strand = item['strand']
+
+            if strand =="+":
+                start <= startHugo - start_padding  or end  > endHugo + end_padding : # outside the gene region
+                continue
+
+            if strand =="-":
+                start <= startHugo - end_padding  or end  > endHugo + start_padding : # outside the gene region
+                continue
+
             exonStarts = copy.deepcopy(item['exonStarts'])
             exonEnds = copy.deepcopy(item['exonEnds'])
             exonCount = item['exonCount']
 
-            if  chrHugo != chr:
-                continue
 
             if strand =="+":
                 exonStarts[0]=exonStarts[0] - start_padding
-                exonEnds[-1]=exonEnds[-1]+end_padding
+                exonEnds[-1]=exonEnds[-1] + end_padding
 
             if strand =="-":
                 exonStarts[0] = exonStarts[0] - end_padding
                 exonEnds[-1] = exonEnds[-1] + start_padding
-
-            if start <= exonStarts[0] or end  > exonEnds[-1]: # outside the gene region
-                continue
 
             for i in range (0, exonCount):
                 if start <= exonEnds[i]  and end  > exonStarts[i]:
