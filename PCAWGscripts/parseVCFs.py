@@ -2,7 +2,7 @@
 import sys, os, string
 import vcf, json, uuid
 import urllib2
-sys.path.insert(0, os.path.dirname(sys.argv[0])+"../support/")
+sys.path.insert(0, os.path.dirname(sys.argv[0])+"/../support/")
 import xenaVCF
 import probMap_genePred
 
@@ -69,6 +69,40 @@ def parse_BND (vcffile, start_padding, end_padding, annDic):
     fin.close()
     return ret_data
 
+
+def parse_SNV (vcffile, start_padding, end_padding, annDic):
+    fin=open(vcffile, 'r')
+    vcf_reader = vcf.Reader(fin)
+    ret_data =[]
+    for record in vcf_reader:
+        #print record.ALT, len(record.ALT), record.ALT[0].type 
+        type =  record.ALT[0].type
+        if type in ["SNV"]:
+            # assuming no filter is passing
+            if record.FILTER and len(record.FILTER)!=0: 
+                print record, record.FILTER
+                continue
+            continue
+            chr = "chr" + record.CHROM
+            start = record.POS
+            end = start + len(record.REF) -1
+            ref = record.REF
+            alt = record.ALT[0]
+            genes = annotate_SV(chr, start, end, start_padding, end_padding, annDic)
+            for gene in genes:
+                data={}
+                data['chr']= chr
+                data['start']= start
+                data['end']= end
+                data['ref']= ref
+                data['alt']= alt
+                data['gene']=gene
+                data['effect']="SNV"
+                ret_data.append(data)
+    fin.close()
+    return ret_data
+
+
 def output_dic (sample, unit, dataSubType, dataDic, file):
     fout=open(file,'w')
     fout.write( "id\t"+sample+"\n")
@@ -96,14 +130,19 @@ def outputputMutationVector (sample, dataList, fout):
         fout.write(str(item['effect'])+'\t')
         fout.write('\n')
 
-def cleanPCAWGvcf(file): #stupid
+def cleanSVPCAWGvcf(file): #stupid
     output = str(uuid.uuid4())
     os.system("grep -v ^##contig "+ file +" |grep -v ^##pcawg > "+output)
     return output
 
+def cpPCAWGvcf(file): #stupid
+    output = str(uuid.uuid4())
+    os.system("cp "+ file +" "+ output)
+    return output
+
 
 if len(sys.argv[:])!=4:
-    print "python parseVCFs.py listFile(one_filename_perline) dataType(BND) outputfile"
+    print "python parseVCFs.py listFile(one_filename_perline) dataType(BND,SNV) outputfile"
     sys.exit()
 
 flist = open(sys.argv[1],'r')
@@ -116,17 +155,22 @@ stream.close()
 
 for infile in flist.readlines():
     infile = infile[:-1]
-    vcffile = cleanPCAWGvcf(infile)
-    if not xenaVCF.checkSample(vcffile, sampleTumor):
-        print sampleTumor, "bad sample name" 
-        os.system("rm -f "+ vcffile)
-        continue
-
-    tumorMetaData = xenaVCF.findSampleMetaData(vcffile,sampleTumor)
-    sampleLabel = tumorMetaData['SampleName']
     if dataType =="BND":
-        xenaRecords=  parse_BND (vcffile, start_sv_padding, end_sv_padding,  annDic)
-        outputputMutationVector (sampleLabel, xenaRecords, fout)
+        vcffile = cleanSVPCAWGvcf(infile)
+        if not xenaVCF.checkSample(vcffile, sampleTumor):
+            print sampleTumor, "bad sample name" 
+            os.system("rm -f "+ vcffile)
+            continue
+
+        tumorMetaData = xenaVCF.findSampleMetaData(vcffile,sampleTumor)
+        sampleLabel = tumorMetaData['SampleName']
+        if dataType =="BND":
+            xenaRecords=  parse_BND (vcffile, start_sv_padding, end_sv_padding,  annDic)
+            outputputMutationVector (sampleLabel, xenaRecords, fout)
+
+    elif dataType == "SNV":
+        vcffile = cpPCAWGvcf(infile)
+        xenaRecords=  parse_SNV (vcffile, start_sv_padding, end_sv_padding,  annDic)
         os.system("rm -f "+ vcffile)
 
 flist.close()
