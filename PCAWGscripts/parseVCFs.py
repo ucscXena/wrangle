@@ -62,7 +62,6 @@ def annotate_SNV_extended_exon (chr, start, end, start_padding, end_padding, ann
             exonEnds = copy.deepcopy(item['exonEnds'])
             exonCount = item['exonCount']
 
-
             if strand =="+":
                 exonStarts[0]=exonStarts[0] - start_padding
                 exonEnds[-1]=exonEnds[-1] + end_padding
@@ -118,6 +117,38 @@ def parse_BND (vcffile, start_padding, end_padding, annDic):
     return ret_data
 
 
+def cavat_annotate(chr, start, ref, alt, count):
+    coding_gene = None
+    effect = ""
+    aa = ""
+
+    #if count >10 :
+    #    return count, coding_gene, effect, aa
+    try:
+        url = "http://www.cravat.us/rest/service/query?mutation="+chr+"_"+str(start)+"_+_"+ref+ "_" + str(alt)
+        cravat = urllib2.urlopen(url)
+        ann=  json.loads(cravat.read())
+        cravat.close()
+
+        if ann["HUGO symbol"] and ann["HUGO symbol"]!="Non-Coding":
+            coding_gene = ann["HUGO symbol"]
+                
+        #CRAVAT analysis
+        #http://www.cravat.us/help.jsp
+        if ann["Sequence ontology"]!="":
+            effect = ann["Sequence ontology"]
+            if effect in xenaVCF.CRAVAT_SO_code:
+                effect = xenaVCF.CRAVAT_SO_code[effect]
+
+        if ann["Sequence ontology protein change"]!="":
+            aa = ann["Sequence ontology protein change"]
+
+        return count, coding_gene, effect, aa
+
+    except:
+        return cavat_annotate(chr, start, ref, alt, count +1)
+
+
 def parse_SNV (vcffile, start_padding, end_padding, annDic):
     fin=open(vcffile, 'r')
     vcf_reader = vcf.Reader(fin)
@@ -138,36 +169,28 @@ def parse_SNV (vcffile, start_padding, end_padding, annDic):
             alt = record.ALT[0]
             effect =""
             aa =""
+            try:
+                VAF = record.INFO["VAF"]
+            except KeyError:
+                VAF=""
 
             #promoter, UTR, noncoding 
             all_genes = annotate_SNV_extended_exon  (chr, start, end, start_padding, end_padding, annDic)
-            
+            coding_genes =[]
+
             if len(all_genes) ==0:
                 continue
 
-            url = "http://www.cravat.us/rest/service/query?mutation="+chr+"_"+str(start)+"_+_"+ref+ "_" + str(alt)
-            cravat = urllib2.urlopen(url)
-            ann=  json.loads(cravat.read())
-            cravat.close()
-            try:
-                if ann["HUGO symbol"]!="Non-Coding":
-                    coding_genes = [ann["HUGO symbol"]]
-                else:
-                    coding_genes = []
-                
-                #CRAVAT analysis
-                #http://www.cravat.us/help.jsp
-                #FI, FD, SG, SS, SL, II, ID, CS, MS, and SY.
-                if ann["Sequence ontology"]!="":
-                    effect = ann["Sequence ontology"]
-                    if effect in xenaVCF.CRAVAT_SO_code:
-                        effect = xenaVCF.CRAVAT_SO_code[effect]
+            count =0
+            r = cavat_annotate(chr, start, ref, alt, count)
+            count, coding_gene, effect, aa = r
 
-                if ann["Sequence ontology protein change"]!="":
-                    aa = ann["Sequence ontology protein change"]
-            except:
-                coding_genes =[]
-            
+            if coding_gene != '' :
+                coding_genes = [coding_gene]
+            if count >1:
+                url = "http://www.cravat.us/rest/service/query?mutation="+chr+"_"+str(start)+"_+_"+ref+ "_" + str(alt)
+                print count, url
+
             for gene in coding_genes:
                 data={}
                 data['chr']= chr
@@ -178,6 +201,7 @@ def parse_SNV (vcffile, start_padding, end_padding, annDic):
                 data['gene']=gene
                 data['aa']= aa
                 data['effect']=effect
+                data['VAF']=VAF
                 ret_data.append(data)
 
             for gene in all_genes:
@@ -190,10 +214,9 @@ def parse_SNV (vcffile, start_padding, end_padding, annDic):
                     data['alt']= alt
                     data['gene']=gene
                     data['aa']= ""
-                    data['effect']=""
+                    data['effect']="unknown"
+                    data['VAF']=VAF
                     ret_data.append(data)
-
-
     fin.close()
     return ret_data
 
@@ -221,9 +244,9 @@ def outputputMutationVector (sample, dataList, fout):
         fout.write('\t'+ str(item['ref']))
         fout.write('\t'+ str(item['alt']))
         fout.write('\t'+ str(item['gene']))
-        fout.write(str('\t'+ item['effect']))
-        if ("aa" in item):
-            fout.write('\t'+str(item['aa']))
+        fout.write('\t'+ item['effect'])
+        fout.write('\t'+ str(item['VAF']))
+        fout.write('\t'+str(item['aa']))
         fout.write('\n')
 
 def cleanSVPCAWGvcf(file): #stupid
@@ -242,7 +265,6 @@ fout = open(sys.argv[3],'w')
 stream = urllib2.urlopen(ann_url)
 annDic = probMap_genePred.parseGenePredToGene(stream)
 stream.close()
-
 
 for infile in flist.readlines():
     infile = infile[:-1]
