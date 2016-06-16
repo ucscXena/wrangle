@@ -86,17 +86,17 @@ def parse_BND (vcffile, start_padding, end_padding, annDic):
     vcf_reader = vcf.Reader(fin)
     ret_data =[]
     for record in vcf_reader:
-        #print record.ALT, len(record.ALT), record.ALT[0].type 
+        #print record.ALT, len(record.ALT), record.ALT[0].type
         type =  record.ALT[0].type
         if type in ["BND"]:
             # assuming no filter is passing
-            if len(record.FILTER)!=0: 
+            if len(record.FILTER)!=0:
                 print record, record.FILTER
-                
+
             #print record.genotype(sampleTumor)
             #print record.genotype(sampleNormal)
-            #printRecordInfo(record, vcf_reader) 
-                   
+            #printRecordInfo(record, vcf_reader)
+
             chr = "chr" + record.CHROM
             start = record.POS
             end = start + len(record.REF) -1
@@ -117,7 +117,7 @@ def parse_BND (vcffile, start_padding, end_padding, annDic):
     return ret_data
 
 
-def cavat_annotate(chr, start, ref, alt, count):
+def cavat_annotate(chr, start, ref, alt):
     coding_gene = None
     effect = ""
     aa = ""
@@ -130,9 +130,12 @@ def cavat_annotate(chr, start, ref, alt, count):
         ann=  json.loads(cravat.read())
         cravat.close()
 
-        if ann["HUGO symbol"] and ann["HUGO symbol"]!="Non-Coding":
+        if ann["HUGO symbol"]:
+           coding_gene = ""
+
+        if ann["HUGO symbol"]!="Non-Coding":
             coding_gene = ann["HUGO symbol"]
-                
+
         #CRAVAT analysis
         #http://www.cravat.us/help.jsp
         if ann["Sequence ontology"]!="":
@@ -143,10 +146,10 @@ def cavat_annotate(chr, start, ref, alt, count):
         if ann["Sequence ontology protein change"]!="":
             aa = ann["Sequence ontology protein change"]
 
-        return count, coding_gene, effect, aa
+        return coding_gene, effect, aa
 
     except:
-        return cavat_annotate(chr, start, ref, alt, count +1)
+        return coding_gene, effect, aa
 
 
 def parse_SNV (vcffile, start_padding, end_padding, annDic):
@@ -154,11 +157,11 @@ def parse_SNV (vcffile, start_padding, end_padding, annDic):
     vcf_reader = vcf.Reader(fin)
     ret_data =[]
     for record in vcf_reader:
-        #print record.ALT, len(record.ALT), record.ALT[0].type 
+        #print record.ALT, len(record.ALT), record.ALT[0].type
         type =  record.ALT[0].type
         if type in ["SNV"]:
             # assuming no filter is passing
-            if record.FILTER and len(record.FILTER)!=0: 
+            if record.FILTER and len(record.FILTER)!=0:
                 #print record, record.FILTER
                 continue
 
@@ -174,7 +177,7 @@ def parse_SNV (vcffile, start_padding, end_padding, annDic):
             except KeyError:
                 VAF=""
 
-            #promoter, UTR, noncoding 
+            #promoter, UTR, noncoding
             all_genes = annotate_SNV_extended_exon  (chr, start, end, start_padding, end_padding, annDic)
             coding_genes =[]
 
@@ -182,8 +185,12 @@ def parse_SNV (vcffile, start_padding, end_padding, annDic):
                 continue
 
             count =0
-            r = cavat_annotate(chr, start, ref, alt, count)
-            count, coding_gene, effect, aa = r
+            while 1:
+                count = count +1
+                r = cavat_annotate(chr, start, ref, alt)
+                coding_gene, effect, aa = r
+                if coding_gene:
+                    break
 
             if coding_gene != '' :
                 coding_genes = [coding_gene]
@@ -271,7 +278,7 @@ for infile in flist.readlines():
     if dataType =="BND":
         vcffile = cleanSVPCAWGvcf(infile)
         if not xenaVCF.checkSample(vcffile, sampleTumor):
-            print sampleTumor, "bad sample name" 
+            print sampleTumor, "bad sample name"
             os.system("rm -f "+ vcffile)
             continue
 
