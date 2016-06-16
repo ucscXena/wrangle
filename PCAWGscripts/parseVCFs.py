@@ -187,6 +187,7 @@ def parse_SNV (vcffile, start_padding, end_padding, annDic):
             count =0
             while 1:
                 count = count +1
+                print count
                 r = cavat_annotate(chr, start, ref, alt)
                 coding_gene, effect, aa = r
                 if coding_gene:
