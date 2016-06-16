@@ -119,8 +119,8 @@ def parse_BND (vcffile, start_padding, end_padding, annDic):
 
 def cavat_annotate(chr, start, ref, alt):
     coding_gene = None
-    effect = ""
-    aa = ""
+    effect = None
+    aa = None
 
     #if count >10 :
     #    return count, coding_gene, effect, aa
@@ -131,7 +131,9 @@ def cavat_annotate(chr, start, ref, alt):
         cravat.close()
 
         if ann["HUGO symbol"]:
-           coding_gene = ""
+            coding_gene = ""
+            effect = ""
+            aa = ""
 
         if ann["HUGO symbol"]!="Non-Coding":
             coding_gene = ann["HUGO symbol"]
@@ -187,17 +189,26 @@ def parse_SNV (vcffile, start_padding, end_padding, annDic):
             count =0
             while 1:
                 count = count +1
-                print count
                 r = cavat_annotate(chr, start, ref, alt)
                 coding_gene, effect, aa = r
-                if coding_gene:
+                if coding_gene != None :
                     break
+                if effect or aa:  # there is no hugo name for the gene yet
+                    if len(all_genes) == 1: # just one
+                        coding_gene = all_genes[0]
+                    break
+                else:
+                    #log special case
+                    url = "http://www.cravat.us/rest/service/query?mutation="+chr+"_"+str(start)+"_+_"+ref+ "_" + str(alt)
+                    print count, r, url
 
             if coding_gene != '' :
                 coding_genes = [coding_gene]
-            if count >1:
-                url = "http://www.cravat.us/rest/service/query?mutation="+chr+"_"+str(start)+"_+_"+ref+ "_" + str(alt)
-                print count, url
+
+            #web log
+            #if count >1:
+            #    url = "http://www.cravat.us/rest/service/query?mutation="+chr+"_"+str(start)+"_+_"+ref+ "_" + str(alt)
+            #    print count, url
 
             for gene in coding_genes:
                 data={}
