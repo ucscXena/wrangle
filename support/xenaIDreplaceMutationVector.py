@@ -42,7 +42,7 @@ def switchIDs (inputFile, outputFile, mapDic):
     fout.close()
 
 if len(sys.argv[:])!=3:
-    print "xenaIDreplaceMutationVector.py mutationVectorfile mappingfile(new current)"
+    print "xenaIDreplaceMutationVector.py mutationVectorfile(with_Header) mappingfile(new current)"
     sys.exit()
 
 mappingfile = sys.argv[2]

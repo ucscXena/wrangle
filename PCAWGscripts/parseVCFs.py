@@ -102,7 +102,7 @@ def parse_BND (vcffile, start_padding, end_padding, annDic):
             end = start + len(record.REF) -1
             ref = record.REF
             alt = record.ALT[0]
-            genes =  (chr, start, end, start_padding, end_padding, annDic)
+            genes = annotate_SV (chr, start, end, start_padding, end_padding, annDic)
             for gene in genes:
                 data={}
                 data['chr']= chr
@@ -254,7 +254,7 @@ def output_dic (sample, unit, dataSubType, dataDic, file):
     fout.write( json.dumps( j, indent=-1 ) )
     fout.close()
 
-def outputputMutationVector (sample, dataList, fout):
+def outputMutationVectorSNV (sample, dataList, fout):
     for item in dataList:
         fout.write(sample)
         fout.write('\t'+ item['chr'])
@@ -266,6 +266,18 @@ def outputputMutationVector (sample, dataList, fout):
         fout.write('\t'+ item['effect'])
         fout.write('\t'+ str(item['VAF']))
         fout.write('\t'+str(item['aa']))
+        fout.write('\n')
+
+def outputMutationVectorBND (sample, dataList, fout):
+    for item in dataList:
+        fout.write(sample)
+        fout.write('\t'+ item['chr'])
+        fout.write('\t'+ str(item['start']))
+        fout.write('\t'+ str(item['end']))
+        fout.write('\t'+ str(item['ref']))
+        fout.write('\t'+ str(item['alt']))
+        fout.write('\t'+ str(item['gene']))
+        fout.write('\t'+ item['effect'])
         fout.write('\n')
 
 def cleanSVPCAWGvcf(file): #stupid
@@ -298,13 +310,14 @@ for infile in flist.readlines():
         sampleLabel = tumorMetaData['SampleName']
         if dataType =="BND":
             xenaRecords=  parse_BND (vcffile, start_sv_padding, end_padding,  annDic)
-            outputputMutationVector (sampleLabel, xenaRecords, fout)
+            outputMutationVectorBND (sampleLabel, xenaRecords, fout)
+            os.system ("rm "+ vcffile)
 
     elif dataType == "SNV":
         sampleLabel = string.split(os.path.basename(infile),'.')[0] # stupid PCAWG SNV VCFS
         print sampleLabel
         xenaRecords=  parse_SNV (infile, promoter_padding, end_padding, annDic)
-        outputputMutationVector (sampleLabel, xenaRecords, fout)
+        outputMutationVectorSNV (sampleLabel, xenaRecords, fout)
 
 flist.close()
 fout.close()
