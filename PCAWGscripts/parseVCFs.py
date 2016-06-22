@@ -1,8 +1,11 @@
-#https://github.com/jamescasbon/PyVCF
 import sys, os, string, copy
-import vcf, json, uuid
-import urllib2
-sys.path.insert(0, os.path.dirname(sys.argv[0])+"/../support/")
+#https://github.com/jamescasbon/PyVCF
+import vcf
+import urllib2, json, uuid
+if os.path.dirname(sys.argv[0])== '':
+    sys.path.insert(0, "./../support/")
+else:
+    sys.path.insert(0, os.path.dirname(sys.argv[0])+"/../support/")
 import xenaVCF
 import probMap_genePred
 
@@ -34,6 +37,9 @@ def annotate_SV(chr, start, end, start_padding, end_padding, annDic):
                     if hugo not in genes:
                         genes.append(hugo)
     return genes
+
+def getStrand(gene, chr, annDic):
+    return annDic[chr][gene][0]['strand']
 
 def annotate_SNV_extended_exon (chr, start, end, start_padding, end_padding, annDic):
     genes = []
@@ -102,7 +108,17 @@ def parse_BND (vcffile, start_padding, end_padding, annDic):
             end = start + len(record.REF) -1
             ref = record.REF
             alt = record.ALT[0]
+
+            t_chr, t_position, t_direction, t_orientation = parseSVAlt (alt)
+
+            # genes the SV cut (the same way as the way I define cut for this gene) to as in the external DNA
+            t_genes = annotate_SV (t_chr, t_position, t_position, start_padding, end_padding, annDic)
+
+            # genes the SV cut to as in this DNA
             genes = annotate_SV (chr, start, end, start_padding, end_padding, annDic)
+
+            #print t_genes, genes
+
             for gene in genes:
                 data={}
                 data['chr']= chr
@@ -110,12 +126,60 @@ def parse_BND (vcffile, start_padding, end_padding, annDic):
                 data['end']= end
                 data['ref']= ref
                 data['alt']= alt
+                data['altGene'] = string.join(t_genes,", ")
                 data['gene']=gene
                 data['effect']="SV"
+
+                if chr == t_chr:
+                    if t_orientation == "same": # deletion
+                        data['effect'] = "intra-chromosome deleteion"
+                    elif t_orientation == "reverse_comp":
+                        data['effect'] = "intra-chromosome inversion"
+
+                if gene in t_genes:
+                    for t_gene in t_genes:
+                        data['start']= min(start, end, t_position)
+                        data['end']= max(start, end, t_position)
+                        data['alt']= chr+":"+ str(data['start']) +"-"+ str(data['end'])
+
+                        #print gene, t_gene, getStrand (gene, chr, annDic), t_direction, t_orientation, alt
+
                 ret_data.append(data)
     fin.close()
     return ret_data
 
+def parseSVAlt (alt):
+    alt = str(alt)
+
+    #extract direction of the external DNA
+    first = alt[0]
+    last =  alt[len(alt)-1]
+    if first == '[' or last =='[':
+        direction ='['
+    elif first == ']' or last ==']':
+        direction =']'
+
+    # extract it is same direction or reverse_compliment
+    if direction == "[" and last == "[":
+        orientation = "same"
+    elif direction == "]" and last == "]":
+        orientation = "reverse_comp"
+    elif direction == "]" and first == "]":
+        orientation = "same"
+    elif direction == "[" and first == "[":
+        orientation = "reverse_comp"
+    else:
+        print "error", alt
+
+    # extract chr, position
+    chr, position = string.split(string.split(alt,direction)[1],":")
+    chr = "chr" + chr
+
+    #print alt
+    #print direction
+    #print chr
+    #print position
+    return chr, int(position), direction, orientation
 
 def cavat_annotate(chr, start, ref, alt):
     coding_gene = None
@@ -277,6 +341,7 @@ def outputMutationVectorBND (sample, dataList, fout):
         fout.write('\t'+ str(item['ref']))
         fout.write('\t'+ str(item['alt']))
         fout.write('\t'+ str(item['gene']))
+        fout.write('\t'+ item['altGene'])
         fout.write('\t'+ item['effect'])
         fout.write('\n')
 
@@ -285,48 +350,56 @@ def cleanSVPCAWGvcf(file): #stupid
     os.system("grep -v ^##contig "+ file +" |grep -v ^##pcawg > "+output)
     return output
 
-if len(sys.argv[:])!=4:
-    print "python parseVCFs.py listFile(one_filename_perline) dataType(BND,SNV) outputfile"
-    sys.exit()
+if __name__ == '__main__':
+    if len(sys.argv[:])!=4:
+        print "python parseVCFs.py listFile(one_filename_perline) dataType(BND,SNV) outputfile"
+        sys.exit()
 
-flist = open(sys.argv[1],'r')
-dataType = sys.argv[2]
-fout = open(sys.argv[3],'w')
+    flist = open(sys.argv[1],'r')
+    dataType = sys.argv[2]
+    fout = open(sys.argv[3],'w')
 
-stream = urllib2.urlopen(ann_url)
-annDic = probMap_genePred.parseGenePredToGene(stream)
-stream.close()
+    #stream = urllib2.urlopen(ann_url)
+    if os.path.dirname(sys.argv[1]):
+        ann_file = os.path.dirname(sys.argv[1]) + 'refgene_good_hg19'
+    else:
+        ann_file = './' + 'refgene_good_hg19'
 
-for infile in flist.readlines():
-    infile = infile[:-1]
-    if dataType =="BND":
-        vcffile = cleanSVPCAWGvcf(infile)
-        if not xenaVCF.checkSample(vcffile, sampleTumor):
-            print sampleTumor, "bad sample name"
-            os.system("rm -f "+ vcffile)
-            continue
+    stream = open(ann_file,'r')
+    annDic = probMap_genePred.parseGenePredToGene(stream)
+    stream.close()
 
-        tumorMetaData = xenaVCF.findSampleMetaData(vcffile,sampleTumor)
-        sampleLabel = tumorMetaData['SampleName']
-        if dataType =="BND":
-            xenaRecords=  parse_BND (vcffile, start_sv_padding, end_padding,  annDic)
-            outputMutationVectorBND (sampleLabel, xenaRecords, fout)
-            os.system ("rm "+ vcffile)
 
-    elif dataType == "SNV":
-        sampleLabel = string.split(os.path.basename(infile),'.')[0] # stupid PCAWG SNV VCFS
-        print sampleLabel
-        xenaRecords=  parse_SNV (infile, promoter_padding, end_padding, annDic)
-        outputMutationVectorSNV (sampleLabel, xenaRecords, fout)
+    for infile in flist.readlines():
+        infile = infile[:-1]
+        if dataType =="BND": # large structural variant
+            vcffile = cleanSVPCAWGvcf(infile)
+            if not xenaVCF.checkSample(vcffile, sampleTumor):
+                print sampleTumor, "bad sample name"
+                os.system("rm -f "+ vcffile)
+                continue
 
-flist.close()
-fout.close()
+            tumorMetaData = xenaVCF.findSampleMetaData(vcffile,sampleTumor)
+            sampleLabel = tumorMetaData['SampleName']
+            if dataType =="BND":
+                xenaRecords=  parse_BND (vcffile, start_sv_padding, end_padding,  annDic)
+                outputMutationVectorBND (sampleLabel, xenaRecords, fout)
+                os.system ("rm "+ vcffile)
 
-#assembly = xenaVCF.findAssembly (vcffile)
-#print assembly
+        elif dataType == "SNV": #SNVs or small INDELs
+            sampleLabel = string.split(os.path.basename(infile),'.')[0] # stupid PCAWG SNV VCFS
+            print sampleLabel
+            xenaRecords=  parse_SNV (infile, promoter_padding, end_padding, annDic)
+            outputMutationVectorSNV (sampleLabel, xenaRecords, fout)
 
-#ploidy = tumorMetaData['Ploidy']
-#print ploidy
+    flist.close()
+    fout.close()
+
+    #assembly = xenaVCF.findAssembly (vcffile)
+    #print assembly
+
+    #ploidy = tumorMetaData['Ploidy']
+    #print ploidy
 
 
 
