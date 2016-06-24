@@ -1,6 +1,6 @@
 import urllib2,sys,json
 
-MAX_projects =100
+#MAX_projects =100
 
 icgcDataTypes = [ # only the dataset types of interest
     #'sample',
@@ -25,7 +25,7 @@ icgcDataTypes = [ # only the dataset types of interest
 
 def getProjects():
     projects=[]
-    url = 'https://dcc.icgc.org/api/v1/projects?size='+str(MAX_projects)
+    url = 'https://dcc.icgc.org/api/v1/projects'
     response = urllib2.urlopen(url).read()
     J= json.loads(response)
     for hit in J['hits']:
