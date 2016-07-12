@@ -91,6 +91,7 @@ def parse_BND (vcffile, start_padding, end_padding, annDic):
     fin=open(vcffile, 'r')
     vcf_reader = vcf.Reader(fin)
     ret_data =[]
+    idDic ={}
     for record in vcf_reader:
         #print record.ALT, len(record.ALT), record.ALT[0].type
         type =  record.ALT[0].type
@@ -108,6 +109,10 @@ def parse_BND (vcffile, start_padding, end_padding, annDic):
             end = start + len(record.REF) -1
             ref = record.REF
             alt = record.ALT[0]
+            id = record.ID
+            matedid = ''
+            if "MATEID" in record.INFO:
+                mateid = record.INFO["MATEID"]
 
             t_chr, t_position, t_direction, t_orientation = parseSVAlt (alt)
 
@@ -129,22 +134,31 @@ def parse_BND (vcffile, start_padding, end_padding, annDic):
                 data['altGene'] = string.join(t_genes,", ")
                 data['gene']=gene
                 data['effect']="SV"
+                data['id'] = id
+                data['mateid']= mateid
+                skip = False
 
                 if chr == t_chr:
                     if t_orientation == "same": # deletion
-                        data['effect'] = "intra-chromosome deleteion"
+                        data['effect'] = "deletion"
                     elif t_orientation == "reverse_comp":
-                        data['effect'] = "intra-chromosome inversion"
+                        data['effect'] = "inversion"
 
                 if gene in t_genes:
                     for t_gene in t_genes:
-                        data['start']= min(start, end, t_position)
-                        data['end']= max(start, end, t_position)
-                        data['alt']= chr+":"+ str(data['start']) +"-"+ str(data['end'])
+                        if gene == t_gene:
+                            if data['mateid'] in idDic:
+                                skip = True
+                            data['start']= min(start, end, t_position)
+                            data['end']= max(start, end, t_position)
+                            data['ref']= chr+":"+ str(data['start']) +"-"+ str(data['end'])
+                            data['alt']=data['effect']
 
                         #print gene, t_gene, getStrand (gene, chr, annDic), t_direction, t_orientation, alt
+                if not skip :
+                    ret_data.append(data)
+                    idDic[id]=''
 
-                ret_data.append(data)
     fin.close()
     return ret_data
 
@@ -361,14 +375,13 @@ if __name__ == '__main__':
 
     #stream = urllib2.urlopen(ann_url)
     if os.path.dirname(sys.argv[1]):
-        ann_file = os.path.dirname(sys.argv[1]) + 'refgene_good_hg19'
+        ann_file = os.path.dirname(sys.argv[1]) + 'gencode_good_hg19'  #'refgene_good_hg19'
     else:
-        ann_file = './' + 'refgene_good_hg19'
+        ann_file = './' + 'gencode_good_hg19' #'refgene_good_hg19'
 
     stream = open(ann_file,'r')
     annDic = probMap_genePred.parseGenePredToGene(stream)
     stream.close()
-
 
     for infile in flist.readlines():
         infile = infile[:-1]

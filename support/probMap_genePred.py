@@ -17,6 +17,8 @@ def parseGenePredToGene(fin):
         strand =data[3]
         start = data[4]
         end =data[5]
+        cdsStart = data[6]
+        cdsEnd = data[7]
         exonCount = data[8]
         exonStarts = data[9]
         exonEnds = data[10]
@@ -29,6 +31,8 @@ def parseGenePredToGene(fin):
         item['start']= int(start)
         item['end']=int(end)
         item['exonCount']= int(exonCount)
+        item['cdsStart'] = int(cdsStart)
+        item['cdsEnd'] = int(cdsEnd)
 
         list =[]
         for pos in string.split(exonStarts,',')[:-1]:
@@ -80,6 +84,6 @@ def parseProbeMapToGene(fin, idParserFunction=None):
 
         if id not in dic:
             dic[id]=item
-            
+
     fin.close()
     return dic

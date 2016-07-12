@@ -12,7 +12,7 @@ def listing (mfile):
 
 def keepIDs (inputFile, outputFile, keep_list):
     fin = open(inputFile,'U')
-    
+
     goodPos=[]
     ids = string.split(fin.readline()[:-1],'\t')
     for i in range (0, len(ids)):
@@ -29,7 +29,7 @@ def keepIDs (inputFile, outputFile, keep_list):
     os.system(s)
 
 if len(sys.argv[:])!=4:
-    print "python keepIDGenomicMatrix_slow.py matrixfile output keep_list(one_id_per_line)"
+    print "python keepIDGenomicMatrix.py matrixfile output keep_list(one_id_per_line)"
     sys.exit()
 
 listfile = sys.argv[3]
