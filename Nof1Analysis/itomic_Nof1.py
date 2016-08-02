@@ -66,6 +66,7 @@ def Gene_TCGA_TNBC (gene):
 
 if __name__ == "__main__" and len(sys.argv[:])!=3:
     print "python Nof1.py sample gene"
+    print
     sys.exit()
 
 Nof1_sample = sys.argv[1]
@@ -74,7 +75,9 @@ sampleData={}
 
 samples = Samples_ITOMIC()
 if Nof1_sample not in samples:
-    print Nof1_sample, "not in dataset tcga_RSEM_gene_tpm"
+    print Nof1_sample, "not in dataset latestCCI_EXP_G_TPM_log"
+    print "See samples:", "https://genome-cancer.soe.ucsc.edu/proj/site/xena/datapages/?host=https%3A%2F%2Fitomic.xenahubs.net%3A443&dataset=latestCCI_EXP_G_TPM_log&label=gene%20expression%20TPM&allSamples=true"
+    print
     sys.exit()
 
 for sample in samples:
