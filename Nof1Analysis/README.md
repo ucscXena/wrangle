@@ -1,6 +1,9 @@
+## Downlaod
+git clone https://github.com/jingchunzhu/cgDataNew.git
+
 ## Installation
 
-cd path/to/Nof1Analysis
+cd path/to/cgDataNew/Nof1Analysis/
 chmod u+x ./install.bash
 ./install.bash
 
