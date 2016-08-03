@@ -21,7 +21,7 @@ def rank_and_percentage(v, v_list):
     K = len(l)
     for i in range(0, K):
         if v > l[i]:
-            return i, int(float(i)/K *100)
+            return i, float(i)/K *100
     return K, "100%"
 
 def Samples_ITOMIC():
@@ -63,6 +63,15 @@ def Gene_TCGA_TNBC (gene):
     values = Gene_values(hub, dataset, samples, gene)
     return values
 
+def Gene_GTEX_breast (gene):
+    hub = "https://toil.xenahubs.net"
+    dataset = "gtex_RSEM_gene_tpm"
+
+    #custom sample list: current gtex_RSEM_gene_tpm data from breast Mammary Tissue
+    samples = samplelist.GTEX_breast
+    values = Gene_values(hub, dataset, samples, gene)
+    return values
+
 
 if __name__ == "__main__" and len(sys.argv[:])!=3:
     print "python Nof1.py sample gene"
@@ -86,21 +95,27 @@ for sample in samples:
 
 Nof1_value = sampleData[Nof1_sample]
 Nof1_TPM = math.pow(2, Nof1_value)-0.001
-print sample
+print Nof1_sample
 print gene, "log2(TPM):", Nof1_value, "TPM:", '{:.2f}'.format(Nof1_TPM)
 
 values = Gene_TCGA_tumors (gene)
 rank, percentage =  rank_and_percentage (Nof1_value, values)
-print "TCGA_tumors (n=", len(values), "):", rank, '{:d}%'.format(percentage), map(
-    lambda x: '{:d}%'.format(rank_and_percentage(x, values)[1]), sampleData.values())
+print "TCGA_tumors (n=", len(values), "):", rank, '{:.2f}%'.format(percentage), map(
+    lambda x: '{:.2f}%'.format(rank_and_percentage(x, values)[1]), sampleData.values())
 
 values = Gene_TCGA_breast_tumors (gene)
 rank, percentage =  rank_and_percentage (Nof1_value, values)
-print "TCGA_BRCA_tumors (n=", len(values), "):", rank, '{:d}%'.format(percentage), map(
-    lambda x: '{:d}%'.format(rank_and_percentage(x, values)[1]), sampleData.values())
-
+print "TCGA_BRCA_tumors (n=", len(values), "):", rank, '{:.2f}%'.format(percentage), map(
+    lambda x: '{:.2f}%'.format(rank_and_percentage(x, values)[1]), sampleData.values())
 
 values = Gene_TCGA_TNBC (gene)
 rank, percentage =  rank_and_percentage (Nof1_value, values)
-print "TCGA_TNBC (n=", len(values), "):", rank, '{:d}%'.format(percentage), map(
-    lambda x: '{:d}%'.format(rank_and_percentage(x, values)[1]), sampleData.values())
+print "TCGA_TNBC (n=", len(values), "):", rank, '{:.2f}%'.format(percentage), map(
+    lambda x: '{:.2f}%'.format(rank_and_percentage(x, values)[1]), sampleData.values())
+
+values = Gene_GTEX_breast (gene)
+rank, percentage =  rank_and_percentage (Nof1_value, values)
+print "GTEX_breast (n=", len(values), "):", rank, '{:.2f}%'.format(percentage), map(
+    lambda x: '{:.2f}%'.format(rank_and_percentage(x, values)[1]), sampleData.values())
+
+
