@@ -1,4 +1,4 @@
-wget https://raw.githubusercontent.com/ucscXena/ucsc-xena-server/master/python/xena_query.py -O xena_query.py
+# wget https://raw.githubusercontent.com/ucscXena/ucsc-xena-server/master/python/xena_query.py -O xena_query.py
 
 install Anaconda
 https://www.continuum.io/downloads
@@ -8,4 +8,6 @@ http://ipython.readthedocs.io/en/stable/install/kernel_install.html
 
 somehow you need to change the kernal  on the UI
 
-open the nootbook
+type "jupyter notebook" to start the software on laptop
+
+find the notebook, double click to open the nootbook
