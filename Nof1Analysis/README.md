@@ -6,9 +6,9 @@ git clone https://github.com/jingchunzhu/cgDataNew.git
 
 cd path/to/cgDataNew/Nof1Analysis/
 
-python itomic_Nof1.py
+python Nof1notebook.py -h
 
-python itomic_Nof1.py 10-3-B1 CTLA4
+python Nof1notebook.py -s 10-3-B1 -g CTLA4
 
 
 

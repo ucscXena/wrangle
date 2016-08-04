@@ -1,1 +1,11 @@
 wget https://raw.githubusercontent.com/ucscXena/ucsc-xena-server/master/python/xena_query.py -O xena_query.py
+
+install Anaconda
+https://www.continuum.io/downloads
+
+install new kernal
+http://ipython.readthedocs.io/en/stable/install/kernel_install.html
+
+somehow you need to change the kernal  on the UI
+
+open the nootbook

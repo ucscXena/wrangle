@@ -55,7 +55,7 @@ Looking up sample ids for the TCGA LGG cohort.
 {u'TCGA.LGG.sampleMap': [u'TCGA-CS-4938-01', u'TCGA-CS-6665-01', u'TCGA-FG-A6J3-01', u'TCGA-HT-7693-01', u'TCGA-S9-A7J2-01']}
 """
 
-import urllib2, json
+
 import re
 
 def compose1(f, g):
@@ -72,6 +72,15 @@ def quote(s):
 
 def array_fmt(l):
     return '[' + ', '.join((quote(s) for s in l)) + ']'
+
+def strip_first_url_dir(path):
+    return re.sub(r'^[^/]*', '', path)
+
+# proj/<proj>/xena/<proj>/<path>
+# download/<proj>/xena/<path>
+def name_to_url(base_url, name):
+    return base_url.replace('/proj/', '/download/') + strip_first_url_dir(name)
+
 
 # The strategy here is
 #   o Do table scan on code to find codes matching field values
@@ -99,13 +108,13 @@ all_samples_query = """
                                  [:= :field.name "sampleID"]]}))
 """
 
-datasets_list_in_cohort_str ="""
+datasets_list_in_cohort_str = """
 (map :name (query {:select [:name :type :datasubtype :probemap :text :status]
       :from [:dataset]
       :where [:= :cohort %s]}))
 """
 
-datasets_list_str ="""
+datasets_list_str = """
 (map :name (query {:select [:name :type :datasubtype :probemap :text :status]
       :from [:dataset]}))
 """
@@ -168,6 +177,18 @@ dataset_gene_str = """
  (map scores-for-gene %s))
 """
 
+import json
+import urllib2
+
+headers = { 'Content-Type' : "text/plain" }
+
+def post(url, query):
+    """POST a xena data query to the given url."""
+    req = urllib2.Request(url + '/data/', query, headers)
+    response = urllib2.urlopen(req)
+    result = response.read().decode('utf-8')
+    return result
+
 def all_samples(host, cohort):
     """return all the samples belong to a cohort on a hub host"""
     return json.loads(post(host, all_samples_query % quote(cohort)))
@@ -179,15 +200,6 @@ def find_sample_by_field_query(cohort, field, values):
 def patient_to_sample_query(cohort, patients):
     """Return a xena query which looks up sample ids for the given patients."""
     return find_sample_by_field_query(cohort, "_PATIENT", patients)
-
-headers = { 'Content-Type' : "text/plain" }
-
-def post(url, query):
-    """POST a xena data query to the given url."""
-    req = urllib2.Request(url + '/data/', query, headers)
-    response = urllib2.urlopen(req)
-    result = response.read()
-    return result
 
 def all_cohorts(url):
     """ Return a list of cohorts on a host """
@@ -202,12 +214,11 @@ def datasets_list_in_cohort (host, cohort):
     """return datasets in a cohort"""
     return json.loads(post(host, datasets_list_in_cohort_str % (quote(cohort))))
 
-def datasets_list (host):
-    """return all datasets stored on a host"""
-    return json.loads(post(host, datasets_list_str))
-
 def dataset_samples (host, dataset):
     return json.loads(post(host, dataset_samples_str % (quote(dataset))))
+
+def datasets_list (host):
+    return json.loads(post(host, datasets_list_str))
 
 def dataset_probe_values (host, dataset, samples, probes):
     """ return matrix of values [[x11, x12, ...],[x21, x22,...],...]"""
@@ -228,14 +239,6 @@ def dataset_gene_values (host, dataset, samples, genes):
 def dataset_gene_probes_values (host,dataset,samples, gene):
     return json.loads(post(host, dataset_gene_probes_str % (quote(dataset), array_fmt([gene]), quote(dataset), array_fmt(samples))))
 
-
 def dataset_type (host, dataset):
     return json.loads(post(host, dataset_type_str % (quote(dataset))))
 
-def strip_first_url_dir(path):
-    return re.sub(r'^[^/]*', '', path)
-
-# proj/<proj>/xena/<proj>/<path>
-# download/<proj>/xena/<path>
-def name_to_url(base_url, name):
-    return base_url.replace('/proj/', '/download/') + strip_first_url_dir(name)
