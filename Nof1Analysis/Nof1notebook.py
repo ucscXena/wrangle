@@ -1,12 +1,23 @@
 
 # coding: utf-8
 
+# ## enter sample
+
 # In[1]:
 
 Nof1_sample = "10-3-B1"
-gene = "TP53"
 
 
+# ## enter gene 
+
+# In[2]:
+
+gene = "CDKN2A"
+
+
+# ## Run - results at the bottom
+
+# In[3]:
 
 Nof1_hub = "https://itomic.xenahubs.net"
 Nof1_dataset = "latestCCI_EXP_G_TPM_log"
@@ -60,20 +71,10 @@ def input(argv, Nof1_sample, gene):
     return Nof1_sample, gene
 
 def legend():
-    print "\nexpression values are sorted from high to low, low rank means high expression"
+    print "\nExpression values are sorted from high to low, low rank and percentile mean high expression."
     
 if __name__ == "__main__":
     Nof1_sample, gene = input(sys.argv[1:], Nof1_sample, gene)
     itomic_Nof1.itomic_Nof1(Nof1_sample, gene, Nof1_hub, Nof1_dataset, comparison_list)
     legend()
-
-
-# In[ ]:
-
-
-
-
-# In[ ]:
-
-
 
