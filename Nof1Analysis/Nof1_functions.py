@@ -10,7 +10,7 @@ def rank_and_percentage(v, v_list):
     for i in range(0, K):
         if v > l[i]:
             return i, float(i)/K *100
-    return K, "100%"
+    return K, 100.0
 
 def Gene_values(hub, dataset, samples, gene):
     values = xena.dataset_gene_values (hub, dataset, samples, [gene])
