@@ -36,9 +36,10 @@ def itomic_Nof1(Nof1_sample, gene, Nof1_hub, Nof1_dataset, comparison_list):
         name = item["name"]
 
         values = Gene_values(hub, dataset, samples, gene)
-        rank, percentage =  rank_and_percentage (Nof1_value, values)
+        h_l_values = clean_then_sort_high_to_low (values)
+        rank, percentage =  rank_and_percentage (Nof1_value, h_l_values)
         print
-        print name +" ( n=", len(values), "):"
+        print name +" ( n=", len(h_l_values), "):"
         print "rank:", rank
         print "percentile:",'{:.2f}%'.format(percentage)
-        print map(lambda x: '{:.2f}%'.format(rank_and_percentage(x, values)[1]), itomic_Data.values())
+        print map(lambda x: '{:.2f}%'.format(rank_and_percentage(x, h_l_values)[1]), itomic_Data.values())

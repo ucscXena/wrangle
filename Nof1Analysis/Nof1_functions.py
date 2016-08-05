@@ -1,14 +1,17 @@
 import string, math
 import xena_query as xena
 
-def rank_and_percentage(v, v_list):
-    v = float(v)
-    l = map(float, v_list)
+def clean_then_sort_high_to_low (v_list):
+    l = filter (lambda x: not math.isnan(x), map(float, v_list))
     l.sort()
     l.reverse() #large to small
-    K = len(l)
+    return l
+
+def rank_and_percentage(v, v_list):
+    v = float(v)
+    K = len(v_list)
     for i in range(0, K):
-        if v > l[i]:
+        if v > v_list[i]:
             return i, float(i)/K *100
     return K, 100.0
 
