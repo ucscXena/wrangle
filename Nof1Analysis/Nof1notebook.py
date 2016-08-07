@@ -3,21 +3,23 @@
 
 # ## enter sample
 
-# In[1]:
+# In[ ]:
 
-Nof1_sample = "10-3-B1"
+Nof1_sample = raw_input('Enter sample name (e.g. 09-3-B1): ')
+print Nof1_sample
 
 
 # ## enter gene 
 
-# In[2]:
+# In[ ]:
 
-gene = "CDKN2A"
+gene = raw_input('Enter gene name (e.g. PTEN): ')
+print gene
 
 
 # ## Run - results at the bottom
 
-# In[3]:
+# In[ ]:
 
 Nof1_hub = "https://itomic.xenahubs.net"
 Nof1_dataset = "latestCCI_EXP_G_TPM_log"
@@ -50,31 +52,13 @@ comparison_list = [
     "name": "GTEX_breast"
     }]
 
-
-import sys, getopt
 import itomic_Nof1
 
-def input(argv, Nof1_sample, gene):
-    try:
-        opts, args = getopt.getopt(argv,"hs:g:")
-        for opt, arg in opts:
-            if opt == '-h':
-                print ("python Nof1.py -s <sample> -g <gene>")
-                sys.exit()
-            if opt in ("-s"):
-                Nof1_sample = arg
-            if opt in ("-g"):
-                gene = arg
-
-    except getopt.GetoptError:
-        pass
-    return Nof1_sample, gene
-
 def legend():
-    print "\nExpression values are sorted from high to low, low rank and percentile mean high expression."
+    print "\nExpression values are sorted from high to low."
+    print "Low rank means high expression."
+    print "Low percentile means high expression."
     
-if __name__ == "__main__":
-    Nof1_sample, gene = input(sys.argv[1:], Nof1_sample, gene)
-    itomic_Nof1.itomic_Nof1(Nof1_sample, gene, Nof1_hub, Nof1_dataset, comparison_list)
-    legend()
+itomic_Nof1.itomic_Nof1(Nof1_sample, gene, Nof1_hub, Nof1_dataset, comparison_list)
+legend()
 

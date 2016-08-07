@@ -24,18 +24,30 @@ https://geosci.uchicago.edu/~rtp1/PrinciplesPlanetaryClimate/Python/NotebookQuic
 
 ## Running a notebook on a public server configuration
 
-see http://stackoverflow.com/questions/31962862/ipython-ipython-notebook-config-py-missing
+
+http://jupyter-notebook.readthedocs.io/en/latest/public_server.html
+-- see http://stackoverflow.com/questions/31962862/ipython-ipython-notebook-config-py-missing
+
+for set up password
+see https://ipython.org/ipython-doc/3/notebook/public_server.html
 
 * jupyter notebook --generate-config
 
 this should create a ~/.jupyter/jupyter_notebook_config.py file with relevant notebook settings ready
 
-* c = get_config()
-* c.NotebookApp.ip = '*'
-* c.NotebookApp.open_browser = False
-* c.NotebookApp.port = 9999
+c = get_config()
+c.NotebookApp.ip = '*'
+c.NotebookApp.open_browser = False
+c.NotebookApp.port = 9999
+c.NotebookApp.notebook_dir = u'cgDataNew/Nof1Analysis/'
+c.NotebookApp.password = u'sha1:bcd259ccf...<your hashed password here>'
 
-see https://ipython.org/ipython-doc/3/notebook/public_server.html
+#c.NotebookApp.certfile = u'/absolute/path/to/your/certificate/mycert.pem'
+#c.NotebookApp.keyfile = u'/absolute/path/to/your/certificate/mykey.key'
+
+
+
+
 
 * AWS port configuration
 
