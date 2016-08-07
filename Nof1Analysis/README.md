@@ -6,9 +6,7 @@ git clone https://github.com/jingchunzhu/cgDataNew.git
 
 cd path/to/cgDataNew/Nof1Analysis/
 
-python Nof1notebook.py -h
-
-python Nof1notebook.py -s 10-3-B1 -g CTLA4
+python Nof1notebook.py
 
 
 
