@@ -35,7 +35,6 @@ see https://ipython.org/ipython-doc/3/notebook/public_server.html
 
 this should create a ~/.jupyter/jupyter_notebook_config.py file with relevant notebook settings ready
 
-c = get_config()
 c.NotebookApp.ip = '*'
 c.NotebookApp.open_browser = False
 c.NotebookApp.port = 9999
@@ -47,9 +46,10 @@ c.NotebookApp.password = u'sha1:bcd259ccf...<your hashed password here>'
 
 
 
+* AWS ELB port configuration
 
-
-* AWS port configuration
+Not sure, sockets use TCP/SSL protocol not HTTP so you will need to change it to TCP/SSL in order to make web sockets work.
+https://www.bountysource.com/issues/5646899-aws-ec2-behind-elb-always-prints-error-unexpected-response-code-400
 
 ## integrate with web page
 

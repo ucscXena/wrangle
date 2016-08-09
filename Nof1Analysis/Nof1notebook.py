@@ -57,7 +57,7 @@ import itomic_Nof1
 def legend():
     print "\nExpression values are sorted from high to low."
     print "Low rank means high expression."
-    print "Low percentile means high expression."
+    print "Percentile (%) is the percentile of samples has higher expression than", Nof1_sample+"."
     
 itomic_Nof1.itomic_Nof1(Nof1_sample, gene, Nof1_hub, Nof1_dataset, comparison_list)
 legend()
