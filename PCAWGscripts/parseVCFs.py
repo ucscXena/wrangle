@@ -1,6 +1,8 @@
 import sys, os, string, copy
+
 #https://github.com/jamescasbon/PyVCF
 import vcf
+
 import urllib2, json, uuid
 if os.path.dirname(sys.argv[0])== '':
     sys.path.insert(0, "./../support/")
@@ -92,6 +94,7 @@ def parse_BND (vcffile, start_padding, end_padding, annDic):
     vcf_reader = vcf.Reader(fin)
     ret_data =[]
     idDic ={}
+
     for record in vcf_reader:
         #print record.ALT, len(record.ALT), record.ALT[0].type
         type =  record.ALT[0].type
@@ -110,14 +113,22 @@ def parse_BND (vcffile, start_padding, end_padding, annDic):
             ref = record.REF
             alt = record.ALT[0]
             id = record.ID
+            effect = ''
             matedid = ''
+
+            #print chr, start, end, id
+            #print record.INFO
+
             if "MATEID" in record.INFO:
                 mateid = record.INFO["MATEID"]
+            if "SVCLASS" in record.INFO:
+                effect = record.INFO["SVCLASS"]
+                effect = string.join(effect, ', ')
 
-            t_chr, t_position, t_direction, t_orientation = parseSVAlt (alt)
+            t_chr, t_position, t_direction = parseSVAlt (alt)
 
             # genes the SV cut (the same way as the way I define cut for this gene) to as in the external DNA
-            t_genes = annotate_SV (t_chr, t_position, t_position, start_padding, end_padding, annDic)
+            t_genes = annotate_SV (t_chr, t_position, t_position, start_padding, end_padding, annDic) ## vcf annotation vs my annotation
 
             # genes the SV cut to as in this DNA
             genes = annotate_SV (chr, start, end, start_padding, end_padding, annDic)
@@ -133,26 +144,28 @@ def parse_BND (vcffile, start_padding, end_padding, annDic):
                 data['alt']= alt
                 data['altGene'] = string.join(t_genes,", ")
                 data['gene']=gene
-                data['effect']="SV"
+                data['effect']= effect
                 data['id'] = id
                 data['mateid']= mateid
                 skip = False
 
-                if chr == t_chr:
-                    if t_orientation == "same": # deletion
-                        data['effect'] = "deletion"
-                    elif t_orientation == "reverse_comp":
-                        data['effect'] = "inversion"
+
+                #if chr == t_chr:
+                #    if t_orientation == "same": # deletion
+                #        data['effect'] = "deletion"
+                #    elif t_orientation == "reverse_comp":
+                #        data['effect'] = "inversion"
 
                 if gene in t_genes:
                     for t_gene in t_genes:
-                        if gene == t_gene:
+                        if gene == t_gene:  # intra gene
                             if data['mateid'] in idDic:
                                 skip = True
+
                             data['start']= min(start, end, t_position)
                             data['end']= max(start, end, t_position)
                             data['ref']= chr+":"+ str(data['start']) +"-"+ str(data['end'])
-                            data['alt']=data['effect']
+                            data['alt'] = data['effect']
 
                         #print gene, t_gene, getStrand (gene, chr, annDic), t_direction, t_orientation, alt
                 if not skip :
@@ -173,18 +186,6 @@ def parseSVAlt (alt):
     elif first == ']' or last ==']':
         direction =']'
 
-    # extract it is same direction or reverse_compliment
-    if direction == "[" and last == "[":
-        orientation = "same"
-    elif direction == "]" and last == "]":
-        orientation = "reverse_comp"
-    elif direction == "]" and first == "]":
-        orientation = "same"
-    elif direction == "[" and first == "[":
-        orientation = "reverse_comp"
-    else:
-        print "error", alt
-
     # extract chr, position
     chr, position = string.split(string.split(alt,direction)[1],":")
     chr = "chr" + chr
@@ -193,7 +194,7 @@ def parseSVAlt (alt):
     #print direction
     #print chr
     #print position
-    return chr, int(position), direction, orientation
+    return chr, int(position), direction
 
 def cavat_annotate(chr, start, ref, alt):
     coding_gene = None
@@ -373,13 +374,15 @@ if __name__ == '__main__':
     dataType = sys.argv[2]
     fout = open(sys.argv[3],'w')
 
-    #stream = urllib2.urlopen(ann_url)
-    if os.path.dirname(sys.argv[1]):
-        ann_file = os.path.dirname(sys.argv[1]) + 'gencode_good_hg19'  #'refgene_good_hg19'
-    else:
-        ann_file = './' + 'gencode_good_hg19' #'refgene_good_hg19'
+    stream = urllib2.urlopen(ann_url) #####
 
-    stream = open(ann_file,'r')
+    # for when there is no internet connnection, use a local file assuming it is there and called gencode_good_hg19
+    #if os.path.dirname(sys.argv[1]):
+    #    ann_file = os.path.dirname(sys.argv[1]) + 'gencode_good_hg19'  #'refgene_good_hg19'
+    #else:
+    #    ann_file = './' + 'gencode_good_hg19' #'refgene_good_hg19'
+    #stream = open(ann_file,'r')
+
     annDic = probMap_genePred.parseGenePredToGene(stream)
     stream.close()
 
