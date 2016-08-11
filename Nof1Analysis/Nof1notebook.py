@@ -9,11 +9,17 @@ Nof1_sample = raw_input('Enter sample name (e.g. 09-3-B1): ') or "09-3-B1"
 print Nof1_sample
 
 import sys
-import itomic_Nof1
+import Nof1_functions
 Nof1_hub = "https://itomic.xenahubs.net"
 Nof1_dataset = "latestCCI_EXP_G_TPM_log"
-if (itomic_Nof1.checkSamples (Nof1_sample, Nof1_hub, Nof1_dataset)):
+
+# ## check sample
+
+
+if (Nof1_functions.checkSamples (Nof1_sample, Nof1_hub, Nof1_dataset)):
     sys.exit()
+else:
+    print "pass"
 
 # ## enter gene
 
@@ -22,7 +28,10 @@ import re
 genes = raw_input('Enter a single or a list of gene names (e.g. PTEN or PTEN TP53): ') or "PTEN,TP53"
 genes = re.split( '\W+', genes)
 print genes
-
+if (Nof1_functions.checkFields(genes, Nof1_hub, Nof1_dataset)):
+    sys.exit()
+else:
+    print "pass"
 
 # ## Run - results at the bottom
 
@@ -35,7 +44,7 @@ comparison_list = [
     xena_datasetlist.TCGA_TNBC
 ]
 
-
+import itomic_Nof1
 for gene in genes:
     itomic_Nof1.itomic_Nof1(Nof1_sample, gene, Nof1_hub, Nof1_dataset, comparison_list)
 

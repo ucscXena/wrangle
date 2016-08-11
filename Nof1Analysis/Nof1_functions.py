@@ -15,16 +15,40 @@ def rank_and_percentage(v, v_list):
             return i+1, float(i)/K *100
     return K+1, 100.0
 
-def Gene_values(hub, dataset, samples, gene):
+def checkSamples (Nof1_sample, hub, dataset):
+    samples = dataset_samples(hub, dataset)
+
+    if Nof1_sample not in samples:
+        print Nof1_sample, "is not in dataset \""+ dataset +"\"."
+        print
+        print "Find out the dataset samples:", "https://genome-cancer.soe.ucsc.edu/proj/site/xena/datapages/?host="+ hub + "&dataset="+ dataset + "&allSamples=true"
+        print
+        return 1
+    else:
+        return 0
+
+def checkFields (fields, hub, dataset):
+    d_fields = map(string.upper, dataset_fields (hub, dataset))
+    for field in fields:
+        if string.upper(field) not in d_fields:
+            print field, "is not in dataset \""+ dataset +"\"."
+            print
+            return 1
+    return 0
+
+def Gene_values (hub, dataset, samples, gene):
     values = xena.dataset_gene_values (hub, dataset, samples, [gene])
     return values[0]["scores"][0]
 
-def Probe_values(hub, dataset, samples, probe):
+def Probe_values (hub, dataset, samples, probe):
     values = xena.dataset_probe_values (hub, dataset, samples, [probe])
     return values[0]
 
-def dataset_samples(hub,dataset):
+def dataset_samples (hub,dataset):
     return xena.dataset_samples(hub, dataset)
+
+def dataset_fields (hub, dataset):
+    return xena.dataset_field (hub, dataset)
 
 
 
