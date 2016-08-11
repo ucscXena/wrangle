@@ -2,21 +2,8 @@ import string, sys
 from Nof1_functions import *
 
 #itomic specific
-def checkGenes (genes, hub, dataset):
-    itomic_samples = dataset_samples(hub, dataset)
-
-    if Nof1_sample not in itomic_samples:
-        print Nof1_sample, "is not in dataset \"latestCCI_EXP_G_TPM_log\"."
-        print
-        print "Find out the dataset samples:", "https://genome-cancer.soe.ucsc.edu/proj/site/xena/datapages/?host=https%3A%2F%2Fitomic.xenahubs.net%3A443&dataset=latestCCI_EXP_G_TPM_log&label=gene%20expression%20TPM&allSamples=true"
-        print
-        return 1
-    else:
-        return 0
-
-
 def get_itomic_Data (gene, hub, dataset, samples):
-    values= Probe_values(hub, dataset, samples, string.upper(gene))
+    values= Probe_values(hub, dataset, samples, gene)
     itomic_Data =dict(zip(samples, values))
     return itomic_Data
 

@@ -27,10 +27,16 @@ def checkSamples (Nof1_sample, hub, dataset):
     else:
         return 0
 
-def checkFields (fields, hub, dataset):
-    d_fields = map(string.upper, dataset_fields (hub, dataset))
+def checkFields (fields, mapping, hub, dataset):
+    d_fields = dataset_fields (hub, dataset)
     for field in fields:
-        if string.upper(field) not in d_fields:
+        if field  in d_fields:
+           mapping[field] = field
+        elif string.upper(field) in d_fields:
+            mapping[field] = string.upper(field)
+        elif mapping[field] in d_fields:
+            pass
+        else:
             print field, "is not in dataset \""+ dataset +"\"."
             print
             return 1
