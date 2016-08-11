@@ -34,7 +34,7 @@ def checkFields (fields, mapping, hub, dataset):
            mapping[field] = field
         elif string.upper(field) in d_fields:
             mapping[field] = string.upper(field)
-        elif mapping[field] in d_fields:
+        elif mapping.has(field) and mapping[field] in d_fields:
             pass
         else:
             print field, "is not in dataset \""+ dataset +"\"."
