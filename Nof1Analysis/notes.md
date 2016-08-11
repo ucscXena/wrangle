@@ -5,16 +5,17 @@ wget https://raw.githubusercontent.com/ucscXena/ucsc-xena-server/master/python/x
 install notebook by Anaconda
 https://www.continuum.io/downloads
 
-install new kernal instruction
+optional install a different kernal instruction.
 http://ipython.readthedocs.io/en/stable/install/kernel_install.html
-
-somehow you need to change the kernal  on the UI
 
 ## run notebook on laptop
 
 * jupyter notebook
 
-find the notebook file, double click to open the nootbook
+or
+
+* screen
+* jupyter notebook
 
 ## using notebook
 
@@ -39,7 +40,7 @@ c.NotebookApp.ip = '*'
 c.NotebookApp.open_browser = False
 c.NotebookApp.port = 9999
 c.NotebookApp.notebook_dir = u'cgDataNew/Nof1Analysis/'
-c.NotebookApp.password = u'sha1:bcd259ccf...<your hashed password here>'
+c.NotebookApp.password = u'sha1:bcd...<your hashed password here>'
 
 #c.NotebookApp.certfile = u'/absolute/path/to/your/certificate/mycert.pem'
 #c.NotebookApp.keyfile = u'/absolute/path/to/your/certificate/mykey.key'

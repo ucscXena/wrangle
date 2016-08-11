@@ -22,10 +22,10 @@ def itomic_Nof1(Nof1_sample, gene, Nof1_hub, Nof1_dataset, comparison_list):
     itomic_samples = dataset_samples(Nof1_hub, Nof1_dataset)
 
     if Nof1_sample not in itomic_samples:
-        print (Nof1_sample, "not in dataset latestCCI_EXP_G_TPM_log")
-        print ("See samples:", "https://genome-cancer.soe.ucsc.edu/proj/site/xena/datapages/?host=https%3A%2F%2Fitomic.xenahubs.net%3A443&dataset=latestCCI_EXP_G_TPM_log&label=gene%20expression%20TPM&allSamples=true")
+        print Nof1_sample, "not in dataset latestCCI_EXP_G_TPM_log"
+        print "See samples:", "https://genome-cancer.soe.ucsc.edu/proj/site/xena/datapages/?host=https%3A%2F%2Fitomic.xenahubs.net%3A443&dataset=latestCCI_EXP_G_TPM_log&label=gene%20expression%20TPM&allSamples=true"
         print
-        sys.exit()
+        exit()
 
     itomic_Data = get_itomic_Data (gene, Nof1_hub, Nof1_dataset, itomic_samples)
     Nof1_output (Nof1_sample, gene, itomic_Data)
