@@ -3,13 +3,13 @@
 
 # ## enter sample
 
-# In[1]:
+# In[ ]:
 
 Nof1_sample = raw_input('Enter sample name (e.g. 09-3-B1): ') or "09-3-B1"
 print Nof1_sample
 
 
-# In[2]:
+# In[ ]:
 
 import sys
 import Nof1_functions
@@ -19,7 +19,7 @@ Nof1_dataset = "latestCCI_EXP_G_TPM_log"
 
 # # check sample
 
-# In[3]:
+# In[ ]:
 
 if (Nof1_functions.checkSamples (Nof1_sample, Nof1_hub, Nof1_dataset)):
     sys.exit()
@@ -29,7 +29,7 @@ else:
 
 # # enter gene 
 
-# In[4]:
+# In[ ]:
 
 import re
 genes = raw_input('Enter a single or a list of gene names (e.g. PTEN or PTEN TP53): ') or "PTEN,TP53"
@@ -39,7 +39,7 @@ print genes
 
 # # gene name mapping
 
-# In[5]:
+# In[ ]:
 
 genaname_mapping ={
     "CTLA-4" : "CTLA4",
@@ -53,7 +53,7 @@ genaname_mapping ={
 
 # # check gene name
 
-# In[6]:
+# In[ ]:
 
 if (Nof1_functions.checkFields(genes, genaname_mapping, Nof1_hub, Nof1_dataset)):
     sys.exit()
@@ -63,7 +63,7 @@ else:
 
 # ## Run - results at the bottom
 
-# In[8]:
+# In[ ]:
 
 import xena_datasetlist
 
@@ -78,9 +78,4 @@ for gene in genes:
     itomic_Nof1.itomic_Nof1(Nof1_sample, gene, genaname_mapping[gene], Nof1_hub, Nof1_dataset, comparison_list)
 
 itomic_Nof1.itomic_legend()
-
-
-# In[ ]:
-
-
 
