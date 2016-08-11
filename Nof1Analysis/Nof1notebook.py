@@ -5,16 +5,17 @@
 
 # In[ ]:
 
-Nof1_sample = raw_input('Enter sample name (e.g. 09-3-B1): ')
+Nof1_sample = raw_input('Enter sample name (e.g. 09-3-B1): ') or "09-3-B1"
 print Nof1_sample
 
 
-# ## enter gene 
+# ## enter gene
 
 # In[ ]:
-
-gene = raw_input('Enter gene name (e.g. PTEN): ')
-print gene
+import re
+genes = raw_input('Enter a single or a list of gene names (e.g. PTEN or PTEN TP53): ') or "PTEN,TP53"
+genes = re.split( '\W+', genes)
+print genes
 
 
 # ## Run - results at the bottom
@@ -24,41 +25,17 @@ print gene
 Nof1_hub = "https://itomic.xenahubs.net"
 Nof1_dataset = "latestCCI_EXP_G_TPM_log"
 
-import samplelist
+import xena_datasetlist
 
 comparison_list = [
-    { 
-    "hub": "https://toil.xenahubs.net",
-    "dataset" : "tcga_RSEM_gene_tpm",
-    "samples": samplelist.TCGA_tumors,
-    "name": "TCGA_tumors"
-    },
-    { 
-    "hub": "https://toil.xenahubs.net",
-    "dataset" : "tcga_RSEM_gene_tpm",
-    "samples": samplelist.TCGA_BRCA_tumors,
-    "name": "TCGA_BRCA_tumors"
-    },
-    { 
-    "hub": "https://toil.xenahubs.net",
-    "dataset" : "tcga_RSEM_gene_tpm",
-    "samples": samplelist.TCGA_TNBC,
-    "name": "TCGA_TNBC"
-    },
-    { 
-    "hub": "https://toil.xenahubs.net",
-    "dataset" : "gtex_RSEM_gene_tpm",
-    "samples": samplelist.GTEX_breast,
-    "name": "GTEX_breast"
-    }]
+    xena_datasetlist.TCGA_BRCA_tumors,
+    xena_datasetlist.TCGA_TNBC
+]
 
 import itomic_Nof1
 
-def legend():
-    print "\nExpression values are sorted from high to low."
-    print "Low rank means high expression."
-    print "Percentile (%) is the percentile of samples has higher expression than", Nof1_sample+"."
-    
-itomic_Nof1.itomic_Nof1(Nof1_sample, gene, Nof1_hub, Nof1_dataset, comparison_list)
-legend()
+for gene in genes:
+    itomic_Nof1.itomic_Nof1(Nof1_sample, gene, Nof1_hub, Nof1_dataset, comparison_list)
+
+itomic_Nof1.itomic_legend()
 
