@@ -7,10 +7,12 @@ def get_itomic_Data (gene, hub, dataset, samples):
     itomic_Data =dict(zip(samples, values))
     return itomic_Data
 
-def Nof1_output (Nof1_sample, gene, itomic_Data):
+def Nof1_output (Nof1_sample, original_label, gene, itomic_Data):
     print
     print 'Sample: ', Nof1_sample
-    print 'Gene:', gene
+    print 'Gene:', original_label
+    if original_label!= gene:
+        print 'HUGO gene name:', gene
 
     Nof1_value = itomic_Data[Nof1_sample]
     Nof1_TPM = math.pow(2, Nof1_value)-0.001
@@ -18,11 +20,11 @@ def Nof1_output (Nof1_sample, gene, itomic_Data):
     print "log2(TPM):", Nof1_value, "TPM:", '{:.2f}'.format(Nof1_TPM)
 
 
-def itomic_Nof1(Nof1_sample, gene, Nof1_hub, Nof1_dataset, comparison_list):
+def itomic_Nof1(Nof1_sample, original_label, gene, Nof1_hub, Nof1_dataset, comparison_list):
     itomic_samples = dataset_samples(Nof1_hub, Nof1_dataset)
 
     itomic_Data = get_itomic_Data (gene, Nof1_hub, Nof1_dataset, itomic_samples)
-    Nof1_output (Nof1_sample, gene, itomic_Data)
+    Nof1_output (Nof1_sample, original_label, gene, itomic_Data)
     Nof1_value = itomic_Data[Nof1_sample]
 
     for item in comparison_list:

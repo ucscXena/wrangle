@@ -57,7 +57,7 @@ comparison_list = [
 import itomic_Nof1
 
 for gene in genes:
-    itomic_Nof1.itomic_Nof1(Nof1_sample, genaname_mapping[gene], Nof1_hub, Nof1_dataset, comparison_list)
+    itomic_Nof1.itomic_Nof1(Nof1_sample, gene, genaname_mapping[gene], Nof1_hub, Nof1_dataset, comparison_list)
 
 itomic_Nof1.itomic_legend()
 
