@@ -12,8 +12,8 @@ def rank_and_percentage(v, v_list):
     K = len(v_list)
     for i in range(0, K):
         if v > v_list[i]:
-            return i+1, float(i)/K *100
-    return K+1, 100.0
+            return i+1, 100 - float(i)/K *100
+    return K+1, 0.0
 
 def checkSamples (Nof1_sample, hub, dataset):
     samples = dataset_samples(hub, dataset)

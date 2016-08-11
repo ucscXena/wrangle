@@ -35,15 +35,22 @@ def itomic_Nof1(Nof1_sample, gene, Nof1_hub, Nof1_dataset, comparison_list):
         values = Gene_values(hub, dataset, samples, gene)
         h_l_values = clean_then_sort_high_to_low (values)
         rank, percentage =  rank_and_percentage (Nof1_value, h_l_values)
+        r_and_p_values = map(lambda x: rank_and_percentage(x, h_l_values), itomic_Data.values())
+
         print
         print name +" ( n=", len(h_l_values), "):"
         print "rank:", rank
-        for list in map(lambda x: (str(x[0]),'{:d}'.format(rank_and_percentage(x[1], h_l_values)[0])),
-            zip(itomic_Data.keys(), itomic_Data.values())):
-            print list
+        print map(lambda x: x[0], r_and_p_values)
+
+        print "expression level percentile:", '{:.2f}%'.format(percentage)
+        #print map(lambda x: '{:.2f}%'.format(x[1]), r_and_p_values)
+
+        for list in zip(itomic_Data.keys(), r_and_p_values):
+            print list[0], list[1][0], '{:.2f}%'.format(list[1][1])
 
 def itomic_legend():
     print "\nExpression values are sorted from high to low."
     print "Low rank means high expression."
-    print "Percentile rank (%) is the percentile of samples has higher expression than sample of interest."
+    print "expression level percentile is the percentile of samples has lower expression than sample of interest."
+    print "High expression level percentile means higher expression."
     print
