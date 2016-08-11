@@ -8,10 +8,12 @@
 Nof1_sample = raw_input('Enter sample name (e.g. 09-3-B1): ') or "09-3-B1"
 print Nof1_sample
 
+import sys
 import itomic_Nof1
 Nof1_hub = "https://itomic.xenahubs.net"
 Nof1_dataset = "latestCCI_EXP_G_TPM_log"
-itomic_Nof1.checkSamples (Nof1_sample, Nof1_hub, Nof1_dataset)
+if (itomic_Nof1.checkSamples (Nof1_sample, Nof1_hub, Nof1_dataset)):
+    sys.exit()
 
 # ## enter gene
 

@@ -6,14 +6,13 @@ def checkSamples (Nof1_sample, hub, dataset):
     itomic_samples = dataset_samples(hub, dataset)
 
     if Nof1_sample not in itomic_samples:
-        print Nof1_sample, "not in dataset latestCCI_EXP_G_TPM_log"
+        print Nof1_sample, "is not in dataset \"latestCCI_EXP_G_TPM_log\"."
         print
-        print "See samples:", "https://genome-cancer.soe.ucsc.edu/proj/site/xena/datapages/?host=https%3A%2F%2Fitomic.xenahubs.net%3A443&dataset=latestCCI_EXP_G_TPM_log&label=gene%20expression%20TPM&allSamples=true"
+        print "Find out the datasets samples:", "https://genome-cancer.soe.ucsc.edu/proj/site/xena/datapages/?host=https%3A%2F%2Fitomic.xenahubs.net%3A443&dataset=latestCCI_EXP_G_TPM_log&label=gene%20expression%20TPM&allSamples=true"
         print
         return 1
     else:
         return 0
-
 
 
 def get_itomic_Data (gene, hub, dataset, samples):
