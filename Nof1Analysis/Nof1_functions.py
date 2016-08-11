@@ -19,7 +19,7 @@ def checkSamples (Nof1_sample, hub, dataset):
     samples = dataset_samples(hub, dataset)
 
     if Nof1_sample not in samples:
-        print Nof1_sample, "is not in dataset \""+ dataset +"\"."
+        print Nof1_sample, "is not found in dataset."
         print
         print "Find out the dataset samples:", "https://genome-cancer.soe.ucsc.edu/proj/site/xena/datapages/?host="+ hub + "&dataset="+ dataset + "&allSamples=true"
         print
@@ -37,8 +37,9 @@ def checkFields (fields, mapping, hub, dataset):
         elif field in mapping and mapping[field] in d_fields:
             pass
         else:
-            print field, "is not in dataset \""+ dataset +"\"."
+            print field, "is not found in dataset."
             print
+            print "Find out the dataset identifiers:", "https://genome-cancer.soe.ucsc.edu/proj/site/xena/datapages/?host="+ hub + "&dataset="+ dataset + "&allFields=true"
             return 1
     return 0
 
