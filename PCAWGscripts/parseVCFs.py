@@ -142,7 +142,7 @@ def parse_BND (vcffile, start_padding, end_padding, annDic):
                 data['end']= end
                 data['ref']= ref
                 data['alt']= alt
-                data['altGene'] = string.join(t_genes,", ")
+                data['altGene'] = string.join(t_genes,", ") or 'intergenic region'
                 data['gene']=gene
                 data['effect']= effect
                 data['id'] = id
