@@ -196,6 +196,7 @@ def humanmethylation (inDir, outDir, cancer,flog,PATHPATTERN, REALRUN):
     #change description
     J["min"]=0.0
     J["max"]=1.0
+    J["unit"]="beta value"
     if suffix =="HumanMethylation27":
         J["PLATFORM"]= "Illumina Infinium HumanMethylation27"
     elif suffix =="HumanMethylation450":

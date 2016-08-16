@@ -16,6 +16,11 @@ import radia
 tmpDir =str(uuid.uuid4())+"/"
 VAF_cut =0.04
 
+## REALRUN
+# 2: only run matrix json
+# 1: run both xena and matrix, real data rerun
+# 0: run both json
+
 #vcf protected germline
 def germline_ucsc_illuminaga_dnaseq_cont (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
@@ -53,7 +58,7 @@ def ucsc_illuminaga_dnaseq_cont_automated (inDir, outDir, cancer,flog,REALRUN):
     radia.radiaToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution,type)
 
 #maf open ucsc
-def ucsc_illuminaga_dnaseq_automated (inDir, outDir, cancer,flog,REALRUN):
+def ucsc_illuminaga_dnaseq_automated (inDir, outDir, cancer, flog, REALRUN):
     print cancer, sys._getframe().f_code.co_name
     distribution = True
     PATHPATTERN= "IlluminaGA_DNASeq_automated."
@@ -298,6 +303,9 @@ def bcgsc_illuminahiseq_dnaseq_curated (inDir, outDir, cancer,flog,REALRUN):
 
 def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM, distribution, VAF= False):
     #VAF =true is saying use VAF_cut, for broad data mostly 
+    if REALRUN == 2:
+        return
+
     garbage=[tmpDir]
     os.system("rm -rf tmp_*")
     if os.path.exists( tmpDir ):
@@ -579,7 +587,7 @@ def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, data
             rootDir =tmpDir
 
     #make sure there is data
-    if REALRUN and (rootDir =="" or not os.path.exists(rootDir)):
+    if REALRUN ==1 and (rootDir =="" or not os.path.exists(rootDir)):
         print "ERROR expect data, but wrong dirpath", rootDir, cancer, __name__
         return
 
@@ -592,7 +600,7 @@ def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, data
     cgFileName= namesuffix
 
     #data processing multiple dirs mode
-    if REALRUN:
+    if REALRUN == 1:
         fgene=open("/data/TCGA/tcgaDataOneOff/Genomic/PANCAN/genes",'r')
         allGenes=[]
         for gene in string.split(fgene.read(),"\n"):
@@ -629,6 +637,7 @@ def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, data
     J[":sampleMap"]="TCGA."+cancer+".sampleMap"
     J[":probeMap"]= "hugo"
     J["PLATFORM"]= PLATFORM
+    J["unit"]= "binary nonsilent mutation"
     if string.find( dataProducer ,"Broad")!=-1:
         J["method"]= "MuTect"
     elif string.find( dataProducer ,"Baylor")!=-1:

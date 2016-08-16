@@ -121,6 +121,7 @@ def process (outDir, cancer, c1, c2, file, REALRUN,type):
     J['domain']="TCGA"
     J['tags']=["cancer"]+ TCGAUtil.tags[cancer]
     J['owner']="TCGA"
+    J["unit"]=Jinput["unit"]
 
     if Jinput.has_key("gdata_tags"):
         J["gdata_tags"]= Jinput["gdata_tags"]

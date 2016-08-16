@@ -183,7 +183,7 @@ def RPPA (inDir, outDir, cancer, flog,REALRUN):
     J['domain']="TCGA"
     J['owner']="TCGA"
     J["tags"]=["cancer"]+ TCGAUtil.tags[cancer]
-    
+    J["unit"]="normalized RPPA value"
     J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") protein expression by reverse phase protein array (RPPA).<br><br> The data was generated and processed at the MD Anderson Cancer Center TCGA proteome characterization center RPPA core. Level 3 interpreted level data was downloaded from TCGA data coordination center.<br><br>"
     
     J["description"] = J["description"] + "Data normalization from the MDACC RPPA core: <a href=\"http://bioinformatics.mdanderson.org/main/TCPA:Overview\" target=\"_blank\"><u>under section How are the RPPA data processed</u></a>.<br>"

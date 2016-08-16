@@ -252,7 +252,7 @@ def makeJSON(oHandle,cancer,lastMageTab,inDir,noCNV,type):
     J['domain']="TCGA"
     J['tags']=["cancer"]+ TCGAUtil.tags[cancer]
     J['owner']="TCGA"
-    
+    J["unit"]= "log2(tumor/normal)"
     #change description
     J["PLATFORM"]= "SNP6"
     J["wrangling_procedure"]= "Level_3 data download from TCGA DCC, processed at UCSC into cgData repository"

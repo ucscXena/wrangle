@@ -4,7 +4,7 @@ import math
 import inspect
 import copy
 import Jing_util
-import mergeGenomicMatrixFiles
+import mergeGenomicMatrixFiles_memEfficient as mergeGenomicMatrixFiles
 
 LEVEL="Level_3"
 
@@ -76,7 +76,7 @@ def mergeGA_Hiseq (inDir, outDir, cancer, flog, REALRUN):
               +string.replace(inDir,TCGAUtil.localBase,"")
     J["version"]= datetime.date.today().isoformat()
     J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
-    J["unit"]="log2(reads_per_million_miRNA_mapped+1)"
+    J["unit"]="log2(RPM+1)"
 
     platformTitle ="Illumina Genome Analyzer and HiSeq 2000 RNA Sequencing platform"
 
@@ -87,7 +87,7 @@ def mergeGA_Hiseq (inDir, outDir, cancer, flog, REALRUN):
     J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") miRNA expression by RNAseq (Illumina GA, HiSeq)"
     J["description"]= J["description"] +"TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") miRNA expression by RNAseq.<br><br>"+ \
         " The miRNA expression profile was measured experimentally using the "+platformTitle+" by the "+ dataProducer +"." + \
-        " Level 3 interpreted level data was downloaded from TCGA data coordination center. This dataset shows the miRNA transcription estimates in log2 (reads per million miRNA mapped)."
+        " Level 3 interpreted level data was downloaded from TCGA data coordination center. Download data is in unit reads per million mapped reads (RPM). This dataset shows the miRNA transcription estimates in log2 (RPM). For more information, see : http://nar.oxfordjournals.org/content/early/2015/08/13/nar.gkv808.full ."
 
     J["description"] = J["description"] +\
                        "<br><br>In order to more easily view the differential expression between samples, we set the default view to center each miRNA to zero by independently subtracting the mean of each miRNA across the cohort on the fly. Users can view the original non-normalized values by adjusting visualization settings."
@@ -336,7 +336,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
               +string.replace(inDir,TCGAUtil.localBase,"")
     J["version"]= datetime.date.today().isoformat()
     J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
-    J["unit"]="log2(reads_per_million_miRNA_mapped+1)"
+    J["unit"]="log2(RPM+1)"
 
     if PATHPATTERN in ["IlluminaHiSeq_miRNASeq"]:
         platformTitle ="Illumina HiSeq 2000 RNA Sequencing platform"
@@ -350,7 +350,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") miRNA expression by RNAseq ("+suffix+")"
     J["description"]= J["description"] +"TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") miRNA expression by RNAseq.<br><br>"+ \
         " The miRNA expression profile was measured experimentally using the "+platformTitle+" by the "+ dataProducer +"." + \
-        " Level 3 interpreted level data was downloaded from TCGA data coordination center. This dataset shows the miRNA transcription estimates in log2 (reads per million miRNA mapped)."
+        " Level 3 interpreted level data was downloaded from TCGA data coordination center. Download data is in the unit of reads per million mapped reads (RPM). This dataset shows the miRNA transcription estimates in log2 (RPM). For more information see: http://nar.oxfordjournals.org/content/early/2015/08/13/nar.gkv808.full ."
 
     J["description"] = J["description"] +\
                        "<br><br>In order to more easily view the differential expression between samples, we set the default view to center each miRNA to zero by independently subtracting the mean of each miRNA across the cohort on the fly. Users can view the original non-normalized values by adjusting visualization settings."

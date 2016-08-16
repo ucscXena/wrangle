@@ -95,11 +95,13 @@ def CopyNumber_Gistic2 (inDir, outDir, cancer,flog,REALRUN):
         if pattern=="all_data_by_genes":
             suffix="gistic2"
             namesuffix="gistic2"
-            
+            unit = "Gistic2 copy number"
         if pattern=="all_thresholded.by_genes":
             suffix="gistic2_thresholded"
             namesuffix="gistic2thd"
-        
+            unit = "-2,-1,0,1,2: 2 copy del, 1 copy del, no change, amplification, high-amplification"
+            J["max"]= 2.0
+            J["min"]= -2.0
         J["label"]= "copy number ("+suffix+")"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") copy number "+suffix+" estimate"
         J["dataSubType"]="copy number (gene-level)"
@@ -109,13 +111,13 @@ def CopyNumber_Gistic2 (inDir, outDir, cancer,flog,REALRUN):
         J["url"]= "http://gdac.broadinstitute.org/runs/analyses__"+FHdate[0:4]+"_"+FHdate[4:6]+"_"+FHdate[6:8]+"/data/"+cancer+"/"+FHdate[0:8]+"/"
         J["version"]= datetime.date.today().isoformat()
         J["wrangler"]= "xena TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
-                
+        J["unit"]= unit
         J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
         J["sample_type"]=["tumor"]
         J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
         J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]+" ("+cancer+")"
         J['tags']=["cancer"]+ TCGAUtil.tags[cancer]
-        
+
         #change description
         J["wrangling_procedure"]= "FIREHOSE data download from TCGA DCC, processed at UCSC into xena repository"
                 

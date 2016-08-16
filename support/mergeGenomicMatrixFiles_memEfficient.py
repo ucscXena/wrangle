@@ -104,12 +104,13 @@ def process(cur_genes, infile, allgenes, outfile):
     fout.close()
     return 
 
-if len(sys.argv[:])<4:
+if __name__ == "__main__" and len(sys.argv[:])<4:
     print "python mergeGenomicMatrixFiles_memEfficient.py outfile tmpDirRoot infiles"
     sys.exit()
 
-outfile = sys.argv[1]
-root = sys.argv[2]
-infile_list =sys.argv[3:]
-print root, infile_list, outfile
-merge (infile_list, outfile, root)
+if __name__ == "__main__":
+    outfile = sys.argv[1]
+    root = sys.argv[2]
+    infile_list =sys.argv[3:]
+    print root, infile_list, outfile
+    merge (infile_list, outfile, root)

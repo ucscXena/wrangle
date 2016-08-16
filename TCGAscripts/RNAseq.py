@@ -583,7 +583,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
             J["unit"]="log2(normalized_count+1)"
             J["wrangling_procedure"]= "Level_3 data (file names: *.rsem.genes.normalized_results) are downloaded from TCGA DCC, log2(x+1) transformed, and processed at UCSC into Xena repository"
         else: #percentile
-            J["unit"]="rank"
+            J["unit"]="percentile rank"
             J["wrangling_procedure"]= "Level_3 data (file names: *.rsem.genes.normalized_results) are downloaded from TCGA DCC, percentile ranked, and processed at UCSC into Xena repository."
             
     elif string.find(namesuffix, "exon")!=-1: #exon

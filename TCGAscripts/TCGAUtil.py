@@ -599,8 +599,8 @@ def uuid_normal_cellline():
 
     txtlocal =  "uuid_normal_cellline.txt"
     localfile = "uuid_normal_cellline.json"
-    
-    current=0
+    current=1 ##DCC went away,no update
+    #current=0
     if os.path.exists(txtlocal):
         fileTime= time.strftime("%Y-%m-%d",time.localtime(os.path.getmtime(localfile)))
         today= datetime.date.today()
@@ -652,7 +652,8 @@ def uuid_cellline():
 
     txtlocal = "uuid_cellline.txt"
     localfile = "uuid_cellline.json"
-    current=0
+    current=1 ##DCC went away,no update
+
     if os.path.exists(txtlocal):
         fileTime= time.strftime("%Y-%m-%d",time.localtime(os.path.getmtime(localfile)))
         today= datetime.date.today()
@@ -691,7 +692,8 @@ def uuid_cellline():
         
 def uuid_Aliquot_all():  #the dictionary of all Aliquote key=uuid value=barcode
     localfile = "uuid_Aliquot.json"
-    current=0
+    current=1
+    #current=0
     if os.path.exists(localfile):
         fileTime= time.strftime("%Y-%m-%d",time.localtime(os.path.getmtime(localfile)))
         today= datetime.date.today()
@@ -762,7 +764,8 @@ def uuid_Aliquot_all():  #the dictionary of all Aliquote key=uuid value=barcode
 
 def uuid_Sample_all():  #the dictionary of all Aliquote key=uuid value=barcode
     localfile = "uuid_Sample.json"
-    current=0
+    current=1
+    #current=0
     if os.path.exists(localfile):
         fileTime= time.strftime("%Y-%m-%d",time.localtime(os.path.getmtime(localfile)))
         today= datetime.date.today()
