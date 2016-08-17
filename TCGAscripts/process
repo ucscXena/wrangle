@@ -2,6 +2,10 @@ cd /inside/home/jzhu/cgDataJing/TCGAscripts
 
 python run.py config log
 
+#lint
+for f in $(find preFreeze/ -name '*.json'); do jsonlint -q $f; done
+
+
 cd /inside/home/jzhu/cgDataJing/scripts/
 
 ./flattenParrallel   #python runFlattenTCGA.py --inDir=data/public/TCGA/ --outDir=data_flatten/public/TCGA/

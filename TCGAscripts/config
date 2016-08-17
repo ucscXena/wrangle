@@ -77,11 +77,11 @@ $FIREHOSEDATE_ana_version
 0	0	MergePANCAN	Methylation27	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
 0	0	MergePANCAN	Methylation450	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
 
-0	0	MergePANCAN	mutation_broad	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
-0	0	MergePANCAN	mutation_bcm	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
-0	0	MergePANCAN	mutation_ucsc_maf	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
-0	0	MergePANCAN	mutation_bcgsc	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
-0	0	MergePANCAN	mutation_wustl	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
+1	0	MergePANCAN	mutation_broad	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
+1	0	MergePANCAN	mutation_bcm	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
+1	0	MergePANCAN	mutation_ucsc_maf	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
+1	0	MergePANCAN	mutation_bcgsc	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
+1	0	MergePANCAN	mutation_wustl	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
 
 #last to do
 #primary_disease
@@ -95,12 +95,10 @@ $FIREHOSEDATE_ana_version
 0	0	TCGASampleMap	TCGASampleMap	$TMP*/	$TMP
 
 #cohort.json
-1	1	xenaCohort	xenaCohort	$TMP*/	$TMP
+0	0	xenaCohort	xenaCohort	$TMP*/	$TMP
 
 #PANCAN dataset done after new data compiled
 0	0	MergePANCAN	clin	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
-
-
 
 
 
@@ -120,6 +118,7 @@ $FIREHOSEDATE_ana_version
 0	0	mutationMatrix	mutationMatrix	/data/TCGA/tcgaDataOneOff/Genomic/PANCAN/*_cleaned_filtered.maf	$TMP
 #PANCAN12 RBN RPPA oneoff
 0	0	RPPA_RBN	RPPA_RBN	/data/TCGA/tcgaDataOneOff/Genomic/PANCAN/*_RBN	$TMP
+
 #PANCAN12 subtype oneoff
 0	0	pancan	pancan_cluster_of_cluster	/data/TCGA/tcgaDataOneOff/Clinical/*/Table_COCA_syn2487022	$TMP
 0	0	pancan	pancan_RPPA	/data/TCGA/tcgaDataOneOff/Clinical/*/PanCan11_RBN_SimpleCluster_syn1756922_clean	$TMP

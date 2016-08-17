@@ -339,6 +339,7 @@ def processMutationData (filename, dir, outDir, cancer,flog, REALRUN):
     elif filename=="mutation_wustl":
         mutation_wustlSON(J,cancer,genelevel)
     J[":probeMap"]="hugo"
+    J["unit"] = "binary non-silent mutation"
     J["dataSubType"]="somatic non-silent mutation (gene-level)"
     commonJSON(J, cancer)
 

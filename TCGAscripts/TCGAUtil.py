@@ -715,14 +715,15 @@ def uuid_Aliquot_all():  #the dictionary of all Aliquote key=uuid value=barcode
         dic[uuid]=0
 
     uuid_barcode_dic={}
-    os.system("wget -O uuid_barcode "+uuid_barcode_txt)
-    fin = open("uuid_barcode","r")
-    for line in fin.readlines():
-        #uuid, barcode =string.split(line,',')[0:2]
-        uuid, barcode =string.split(line,'\t')[0:2]
-        if not uuid_barcode_dic.has_key(uuid):
-            uuid_barcode_dic[uuid]=barcode
-    fin.close()
+    if not current:
+        os.system("wget -O uuid_barcode "+uuid_barcode_txt)
+        fin = open("uuid_barcode","r")
+        for line in fin.readlines():
+            #uuid, barcode =string.split(line,',')[0:2]
+            uuid, barcode =string.split(line,'\t')[0:2]
+            if not uuid_barcode_dic.has_key(uuid):
+                uuid_barcode_dic[uuid]=barcode
+        fin.close()
 
     if os.path.exists("jing_uuid_barcode"):
         fin = open("jing_uuid_barcode","r")
@@ -736,29 +737,30 @@ def uuid_Aliquot_all():  #the dictionary of all Aliquote key=uuid value=barcode
             uuid_barcode_dic[uuid]=barcode
         fin.close()
         
-    for item in dic:
-        if item not in uuid_barcode_dic:
-            c=1
-            while c:
-                try:
-                    site = "https://tcga-data.nci.nih.gov/uuid/uuidws/metadata/"
-                    q="json/uuid/"+item
-                    os.system("wget -nv -O tmp "+ site+q)
-                    iHandle = open("tmp","r")
-                    J = json.loads(iHandle.read())
-                    iHandle.close()
-                    uuid_barcode_dic[item]=J["tcgaElement"]["barcodes"]["barcode"]
-                    break
-                except ValueError:
-                    c=c+1
-                    if c>3:
+    if not current:
+        for item in dic:
+            if item not in uuid_barcode_dic:
+                c=1
+                while c:
+                    try:
+                        site = "https://tcga-data.nci.nih.gov/uuid/uuidws/metadata/"
+                        q="json/uuid/"+item
+                        os.system("wget -nv -O tmp "+ site+q)
+                        iHandle = open("tmp","r")
+                        J = json.loads(iHandle.read())
+                        iHandle.close()
+                        uuid_barcode_dic[item]=J["tcgaElement"]["barcodes"]["barcode"]
                         break
+                    except ValueError:
+                        c=c+1
+                        if c>3:
+                            break
 
-    os.system("cp jing_uuid_barcode jing_uuid_barcode_BK")
-    fout= open("jing_uuid_barcode","w")
-    for item in uuid_barcode_dic:
-        fout.write(item+"\t"+uuid_barcode_dic[item]+"\n")
-    fout.close()
+        os.system("cp jing_uuid_barcode jing_uuid_barcode_BK")
+        fout= open("jing_uuid_barcode","w")
+        for item in uuid_barcode_dic:
+            fout.write(item+"\t"+uuid_barcode_dic[item]+"\n")
+        fout.close()
 
     return uuid_barcode_dic
 
@@ -809,29 +811,30 @@ def uuid_Sample_all():  #the dictionary of all Aliquote key=uuid value=barcode
                 uuid_barcode_dic[uuid]=barcode
             uuid_barcode_dic[uuid]=barcode
         fin.close()
-        
-    for item in dic:
-        if item not in uuid_barcode_dic:
-            c=1
-            while c:
-                try:
-                    site = "https://tcga-data.nci.nih.gov/uuid/uuidws/metadata/"
-                    q="json/uuid/"+item
-                    os.system("wget -nv -O tmp "+ site+q)
-                    iHandle = open("tmp","r")
-                    J = json.loads(iHandle.read())
-                    iHandle.close()
-                    uuid_barcode_dic[item]=J["tcgaElement"]["barcodes"]["barcode"]
-                    break
-                except ValueError:
-                    c=c +1
-                    if c>3:
+    
+    if not current:
+        for item in dic:
+            if item not in uuid_barcode_dic:
+                c=1
+                while c:
+                    try:
+                        site = "https://tcga-data.nci.nih.gov/uuid/uuidws/metadata/"
+                        q="json/uuid/"+item
+                        os.system("wget -nv -O tmp "+ site+q)
+                        iHandle = open("tmp","r")
+                        J = json.loads(iHandle.read())
+                        iHandle.close()
+                        uuid_barcode_dic[item]=J["tcgaElement"]["barcodes"]["barcode"]
                         break
-    os.system("cp jing_uuid_barcode_sample jing_uuid_barcode_sample_BK")
-    fout= open("jing_uuid_barcode_sample","w")
-    for item in uuid_barcode_dic:
-        fout.write(item+"\t"+uuid_barcode_dic[item]+"\n")
-    fout.close()
+                    except ValueError:
+                        c=c +1
+                        if c>3:
+                            break
+        os.system("cp jing_uuid_barcode_sample jing_uuid_barcode_sample_BK")
+        fout= open("jing_uuid_barcode_sample","w")
+        for item in uuid_barcode_dic:
+            fout.write(item+"\t"+uuid_barcode_dic[item]+"\n")
+            fout.close()
 
     return uuid_barcode_dic
 
