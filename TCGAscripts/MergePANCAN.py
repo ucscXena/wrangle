@@ -468,6 +468,7 @@ def miRNAJSON(J,cancer):
         J.pop(":probeMap")
     J["dataSubType"]="miRNA expression RNAseq"
     J["colNormalization"]=True
+    J["unit"]="log2(RPM+1)"
     return
 
 def HumanMethylation27JSON(J,cancer):
@@ -527,6 +528,7 @@ def gisticJSON(J,cancer):
     J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" gene-level copy number variation (CNV) estimated using the GISTIC2 method, compiled using data from all TCGA cohorts. Copy number was measured experimentally using whole genome microarray at Broad TCGA genome characterization center. Subsequently, TCGA FIREHOSE pipeline applied GISTIC2 method to produce segmented CNV data, which was then mapped to genes to produce gene-level estimates. Gistic2 data from all TCGA cohorts are combined to produce this dataset. Reference to GISTIC2 method PMID:21527027."
     J["description"] = J["description"] +"<br><br>"    
     J[":probeMap"]="hugo"
+    J["unit"] = "Gistic2 copy number"
     J["dataSubType"]="copy number (gene-level)"
     return
 
@@ -537,6 +539,7 @@ def gistic_thresholdJSON(J,cancer):
     J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" gene-level copy number variation (CNV) estimated using the GISTIC2 threshold method, compiled using data from all TCGA cohorts. Copy number was measured experimentally using whole genome microarray at a TCGA genome characterization center. Subsequently, GISTIC2 method was applied using the TCGA FIREHOSE pipeline to produce gene-level copy number estimates. GISTIC2 further thresholded the estimated values to -2,-1,0,1,2, representing homozygous deletion, single copy deletion, diploid normal copy, low-level copy number amplification, or high-level copy number amplification. Genes are mapped onto the human genome coordinates using UCSC cgData HUGO probeMap. Reference to GISTIC2 method PMID:21527027."
     J["description"] = J["description"] +"<br><br>"    
     J[":probeMap"]="hugo"
+    J["unit"] = "-2,-1,0,1,2: 2 copy del, 1 copy del, no change, amplification, high-amplification"
     J["dataSubType"]="copy number (gene-level)"
     return
 
@@ -636,7 +639,7 @@ def processRNA (filename, dir,outDir, cancer,flog, REALRUN):
         J[":sampleMap"]="TCGA."+cancer+".sampleMap"
         J['label']="gene expression RNAseq ("+ J["RNAtype"]+ " IlluminaHiSeq pancan normalized)"
         J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression by RNAseq ("+ J["RNAtype"]+" IlluminaHiSeq), pancan normalized"
-
+        J["unit"]="pan-cancer normalized log2(norm_counts+1)"
         J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression by RNAseq, mean-normalized (per gene) across all TCGA cohorts. Values in this dataset are generated at UCSC by combining \"gene expression RNAseq\" values of all TCGA cohorts, values are then mean-centered per gene, then extracting the converted data only belongs to the this cohort."
 
         J["description"]= J["description"] +"<br><br>For comparing data within this cohort, we recommend to use the \"gene expression RNAseq\" dataset. For questions regarding the gene expression of this particular cohort in relation to other types tumors, you can use the pancan normalized version of the \"gene expression RNAseq\" data. For comparing with data outside TCGA, we recommend using the percentile version if the non-TCGA data is normalized by percentile ranking. For more information, please see our Data FAQ: <a href=https://docs.google.com/document/d/1q-7Tkzd7pci4Rz-_IswASRMRzYrbgx1FTTfAWOyHbmk/edit?usp=sharing target=\"_blank\"><u>here</u></a>.<br>"

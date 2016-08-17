@@ -66,7 +66,7 @@ def mutationMatrix (inDir, outDir, cancer,flog,REALRUN):
     J["dataProducer"]= dataProducer
     J["type"]= "genomicMatrix" 
     J[":sampleMap"]="TCGA."+cancer+".sampleMap"
-    
+    J["unit"]= "binary non-silent mutation"
     #multiple dirs
     J["url"]="https://www.synapse.org/#!Synapse:syn1729383"
     J["version"]= datetime.date.today().isoformat()

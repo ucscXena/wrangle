@@ -637,7 +637,7 @@ def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, data
     J[":sampleMap"]="TCGA."+cancer+".sampleMap"
     J[":probeMap"]= "hugo"
     J["PLATFORM"]= PLATFORM
-    J["unit"]= "binary nonsilent mutation"
+    J["unit"]= "binary non-silent mutation"
     if string.find( dataProducer ,"Broad")!=-1:
         J["method"]= "MuTect"
     elif string.find( dataProducer ,"Baylor")!=-1:

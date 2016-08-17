@@ -154,10 +154,9 @@ def Affy (inDir, outDir, cancer,flog,REALRUN):
     J["label"]="gene expression ("+suffix+")"
     J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression ("+suffix+" array)"
     J["dataSubType"]="gene expression array"
-    J["expressionDataSpace"] = "log", 
     J["redistribution"]= True
     J["dataProducer"]= "Broad Institute of MIT and Harvard University cancer genomic characterization center"
-
+    J["unit"] = "log2(affy RMA)"
     #multiple dirs
     J["url"]=TCGAUtil.remoteBase \
               +string.replace(inDir,TCGAUtil.localBase,"")

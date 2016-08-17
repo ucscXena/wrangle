@@ -135,7 +135,7 @@ def AgilentG4502A (inDir, outDir, cancer,flog,PATHPATTERN,REALRUN):
               +string.replace(inDir,TCGAUtil.localBase,"")
     J["version"]=  datetime.date.today().isoformat()
     J["wrangler"]= "xena TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
-
+    J["unit"]="normalized Agilent array expression"
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
     J["sample_type"]=["tumor"]
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
