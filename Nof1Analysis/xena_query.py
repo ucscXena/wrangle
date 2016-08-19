@@ -206,7 +206,7 @@ def all_cohorts(url):
     """ return example: ["chinSF2007_public","TCGA.BRCA.sampleMap","cohort3"] """
     return json.loads(post(url,cohort_query_str))
 
-def dataset_field(host, dataset):
+def dataset_field (host, dataset):
     """return probes or features of a dataset"""
     return json.loads(post(host, dataset_field_str % (quote(dataset))))
 
