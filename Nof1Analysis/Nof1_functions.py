@@ -15,6 +15,9 @@ def rank_and_percentage(v, v_list):
             return i+1, 100 - float(i)/K *100
     return K+1, 0.0
 
+def revert_Log2_theta (Nof1_value, theta):
+    return math.pow(2, Nof1_value)- theta
+
 def checkSamples (Nof1_sample, hub, dataset):
     samples = dataset_samples(hub, dataset)
 

@@ -13,15 +13,22 @@ print Nof1_sample
 
 import sys
 import Nof1_functions
-Nof1_hub = "https://itomic.xenahubs.net"
-Nof1_dataset = "latestCCI_EXP_G_TPM_log"
+Nof1_item = {
+    "hub" : "https://itomic.xenahubs.net",
+    "dataset" : "latestCCI_EXP_G_TPM_log",
+    "mode" : "probe",
+    "name" : "itomic_Nof1",
+    "label" : "itomic_Nof1",
+    "samples" : [Nof1_sample],
+    "log2Theta" : 0.001
+}
 
 
 # # check sample
 
 # In[ ]:
 
-if (Nof1_functions.checkSamples (Nof1_sample, Nof1_hub, Nof1_dataset)):
+if (Nof1_functions.checkSamples (Nof1_sample, Nof1_item["hub"], Nof1_item["dataset"])):
     sys.exit()
 else:
     print "pass"
@@ -57,7 +64,7 @@ genaname_mapping ={
 
 # In[ ]:
 
-if (Nof1_functions.checkFields(genes, genaname_mapping, Nof1_hub, Nof1_dataset)):
+if (Nof1_functions.checkFields(genes, genaname_mapping, Nof1_item["hub"], Nof1_item["dataset"])):
     sys.exit()
 else:
     print "pass"
@@ -92,7 +99,7 @@ fout.write(string.join(header2ndList,'\t') +'\n')
 
 import itomic_Nof1
 for gene in genes:
-    itomic_Nof1.itomic_Nof1(Nof1_sample, gene, genaname_mapping[gene], Nof1_hub, Nof1_dataset, comparison_list, fout)
+    itomic_Nof1.itomic_Nof1(Nof1_item, gene, genaname_mapping[gene], comparison_list, fout)
 fout.close()
 
 itomic_Nof1.itomic_legend()

@@ -7,11 +7,8 @@ def get_itomic_Data (gene, hub, dataset, samples):
     itomic_Data =dict(zip(samples, values))
     return itomic_Data
 
-def itomic_log2TPM_2_TPM (Nof1_value):
-    theta =0.001
-    return math.pow(2, Nof1_value)- theta
 
-def Nof1_output (Nof1_sample, original_label, gene, itomic_Data):
+def Nof1_output (Nof1_sample, original_label, gene, itomic_Data, Nof1_theta):
     print
     print 'Sample: ', Nof1_sample
     print 'Gene:', original_label
@@ -19,21 +16,20 @@ def Nof1_output (Nof1_sample, original_label, gene, itomic_Data):
         print 'HUGO gene name:', gene
 
     Nof1_value = itomic_Data[Nof1_sample]
-    Nof1_TPM = itomic_log2TPM_2_TPM(Nof1_value)
+    Nof1_TPM = revert_Log2_theta(Nof1_value, Nof1_theta)
 
     print "log2(TPM):", Nof1_value, "TPM:", '{:.2f}'.format(Nof1_TPM)
 
 
-def itomic_Nof1(Nof1_sample, original_label, gene, Nof1_hub, Nof1_dataset, comparison_list, fout):
-    itomic_samples = dataset_samples(Nof1_hub, Nof1_dataset)
+def itomic_Nof1(Nof1_item, original_label, gene, comparison_list, fout):
+    itomic_samples = dataset_samples(Nof1_item["hub"], Nof1_item["dataset"])
 
-    itomic_Data = get_itomic_Data (gene, Nof1_hub, Nof1_dataset, itomic_samples)
-    Nof1_output (Nof1_sample, original_label, gene, itomic_Data)
-    Nof1_value = itomic_Data[Nof1_sample]
+    itomic_Data = get_itomic_Data (gene, Nof1_item["hub"], Nof1_item["dataset"], itomic_samples)
+    Nof1_output (Nof1_item["samples"][0], original_label, gene, itomic_Data, Nof1_item["log2Theta"])
+    Nof1_value = itomic_Data[Nof1_item["samples"][0]]
 
     outputList =[gene]
 
-    print Nof1_value,"here"
     for item in comparison_list:
         hub = item["hub"]
         dataset = item["dataset"]
@@ -62,7 +58,7 @@ def itomic_Nof1(Nof1_sample, original_label, gene, Nof1_hub, Nof1_dataset, compa
             print list[0], list[1][0], '{:.2f}%'.format(list[1][1])
 
     outputList.append('{:.2f}'.format(Nof1_value))
-    outputList.append('{:.2f}'.format(itomic_log2TPM_2_TPM(Nof1_value)))
+    outputList.append('{:.2f}'.format(revert_Log2_theta(Nof1_value, Nof1_item["log2Theta"])))
     fout.write(string.join(outputList,'\t') +'\n')
 
 
