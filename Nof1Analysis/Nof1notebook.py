@@ -12,6 +12,7 @@ print Nof1_sample
 # In[ ]:
 
 import sys
+
 import Nof1_functions
 Nof1_item = {
     "hub" : "https://itomic.xenahubs.net",
@@ -34,13 +35,23 @@ else:
     print "pass"
 
 
-# # enter gene
+# # enter gene 
 
 # In[ ]:
 
 import re
+import string
 genes = raw_input('Enter a single or a list of gene names (e.g. PTEN or PTEN,TP53 or a column of gene names copied from a spreadsheet): ') or "PTEN,TP53"
-genes = filter(lambda x: x!='', re.split(';|,|\n', genes))
+genes = filter(lambda x: x!='', re.split(';|,| |\n', genes))
+new_genes =[]
+new_genes = [string.strip (genes[0])]
+for i in range (1, len(genes)):
+    gene = string.strip(genes[i])
+    if gene[0] =="(" and gene[-1] ==")":
+        new_genes[-1] = new_genes[-1] + " (" + string.strip(gene[1:-1]) +")"
+    else:
+        new_genes.append(gene)
+genes = new_genes
 print genes
 
 
@@ -56,14 +67,16 @@ genaname_mapping ={
     "PDL1" : "CD274",
     "PD-L2" : "PDCD1LG2",
     "PDL2" : "PDCD1LG2",
-    "TROP2" : "TACSTD2"
+    "TROP2" : "TACSTD2",
+    "p16" : "CDKN2A",
+    "p18" : "CDKN2C"
 }
 
 
 # # check gene name
 
 # In[ ]:
-import string
+
 def cleanGeneName_Funtion (originalLable):
     return string.strip(string.split(originalLable,'(')[0])
 
@@ -73,10 +86,18 @@ else:
     print "pass"
 
 
+# # Enter output file name
+
+# In[ ]:
+
+outputfile = raw_input('Enter output file name (e.g. result.txt): ') or "result.txt"
+
+
 # ## Run - results at the bottom
 
 # In[ ]:
 
+print genes
 import xena_datasetlist
 
 comparison_list = [
@@ -84,11 +105,8 @@ comparison_list = [
     xena_datasetlist.TCGA_BRCA_tumors,
 ]
 
-outputfile = "result.txt"
-
 import itomic_Nof1
-for gene in genes:
-    itomic_Nof1.itomic_Nof1(Nof1_item, genes, genaname_mapping, comparison_list, outputfile)
+itomic_Nof1.itomic_Nof1(Nof1_item, genes, genaname_mapping, comparison_list, outputfile)
 
 itomic_Nof1.itomic_legend()
 
