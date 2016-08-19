@@ -44,8 +44,8 @@ def itomic_Nof1(Nof1_item, original_label, gene, comparison_list, fout):
         outputList.append('{:.2f}%'.format(percentage))
 
         r_and_p_values = map(lambda x: rank_and_percentage(x, h_l_values), itomic_Data.values())
-        outputList.append(string.join(map(lambda x: '100' if (x[1]==100.0) else '{:.2g}'.format(x[1]),
-            r_and_p_values),','))
+        outputList.append(string.join(map(lambda x: '100' if (x[1] > 99.5) else '{:.2g}'.format(x[1]),
+            r_and_p_values),', '))
 
         print
         print name +" ( n=", len(h_l_values), "):"
