@@ -76,7 +76,7 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_list, outpu
             print "rank:", rank
             print map(lambda x: x[0], r_and_p_values)
 
-            print "Rank (%):", '{:.2f}%'.format(percentage)
+            print "Rank %:", '{:.2f}%'.format(percentage)
 
             for list in zip(itomic_Data.keys(), r_and_p_values):
                 print list[0], list[1][0], '{:.2f}%'.format(list[1][1])
