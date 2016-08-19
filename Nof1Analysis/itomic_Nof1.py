@@ -76,7 +76,7 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_list, outpu
             print "rank:", rank
             print map(lambda x: x[0], r_and_p_values)
 
-            print "expression level percentile:", '{:.2f}%'.format(percentage)
+            print "Rank (%):", '{:.2f}%'.format(percentage)
 
             for list in zip(itomic_Data.keys(), r_and_p_values):
                 print list[0], list[1][0], '{:.2f}%'.format(list[1][1])
@@ -89,6 +89,6 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_list, outpu
 def itomic_legend():
     print "\nExpression values are sorted from high to low."
     print "Low rank means high expression."
-    print "expression level percentile is the percentile of samples has lower expression than sample of interest."
-    print "High expression level percentile means higher expression."
+    print "Rank % is the percentile of samples has lower expression than sample of interest."
+    print "High Rank %  means higher expression."
     print
