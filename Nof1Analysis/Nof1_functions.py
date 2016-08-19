@@ -30,17 +30,18 @@ def checkSamples (Nof1_sample, hub, dataset):
     else:
         return 0
 
-def checkFields (fields, mapping, hub, dataset):
+def checkFields (fields, mapping, hub, dataset, cleanFuntion):
     d_fields = dataset_fields (hub, dataset)
-    for field in fields:
-        if field  in d_fields:
-           mapping[field] = field
+    for original_field in fields:
+        field = cleanFuntion (original_field)
+        if field in d_fields:
+           mapping[original_field] = field
         elif string.upper(field) in d_fields:
-            mapping[field] = string.upper(field)
-        elif field in mapping and mapping[field] in d_fields:
+            mapping[original_field] = string.upper(field)
+        elif original_field in mapping and mapping[original_field] in d_fields:
             pass
         else:
-            print field, "is not found in dataset."
+            print original_field, "is not found in dataset."
             print
             print "Find out the dataset identifiers:", "https://genome-cancer.soe.ucsc.edu/proj/site/xena/datapages/?host="+ hub + "&dataset="+ dataset + "&allFields=true"
             return 1

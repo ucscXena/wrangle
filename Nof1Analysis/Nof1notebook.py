@@ -39,8 +39,8 @@ else:
 # In[ ]:
 
 import re
-genes = raw_input('Enter a single or a list of gene names (e.g. PTEN or PTEN TP53): ') or "PTEN,TP53"
-genes = filter(lambda x: x!='', re.split(';|,| |\n', genes))
+genes = raw_input('Enter a single or a list of gene names (e.g. PTEN or PTEN,TP53 or a column of gene names copied from a spreadsheet): ') or "PTEN,TP53"
+genes = filter(lambda x: x!='', re.split(';|,|\n', genes))
 print genes
 
 
@@ -63,8 +63,11 @@ genaname_mapping ={
 # # check gene name
 
 # In[ ]:
+import string
+def cleanGeneName_Funtion (originalLable):
+    return string.strip(string.split(originalLable,'(')[0])
 
-if (Nof1_functions.checkFields(genes, genaname_mapping, Nof1_item["hub"], Nof1_item["dataset"])):
+if (Nof1_functions.checkFields(genes, genaname_mapping, Nof1_item["hub"], Nof1_item["dataset"], cleanGeneName_Funtion)):
     sys.exit()
 else:
     print "pass"
@@ -81,7 +84,6 @@ comparison_list = [
     xena_datasetlist.TCGA_BRCA_tumors,
 ]
 
-import string
 outputfile = "result.txt"
 
 import itomic_Nof1

@@ -21,8 +21,8 @@ def Nof1_output (Nof1_sample, original_label, gene, itomic_Data, Nof1_theta):
     print "log2(TPM):", Nof1_value, "TPM:", '{:.2f}'.format(Nof1_TPM)
 
 def filer_header (comparison_list, fout):
-    headerList =["gene"]
-    header2ndList =[""]
+    headerList =["label","gene"]
+    header2ndList =["",""]
     for item in comparison_list:
         headerList.append(item["label"]+ ' (n=' + str(len(item["samples"]))+")")
         headerList.append("Range of previous ITOMIC samples vs. " + item["label"])
@@ -52,7 +52,7 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_list, outpu
 
         Nof1_value = itomic_Data[Nof1_item["samples"][0]]
 
-        outputList =[gene]
+        outputList =[original_label, gene]
 
         for item in comparison_list:
             hub = item["hub"]
