@@ -48,7 +48,8 @@ def itomic_Nof1(Nof1_sample, original_label, gene, Nof1_hub, Nof1_dataset, compa
         outputList.append('{:.2f}%'.format(percentage))
 
         r_and_p_values = map(lambda x: rank_and_percentage(x, h_l_values), itomic_Data.values())
-        outputList.append('['+string.join(map(lambda x: '{:.2f}'.format(x[1]), r_and_p_values),', ')+']')
+        outputList.append(string.join(map(lambda x: '100' if (x[1]==100.0) else '{:.2g}'.format(x[1]),
+            r_and_p_values),','))
 
         print
         print name +" ( n=", len(h_l_values), "):"
@@ -60,8 +61,8 @@ def itomic_Nof1(Nof1_sample, original_label, gene, Nof1_hub, Nof1_dataset, compa
         for list in zip(itomic_Data.keys(), r_and_p_values):
             print list[0], list[1][0], '{:.2f}%'.format(list[1][1])
 
-    outputList.append(str(Nof1_value))
-    outputList.append(str(itomic_log2TPM_2_TPM(Nof1_value)))
+    outputList.append('{:.2f}'.format(Nof1_value))
+    outputList.append('{:.2f}'.format(itomic_log2TPM_2_TPM(Nof1_value)))
     fout.write(string.join(outputList,'\t') +'\n')
 
 
