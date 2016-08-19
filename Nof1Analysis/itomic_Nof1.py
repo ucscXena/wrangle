@@ -22,13 +22,13 @@ def Nof1_output (Nof1_sample, original_label, gene, itomic_Data, Nof1_theta):
 
 def filer_header (comparison_list, Nof1_sample, fout):
     headerList =["label","gene"]
-    header2ndList =[Nof1_sample, Nof1_sample]
+    header2ndList =["",""]
     for item in comparison_list:
         headerList.append(item["label"]+ ' (n=' + str(len(item["samples"]))+")")
         headerList.append("Range of previous ITOMIC samples vs. " + item["label"])
         header2ndList.append("Rank %")
         header2ndList.append("Rank %")
-    headerList.extend(["",""])
+    headerList.extend([Nof1_sample, Nof1_sample])
     header2ndList.extend(["log2(TPM)","TPM"])
 
     fout.write(string.join(headerList,'\t') +'\n')
