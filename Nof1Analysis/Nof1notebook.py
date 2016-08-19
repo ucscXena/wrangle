@@ -83,24 +83,10 @@ comparison_list = [
 
 import string
 outputfile = "result.txt"
-fout = open(outputfile,'w')
-headerList =["gene"]
-header2ndList =[""]
-for item in comparison_list:
-    headerList.append(item["label"]+ ' (n=' + str(len(item["samples"]))+")")
-    headerList.append("Range of previous ITOMIC samples vs. " + item["label"])
-    header2ndList.append("expression %")
-    header2ndList.append("expression %")
-headerList.extend(["",""])
-header2ndList.extend(["log2(TPM)","TPM"])
-
-fout.write(string.join(headerList,'\t') +'\n')
-fout.write(string.join(header2ndList,'\t') +'\n')
 
 import itomic_Nof1
 for gene in genes:
-    itomic_Nof1.itomic_Nof1(Nof1_item, gene, genaname_mapping[gene], comparison_list, fout)
-fout.close()
+    itomic_Nof1.itomic_Nof1(Nof1_item, genes, genaname_mapping, comparison_list, outputfile)
 
 itomic_Nof1.itomic_legend()
 
