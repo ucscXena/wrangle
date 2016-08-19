@@ -20,9 +20,9 @@ def Nof1_output (Nof1_sample, original_label, gene, itomic_Data, Nof1_theta):
 
     print "log2(TPM):", Nof1_value, "TPM:", '{:.2f}'.format(Nof1_TPM)
 
-def filer_header (comparison_list, fout):
+def filer_header (comparison_list, Nof1_sample, fout):
     headerList =["label","gene"]
-    header2ndList =["",""]
+    header2ndList =[Nof1_sample, Nof1_sample]
     for item in comparison_list:
         headerList.append(item["label"]+ ' (n=' + str(len(item["samples"]))+")")
         headerList.append("Range of previous ITOMIC samples vs. " + item["label"])
@@ -37,20 +37,20 @@ def filer_header (comparison_list, fout):
 
 def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_list, outputfile):
     itomic_samples = dataset_samples(Nof1_item["hub"], Nof1_item["dataset"])
-
+    Nof1_sample = Nof1_item["samples"][0]
     #file header output
     fout = open(outputfile,'w')
-    filer_header (comparison_list, fout)
+    filer_header (comparison_list, Nof1_sample, fout)
 
     for original_label in original_labels:
         gene = geneMappping[original_label];
         itomic_Data = get_itomic_Data (gene, Nof1_item["hub"], Nof1_item["dataset"], itomic_samples)
 
         #screen output
-        Nof1_output (Nof1_item["samples"][0], original_label, gene, itomic_Data, Nof1_item["log2Theta"])
+        Nof1_output (Nof1_sample, original_label, gene, itomic_Data, Nof1_item["log2Theta"])
 
 
-        Nof1_value = itomic_Data[Nof1_item["samples"][0]]
+        Nof1_value = itomic_Data[Nof1_sample]
 
         outputList =[original_label, gene]
 
@@ -84,11 +84,12 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_list, outpu
         outputList.append('{:.2f}'.format(Nof1_value))
         outputList.append('{:.2f}'.format(revert_Log2_theta(Nof1_value, Nof1_item["log2Theta"])))
         fout.write(string.join(outputList,'\t') +'\n')
+    fout.write("Rank % : percentile of samples with lower expression than sample of interest.\n")
     fout.close()
 
 def itomic_legend():
     print "\nExpression values are sorted from high to low."
     print "Low rank means high expression."
-    print "Rank % is the percentile of samples has lower expression than sample of interest."
+    print "Rank % is the percentile of samples with lower expression than sample of interest."
     print "High Rank %  means higher expression."
     print
