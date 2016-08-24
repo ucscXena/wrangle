@@ -2,13 +2,15 @@ import string, sys, os
 
 def cleanProbeMapByData (matrixfile, probeMapfile, outputfile):
     fprobe = open(probeMapfile,'U')
-    fout = open(outputFile,'w')
+    fout = open(outputfile,'w')
 
     #matrix features
     os.system("cut -f 1 "+ matrixfile + " > features")
     fin = open("features",'r')
     features = {}
-    map(lambda x: features[x]='', fin.readlines())
+    for f in fin.readlines():
+        f = string.strip(f)
+        features[f]=''
     fin.close()
 
     #probeMap
