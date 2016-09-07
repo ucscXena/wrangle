@@ -29,7 +29,7 @@ def switchIDs (inputFile, outputFile, mapDic):
         line = fin.readline()
         if line =="":
             break
-        data = string.split(line,'\t')
+        data = string.split(line[:-1],'\t')
         id = data[0]
         if  id not in mapDic:
             newID = id
@@ -37,7 +37,7 @@ def switchIDs (inputFile, outputFile, mapDic):
         else:
             newID = mapDic[id]
         data[0]=newID
-        fout.write(string.join(data,'\t'))
+        fout.write(string.join(data,'\t')+'\n')
     fin.close()
     fout.close()
 
