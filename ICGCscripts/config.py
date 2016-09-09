@@ -1,5 +1,11 @@
 import urllib2,sys,json
 
+#bigDir = "/inside/depot/icgcFiles/"
+bigDir = "/mnt/test/icgcFiles/"
+#smallDir = "/data/TCGA/icgcFiles/"
+smallDir = "/mnt/test/icgcFiles/"
+release = "release_22"
+
 #MAX_projects =100
 
 icgcDataTypes = [ # only the dataset types of interest
