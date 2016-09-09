@@ -6,7 +6,7 @@ def average (v_list):
 
 def standard_deviation (v_list):
     m = average (v_list)
-    variance = reduce(lambda x, y: x + y*y, v_list)/float(len(v_list)) - m * m
+    variance = reduce(lambda x, y : x + (y -m) *(y-m), v_list)/float(len(v_list))
     SD = math.sqrt(variance)
     return SD
 
