@@ -24,7 +24,7 @@ def checkSamples (Nof1_sample, hub, dataset):
     if Nof1_sample not in samples:
         print Nof1_sample, "is not found in dataset."
         print
-        print "Find out the dataset samples:", "https://genome-cancer.soe.ucsc.edu/proj/site/xena/datapages/?host="+ hub + "&dataset="+ dataset + "&allSamples=true"
+        print "Find out the dataset samples:", "https://genome-cancer.soe.ucsc.edu/proj/site/xena/datapages/?host="+ hub + "&dataset="+ dataset + "&allSamples=true&label="+dataset
         print
         return 1
     else:
