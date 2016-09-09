@@ -26,9 +26,10 @@ def filer_header (comparison_list, Nof1_sample, fout):
     for item in comparison_list:
         headerList.append(item["label"]+ ' (n=' + str(len(item["samples"]))+")")
         headerList.append("Range of ITOMIC samples vs. " + item["label"])
-        headerList.append("standard deviation")
+        headerList.append("")
         header2ndList.append("Rank %")
         header2ndList.append("Rank %")
+        header2ndList.append("Rank % SD")
     headerList.extend([Nof1_sample, Nof1_sample])
     header2ndList.extend(["log2(TPM)","TPM"])
 
