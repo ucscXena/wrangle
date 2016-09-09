@@ -2,11 +2,11 @@ import string, math
 import xena_query as xena
 
 def average (v_list):
-    return reduce(lambda x, y: x+y, v_list)/float(len(v_list))
+    return reduce(lambda x, y: x+y, v_list, 0)/float(len(v_list))
 
 def standard_deviation (v_list):
     m = average (v_list)
-    variance = reduce(lambda x, y : x + (y -m) *(y-m), v_list)/float(len(v_list))
+    variance = reduce(lambda x, y : x + (y -m) *(y-m), v_list, 0)/float(len(v_list))
     SD = math.sqrt(variance)
     return SD
 
