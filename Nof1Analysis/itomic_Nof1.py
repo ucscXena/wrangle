@@ -84,12 +84,14 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_list, outpu
         outputList.append('{:.2f}'.format(Nof1_value))
         outputList.append('{:.2f}'.format(revert_Log2_theta(Nof1_value, Nof1_item["log2Theta"])))
         fout.write(string.join(outputList,'\t') +'\n')
+    fout.write("\n")
     fout.write("Rank % : percentile of samples with lower expression than sample of interest.\n")
+    fout.write("Higher Rank %  means higher expression.\n")
     fout.close()
 
 def itomic_legend():
     print "\nExpression values are sorted from high to low."
     print "Low rank means high expression."
     print "Rank % is the percentile of samples with lower expression than sample of interest."
-    print "High Rank %  means higher expression."
+    print "Higher Rank %  means higher expression."
     print
