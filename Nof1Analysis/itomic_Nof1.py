@@ -25,7 +25,8 @@ def filer_header (comparison_list, Nof1_sample, fout):
     header2ndList =["",""]
     for item in comparison_list:
         headerList.append(item["label"]+ ' (n=' + str(len(item["samples"]))+")")
-        headerList.append("Range of previous ITOMIC samples vs. " + item["label"])
+        headerList.append("Range of ITOMIC samples vs. " + item["label"])
+        headerList.append("standard deviation")
         header2ndList.append("Rank %")
         header2ndList.append("Rank %")
     headerList.extend([Nof1_sample, Nof1_sample])
@@ -70,6 +71,8 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_list, outpu
             r_and_p_values = map(lambda x: rank_and_percentage(x, h_l_values), itomic_Data.values())
             outputList.append(string.join(map(lambda x: '100' if (x[1] > 99.5) else '{:.2g}'.format(x[1]),
                 r_and_p_values),', '))
+            SD = standard_deviation(map(lambda x: x[1], r_and_p_values))
+            outputList.append ('{:.2g}'.format(SD))
 
             print
             print name +" ( n=", len(h_l_values), "):"

@@ -1,6 +1,15 @@
 import string, math
 import xena_query as xena
 
+def average (v_list):
+    return reduce(lambda x, y: x+y, v_list)/float(len(v_list))
+
+def standard_deviation (v_list):
+    m = average (v_list)
+    variance = reduce(lambda x, y: x + y*y, v_list)/float(len(v_list)) - m * m
+    SD = math.sqrt(variance)
+    return SD
+
 def clean_then_sort_high_to_low (v_list):
     l = filter (lambda x: not math.isnan(x), map(float, v_list))
     l.sort()
