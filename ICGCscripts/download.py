@@ -2,7 +2,7 @@
 
 bigDir = "/inside/depot/icgcFiles/"
 smallDir = "/data/TCGA/icgcFiles/"
-release = "release_21"
+release = "release_22"
 
 import os, string, subprocess
 import config
@@ -53,6 +53,7 @@ def downloadSummary(dataTypes):
 
 if __name__ == '__main__':
     downloadOriginals(config.getProjects(), config.icgcDataTypes)
+    #downloadOriginals(["PACA-AU"], config.icgcDataTypes)
     #downloadSummary(config.icgcDataTypes)
     os.system("gunzip -f "+smallDir+"*gz")
     os.system("gunzip -f "+bigDir+"*gz")
