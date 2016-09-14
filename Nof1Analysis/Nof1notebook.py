@@ -5,7 +5,7 @@
 
 # In[ ]:
 
-Nof1_sample = raw_input('Enter sample name (e.g. 09-3-B1): ') or "09-3-B1"
+Nof1_sample = raw_input('Enter sample name (e.g. 10-3-B1): ') or "10-3-B1"
 print Nof1_sample
 
 
@@ -69,7 +69,8 @@ genaname_mapping ={
     "PDL2" : "PDCD1LG2",
     "TROP2" : "TACSTD2",
     "p16" : "CDKN2A",
-    "p18" : "CDKN2C"
+    "p18" : "CDKN2C",
+    "MLL2" :"KMT2D"
 }
 
 
