@@ -91,7 +91,7 @@ else:
 
 # In[ ]:
 
-outputfile = raw_input('Enter output file name (e.g. result.txt): ') or "result.txt"
+outputfile = raw_input('Enter output file name (e.g. ' + Nof1_sample + '_result.txt): ') or Nof1_sample + "_result.txt"
 
 
 # ## Run - results at the bottom
