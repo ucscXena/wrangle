@@ -1,8 +1,6 @@
 
 # coding: utf-8
 
-# ## enter sample
-
 # In[ ]:
 
 Nof1_sample = raw_input('Enter sample name (e.g. 10-3-B1): ') or "10-3-B1"
@@ -104,6 +102,11 @@ import xena_datasetlist
 comparison_list = [
     xena_datasetlist.TCGA_TNBC,
     xena_datasetlist.TCGA_BRCA_tumors,
+    #xena_datasetlist.TCGA_Breast_Basal,
+    #xena_datasetlist.TCGA_Breast_Her2,
+    #xena_datasetlist.TCGA_Breast_LumA,
+    #xena_datasetlist.TCGA_Breast_LumB,
+    #xena_datasetlist.TCGA_Breast_Adjacent_Normal,
 ]
 
 import itomic_Nof1
