@@ -1,17 +1,25 @@
 import string, sys, os
 
 def cleanProbeMapByData (matrixfile, probeMapfile, outputfile):
+    #matrix features
+    features = {}
+    fin = open(matrixfile,'r')
+    while 1:
+        line = fin.readline()
+        if line == "":
+            break
+        data = string.split(line[:-1],'\t')
+        f = data[0]
+        #print f
+        for item in data[1:]:
+            if item not in ["","NA","0"]:
+                #print item
+                features[f]=''
+                break
+    fin.close()
+
     fprobe = open(probeMapfile,'U')
     fout = open(outputfile,'w')
-
-    #matrix features
-    os.system("cut -f 1 "+ matrixfile + " > features")
-    fin = open("features",'r')
-    features = {}
-    for f in fin.readlines():
-        f = string.strip(f)
-        features[f]=''
-    fin.close()
 
     #probeMap
     line = fprobe.readline()

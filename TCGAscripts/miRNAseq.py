@@ -83,7 +83,7 @@ def mergeGA_Hiseq (inDir, outDir, cancer, flog, REALRUN):
     #change description
     J["description"]=""
     J["dataSubType"]="miRNA expression RNAseq"
-    J["label"]= "miRNA expression (GA, HiSeq)"
+    J["label"]= "miRNA isoform expression (GA, HiSeq)"
     J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") miRNA expression by RNAseq (Illumina GA, HiSeq)"
     J["description"]= J["description"] +"TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") miRNA expression by RNAseq.<br><br>"+ \
         " The miRNA expression profile was measured experimentally using the "+platformTitle+" by the "+ dataProducer +"." + \
@@ -196,7 +196,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     #data processing multiple dirs mode
     if REALRUN:
         #hg19 or not
-        pattern =".hg19.mirna.quantification"
+        pattern =".hg19.mirbase20.isoform.quantification"
         HG19= 0
         for dataDir in os.listdir(rootDir):
             for file in os.listdir(rootDir+dataDir):
@@ -206,9 +206,9 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
             if HG19:
                 break
         if HG19:
-            pattern =".hg19.mirna.quantification"
+            pattern =".hg19.mirbase20.isoform.quantification"
         else:
-            pattern =".mirna.quantification"
+            pattern =".isoform.quantification"
 
         allSamples={}        
         for dataDir in os.listdir(rootDir):
@@ -251,11 +251,13 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
 
         c=0
         dataMatrix=[]
+        mapping = {}
         tmpSamples={}
         genes={}
         oldgenes={}
         files=[]
         GOOD=1
+        BATCH = 2500
         for dataDir in os.listdir(rootDir):
             for file in os.listdir(rootDir+dataDir):
                 sample=""
@@ -266,9 +268,8 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
                         sample = string.split(file,".")[0]
                     else:
                         print "please check how to identify sample name"
-                    valuePOS=2
+                    valuePOS=3
                     LOG2=1
-                    RANK=0
 
                 if sample=="":
                     continue
@@ -281,14 +282,10 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
                 tmpSamples[sample]=p
                 
                 c=c+1
-                #print c
-                if RANK:
-                    process_percentileRANK(dataMatrix,tmpSamples,sample,genes, cancer,infile,flog, valuePOS,250)
-                else:
-                    process(dataMatrix,tmpSamples,sample,genes, cancer,infile,flog, valuePOS,LOG2,250)
+                process(dataMatrix, mapping, tmpSamples,sample, genes, cancer, infile,flog, valuePOS,LOG2,BATCH)
 
-                if (c % 250)==0:
-                    tmpout="tmp_"+ str(int(c/250.0))
+                if (c % BATCH)==0:
+                    tmpout="tmp_"+ str(int(c/float(BATCH)))
                     r =outputMatrix(dataMatrix, tmpSamples, genes, oldgenes, tmpout, flog)
                     if r:
                         GOOD=0
@@ -299,8 +296,8 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
                     genes ={}
                     files.append(tmpout)
                     
-        if (c % 250)!=0:
-            tmpout= "tmp_"+ str(int(c/250.0)+1)
+        if (c % BATCH)!=0:
+            tmpout= "tmp_"+ str(int(c/float(BATCH))+1)
             files.append(tmpout)
             r= outputMatrix(dataMatrix, tmpSamples, genes, oldgenes,tmpout, flog)
             if r:
@@ -315,6 +312,10 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
         if not GOOD:
             sys.exit()
     
+    #probeMap
+    datafile= outDir+cancer+"/"+namesuffix+".probeMap"
+    outputProbeMap (datafile, mapping)
+
     datafile= outDir+cancer+"/"+cgFileName
     if not os.path.exists(datafile):
         return
@@ -337,6 +338,8 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     J["version"]= datetime.date.today().isoformat()
     J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
     J["unit"]="log2(RPM+1)"
+    J["idSubType"] = "isoform"
+    J[":probeMap"]= "miRNA_isoform_TCGA.probeMap"
 
     if PATHPATTERN in ["IlluminaHiSeq_miRNASeq"]:
         platformTitle ="Illumina HiSeq 2000 RNA Sequencing platform"
@@ -345,8 +348,8 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
 
     #change description
     J["description"]=""
-    J["dataSubType"]="miRNA expression RNAseq"
-    J["label"]= "miRNA expression ("+suffix+")"
+    J["dataSubType"]="miRNA isoform expression RNAseq"
+    J["label"]= "miRNA isoform expression ("+suffix+")"
     J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") miRNA expression by RNAseq ("+suffix+")"
     J["description"]= J["description"] +"TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") miRNA expression by RNAseq.<br><br>"+ \
         " The miRNA expression profile was measured experimentally using the "+platformTitle+" by the "+ dataProducer +"." + \
@@ -356,7 +359,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
                        "<br><br>In order to more easily view the differential expression between samples, we set the default view to center each miRNA to zero by independently subtracting the mean of each miRNA across the cohort on the fly. Users can view the original non-normalized values by adjusting visualization settings."
     J["description"] = J["description"] +"<br><br>"
 
-    J["wrangling_procedure"]= "Level_3 Data (file names: *.hg19.mirna.quantification.txt) download from TCGA DCC, log2(x+1) transformed, and processed at UCSC into Xena repository."
+    J["wrangling_procedure"]= "Level_3 Data (file names: *.isoform.quantification.txt) download from TCGA DCC, log2(x+1) transformed, and processed at UCSC into Xena repository."
 
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
     J["sample_type"]=["tumor"]
@@ -383,18 +386,38 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     
     return
 
-def process(dataMatrix,samples, sample,genes, cancer,infile,flog, valuePOS, LOG2, maxLength):
+def outputProbeMap (outfile, mapping):
+    #probeMap
+    fout = open(outfile,"w")
+    fout.write("#id\tgene\tchrom\tchromStart\tchromEnd\tstrand\n")
+    for gene in mapping:
+        for probe in mapping[gene]:
+            #probe =hg19:9:139565069-139565091:+
+            data = string.split(probe, ":")
+            chr = "chr"+data[1]
+            start, end = string.split(data[2],'-')
+            strand = data[3]
+            fout.write(probe+'\t'+gene+'\t'+chr+'\t'+start+'\t'+end+'\t'+strand+'\n')
+    fout.close()
+
+
+def process(dataMatrix, mapping, samples, sample,genes, cancer,infile,flog, valuePOS, LOG2, maxLength):
     # one sample a file  
     fin=open(infile,'U')    
     fin.readline()
     for line in fin.readlines():
         data =string.split(line[:-1],"\t")
-        hugo = data[0]
+        hugo = data[1] #miRNA isoform id
         value= data[valuePOS]
-        hugo = string.split(hugo,"|")[0]
 
-        if hugo=="?":
-            hugo=data[0]
+        MIMAT = string.split(data[5],',')
+        if len(MIMAT)!=2 or MIMAT[0] != "mature":
+            continue
+        MIMAT = MIMAT[1]
+        if MIMAT not in mapping:
+            mapping[MIMAT]=[]
+        if hugo not in mapping[MIMAT]:
+            mapping[MIMAT].append(hugo)
 
         if hugo not in genes:
             p=len(genes)
