@@ -13,14 +13,14 @@ def main():
     parser.add_argument("genomicData", type=str)
     parser.add_argument("clinicalVector", type=str)
     parser.add_argument("outfile", type=str)
-    parser.add_argument('-probeMap', default=None, type=str, help='optional probeMap')
-    parser.add_argument('-a', type=str, default=None)
-    parser.add_argument('-b', type=str, default=None)
+    parser.add_argument('-p', type=str, default=None, help='optional probeMap')
+    parser.add_argument('-a', type=str, default=None, help='required value of groupA in clinicalVector file')
+    parser.add_argument('-b', type=str, default=None, help='required value of groupB in clinicalVector file')
     args = parser.parse_args()
     clinicalVector = readClinicalFile(args.clinicalVector)
     genomicFp = open(args.genomicData)
-    if (args.probeMap):
-        probeMap = readProbeMap(args.probeMap)
+    if (args.p):
+        probeMap = readProbeMap(args.p)
     else:
         probeMap = None
     headerTokens = genomicFp.readline().rstrip().split("\t")
