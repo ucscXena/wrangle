@@ -219,7 +219,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
                     infile = rootDir+dataDir+"/"+file
                     # bcgsc stupid sample name in file name
                     if dataProducer=="British Columbia Cancer Agency TCGA genome characterization center":
-                        sample = string.split(file,".")[0]
+                        sample = string.split(file,".")[0][:15]
                     else:
                         print "please check how to identify sample name"
 
@@ -265,7 +265,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
                     infile = rootDir+dataDir+"/"+file
                     # bcgsc stupid sample name in file name
                     if dataProducer=="British Columbia Cancer Agency TCGA genome characterization center":
-                        sample = string.split(file,".")[0]
+                        sample = string.split(file,".")[0][:15]
                     else:
                         print "please check how to identify sample name"
                     valuePOS=3
@@ -313,15 +313,19 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
             sys.exit()
     
     #probeMap
-    datafile= outDir+cancer+"/"+namesuffix+".probeMap"
-    outputProbeMap (datafile, mapping)
+    probefile= outDir+cancer+"/"+namesuffix+".probeMap"
+    outputProbeMap (probefile, mapping)
 
+    #transcript datafile
     datafile= outDir+cancer+"/"+cgFileName
     if not os.path.exists(datafile):
         return
 
+    #gene datafile
+    genefile = outDir+cancer+"/"+cgFileName+"_gene"
+    os.system("python ../support/genomicMatrixToGeneMatrix_memInEfficient.py "+ datafile + " " + probefile +' ' +  genefile + " add log2 1")
+
     oHandle = open(outDir+cancer+"/"+cgFileName+".json","w")
-    
     J={}
     #stable    
     J["cgDataVersion"]=1
@@ -350,7 +354,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     J["description"]=""
     J["dataSubType"]="miRNA isoform expression RNAseq"
     J["label"]= "miRNA isoform expression ("+suffix+")"
-    J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") miRNA expression by RNAseq ("+suffix+")"
+    J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") miRNA isoform expression by RNAseq ("+suffix+")"
     J["description"]= J["description"] +"TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") miRNA expression by RNAseq.<br><br>"+ \
         " The miRNA expression profile was measured experimentally using the "+platformTitle+" by the "+ dataProducer +"." + \
         " Level 3 interpreted level data was downloaded from TCGA data coordination center. Download data is in the unit of reads per million mapped reads (RPM). This dataset shows the miRNA transcription estimates in log2 (RPM). For more information see: http://nar.oxfordjournals.org/content/early/2015/08/13/nar.gkv808.full ."
@@ -384,6 +388,19 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     oHandle.write( json.dumps( J, indent=-1 ) )
     oHandle.close()
     
+
+    #gene datafile json
+    oHandle = open(genefile +".json","w")
+    J.pop("name")
+    J.pop(":probeMap")
+    J.pop("description")
+    J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") miRNA gene expression by RNAseq ("+suffix+")"
+    J["idSubType"] = "gene"
+    J["dataSubType"]="miRNA gene expression RNAseq"
+    J["label"]= "miRNA gene expression ("+suffix+")"
+    oHandle.write( json.dumps( J, indent=-1 ) )
+    oHandle.close()
+
     return
 
 def outputProbeMap (outfile, mapping):

@@ -8,11 +8,13 @@ def main():
     parser.add_argument("probeMap", type=str)
     parser.add_argument("geneMatrixOutput", type=str)
     parser.add_argument("type", type=str, choices=('add', 'average'), help='add or average')
+    parser.add_argument("log2", type=str, choices=('log2', 'nolog'), help='log or nolog')
+    parser.add_argument("theta", type=float, default=0, help='theta value')
     args = parser.parse_args()
 
     probeMap = readProbeMap(args.probeMap)
     geneMatrix, colN = process (args.genomicMatrixInput, probeMap, args.type, args.geneMatrixOutput)
-    outputMatrix (geneMatrix, args.geneMatrixOutput, args.type, colN)
+    outputMatrix (geneMatrix, args.geneMatrixOutput, args.type, args.log2, args.theta, colN)
 
 def process(genomicMatrixInput, probeMap, type, output):
     geneMatrix = {}
@@ -21,11 +23,13 @@ def process(genomicMatrixInput, probeMap, type, output):
     fout = open(output, 'w')
     line = genomicFp.readline()
     N = len(string.split(line,'\t'))
-    fout.write(genomicFp.readline())
+    fout.write(line)
     fout.close()
 
     while 1:
         line = genomicFp.readline()
+        if line =='':
+            break
         data = string.split(line,'\t')
         probe = data[0]
         if probe not in probeMap:
@@ -38,7 +42,7 @@ def process(genomicMatrixInput, probeMap, type, output):
     return geneMatrix, N
 
 
-def ADD_type_conversion (list, colN):
+def ADD_type_conversion (list, log2, theta, colN):
     ret_list = []
     for i in range(0, colN):
         ret_list.append('NA')
@@ -47,14 +51,20 @@ def ADD_type_conversion (list, colN):
         for i in range(0, colN):
             try:
                 value =  float(row[i])
+                if log2:
+                    value = math.pow(2, value) - theta
             except:
                 continue
             if ret_list[i] == 'NA':
                 ret_list[i] = value
             ret_list[i] = ret_list[i] + value
+    if log2:
+        for i in range(0, colN):
+            if ret_list[i]!= 'NA':
+                ret_list[i] = math.log(ret_list[i] + theta, 2)
     return ret_list
 
-def Average_type_conversion (list, colN):
+def Average_type_conversion (list, log2, theta, colN):
     total_list = []
     count_list = []
     ret_list =[]
@@ -68,6 +78,8 @@ def Average_type_conversion (list, colN):
         for i in range(0, colN):
             try:
                 value =  float(row[i])
+                if log2:
+                    value = math.pow(2, value) - theta
             except:
                 continue
             if total_list[i] == 'NA':
@@ -79,20 +91,25 @@ def Average_type_conversion (list, colN):
         if total_list[i]!='NA':
             ret_list [i] = total_list[i] / count_list [i]
 
+    if log2:
+        for i in range(0, colN):
+            if ret_list[i]!= 'NA':
+                ret_list[i] = math.log(ret_list[i] + theta, 2)
+
     return ret_list
 
 
-def outputMatrix (geneMatrix, output, type, colN):
+def outputMatrix (geneMatrix, output, type, log2, theta, colN):
     fout = open(output, 'a')
-    for gene in matrix:
-        geneData = matrix[gene]
+    for gene in geneMatrix:
+        geneData = geneMatrix[gene]
         if type == 'add':
-            ret_list = ADD_type_conversion (list, colN)
+            ret_list = ADD_type_conversion (geneData, log2, theta, colN)
         elif type == 'average':
-            ret_list = Average_type_conversion (list, colN)
+            ret_list = Average_type_conversion (geneData, log2, theta, colN)
         fout.write(gene)
         for i in range(0, colN):
-            fout.write('\t'+ret_list[i])
+            fout.write('\t'+str(ret_list[i]))
         fout.write('\n')
     fout.close()
 
