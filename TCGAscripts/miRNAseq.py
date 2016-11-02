@@ -327,6 +327,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
         os.system("python ../support/genomicMatrixToGeneMatrix_memInEfficient.py "+ datafile + " " + probefile +' ' +  genefile + " add log2 1")
 
     #probeMap json
+    probefile= outDir+cancer+"/"+namesuffix+".probeMap"
     fout = open(probefile +".json","w")
     J = {}
     J['type'] = 'probeMap'
@@ -397,6 +398,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     oHandle.close()
 
     #gene datafile json
+    genefile = outDir+cancer+"/"+cgFileName+"_gene"
     oHandle = open(genefile +".json","w")
     J.pop("name")
     J.pop(":probeMap")
