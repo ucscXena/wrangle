@@ -20,9 +20,9 @@ tmpDir="tmpmiRNA/"
 
 def illuminaga_miRnaseq_bcgsc (inDir, outDir, cancer, flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
-    PATHPATTERN = "IlluminaGA_miRNASeq"   
-    suffix      = "IlluminaGA" 
-    namesuffix = "miRNA_GA" 
+    PATHPATTERN = "IlluminaGA_miRNASeq"
+    suffix      = "IlluminaGA"
+    namesuffix = "miRNA_GA"
     dataProducer = "British Columbia Cancer Agency TCGA genome characterization center"
     clean =1
     geneRPKM (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer, REALRUN, clean)
@@ -30,8 +30,8 @@ def illuminaga_miRnaseq_bcgsc (inDir, outDir, cancer, flog,REALRUN):
 
 def illuminahiseq_miRnaseq_bcgsc  (inDir, outDir, cancer, flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
-    PATHPATTERN = "IlluminaHiSeq_miRNASeq" 
-    suffix      = "IlluminaHiseq" 
+    PATHPATTERN = "IlluminaHiSeq_miRNASeq"
+    suffix      = "IlluminaHiseq"
     namesuffix = "miRNA_HiSeq"
     dataProducer = "British Columbia Cancer Agency TCGA genome characterization center"
     clean =1
@@ -62,15 +62,15 @@ def mergeGA_Hiseq (inDir, outDir, cancer, flog, REALRUN):
 
     #json
     J={}
-    
+
     J["cgDataVersion"]=1
     J["redistribution"]= True
     J["dataProducer"]= dataProducer
     J["colNormalization"]=True
     J["PLATFORM"]= "IlluminaGA and IlluminaHiSeq miRNAseq"
-    J["type"]= "genomicMatrix" 
+    J["type"]= "genomicMatrix"
     J[":sampleMap"]="TCGA."+cancer+".sampleMap"
-    
+
     #multiple dirs
     J["url"]=TCGAUtil.remoteBase \
               +string.replace(inDir,TCGAUtil.localBase,"")
@@ -110,7 +110,7 @@ def mergeGA_Hiseq (inDir, outDir, cancer, flog, REALRUN):
 
 def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataProducer,REALRUN,clean):
     garbage=[tmpDir]
-    os.system("rm -rf tmp_*") 
+    os.system("rm -rf tmp_*")
     if os.path.exists( tmpDir ):
         if clean:
             os.system("rm -rf "+tmpDir+"*")
@@ -125,14 +125,14 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
             pass
         else:
             continue
-        
+
         if not os.path.exists(inDir +file+".md5"):
             print "file has no matching .md5 throw out", file
             continue
-            
+
         #find lastest in each archive
         info = string.split(file,".")
-        archive = info [-5] 
+        archive = info [-5]
         release = int(info [-4])
 
         if not lastRelease.has_key(archive):
@@ -140,7 +140,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
         else:
             if lastRelease[archive]< release:
                 lastRelease[archive]=release
-                
+
 
     rootDir =""
     lastDate=None
@@ -157,7 +157,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
 
         #find the file that is the lastest release for the archive
         info = string.split(file,".")
-        archive = info [-5] 
+        archive = info [-5]
         release = int(info [-4])
 
         if release != lastRelease[archive]:
@@ -169,7 +169,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
             lastDate = newDate
         if lastDate < newDate:
             lastDate = newDate
-            
+
         if remoteDataDirExample =="":
             remoteDataDirExample = file[:-7]
 
@@ -177,7 +177,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
         if not clean:
             rootDir =tmpDir
         elif string.find(file,".tar.gz")!=-1 and REALRUN and clean:
-            os.system("tar -xzf "+inDir+file +" -C "+tmpDir) 
+            os.system("tar -xzf "+inDir+file +" -C "+tmpDir)
             rootDir =tmpDir
 
     #make sure there is data
@@ -191,7 +191,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     if not os.path.exists( outDir +cancer+"/"):
         os.makedirs( outDir+cancer+"/" )
 
-    cgFileName= namesuffix 
+    cgFileName= namesuffix
 
     #data processing multiple dirs mode
     if REALRUN:
@@ -210,7 +210,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
         else:
             pattern =".isoform.quantification"
 
-        allSamples={}        
+        allSamples={}
         for dataDir in os.listdir(rootDir):
             for file in os.listdir(rootDir+dataDir):
                 sample =""
@@ -247,7 +247,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
 
                 p=len(allSamples)
                 allSamples[sample]=p
-                    
+
 
         c=0
         dataMatrix=[]
@@ -280,7 +280,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
 
                 p=len(tmpSamples)
                 tmpSamples[sample]=p
-                
+
                 c=c+1
                 process(dataMatrix, mapping, tmpSamples,sample, genes, cancer, infile,flog, valuePOS,LOG2,BATCH)
 
@@ -289,32 +289,41 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
                     r =outputMatrix(dataMatrix, tmpSamples, genes, oldgenes, tmpout, flog)
                     if r:
                         GOOD=0
-                        
+
                     dataMatrix=[]
                     tmpSamples={}
                     oldgenes=copy.deepcopy(genes)
                     genes ={}
                     files.append(tmpout)
-                    
+
         if (c % BATCH)!=0:
             tmpout= "tmp_"+ str(int(c/float(BATCH))+1)
             files.append(tmpout)
             r= outputMatrix(dataMatrix, tmpSamples, genes, oldgenes,tmpout, flog)
             if r:
                 GOOD=0
-                
+
         #paste all together
         outfile = outDir+cancer+"/"+cgFileName
         if GOOD:
             os.system("paste -d \'\' "+string.join(files," ")+" > "+ outfile)
-        for file in files: 
-            os.system("rm "+ file) 
+        for file in files:
+            os.system("rm "+ file)
         if not GOOD:
             sys.exit()
-    
+
     #probeMap
     probefile= outDir+cancer+"/"+namesuffix+".probeMap"
     outputProbeMap (probefile, mapping)
+
+    #probeMap json
+    fout = open(probefile +".json","w")
+    J = {}
+    J['type'] = 'probeMap'
+    J['assembly'] ='hg19'
+    fout.write( json.dumps( J, indent=-1 ) )
+    fout.close()
+
 
     #transcript datafile
     datafile= outDir+cancer+"/"+cgFileName
@@ -327,15 +336,15 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
 
     oHandle = open(outDir+cancer+"/"+cgFileName+".json","w")
     J={}
-    #stable    
+    #stable
     J["cgDataVersion"]=1
     J["redistribution"]= True
     J["dataProducer"]= dataProducer
     J["colNormalization"]=True
     J["PLATFORM"]= PATHPATTERN
-    J["type"]= "genomicMatrix" 
+    J["type"]= "genomicMatrix"
     J[":sampleMap"]="TCGA."+cancer+".sampleMap"
-    
+
     #multiple dirs
     J["url"]=TCGAUtil.remoteBase \
               +string.replace(inDir,TCGAUtil.localBase,"")
@@ -355,8 +364,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     J["dataSubType"]="miRNA isoform expression RNAseq"
     J["label"]= "miRNA isoform expression ("+suffix+")"
     J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") miRNA isoform expression by RNAseq ("+suffix+")"
-    J["description"]= J["description"] +"TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") miRNA expression by RNAseq.<br><br>"+ \
-        " The miRNA expression profile was measured experimentally using the "+platformTitle+" by the "+ dataProducer +"." + \
+    J["description"]= J["description"] +"TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") miRNA expression by RNAseq. The miRNA expression profile was measured experimentally using the "+platformTitle+" by the "+ dataProducer +"." + \
         " Level 3 interpreted level data was downloaded from TCGA data coordination center. Download data is in the unit of reads per million mapped reads (RPM). This dataset shows the miRNA transcription estimates in log2 (RPM). For more information see: http://nar.oxfordjournals.org/content/early/2015/08/13/nar.gkv808.full ."
 
     J["description"] = J["description"] +\
@@ -373,7 +381,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     J['tags']=["cancer"]+ TCGAUtil.tags[cancer]
     J['owner']="TCGA"
     J['gdata_tags'] =["transcription","miRNA"]
-    
+
     #change cgData
     J["name"]="TCGA_"+cancer + "_"+namesuffix
     name = trackName_fix(J['name'])
@@ -383,11 +391,11 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
         flog.write(message+"\n")
         return
     else:
-        J["name"]=name        
-        
+        J["name"]=name
+
     oHandle.write( json.dumps( J, indent=-1 ) )
     oHandle.close()
-    
+
 
     #gene datafile json
     oHandle = open(genefile +".json","w")
@@ -398,6 +406,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     J["idSubType"] = "gene"
     J["dataSubType"]="miRNA gene expression RNAseq"
     J["label"]= "miRNA gene expression ("+suffix+")"
+    J["wrangling_procedure"]= "Level_3 Data (file names: *.isoform.quantification.txt) download from TCGA DCC, for each sample, all isoform expression for the same miRNA gene are added together, log2(total_RPM +1) transformed, and deposited at UCSC into Xena repository."
     oHandle.write( json.dumps( J, indent=-1 ) )
     oHandle.close()
 
@@ -419,8 +428,8 @@ def outputProbeMap (outfile, mapping):
 
 
 def process(dataMatrix, mapping, samples, sample,genes, cancer,infile,flog, valuePOS, LOG2, maxLength):
-    # one sample a file  
-    fin=open(infile,'U')    
+    # one sample a file
+    fin=open(infile,'U')
     fin.readline()
     for line in fin.readlines():
         data =string.split(line[:-1],"\t")
@@ -441,9 +450,9 @@ def process(dataMatrix, mapping, samples, sample,genes, cancer,infile,flog, valu
             genes[hugo]=p
             l=[]
             for j in range (0,maxLength):
-                l.append("")    
+                l.append("")
             dataMatrix.append(l)
-        
+
         if value not in ["","null","NULL","Null","NA"]:
             if LOG2:
                 value = float(value)
@@ -455,13 +464,13 @@ def process(dataMatrix, mapping, samples, sample,genes, cancer,infile,flog, valu
             x=genes[hugo]
             y=samples[sample]
             dataMatrix[x][y]=value
-            
+
     fin.close()
-    return 
+    return
 
 def process_percentileRANK (dataMatrix,samples, sample,genes, cancer,infile,flog, valuePOS, maxLength):
-    # one sample a file  
-    fin=open(infile,'U')    
+    # one sample a file
+    fin=open(infile,'U')
     fin.readline()
     for line in fin.readlines():
         data =string.split(line[:-1],"\t")
@@ -477,13 +486,13 @@ def process_percentileRANK (dataMatrix,samples, sample,genes, cancer,infile,flog
             genes[hugo]=p
             l=[]
             for j in range (0,maxLength):
-                l.append("")    
+                l.append("")
             dataMatrix.append(l)
     fin.close()
 
     #build data from file
     dataDic={}
-    fin=open(infile,'U')    
+    fin=open(infile,'U')
     fin.readline()
     for line in fin.readlines():
         data =string.split(line[:-1],"\t")
@@ -500,7 +509,7 @@ def process_percentileRANK (dataMatrix,samples, sample,genes, cancer,infile,flog
     fin.close()
 
     # percentileRANK data
-    dataRankDic = percentileRANK (dataDic) 
+    dataRankDic = percentileRANK (dataDic)
 
     for hugo in dataRankDic:
         x=genes[hugo]
@@ -508,7 +517,7 @@ def process_percentileRANK (dataMatrix,samples, sample,genes, cancer,infile,flog
         value= dataRankDic[hugo]
         dataMatrix[x][y]=value
 
-    return 
+    return
 
 def outputMatrix(dataMatrix, samples, genes, oldgenes,outfile, flog):
     #compare genes and oldgenes:
@@ -520,7 +529,7 @@ def outputMatrix(dataMatrix, samples, genes, oldgenes,outfile, flog):
             if genes[gene]!=oldgenes[gene]:
                 print "ERROR gene order is different",gene
                 return 1
-            
+
     fout = open(outfile,"w")
     if oldgenes=={}:
         fout.write("sample")
