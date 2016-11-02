@@ -312,9 +312,19 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
         if not GOOD:
             sys.exit()
 
-    #probeMap
-    probefile= outDir+cancer+"/"+namesuffix+".probeMap"
-    outputProbeMap (probefile, mapping)
+        #probeMap
+        probefile= outDir+cancer+"/"+namesuffix+".probeMap"
+        outputProbeMap (probefile, mapping)
+
+
+        #transcript datafile
+        datafile= outDir+cancer+"/"+cgFileName
+        if not os.path.exists(datafile):
+            return
+
+        #gene datafile
+        genefile = outDir+cancer+"/"+cgFileName+"_gene"
+        os.system("python ../support/genomicMatrixToGeneMatrix_memInEfficient.py "+ datafile + " " + probefile +' ' +  genefile + " add log2 1")
 
     #probeMap json
     fout = open(probefile +".json","w")
@@ -323,16 +333,6 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     J['assembly'] ='hg19'
     fout.write( json.dumps( J, indent=-1 ) )
     fout.close()
-
-
-    #transcript datafile
-    datafile= outDir+cancer+"/"+cgFileName
-    if not os.path.exists(datafile):
-        return
-
-    #gene datafile
-    genefile = outDir+cancer+"/"+cgFileName+"_gene"
-    os.system("python ../support/genomicMatrixToGeneMatrix_memInEfficient.py "+ datafile + " " + probefile +' ' +  genefile + " add log2 1")
 
     oHandle = open(outDir+cancer+"/"+cgFileName+".json","w")
     J={}
@@ -395,7 +395,6 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
 
     oHandle.write( json.dumps( J, indent=-1 ) )
     oHandle.close()
-
 
     #gene datafile json
     oHandle = open(genefile +".json","w")
