@@ -56,10 +56,16 @@ def miRNA  ( dir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
 
     filename = "miRNA_HiSeq"
-    processMatrix (filename, dir,outDir, cancer,flog, REALRUN)
+    processMatrix (filename, dir, outDir, cancer,flog, REALRUN)
+
+    filename = "miRNA_HiSeq.probeMap"
+    processProbeMap (filename, dir, outDir, cancer, REALRUN)
 
     filename = "miRNA_GA"
     processMatrix (filename, dir,outDir, cancer,flog, REALRUN)
+
+    filename = "miRNA_GA.probeMap"
+    processProbeMap (filename, dir, outDir, cancer, REALRUN)
 
     filename = "miRNA_HiSeq_gene"
     processMatrix (filename, dir,outDir, cancer,flog, REALRUN)
@@ -358,6 +364,22 @@ def processMutationData (filename, dir, outDir, cancer,flog, REALRUN):
 
     return
 
+def processProbeMap (filename, dir, outDir, cancer, REALRUN):
+    inFiles =processFiles (filename, dir, outDir, cancer )
+
+    cancer="PANCAN"
+    outfile = outDir +cancer + "/"+filename
+
+    if REALRUN:
+        root = "/data/TCGA/"
+        os.system("python mergeTableFiles.py.py noDup "+outfile+" "+root+" " + string.join(inFiles,' '))
+    
+    J={}
+    J["type"]="probeMap"
+    fout = open(outfile+".json","w")
+    fout.close()
+    return
+
 def processMatrix (filename, dir,outDir, cancer,flog, REALRUN, memVersion = False):
     inFiles =processFiles (filename, dir,outDir, cancer )
 
@@ -478,11 +500,10 @@ def mutation_broadJSON(J,cancer,genelevel):
 def miRNA_HiSeqJSON(J,cancer):
     J['name']= "TCGA_PANCAN_miRNA_HiSeq"
     J["label"]= "miRNA isoform expression (HiSeq)"
-    #if J.has_key(":probeMap"):
-    #    J.pop(":probeMap")
+    J["probeMap"] = "miRNA_HiSeq.probeMap"
     J["dataSubType"]="miRNA isoform expression RNAseq"
-    J["idSubType"] = "isoform", 
-    J["PLATFORM"] = "IlluminaHiSeq_miRNASeq",
+    J["idSubType"] = "isoform" 
+    J["PLATFORM"] = "IlluminaHiSeq_miRNASeq"
     J["colNormalization"]=True
     J["unit"]="log2(RPM+1)"
     return
@@ -490,24 +511,22 @@ def miRNA_HiSeqJSON(J,cancer):
 def miRNA_GAJSON(J,cancer):
     J['name']= "TCGA_PANCAN_miRNA_GA"
     J["label"]= "miRNA isoform expression (GA)"
-    #if J.has_key(":probeMap"):
-    #    J.pop(":probeMap")
+    J["probeMap"] = "miRNA_GA.probeMap"
     J["dataSubType"]="miRNA isoform expression RNAseq"
-    J["idSubType"] = "isoform", 
-    J["PLATFORM"] = "IlluminaGA_miRNASeq",
+    J["idSubType"] = "isoform"
+    J["PLATFORM"] = "IlluminaGA_miRNASeq"
     J["colNormalization"]=True
     J["unit"]="log2(RPM+1)"
     return
 
-
 def miRNA_HiSeq_geneJSON(J,cancer):
     J['name']= "TCGA_PANCAN_miRNA_HiSeq_gene"
     J["label"]= "miRNA gene expression (HiSeq)"
-    #if J.has_key(":probeMap"):
-    #    J.pop(":probeMap")
+    if J.has_key(":probeMap"):
+        J.pop(":probeMap")
     J["dataSubType"]="miRNA gene expression RNAseq"
-    J["idSubType"] = "gene", 
-    J["PLATFORM"] = "IlluminaHiSeq_miRNASeq",
+    J["idSubType"] = "gene"
+    J["PLATFORM"] = "IlluminaHiSeq_miRNASeq"
     J["colNormalization"]=True
     J["unit"]="log2(RPM+1)"
     return
@@ -515,11 +534,11 @@ def miRNA_HiSeq_geneJSON(J,cancer):
 def miRNA_GA_geneJSON(J,cancer):
     J['name']= "TCGA_PANCAN_miRNA_GA_gene"
     J["label"]= "miRNA gene expression (GA)"
-    #if J.has_key(":probeMap"):
-    #    J.pop(":probeMap")
+    if J.has_key(":probeMap"):
+        J.pop(":probeMap")
     J["dataSubType"]="miRNA gene expression RNAseq"
-    J["idSubType"] = "gene", 
-    J["PLATFORM"] = "IlluminaGA_miRNASeq",
+    J["idSubType"] = "gene"
+    J["PLATFORM"] = "IlluminaGA_miRNASeq"
     J["colNormalization"]=True
     J["unit"]="log2(RPM+1)"
     return
