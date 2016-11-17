@@ -368,7 +368,7 @@ def process(samples,cancer,infile,flog, mapping,fout):
 
     fin=open(infile,'U')
     line = fin.readline()
-    fout.write("sample"+"\t"+"chr"+"\t"+"start"+"\t"+"end"+"\t"+"segment_mean"+"\n")
+    fout.write("sample"+"\t"+"chr"+"\t"+"start"+"\t"+"end"+"\t"+"value"+"\n")
     for line in fin.readlines():
         sample,chr,start, end, numMark, segMean = string.split(line[:-1],"\t")
         sample=mapping[sample]

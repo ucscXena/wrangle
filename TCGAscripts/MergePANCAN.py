@@ -54,7 +54,17 @@ def miRNA  ( dir, outDir, cancer,flog,REALRUN):
     if cancer !="PANCAN":
         return
     print cancer, sys._getframe().f_code.co_name
-    filename = "miRNA"
+
+    filename = "miRNA_HiSeq"
+    processMatrix (filename, dir,outDir, cancer,flog, REALRUN)
+
+    filename = "miRNA_GA"
+    processMatrix (filename, dir,outDir, cancer,flog, REALRUN)
+
+    filename = "miRNA_HiSeq_gene"
+    processMatrix (filename, dir,outDir, cancer,flog, REALRUN)
+
+    filename = "miRNA_GA_gene"
     processMatrix (filename, dir,outDir, cancer,flog, REALRUN)
 
 def mutation_broad  ( dir, outDir, cancer,flog,REALRUN):
@@ -243,19 +253,19 @@ def processFiles (filename, dir,outDir, cancer , MUTATION= False):
         cancerDir= outDir+ cancer
         cancerFile = cancerDir+"/"+filename
 
-        if not os.path.exists(cancerFile):
-            if filename =="miRNA":
-                cancerFile = cancerDir+"/"+filename+"_HiSeq"
-                if not os.path.exists(cancerFile):
-                    cancerFile = cancerDir+"/"+filename+"_GA"
-                    if not os.path.exists(cancerFile):
-                        continue
-                    else:
-                        inFiles.append(cancerFile)
-                else:
-                    inFiles.append(cancerFile)
-            else:
-                continue
+        #if not os.path.exists(cancerFile):
+        #    if filename =="miRNA":
+        #        cancerFile = cancerDir+"/"+filename+"_HiSeq"
+        #        if not os.path.exists(cancerFile):
+        #            cancerFile = cancerDir+"/"+filename+"_GA"
+        #            if not os.path.exists(cancerFile):
+        #                continue
+        #            else:
+        #                inFiles.append(cancerFile)
+        #        else:
+        #            inFiles.append(cancerFile)
+        #    else:
+        #        continue
 
         if MUTATION:
             fin = open(cancerFile+".json",'r')
@@ -372,8 +382,14 @@ def processMatrix (filename, dir,outDir, cancer,flog, REALRUN, memVersion = Fals
         HiSeqV2JSON(J,cancer)
     elif filename=="HiSeqV2_exon":
         HiSeqV2_exonJSON(J,cancer)
-    elif filename=="miRNA":
-        miRNAJSON(J,cancer)
+    elif filename=="miRNA_HiSeq":
+        miRNA_HiSeqJSON(J,cancer)
+    elif filename=="miRNA_GA":
+        miRNA_GAJSON(J,cancer)
+    elif filename=="miRNA_HiSeq_gene":
+        miRNA_HiSeq_geneJSON(J,cancer)
+    elif filename=="miRNA_GA_gene":
+        miRNA_GA_geneJSON(J,cancer)
     elif filename=="HumanMethylation27":
         HumanMethylation27JSON(J,cancer)
     elif filename=="HumanMethylation450":
@@ -459,15 +475,51 @@ def mutation_broadJSON(J,cancer,genelevel):
     J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" somatic mutation data, compiled using data from all TCGA cohorts. The calls are generated at Broad Institute Genome Sequencing Center using the MuTect method. MuTect calls from various TCGA cohorts are combined to produce this dataset."
     J["description"] = J["description"] +"<br><br>"    
     
-def miRNAJSON(J,cancer):
-    J['name']= "TCGA_PANCAN_miRNA"
-    J["label"]= "miRNA expression"
-    J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+" miRNA expression (RNAseq)"
-    J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" miRNA expression by RNAseq, compiled using data from all TCGA cohorts. miRNA expression was measured using the IlluminaHiSeq and IllunimaGA technology. Data from all TCGA cohorts are combined to produce this dataset."
-    J["description"] = J["description"] +"<br><br>"    
-    if J.has_key(":probeMap"):
-        J.pop(":probeMap")
-    J["dataSubType"]="miRNA expression RNAseq"
+def miRNA_HiSeqJSON(J,cancer):
+    J['name']= "TCGA_PANCAN_miRNA_HiSeq"
+    J["label"]= "miRNA isoform expression (HiSeq)"
+    #if J.has_key(":probeMap"):
+    #    J.pop(":probeMap")
+    J["dataSubType"]="miRNA isoform expression RNAseq"
+    J["idSubType"] = "isoform", 
+    J["PLATFORM"] = "IlluminaHiSeq_miRNASeq",
+    J["colNormalization"]=True
+    J["unit"]="log2(RPM+1)"
+    return
+
+def miRNA_GAJSON(J,cancer):
+    J['name']= "TCGA_PANCAN_miRNA_GA"
+    J["label"]= "miRNA isoform expression (GA)"
+    #if J.has_key(":probeMap"):
+    #    J.pop(":probeMap")
+    J["dataSubType"]="miRNA isoform expression RNAseq"
+    J["idSubType"] = "isoform", 
+    J["PLATFORM"] = "IlluminaGA_miRNASeq",
+    J["colNormalization"]=True
+    J["unit"]="log2(RPM+1)"
+    return
+
+
+def miRNA_HiSeq_geneJSON(J,cancer):
+    J['name']= "TCGA_PANCAN_miRNA_HiSeq_gene"
+    J["label"]= "miRNA gene expression (HiSeq)"
+    #if J.has_key(":probeMap"):
+    #    J.pop(":probeMap")
+    J["dataSubType"]="miRNA gene expression RNAseq"
+    J["idSubType"] = "gene", 
+    J["PLATFORM"] = "IlluminaHiSeq_miRNASeq",
+    J["colNormalization"]=True
+    J["unit"]="log2(RPM+1)"
+    return
+
+def miRNA_GA_geneJSON(J,cancer):
+    J['name']= "TCGA_PANCAN_miRNA_GA_gene"
+    J["label"]= "miRNA gene expression (GA)"
+    #if J.has_key(":probeMap"):
+    #    J.pop(":probeMap")
+    J["dataSubType"]="miRNA gene expression RNAseq"
+    J["idSubType"] = "gene", 
+    J["PLATFORM"] = "IlluminaGA_miRNASeq",
     J["colNormalization"]=True
     J["unit"]="log2(RPM+1)"
     return
