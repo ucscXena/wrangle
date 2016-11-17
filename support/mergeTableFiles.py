@@ -1,6 +1,15 @@
 import sys,os
 import uuid
 
+def checkDataSetsExists(inputs):
+    retList = []
+    for file in inputs:
+        if os.path.exists(file):
+            retList.append(file)
+        else:
+            print file +" does not exist, skip"
+    return retList
+
 def mergeTableFiles (noDup, outfile, datasets):
     HEADER=""
     for path in datasets:
@@ -57,5 +66,6 @@ if noDup not in ["noDup","Dup"]:
 output= sys.argv[2]
 inputs = sys.argv[3:]
 
+inputs = checkDataSetsExists(inputs)
 mergeTableFiles (noDup, output, inputs)
 

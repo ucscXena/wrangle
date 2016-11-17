@@ -372,11 +372,12 @@ def processProbeMap (filename, dir, outDir, cancer, REALRUN):
 
     if REALRUN:
         root = "/data/TCGA/"
-        os.system("python mergeTableFiles.py.py noDup "+outfile+" "+root+" " + string.join(inFiles,' '))
+        os.system("python mergeTableFiles.py noDup "+ outfile + " " + string.join(inFiles,' '))
     
     J={}
     J["type"]="probeMap"
     fout = open(outfile+".json","w")
+    fout.write(json.dumps(J,indent=-1))
     fout.close()
     return
 

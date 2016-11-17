@@ -15,6 +15,15 @@ def merge (infile_list, outfile, root ="./"):
 
     os.system("mkdir "+ tmpDir)
 
+    tmpList =[]
+    for infile in infile_list:
+        if not os.path.exists(infile):
+            print infile, "not exists, skip"
+        else:
+            tmpList.append(infile)
+
+    infile_list = tmpList
+
     for infile in infile_list:
         if not os.path.exists(infile):
             print infile, "not exists"
