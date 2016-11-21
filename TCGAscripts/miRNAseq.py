@@ -332,6 +332,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     J = {}
     J['type'] = 'probeMap'
     J['assembly'] ='hg19'
+    J['name']= cancer+'_'+namesuffix+".probeMap"
     fout.write( json.dumps( J, indent=-1 ) )
     fout.close()
 
@@ -353,7 +354,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
     J["unit"]="log2(RPM+1)"
     J["idSubType"] = "isoform"
-    J[":probeMap"]= "miRNA_isoform_TCGA.probeMap"
+    J[":probeMap"]= cancer+'_'+namesuffix+".probeMap"
 
     if PATHPATTERN in ["IlluminaHiSeq_miRNASeq"]:
         platformTitle ="Illumina HiSeq 2000 RNA Sequencing platform"

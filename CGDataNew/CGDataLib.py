@@ -40,7 +40,6 @@ def cgWalk(dir, ignore):
             if not J.has_key('type'):
                 J['type']=None
 
-
             if J['type']!=None and not os.path.exists(root+"/"+base):
                 if ignore:
                     continue

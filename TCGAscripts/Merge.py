@@ -32,7 +32,6 @@ def matrix (dir,outDir, cancer,flog,REALRUN):
         "HiSeqV2",
         "HiSeqV2_exon",
         "AgilentG4502A_07_3",
-        "miRNA",
         "Gistic2_CopyNumber_Gistic2_all_data_by_genes",
         "Gistic2_CopyNumber_Gistic2_all_thresholded.by_genes",
         "HumanMethylation27",

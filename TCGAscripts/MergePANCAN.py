@@ -376,6 +376,8 @@ def processProbeMap (filename, dir, outDir, cancer, REALRUN):
     
     J={}
     J["type"]="probeMap"
+    J['assembly']='hg19'
+    J['name']= 'PANCAN_'+ filename
     fout = open(outfile+".json","w")
     fout.write(json.dumps(J,indent=-1))
     fout.close()
@@ -501,7 +503,7 @@ def mutation_broadJSON(J,cancer,genelevel):
 def miRNA_HiSeqJSON(J,cancer):
     J['name']= "TCGA_PANCAN_miRNA_HiSeq"
     J["label"]= "miRNA isoform expression (HiSeq)"
-    J["probeMap"] = "miRNA_HiSeq.probeMap"
+    J[":probeMap"] = "PANCAN_miRNA_HiSeq.probeMap"
     J["dataSubType"]="miRNA isoform expression RNAseq"
     J["idSubType"] = "isoform" 
     J["PLATFORM"] = "IlluminaHiSeq_miRNASeq"
@@ -512,7 +514,7 @@ def miRNA_HiSeqJSON(J,cancer):
 def miRNA_GAJSON(J,cancer):
     J['name']= "TCGA_PANCAN_miRNA_GA"
     J["label"]= "miRNA isoform expression (GA)"
-    J["probeMap"] = "miRNA_GA.probeMap"
+    J[":probeMap"] = "PANCAN_miRNA_GA.probeMap"
     J["dataSubType"]="miRNA isoform expression RNAseq"
     J["idSubType"] = "isoform"
     J["PLATFORM"] = "IlluminaGA_miRNASeq"
