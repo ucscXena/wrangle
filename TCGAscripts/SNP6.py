@@ -131,6 +131,7 @@ def SNP6 (inDir, outDir, cancer,flog, REALRUN):
     gMoutput = outDir+cancer+"/"+"SNP6"
     if REALRUN:
         fout=open(outfile,'w')
+        fout.write("sample"+"\t"+"chr"+"\t"+"start"+"\t"+"end"+"\t"+"value"+"\n")
         samples=[]
         for dataDir in os.listdir(rootDir):
             for file in os.listdir(rootDir+dataDir):
@@ -168,6 +169,7 @@ def SNP6 (inDir, outDir, cancer,flog, REALRUN):
     gMoutput = outDir+cancer+"/"+"SNP6_nocnv"
     if REALRUN:
         fout=open(outfile,'w')
+        fout.write("sample"+"\t"+"chr"+"\t"+"start"+"\t"+"end"+"\t"+"value"+"\n")
         samples=[]
         for dataDir in os.listdir(rootDir):
             for file in os.listdir(rootDir+dataDir):
@@ -362,7 +364,6 @@ def process(samples,cancer,infile,flog, mapping,fout):
 
     fin=open(infile,'U')
     line = fin.readline()
-    fout.write("sample"+"\t"+"chr"+"\t"+"start"+"\t"+"end"+"\t"+"value"+"\n")
     for line in fin.readlines():
         sample,chr,start, end, numMark, segMean = string.split(line[:-1],"\t")
         sample=mapping[sample]
