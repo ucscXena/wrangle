@@ -203,7 +203,6 @@ def SNP6 (inDir, outDir, cancer,flog, REALRUN):
 
 def makeProbeJSON(oHandle,cancer,noCNV):
     J={}
-    J["cgDataVersion"]=1
     #change cgData
     if noCNV:
         mName="TCGA_"+cancer+"_GSNP6noCNV"
@@ -227,24 +226,19 @@ def makeProbeJSON(oHandle,cancer,noCNV):
 def makeJSON(oHandle,cancer,lastMageTab,inDir,noCNV,type):    
     J={}
     #stable
-    J["cgDataVersion"]=1
     if noCNV:
-        J["shortTitle"]= "copy number (delete germline cnv)"
+        J["label"]= "copy number (delete germline cnv)"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") segmented copy number (delete germline cnv)"
     else:
-        J["shortTitle"]= "copy number"
+        J["label"]= "copy number"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") segmented copy number"
     J["dataSubType"]="copy number"
-    J["redistribution"]= True
-
     J["dataProducer"]= "Broad Institute of MIT and Harvard University cancer genomic characterization center"
     J["url"]=TCGAUtil.remoteBase \
               +string.replace(inDir,TCGAUtil.localBase,"")
     J["version"]= datetime.date.today().isoformat()
     J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
 
-    J["label"] = J["shortTitle"]
-    
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
     J["sample_type"]=["tumor"]
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]

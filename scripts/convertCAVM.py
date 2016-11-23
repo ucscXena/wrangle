@@ -280,10 +280,12 @@ def convertCAVM (inDir, outD ,REALRUN, CAVM, TCGA, MAPID=1):
                     continue
                 
                 #probemap for genomic segment
-                if J.has_key(':genomicSegment'):
-                    probeMap = bookDic[J[':probeMap']]['path']
-                    os.system("cp "+probeMap+" "+outDir+os.path.basename(probeMap))
-                    os.system("cp "+probeMap+".json "+outDir+os.path.basename(probeMap)+".json")
+                #if J.has_key(':genomicSegment'):
+                if J.has_key(':probeMap'):
+                    if bookDic.has_key(J[':probeMap']):
+                        probeMap = bookDic[J[':probeMap']]['path']
+                        os.system("cp "+probeMap+" "+outDir+os.path.basename(probeMap))
+                        os.system("cp "+probeMap+".json "+outDir+os.path.basename(probeMap)+".json")
 
                 #need to figure out if there are duplication in the probe ids
                 findDupProbe=[]
