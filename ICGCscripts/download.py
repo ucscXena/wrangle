@@ -12,19 +12,19 @@ def downloadSummaryUrl(dataType):
     return download + config.release  + '/Summary/' + dataType +".all_projects.tsv.gz"
 
 def curlDownload(outdir, file, url):
-    try:
-        resp = subprocess.check_output(['wget', '-O', outdir + file, url,'--no-check-certificate'])
-    except subprocess.CalledProcessError:
-        return  # TODO assuming the file does not exist
+    #try:
+    #    resp = subprocess.check_output(['wget', '-O', outdir + file, url,'--no-check-certificate'])
+    #except subprocess.CalledProcessError:
+    #    return  # TODO assuming the file does not exist
     
     try:
         print url
         print outdir +file
         resp = subprocess.check_output(['wget', '-O', outdir + file, url, '--no-check-certificate'])
+        print 'downloaded: ' + file
     except subprocess.CalledProcessError:
-        error('Curl call failed for file: ' + file)
-        return 
-    print 'downloaded: ' + file
+        print 'Curl call failed for file: ' + file
+        os.system("rm -f "+ outdir + file)
 
 
 def downloadOriginals(projects, dataTypes):
