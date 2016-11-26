@@ -1,12 +1,12 @@
 import urllib2,sys,json
 
-#bigDir = "/inside/depot/icgcFiles/"
-bigDir = "/mnt/test/icgcFiles/"
-#smallDir = "/data/TCGA/icgcFiles/"
-smallDir = "/mnt/test/icgcFiles/"
+bigDir = "/inside/depot/icgcFiles/"
+#bigDir = "/mnt/test/icgcFiles/"
+smallDir = "/data/TCGA/icgcFiles/"
+#smallDir = "/mnt/test/icgcFiles/"
 release = "release_22"
 
-#MAX_projects =100
+MAX_projects =100
 
 icgcDataTypes = [ # only the dataset types of interest
     #'sample',
@@ -22,7 +22,7 @@ icgcDataTypes = [ # only the dataset types of interest
     #'meth_seq',
 
     #'copy_number_somatic_mutation',
-    'exp_seq',
+    #'exp_seq',
     #'protein_expression',
     'simple_somatic_mutation.open',
     #'structural_somatic_mutation',
@@ -31,9 +31,10 @@ icgcDataTypes = [ # only the dataset types of interest
 
 def getProjects():
     projects=[]
-    url = 'https://dcc.icgc.org/api/v1/projects'
+    url = 'https://dcc.icgc.org/api/v1/projects?size='+ str(MAX_projects)
     response = urllib2.urlopen(url).read()
     J= json.loads(response)
+    print len(J['hits'])
     for hit in J['hits']:
         projects.append(hit['id'])
     return projects
