@@ -1,6 +1,6 @@
 ./download.py
 
-######US RNAseq
+################ US RNAseq ################
 #RNAseq US specimen level: exp_seq.*US.tsv
 #column 3, 8, 9
 cut -f 3,8,9 /data/TCGA/icgcFiles/exp_seq.*US.tsv | grep -v icgc_specimen_id > /data/TCGA/icgcFiles/pancan/tmp_exp_seq_specimen_US
@@ -14,7 +14,7 @@ python ~/cgDataJing/support/Log2xplusTheta.py /data/TCGA/icgcFiles/pancan/exp_se
 
 sed 2d /data/TCGA/icgcFiles/pancan/tmp_exp_seq_specimen_US_log2 > /data/TCGA/icgcFiles/pancan/exp_seq_specimen_US_log2
 
-##### Phenotype
+################ Phenotype ################
 manual : shared with PCAWG
 #manul specimen
 cut -f 1,7 /data/TCGA/icgcFiles/specimen.all_projects > /data/TCGA/icgcFiles/pancan/specimen.all_projects.phenotype
@@ -46,7 +46,7 @@ python ~/cgDataJing/support/autoStateOrderFeatureFile.py  specimen.all_projects.
 mv new
 
 
-#SNV
+################ SNV ################
 cd /data/TCGA/icgcFiles
 
 snv_parse.bash

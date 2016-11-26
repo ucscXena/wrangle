@@ -22,7 +22,7 @@ typeRank ={
     "disruptive_inframe_insertion":1,
     "disruptive_inframe_deletion":1,
     "5_prime_UTR_premature_start_codon_gain_variant":1,
-    "splice_region_variant":2,
+    "splice_region_variant":1,
     "synonymous_variant":2,
     "initiator_codon_variant":2,
     "stop_retained_variant":2,
@@ -30,7 +30,10 @@ typeRank ={
     "3_prime_UTR_variant":3,
     "5_prime_UTR_variant":3,
     "upstream_gene_variant":4,
+    "downstream_gene_variant":4,
     "exon_variant":4,
+    "intergenic_regaion":5,
+    "intron_variant":5,
     "intragenic_variant":5
 }
 
@@ -75,12 +78,12 @@ def parseSNV(fin, emsemblGeneDic, upstreamDis):
                 print enGene, "bad eneGene"
                 continue
             item = emsemblGeneDic[enGene]
-            if item['strand']=="+":
-                if int(end) < item['start']-upstreamDis:
-                    continue
-            if item['strand']=="-":
-                if int(start) > item['end']+upstreamDis:
-                    continue
+            #if item['strand']=="+":
+            #    if int(end) < item['start']-upstreamDis:
+            #        continue
+            #if item['strand']=="-":
+            #    if int(start) > item['end']+upstreamDis:
+            #        continue
 
         record ={}
         record[transcript]=data
@@ -182,7 +185,11 @@ for key in data:
         if t in basicTranscripts:
             record = data[key][t]
             type = value[6]
-            rank = typeRank[type]
+            if type in typeRank:
+                rank = typeRank[type]
+            else:
+                print "missing type:", type
+                continue
             if rank < minRank:
                 minRank = rank
                 bestRecord = record
