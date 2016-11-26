@@ -229,10 +229,16 @@ def makeJSON(oHandle,cancer,lastMageTab,inDir,noCNV,type):
     J={}
     #stable
     if noCNV:
-        J["label"]= "copy number (delete germline cnv)"
+        if type == 'genomicSegment':
+            J["label"]= "copy number segments (delete germline cnv)"
+        else:
+            J["label"]= "copy number (delete germline cnv)"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") segmented copy number (delete germline cnv)"
     else:
-        J["label"]= "copy number"
+        if type == 'genomicSegment':
+            J["label"]= "copy number segments"
+        else:
+            J["label"]= "copy number"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") segmented copy number"
     J["dataSubType"]="copy number"
     J["dataProducer"]= "Broad Institute of MIT and Harvard University cancer genomic characterization center"
