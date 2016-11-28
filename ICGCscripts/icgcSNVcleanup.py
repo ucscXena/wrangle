@@ -73,11 +73,11 @@ def parseSNV(fin, emsemblGeneDic, upstreamDis):
         transcript = data[9]
 
         #only keep upstreamDis variants:
-        if type =="upstream_gene_variant":
-            if enGene not in emsemblGeneDic:
-                print enGene, "bad eneGene"
-                continue
-            item = emsemblGeneDic[enGene]
+        #if type =="upstream_gene_variant":
+        #    if enGene not in emsemblGeneDic:
+        #        print enGene, "bad eneGene"
+        #        continue
+        #    item = emsemblGeneDic[enGene]
             #if item['strand']=="+":
             #    if int(end) < item['start']-upstreamDis:
             #        continue
@@ -90,7 +90,11 @@ def parseSNV(fin, emsemblGeneDic, upstreamDis):
         id = string.join([sample, chr, start, end, alt, enGene],"_")
         if id not in dic:
             dic[id]={}
-        dic[id][transcript]=data
+        if transcript not in dic[id]:
+            dic[id][transcript]=data
+        elif dic[id][transcript][6] != data[6]:
+            print dic[id][transcript][6], data
+            
     fin.close()
     return dic
 

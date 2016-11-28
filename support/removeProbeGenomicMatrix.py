@@ -19,7 +19,7 @@ def removeProbes (inputFile, outputFile, remove_list):
         line = fin.readline()
         if line =="":
             break
-        data = string.split(line[:-1],'\t')
+        data = string.split(line,'\t')
         if data[0] in remove_list:
             continue
         else:
@@ -28,7 +28,7 @@ def removeProbes (inputFile, outputFile, remove_list):
     fout.close()
 
 if len(sys.argv[:])!=4:
-    print "python removeProbeGenomicMatrix.py matrixfile output remove_list(one_id_per_line)"
+    print "python removeRowsByFirstColumn.py infile output remove_list(one_id_per_line)"
     sys.exit()
 
 listfile = sys.argv[3]

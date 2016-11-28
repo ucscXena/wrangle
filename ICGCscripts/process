@@ -51,8 +51,21 @@ cd /data/TCGA/icgcFiles
 
 snv_parse.bash
 
-cat SNV.header *.donor.xena > SNV.donor.xena
-cat SNV.header *.sp.xena > SNV.sp.xena
+#non-US all mutations
+test=$(ls /data/TCGA/icgcFiles/simple_somatic_mutation.open.*.sp.xena |grep -v -e '-US')
+cat SNV.header $test > SNV.sp.allMutation-nonUSprojects
+
+#all projects, coding mutations
+cat SNV.header *.sp.xena | grep -v "5_prime_UTR_premature_start_codon_gain_variant\|3_prime_UTR_variant\|5_prime_UTR_variant\|upstream_gene_variant\|downstream_gene_variant\|exon_variant\|intergenic_regaion\|intron_variant\|intragenic_variant"  > SNV.sp.codingMutation-allProjects
+
+#non-US all mutations
+test=$(ls /data/TCGA/icgcFiles/simple_somatic_mutation.open.*.donor.xena |grep -v -e '-US')
+cat SNV.header $test > SNV.donor.allMutation-nonUSprojects
+
+#all projects, coding mutations
+cat SNV.header *.donor.xena | grep -v "5_prime_UTR_premature_start_codon_gain_variant\|3_prime_UTR_variant\|5_prime_UTR_variant\|upstream_gene_variant\|downstream_gene_variant\|exon_variant\|intergenic_regaion\|intron_variant\|intragenic_variant"  > SNV.donor.codingMutation-allProjects
+
+
 mv
 
 #SNV gene level --- not a good idea
