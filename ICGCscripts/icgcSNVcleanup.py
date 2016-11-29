@@ -4,7 +4,7 @@ import urllib2
 sys.path.insert(0, os.path.dirname(sys.argv[0])+"/../support/")
 import probMap_genePred
 
-ensemblCanonical_url = "http://xena-probemap.s3.amazonaws.com/reference_master/ensemblCanonical"
+#ensemblCanonical_url = "http://xena-probemap.s3.amazonaws.com/reference_master/ensemblCanonical"
 ensemblBasic_url ="http://xena-probemap.s3.amazonaws.com/reference_master/ensemblBasic"
 gencodeGene_url = "http://xena-probemap.s3.amazonaws.com/probemap-master/gencode.v19.annotation.gene.probemap"
 upstream =200
@@ -113,8 +113,8 @@ if len(sys.argv[:])!= 3:
 infile = sys.argv[1]
 outfile = sys.argv[2]
 
-fin = urllib2.urlopen(ensemblCanonical_url)
-cTranscripts = collectT(fin)
+#fin = urllib2.urlopen(ensemblCanonical_url)
+#cTranscripts = collectT(fin)
 
 fin = urllib2.urlopen(ensemblBasic_url)
 basicTranscripts = collectT(fin)
@@ -137,16 +137,16 @@ for key in data:
     transcripts = data[key].keys()
 
     #use ensembl canonical
-    foundC =0
-    for t in transcripts:
-        if t in cTranscripts:
-            record = data[key][t]
-            hugo= findHugo(idToHugo, record[8], record[9])
-            record[8] = hugo
-            fout.write(string.join(record[:9], "\t")+"\n")
-            foundC= foundC +1
-    if foundC:
-        continue
+    #foundC =0
+    #for t in transcripts:
+    #    if t in cTranscripts:
+    #        record = data[key][t]
+    #        hugo= findHugo(idToHugo, record[8], record[9])
+    #        record[8] = hugo
+    #        fout.write(string.join(record[:9], "\t")+"\n")
+    #        foundC= foundC +1
+    #if foundC:
+    #    continue
     
     if len(data[key])==1:
         t = data[key].keys()[0]
@@ -188,7 +188,7 @@ for key in data:
     for t in transcripts:
         if t in basicTranscripts:
             record = data[key][t]
-            type = value[6]
+            type = record[6]
             if type in typeRank:
                 rank = typeRank[type]
             else:
