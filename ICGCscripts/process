@@ -56,19 +56,26 @@ test=$(ls /data/TCGA/icgcFiles/simple_somatic_mutation.open.*.sp.xena |grep -v -
 cat SNV.header $test > SNV.sp.allMutation-nonUSprojects
 
 #all projects, coding mutations
-cat SNV.header *.sp.xena | grep -v "5_prime_UTR_premature_start_codon_gain_variant\|3_prime_UTR_variant\|5_prime_UTR_variant\|upstream_gene_variant\|downstream_gene_variant\|exon_variant\|intergenic_regaion\|intron_variant\|intragenic_variant"  > SNV.sp.codingMutation-allProjects
+cat SNV.header simple_somatic_mutation.open.*.sp.xena | grep -v "5_prime_UTR_premature_start_codon_gain_variant\|3_prime_UTR_variant\|5_prime_UTR_variant\|upstream_gene_variant\|downstream_gene_variant\|exon_variant\|intergenic_regaion\|intron_variant\|intragenic_variant"  > SNV.sp.codingMutation-allProjects
 
 #non-US all mutations
 test=$(ls /data/TCGA/icgcFiles/simple_somatic_mutation.open.*.donor.xena |grep -v -e '-US')
 cat SNV.header $test > SNV.donor.allMutation-nonUSprojects
 
 #all projects, coding mutations
-cat SNV.header *.donor.xena | grep -v "5_prime_UTR_premature_start_codon_gain_variant\|3_prime_UTR_variant\|5_prime_UTR_variant\|upstream_gene_variant\|downstream_gene_variant\|exon_variant\|intergenic_regaion\|intron_variant\|intragenic_variant"  > SNV.donor.codingMutation-allProjects
+cat SNV.header simple_somatic_mutation.open.*.donor.xena | grep -v "5_prime_UTR_premature_start_codon_gain_variant\|3_prime_UTR_variant\|5_prime_UTR_variant\|upstream_gene_variant\|downstream_gene_variant\|exon_variant\|intergenic_regaion\|intron_variant\|intragenic_variant"  > SNV.donor.codingMutation-allProjects
 
 #US projects with both SNV and expression
 python ~/cgDataJing/support/keepIDRowsByFirstColumn.py SNV.donor.codingMutation-allProjects  simple_somatic_mutation.open.donor.xena.hasRNASNV pancan/RNAAndSNVSamples/hasRNAandSNV.donor 
 
-mv
+
+################ CNV ################
+cd /data/TCGA/icgcFiles
+
+cnv_parse.bash
+
+cat CNV.header copy_number_somatic_mutation.*.donor.xena > CNV.donor.xena
+cat CNV.header copy_number_somatic_mutation.*.sp.xena > CNV.sp.xena
 
 #SNV gene level --- not a good idea
 #python xenaToMatrix.py
