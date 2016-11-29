@@ -69,17 +69,23 @@ cat SNV.header simple_somatic_mutation.open.*.donor.xena | grep -v "5_prime_UTR_
 python ~/cgDataJing/support/keepIDRowsByFirstColumn.py SNV.donor.codingMutation-allProjects  simple_somatic_mutation.open.donor.xena.hasRNASNV pancan/RNAAndSNVSamples/hasRNAandSNV.donor 
 
 
+#SNV gene level --- not a good idea
+#python xenaToMatrix.py
+
+
+################ id mapping  ################
+cut -f 1,5 specimen.all_projects.tsv > mapping_icgc_specimen_donor
+cat mapping_icgc_specimen_donor |awk 'BEGIN{OFS="\t"} {print $2, $1}' > mapping_icgc_donor_specimen
+
+
 ################ CNV ################
 cd /data/TCGA/icgcFiles
 
 cnv_parse.bash
 
-cat CNV.header copy_number_somatic_mutation.*.donor.xena > CNV.donor.xena
-cat CNV.header copy_number_somatic_mutation.*.sp.xena > CNV.sp.xena
+cat CNV.header copy_number_somatic_mutation.*.sp.xena > CNV.sp.xena.tmp
+python ~/cgDataJing/support/keepIDRowsByFirstColumn.py CNV.sp.xena.tmp CNV.sp.xena specimen.all_tumors_relevent.tsv
 
-#SNV gene level --- not a good idea
-#python xenaToMatrix.py
-
-
-# id mapping
-cut -f 1,5 specimen.all_projects > mapping_icgc_specimen_donor
+python ~/cgDataJing/support/xenaIDreplaceMutationVector.py CNV.sp.xena mapping_icgc_donor_specimen
+mv  CNV.sp.xena  CNV.donor.xena
+mv  CNV.sp.xena_BK  CNV.sp.xena
