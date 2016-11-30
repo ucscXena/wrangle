@@ -15,11 +15,11 @@ python ~/cgDataJing/support/Log2xplusTheta.py /data/TCGA/icgcFiles/pancan/exp_se
 sed 2d /data/TCGA/icgcFiles/pancan/tmp_exp_seq_specimen_US_log2 > /data/TCGA/icgcFiles/pancan/exp_seq_specimen_US_log2
 
 ################ Phenotype ################
-manual : shared with PCAWG
-#manul specimen
-cut -f 1,7 /data/TCGA/icgcFiles/specimen.all_projects > /data/TCGA/icgcFiles/pancan/specimen.all_projects.phenotype
+#manul specimen 
+similar to: cut -f 1,7 /data/TCGA/icgcFiles/specimen.all_projects > /data/TCGA/icgcFiles/pancan/specimen.all_projects.phenotype
 
-cut -f 1,2,5,6,7,8,9,15 donor.all_projects |sed -e 's/$/\tICGC/'> donor.all_projects.phenotype
+#manual donor
+similar to :  cut -f 1,2,5,6,7,8,9,15 donor.all_projects |sed -e 's/$/\tICGC/'> donor.all_projects.phenotype
 manual change feature to _cohort
 
 #manul survival
@@ -35,10 +35,13 @@ mv new /data/TCGA/icgcFiles/pancan/donor.all_projects.phenotype
 python ~/cgDataJing/support/clinicalPushDown.py /data/TCGA/icgcFiles/pancan/donor.all_projects.phenotype  /data/TCGA/PCAWG/mapping_icgcSpecimen_donor /data/TCGA/icgcFiles/pancan/donor.all_projects.phenotype_transfer_specimen
 
 #clinFeature
-python ../support/autoStateOrderFeatureFile.py /data/TCGA/icgcFiles/pancan/donor.all_projects.phenotype_transfer_specimen new /data/TCGA/icgcFiles/pancan/donor.all_projects.phenotype_transfer_specimen_clinFeature
+#default labels
+python ~/cgDataJing/support/curatedPhenotype.py
+
+#state orders
+python ~/cgDataJing/support/autoStateOrderFeatureFile.py /data/TCGA/icgcFiles/pancan/donor.all_projects.phenotype_transfer_specimen new /data/TCGA/icgcFiles/pancan/donor.all_projects.phenotype_transfer_specimen_clinFeature
 mv new 
 
-#stateOrder
 python ../support/autoStateOrderFeatureFile.py /data/TCGA/icgcFiles/pancan/donor.all_projects.phenotype_transfer_specimen new
 mv new
 

@@ -28,7 +28,7 @@ def keepProbes (inputFile, outputFile, keep_dic):
     fout.close()
 
 if len(sys.argv[:])!=4:
-    print "python keepIDRowsByFirstColumn.py infile output remove_list(first_column_id)"
+    print "python keepIDRowsByFirstColumn.py infile output keep_list(first_column_id)"
     sys.exit()
 
 listfile = sys.argv[3]
