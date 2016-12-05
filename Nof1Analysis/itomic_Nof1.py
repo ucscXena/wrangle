@@ -45,7 +45,10 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_list, outpu
     filer_header (comparison_list, Nof1_sample, fout)
 
     for original_label in original_labels:
-        gene = geneMappping[original_label];
+        if original_label in geneMappping:
+            gene = geneMappping[original_label]
+        else:
+            gene = original_label
         itomic_Data = get_itomic_Data (gene, Nof1_item["hub"], Nof1_item["dataset"], itomic_samples)
 
         #screen output
@@ -64,7 +67,7 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_list, outpu
             gene = string.upper(gene)
 
             values = Gene_values(hub, dataset, samples, gene)
-            h_l_values = clean_then_sort_high_to_low (values)
+            h_l_values = clean (values)
 
             rank, percentage =  rank_and_percentage (Nof1_value, h_l_values)
             outputList.append('{:.2f}%'.format(percentage))

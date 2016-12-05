@@ -17,6 +17,7 @@ GTEX_breast = {
 }
 
 TCGA_BRCA_tumors = {
+    "file": "/inside/depot4/CCI/TCGA_BRCA_RSEM_hugo_tpm",
     "hub" : "https://toil.xenahubs.net",
     "dataset" : "tcga_RSEM_gene_tpm",
     "name" : "TCGA_BRCA_tumors",
@@ -26,6 +27,7 @@ TCGA_BRCA_tumors = {
 }
 
 TCGA_TNBC = {
+    "file": "/inside/depot4/CCI/TCGA_TNBC_RSEM_hugo_tpm",
     "hub" : "https://toil.xenahubs.net",
     "dataset" : "tcga_RSEM_gene_tpm",
     "name" : "TCGA_TNBC",

@@ -22,7 +22,7 @@ def process(genomicMatrixInput, probeMap, type, output):
 
     fout = open(output, 'w')
     line = genomicFp.readline()
-    N = len(string.split(line,'\t'))
+    N = len(string.split(line,'\t')) - 1
     fout.write(line)
     fout.close()
 
@@ -30,7 +30,7 @@ def process(genomicMatrixInput, probeMap, type, output):
         line = genomicFp.readline()
         if line =='':
             break
-        data = string.split(line,'\t')
+        data = string.split(line[:-1],'\t')
         probe = data[0]
         if probe not in probeMap:
             continue

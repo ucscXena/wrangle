@@ -10,19 +10,33 @@ def standard_deviation (v_list):
     SD = math.sqrt(variance)
     return SD
 
-def clean_then_sort_high_to_low (v_list):
+#def clean_then_sort_high_to_low (v_list):
+#    l = filter (lambda x: not math.isnan(x), map(float, v_list))
+#    l.sort()
+#    l.reverse() #large to small
+#    return l
+
+def clean (v_list):
     l = filter (lambda x: not math.isnan(x), map(float, v_list))
-    l.sort()
-    l.reverse() #large to small
     return l
 
-def rank_and_percentage(v, v_list):
+#old
+#def rank_and_percentage (v, v_list):
+#    v = float(v)
+#    K = len(v_list)
+#    for i in range(0, K):
+#        if v > v_list[i]:
+#            return i+1, 100 - float(i)/K *100
+#    return K+1, 0.0
+
+def rank_and_percentage (v, v_list):
+    v_list.sort()  #low to high
     v = float(v)
     K = len(v_list)
     for i in range(0, K):
-        if v > v_list[i]:
-            return i+1, 100 - float(i)/K *100
-    return K+1, 0.0
+        if v < v_list[i]:
+            return K - i +1, i * 100.0/K
+    return 1, 100.0
 
 def revert_Log2_theta (Nof1_value, theta):
     return math.pow(2, Nof1_value)- theta
