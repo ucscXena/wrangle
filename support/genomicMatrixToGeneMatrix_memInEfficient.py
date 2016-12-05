@@ -8,7 +8,7 @@ def main():
     parser.add_argument("probeMap", type=str)
     parser.add_argument("geneMatrixOutput", type=str)
     parser.add_argument("type", type=str, choices=('add', 'average'), help='add or average')
-    parser.add_argument("log2", type=str, choices=('log2', 'nolog'), help='log or nolog')
+    parser.add_argument("log2", type=int, choices=(1, 0), help='log or nolog')
     parser.add_argument("theta", type=float, default=0, help='theta value')
     args = parser.parse_args()
 
@@ -56,7 +56,7 @@ def ADD_type_conversion (list, log2, theta, colN):
             except:
                 continue
             if ret_list[i] == 'NA':
-                ret_list[i] = value
+                ret_list[i] = 0
             ret_list[i] = ret_list[i] + value
     if log2:
         for i in range(0, colN):
@@ -83,7 +83,7 @@ def Average_type_conversion (list, log2, theta, colN):
             except:
                 continue
             if total_list[i] == 'NA':
-                total_list[i] = value
+                total_list[i] = 0
             total_list[i] = total_list[i] + value
             count_list[i] = count_list[i] + 1
 
@@ -95,7 +95,6 @@ def Average_type_conversion (list, log2, theta, colN):
         for i in range(0, colN):
             if ret_list[i]!= 'NA':
                 ret_list[i] = math.log(ret_list[i] + theta, 2)
-
     return ret_list
 
 
