@@ -68,7 +68,9 @@ genaname_mapping ={
     "TROP2" : "TACSTD2",
     "p16" : "CDKN2A",
     "p18" : "CDKN2C",
-    "MLL2" :"KMT2D"
+    "MLL2" :"KMT2D",
+    "CD105" : "ENG",
+    "YB1" : "YBX1"
 }
 
 
@@ -90,9 +92,15 @@ else:
 # In[ ]:
 
 outputfile = raw_input('Enter output file name (e.g. ' + Nof1_sample + '_result.txt): ') or Nof1_sample + "_result.txt"
+outputfile = "Results_Folder/" + outputfile
 
 
 # ## Run - results at the bottom
+
+# In[ ]:
+
+
+
 
 # In[ ]:
 
