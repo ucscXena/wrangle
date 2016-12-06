@@ -100,8 +100,8 @@ outputfile = "Results_Folder/" + outputfile
 import xena_datasetlist
 
 comparison_list = [
-    xena_datasetlist.TCGA_TNBC,
-    #xena_datasetlist.TCGA_BRCA_tumors,
+    #xena_datasetlist.TCGA_TNBC,
+    xena_datasetlist.TCGA_BRCA_tumors,
     #xena_datasetlist.TCGA_Breast_Basal,
     #xena_datasetlist.TCGA_Breast_Her2,
     #xena_datasetlist.TCGA_Breast_LumA,

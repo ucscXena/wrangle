@@ -78,6 +78,10 @@ def Probe_values (hub, dataset, samples, probe):
     values = xena.dataset_probe_values (hub, dataset, samples, [probe])
     return values[0]
 
+def Probes_values (hub, dataset, samples, probes):
+    values = xena.dataset_probe_values (hub, dataset, samples, probes)
+    return values
+
 def dataset_samples (hub,dataset):
     return xena.dataset_samples(hub, dataset)
 
