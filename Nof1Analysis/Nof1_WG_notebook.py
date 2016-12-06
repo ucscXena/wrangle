@@ -9,7 +9,8 @@ Nof1_item = {
     "mode" : "probe",
     "name" : "itomic_Nof1",
     "label" : "itomic_Nof1",
-    "log2Theta" : 0.001 
+    "log2Theta" : 0.001,
+    "unit": "log(TPM)"
 }
 
 
@@ -100,7 +101,7 @@ outputfile = "Results_Folder/" + outputfile
 import xena_datasetlist
 
 comparison_list = [
-    #xena_datasetlist.TCGA_TNBC,
+    xena_datasetlist.TCGA_TNBC,
     xena_datasetlist.TCGA_BRCA_tumors,
     #xena_datasetlist.TCGA_Breast_Basal,
     #xena_datasetlist.TCGA_Breast_Her2,
@@ -111,7 +112,5 @@ comparison_list = [
 
 import itomic_WG_Nof1
 for comparison_item in comparison_list:
-    itomic_WG_Nof1.itomic_Nof1(Nof1_item, genes, genaname_mapping, comparison_item, outputfile + "_vs_"+ comparison_item["label"]) 
-
-#itomic_Nof1.itomic_legend()
+    itomic_WG_Nof1.itomic_Nof1(Nof1_item, genes, genaname_mapping, comparison_item, outputfile + "_vs_"+ comparison_item["fileLabel"]) 
 
