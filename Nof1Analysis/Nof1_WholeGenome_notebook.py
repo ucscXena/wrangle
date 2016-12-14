@@ -14,7 +14,7 @@ Nof1_item = {
 }
 
 
-# In[ ]:
+# get samples
 
 Nof1_sample = raw_input('Enter sample name (e.g. 10-3-B1 or ALL): ') or "ALL"
 
@@ -29,9 +29,7 @@ else:
 print Nof1_item["samples"]
 
 
-# # check samples  -- no need 
-
-# # enter gene 
+# enter gene 
 genes = raw_input('Enter a single or a list of gene names (e.g. PTEN, AR, or ALL): ') or "ALL"
 
 if Nof1_item["mode"] == "probe":
@@ -41,70 +39,21 @@ if Nof1_item["mode"] == "probe":
         genes = string.split(genes,',')
     genaname_mapping ={}
 
-# In[ ]:
-#genes = filter(lambda x: x!='', re.split(';|,| |\n', genes))
-#new_genes =[]
-#new_genes = [string.strip (genes[0])]
-#for i in range (1, len(genes)):
-#    gene = string.strip(genes[i])
-#    if gene[0] =="(" and gene[-1] ==")":
-#        new_genes[-1] = new_genes[-1] + " (" + string.strip(gene[1:-1]) +")"
-#    else:
-#        new_genes.append(gene)
-#genes = new_genes
+
 if len(genes) >10:
     print "genes:", genes[:10],"..."
 else:
     print "genes:", genes[:10]
 
-# # gene name mapping
-
-# In[ ]:
-
-#genaname_mapping ={
-#    "CTLA-4" : "CTLA4",
-#    "LAG-3" : "LAG3",
-#    "LIV-1" : "SLC39A6",
-#    "PD-L1" : "CD274",
-#    "PDL1" : "CD274",
-#    "PD-L2" : "PDCD1LG2",
-#    "PDL2" : "PDCD1LG2",
-#    "TROP2" : "TACSTD2",
-#    "p16" : "CDKN2A",
-#    "p18" : "CDKN2C",
-#    "MLL2" :"KMT2D",
-#    "CD105" : "ENG",
-#    "YB1" : "YBX1"
-#}
-
-
-# # check gene name
-
-# In[ ]:
-
-#def cleanGeneName_Funtion (originalLable):
-#    return string.strip(string.split(originalLable,'(')[0])
-
-#if (Nof1_functions.checkFields(genes, genaname_mapping, Nof1_item["hub"], Nof1_item["dataset"], cleanGeneName_Funtion)):
-#    sys.exit()
-#else:
-#    print "pass"
-
 
 # # Enter output file name
 
-# In[ ]:
-
-print "samples:",Nof1_sample
 outputfile = raw_input('Enter output file name (e.g. ' + Nof1_sample +")") or Nof1_sample
 outputfile = "Results_Folder/" + outputfile
-
-# ## Run
-
-# In[ ]:
+print "output:", outputfile
 
 
-# In[ ]:
+# comparision list
 import xena_datasetlist
 
 comparison_list = [
@@ -117,6 +66,7 @@ comparison_list = [
     #xena_datasetlist.TCGA_Breast_Adjacent_Normal,
 ]
 
+# ## Run
 import itomic_WG_Nof1
 for comparison_item in comparison_list:
     itomic_WG_Nof1.itomic_Nof1(Nof1_item, genes, genaname_mapping, comparison_item, outputfile + "_vs_"+ comparison_item["fileLabel"]) 
