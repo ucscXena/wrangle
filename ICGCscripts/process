@@ -86,9 +86,15 @@ cd /data/TCGA/icgcFiles
 
 cnv_parse.bash
 
-cat CNV.header copy_number_somatic_mutation.*.sp.xena > CNV.sp.xena.tmp
-python ~/cgDataJing/support/keepIDRowsByFirstColumn.py CNV.sp.xena.tmp CNV.sp.xena specimen.all_tumors_relevent.tsv
+cat CNV.header copy_number_somatic_mutation.*.HiSeq.sp.xena > CNV.HiSeq.sp.xena.tmp
+python ~/cgDataJing/support/keepIDRowsByFirstColumn.py CNV.HiSeq.sp.xena.tmp CNV.HiSeq.sp.xena clinical/limit_specimen.all_tumors_relevent.tsv
+python ~/cgDataJing/support/keepIDRowsByFirstColumn.py CNV.HiSeq.sp.xena CNV.HiSeq.donor.xena clinical/limit_specimen.tumorsOnly.tsv
 
-python ~/cgDataJing/support/xenaIDreplaceMutationVector.py CNV.sp.xena mapping_icgc_donor_specimen
-mv  CNV.sp.xena  CNV.donor.xena
-mv  CNV.sp.xena_BK  CNV.sp.xena
+cat CNV.header copy_number_somatic_mutation.*.SNP6.sp.xena > CNV.SNP6.sp.xena.tmp
+python ~/cgDataJing/support/keepIDRowsByFirstColumn.py CNV.SNP6.sp.xena.tmp CNV.SNP6.sp.xena clinical/limit_specimen.all_tumors_relevent.tsv
+python ~/cgDataJing/support/keepIDRowsByFirstColumn.py CNV.SNP6.sp.xena CNV.SNP6.donor.xena clinical/limit_specimen.tumorsOnly.tsv
+
+python ~/cgDataJing/support/xenaIDreplaceMutationVector.py CNV.HiSeq.donor.xena mapping_icgc_donor_specimen
+python ~/cgDataJing/support/xenaIDreplaceMutationVector.py CNV.SNP6.donor.xena mapping_icgc_donor_specimen
+
+python ~/cgDataJing/support/keepIDRowsByFirstColumn.py CNV.SNP6.donor.xena CNV.SNP6.donor.RNASNV.xena clinical/donor_RNASNV_limits.tsv
