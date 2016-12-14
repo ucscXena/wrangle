@@ -74,6 +74,10 @@ def Gene_values (hub, dataset, samples, gene):
     values = xena.dataset_gene_values (hub, dataset, samples, [gene])
     return values[0]["scores"][0]
 
+def Genes_values (hub, dataset, samples, genes):
+    values = xena.dataset_gene_values (hub, dataset, samples, genes)
+    return values
+
 def Probe_values (hub, dataset, samples, probe):
     values = xena.dataset_probe_values (hub, dataset, samples, [probe])
     return values[0]

@@ -69,12 +69,16 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_item, outpu
         cData = getMatrixData(file)
     else:
         cData = None
-        hub = comparison_item["hub"]
-        dataset = comparison_item["dataset"]
-        samples = comparison_item["samples"]
-        name = comparison_item["name"]
-            
-    n = 2000
+    hub = comparison_item["hub"]
+    dataset = comparison_item["dataset"]
+    samples = comparison_item["samples"]
+    name = comparison_item["name"]
+    mode = comparison_item["mode"]
+
+    if cData:
+        n = 2000
+    else:
+        n = 200
     for k in range (0, len(original_labels), n):
         labels = original_labels[k:k+n]
         genes = map(lambda original_label: geneMappping[original_label] if (original_label in geneMappping) else original_label,labels)
@@ -86,6 +90,13 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_item, outpu
 
         if Nof1_sample:
             all_data_list = get_itomic_Data (genes, Nof1_item["hub"], Nof1_item["dataset"], itomic_samples)
+            
+        if not cData:
+            # get data for comparison
+            if mode == "gene":
+                compare_data_list = Genes_values (hub, dataset, samples, genes) 
+            if mode == "probe":
+                compare_data_list = Probes_values (hub, dataset, samples, genes) 
 
         for m in range (0, n):
             if m  == len(genes):
@@ -107,8 +118,9 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_item, outpu
                     values = cData[gene]
                 else:
                     values =[]
-            #else:
-            #    values = Gene_values(hub, dataset, samples, string.upper(gene))    ########### bad code for on the fly cal against larger cohort
+            else:
+                compare_gene_obj = compare_data_list[m]
+                values = compare_gene_obj['scores'][0] #############
 
             h_l_values = clean (values)
             
