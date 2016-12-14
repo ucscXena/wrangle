@@ -67,8 +67,8 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_item, outpu
     if "file" in comparison_item:
         file = comparison_item["file"]
         cData = getMatrixData(file)
-    #else:
-    #    cData = None
+    else:
+        cData = None
         
     hub = comparison_item["hub"]
     dataset = comparison_item["dataset"]
@@ -79,7 +79,7 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_item, outpu
     if cData:
         n = 2000
     else:
-        n = 200
+        n = 1000
     for k in range (0, len(original_labels), n):
         labels = original_labels[k:k+n]
         genes = map(lambda original_label: geneMappping[original_label] if (original_label in geneMappping) else original_label,labels)
@@ -92,14 +92,14 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_item, outpu
         if Nof1_sample:
             all_data_list = get_itomic_Data (genes, Nof1_item["hub"], Nof1_item["dataset"], itomic_samples)
             
-        if not cData:
+        if cData:
+            compare_data_list = None
+        else:
             # get data for comparison
             if mode == "gene":
                 compare_data_list = Genes_values (hub, dataset, samples, genes) 
             if mode == "probe":
                 compare_data_list = Probes_values (hub, dataset, samples, genes)
-        else:
-            compare_data_list = None
 
         for m in range (0, n):
             if m  == len(genes):
@@ -115,21 +115,29 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_item, outpu
             if Nof1_sample:
                 allsample_Data = all_data_list[m]
             
+            print len(samples)
             # cohort data
             if cData:
                 if gene in cData:
                     values = cData[gene]
                 else:
                     values =[]
-            print values
+                #print len(values)
+                #h_l_values = clean (values)            
+                #r_and_p_values = map(lambda x: rank_and_percentage(x, h_l_values), itomic_values)  
+                #print r_and_p_values
+
             if compare_data_list:
                 compare_gene_obj = compare_data_list[m]
                 values = compare_gene_obj['scores'][0] #############
-            print values
+                #print len(values)
+                #h_l_values = clean (values)            
+                #r_and_p_values = map(lambda x: rank_and_percentage(x, h_l_values), itomic_values)  
+                #print r_and_p_values
             
-            h_l_values = clean (values)
-            
-            r_and_p_values = map(lambda x: rank_and_percentage(x, h_l_values), itomic_values)   ########## bad code
+            h_l_values = clean (values)            
+            r_and_p_values = map(lambda x: rank_and_percentage(x, h_l_values), itomic_values)  
+
             outputList.extend(map(lambda x: '{:.2f}%'.format(x[1]), r_and_p_values)) #rank %
             data_outputList.extend(map(lambda x: '{:.2f}'.format(x[1]), r_and_p_values)) #rank %
 

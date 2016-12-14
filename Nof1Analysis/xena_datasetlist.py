@@ -1,5 +1,5 @@
 TCGA_BRCA_tumors = {
-    "file": "data/TCGA_BRCA_RSEM_hugo_tpm",
+    #"file": "data/TCGA_BRCA_RSEM_hugo_tpm",
     "fileLabel":"TCGA_breasts",
     "hub" : "https://toil.xenahubs.net",
     "dataset" : "tcga_RSEM_gene_tpm",
@@ -10,7 +10,7 @@ TCGA_BRCA_tumors = {
 }
 
 TCGA_TNBC = {
-    "file": "data/TCGA_TNBC_RSEM_hugo_tpm",
+    #"file": "data/TCGA_TNBC_RSEM_hugo_tpm",
     "fileLabel":"TNBC",
     "hub" : "https://toil.xenahubs.net",
     "dataset" : "tcga_RSEM_gene_tpm",

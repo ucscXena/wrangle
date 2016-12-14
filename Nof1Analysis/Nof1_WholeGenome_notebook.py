@@ -1,6 +1,12 @@
+
+# coding: utf-8
+
 # In[ ]:
 
 import sys, string
+
+
+# In[ ]:
 
 import Nof1_functions
 Nof1_item = {
@@ -14,8 +20,9 @@ Nof1_item = {
 }
 
 
-# get samples
+# In[ ]:
 
+# get samples
 Nof1_sample = raw_input('Enter sample name (e.g. 10-3-B1 or ALL): ') or "ALL"
 
 if Nof1_sample == "ALL":
@@ -29,6 +36,8 @@ else:
 print Nof1_item["samples"]
 
 
+# In[ ]:
+
 # enter gene 
 genes = raw_input('Enter a single or a list of gene names (e.g. PTEN, AR, or ALL): ') or "ALL"
 
@@ -38,13 +47,14 @@ if Nof1_item["mode"] == "probe":
     else:
         genes = string.split(genes,',')
     genaname_mapping ={}
-
-
+    
 if len(genes) >10:
     print "genes:", genes[:10],"..."
 else:
     print "genes:", genes[:10]
 
+
+# In[ ]:
 
 # # Enter output file name
 
@@ -52,6 +62,8 @@ outputfile = raw_input('Enter output file name (e.g. ' + Nof1_sample +")") or No
 outputfile = "Results_Folder/" + outputfile
 print "output:", outputfile
 
+
+# In[ ]:
 
 # comparision list
 import xena_datasetlist
@@ -66,8 +78,12 @@ comparison_list = [
     #xena_datasetlist.TCGA_Breast_Adjacent_Normal,
 ]
 
+
+# In[ ]:
+
 # ## Run
 import itomic_WG_Nof1
 for comparison_item in comparison_list:
     itomic_WG_Nof1.itomic_Nof1(Nof1_item, genes, genaname_mapping, comparison_item, outputfile + "_vs_"+ comparison_item["fileLabel"]) 
+print "Done"
 
