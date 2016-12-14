@@ -79,7 +79,11 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_item, outpu
     if cData:
         n = 2000
     else:
-        n = 1000
+        n = int(100000/len(samples))
+        if n < 100:
+            n =100
+        print n 
+
     for k in range (0, len(original_labels), n):
         labels = original_labels[k:k+n]
         genes = map(lambda original_label: geneMappping[original_label] if (original_label in geneMappping) else original_label,labels)
@@ -115,7 +119,6 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_item, outpu
             if Nof1_sample:
                 allsample_Data = all_data_list[m]
             
-            print len(samples)
             # cohort data
             if cData:
                 if gene in cData:
