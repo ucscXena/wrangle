@@ -16,12 +16,15 @@ Nof1_item = {
 
 # In[ ]:
 
-Nof1_sample = raw_input('Enter sample name (e.g. 10-3-B1 or ALL): ') or "10-3-B1"
+Nof1_sample = raw_input('Enter sample name (e.g. 10-3-B1 or ALL): ') or "ALL"
 
 if Nof1_sample == "ALL":
     Nof1_item["samples"] = Nof1_functions.dataset_samples( Nof1_item["hub"], Nof1_item["dataset"])
 else:
-    Nof1_item["samples"]= [Nof1_sample]
+    if (Nof1_functions.checkSamples (Nof1_sample, Nof1_item["hub"], Nof1_item["dataset"])):
+        sys.exit()
+    else:
+        Nof1_item["samples"]= [Nof1_sample]
 
 print Nof1_item["samples"]
 
@@ -29,14 +32,16 @@ print Nof1_item["samples"]
 # # check samples  -- no need 
 
 # # enter gene 
+genes = raw_input('Enter a single or a list of gene names (e.g. PTEN, AR, or ALL): ') or "ALL"
 
 if Nof1_item["mode"] == "probe":
-    genes = Nof1_functions.dataset_fields( Nof1_item["hub"],  Nof1_item["dataset"])
+    if genes =="ALL":
+        genes = Nof1_functions.dataset_fields( Nof1_item["hub"],  Nof1_item["dataset"])
+    else:
+        genes = string.split(genes,',')
     genaname_mapping ={}
 
 # In[ ]:
-
-#genes = raw_input('Enter a single or a list of gene names (e.g. PTEN or PTEN,TP53 or a column of gene names copied from a spreadsheet): ') or "PTEN,TP53"
 #genes = filter(lambda x: x!='', re.split(';|,| |\n', genes))
 #new_genes =[]
 #new_genes = [string.strip (genes[0])]
@@ -47,8 +52,10 @@ if Nof1_item["mode"] == "probe":
 #    else:
 #        new_genes.append(gene)
 #genes = new_genes
-#print genes
-
+if len(genes) >10:
+    print "genes:", genes[:10],"..."
+else:
+    print "genes:", genes[:10]
 
 # # gene name mapping
 
@@ -88,7 +95,7 @@ if Nof1_item["mode"] == "probe":
 
 # In[ ]:
 
-print Nof1_sample
+print "samples:",Nof1_sample
 outputfile = raw_input('Enter output file name (e.g. ' + Nof1_sample +")") or Nof1_sample
 outputfile = "Results_Folder/" + outputfile
 
