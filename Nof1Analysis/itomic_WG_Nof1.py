@@ -67,8 +67,9 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_item, outpu
     if "file" in comparison_item:
         file = comparison_item["file"]
         cData = getMatrixData(file)
-    else:
-        cData = None
+    #else:
+    #    cData = None
+        
     hub = comparison_item["hub"]
     dataset = comparison_item["dataset"]
     samples = comparison_item["samples"]
@@ -96,7 +97,9 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_item, outpu
             if mode == "gene":
                 compare_data_list = Genes_values (hub, dataset, samples, genes) 
             if mode == "probe":
-                compare_data_list = Probes_values (hub, dataset, samples, genes) 
+                compare_data_list = Probes_values (hub, dataset, samples, genes)
+        else:
+            compare_data_list = None
 
         for m in range (0, n):
             if m  == len(genes):
@@ -118,10 +121,12 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_item, outpu
                     values = cData[gene]
                 else:
                     values =[]
-            else:
+            print values
+            if compare_data_list:
                 compare_gene_obj = compare_data_list[m]
                 values = compare_gene_obj['scores'][0] #############
-
+            print values
+            
             h_l_values = clean (values)
             
             r_and_p_values = map(lambda x: rank_and_percentage(x, h_l_values), itomic_values)   ########## bad code
