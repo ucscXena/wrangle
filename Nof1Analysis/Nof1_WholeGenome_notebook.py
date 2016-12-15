@@ -59,7 +59,7 @@ else:
 # # Enter output file name
 
 outputfile = raw_input('Enter output file name (e.g. ' + Nof1_sample +")") or Nof1_sample
-outputfile = "Results_Folder/" + outputfile
+outputfile = "Results_Folder/Whole_Genome/" + outputfile
 print "output:", outputfile
 
 
