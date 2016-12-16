@@ -31,6 +31,7 @@ TCGA_tumors = {
 }
 
 GTEX_breast = {
+    "fileLabel":"GTEX_breast",
     "hub" : "https://toil.xenahubs.net",
     "dataset" : "gtex_RSEM_gene_tpm",
     "name" : "GTEX_breast",
