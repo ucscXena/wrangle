@@ -63,7 +63,15 @@ if __name__ == "__main__":
             if gene in hits:
                 continue
             hits[gene]=0
-            matrix[samples[sample]][genes[gene]].append(value)
+
+            gene_length = hit.chrom_end - hit.chrom_start + 1
+            overlap_start = max(int(tmp[2]), hit.chrom_start)
+            overlap_end =  min(int(tmp[3]), hit.chrom_end)
+            overlap_length = overlap_end - overlap_start + 1
+            weight =  overlap_length / float(gene_length)
+
+            matrix[samples[sample]][genes[gene]].append([value, weight])
+            #print int(tmp[2]), int(tmp[3]), hit.chrom_start, hit.chrom_end, gene_length, overlap_length, weight
     fin.close()
 
     print "segments: ", count
@@ -78,14 +86,17 @@ if __name__ == "__main__":
             if len(list)==0:
                 average = NORMAL_CNV
             elif len(list)==1:
-                average = list[0]
-                average =round(average,3)
+                average = list[0][0]
+                average =round(average,6)
             else:
                 total=0.0
-                for value in list:
-                    total = total +value
-                average = total/len(list)
-                average =round(average,3)
+                t_weight =0.0
+                for item in list:
+                    value, weight = item
+                    total = total + value * weight
+                    t_weight = t_weight + weight
+                average = total/ t_weight
+                average =round(average,6)
             fout.write("\t"+str(average))
         fout.write("\n")
     fout.close()
