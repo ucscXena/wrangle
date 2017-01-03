@@ -5,8 +5,7 @@ import CGData.RefGene
 import CGData.GeneMap
 import segToProbeMap
 
-if __name__ == "__main__":
-    
+if __name__ == "__main__":    
     if len(sys.argv[:])!=5:
         print "python mapSegToGeneMatrix.py genomicsSegmentIn refGene GeneLevelMatrixOut NORMAL_CNV\n"
         sys.exit()
@@ -36,8 +35,8 @@ if __name__ == "__main__":
 
     while 1:
         count = count+1
-        #print count
         line =fin.readline()
+        #print line, count
         if line =="": # end of file
             break
         if count ==1:
@@ -53,6 +52,7 @@ if __name__ == "__main__":
         seg = segToProbeMap.probeseg("", tmp[1], int(tmp[2]), int(tmp[3]),".")
         sample = tmp[0]
         value = float(tmp[4])
+
         if sample not in samples:
             samples[sample]=len(samples)
             matrix.append(copy.deepcopy(oneSample))
@@ -63,12 +63,11 @@ if __name__ == "__main__":
             if gene in hits:
                 continue
             hits[gene]=0
-
             gene_length = hit.chrom_end - hit.chrom_start + 1
             overlap_start = max(int(tmp[2]), hit.chrom_start)
             overlap_end =  min(int(tmp[3]), hit.chrom_end)
             overlap_length = overlap_end - overlap_start + 1
-            weight =  overlap_length / float(gene_length)
+            weight = overlap_length / float(gene_length)
 
             matrix[samples[sample]][genes[gene]].append([value, weight])
             #print int(tmp[2]), int(tmp[3]), hit.chrom_start, hit.chrom_end, gene_length, overlap_length, weight
@@ -79,7 +78,10 @@ if __name__ == "__main__":
     fout =open(sys.argv[3],'w')
     sample_list =samples.keys()
     fout.write("sample\t"+string.join(sample_list,"\t")+"\n")
+    print genes["MYC"]
     for gene in genes.keys():
+        if gene == "MYC":
+            print MYC
         fout.write(gene)
         for sample in sample_list:
             list = matrix[samples[sample]][genes[gene]]
