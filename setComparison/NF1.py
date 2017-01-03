@@ -13,8 +13,16 @@ samples_wt = NF1wt.samples_wt
 
 hub = "https://tcgapancan.xenahubs.net"
 
-def chi2_contingency_by_probes (hub, dataset, probes, samples1, samples2, output):
+#chiq_contigency
+def chi2_contingency_by_probes (hub, dataset, probes, samples1, samples2, output, kp = None):
     fout = open(output,'w')
+    o_list =["probe", "chi2_stat", "Gtest_p", "Mutual_information"]
+    if kp:
+        o_list.append("observed")
+        o_list.append("expected")
+        
+    fout.write(string.join(o_list, '\t') +'\n')
+
     N = 100
     for i in range (0, len(probes), N):
         pList = probes[i:i+N]
@@ -38,14 +46,23 @@ def chi2_contingency_by_probes (hub, dataset, probes, samples1, samples2, output
             observed = [[array1, array2]]
             try:
                 chi2, p, dof, expected = scipy.stats.chi2_contingency(observed, lambda_="log-likelihood")
-                MI = chi2 / (2*len(v1) +len(v2)) 
-                fout.write(string.join([probe, str(chi2), str(p), str(MI), str(observed[0][0][1]), str(expected[0][0][1])], '\t') +'\n')
+                o_list = []
+                if len(array1) == 2 and len(array2) ==2: #only makes sense for 2 by 2 table, key parameter: 0,1
+                    MI = chi2 / (2*len(v1) + len(v2)) 
+                    o_list = [probe, str(chi2), str(p), str(MI)]  
+                else:
+                    o_list = [probe, str(chi2), str(p), '']
+                if kp:
+                    o_list.append(str(observed[0][kp[0]][kp[1]]))
+                    o_list.append(str(expected[0][kp[0]][kp[1]]))
+                fout.write(string.join(o_list,'\t')+'\n')
                 #print probe, codes, chi2, p, MI, observed, expected
             except:
                 print probe, "bad"
 
     fout.close()
 
+#ttest
 def ttest_by_probes (hub, dataset, probes, samples1, samples2, output):
     fout = open(output,'w')
     N = 100
@@ -81,7 +98,8 @@ ttest_by_probes (hub, dataset_cnv, cnv_genes, samples_mut, samples_wt, output)
 dataset_mut = "mc3.v0.2.8.PUBLIC.nonsilentGene.xena"
 mut_genes = Nof1_functions.dataset_fields(hub, dataset_mut)
 output = 'chisqure_mut'
-chi2_contingency_by_probes (hub, dataset_mut, mut_genes, samples_mut, samples_wt, output)
+key_parameter = [0,1]  #mutants, value =1
+chi2_contingency_by_probes (hub, dataset_mut, mut_genes, samples_mut, samples_wt, output, key_parameter)
 
 
 
