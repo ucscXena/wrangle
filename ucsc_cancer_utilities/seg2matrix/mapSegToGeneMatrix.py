@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import sys,string,copy
+import sys,string,os,copy
 import CGData.RefGene
 import CGData.GeneMap
 import segToProbeMap
@@ -9,6 +9,7 @@ if __name__ == "__main__":
     if len(sys.argv[:])!=5:
         print "python mapSegToGeneMatrix.py genomicsSegmentIn refGene GeneLevelMatrixOut NORMAL_CNV\n"
         sys.exit()
+
     refgene = CGData.RefGene.RefGene()
     refgene.load( sys.argv[2] )
 
@@ -17,7 +18,6 @@ if __name__ == "__main__":
     #* b for cnv
     probeMapper = CGData.GeneMap.ProbeMapper('b')
 
-    fin =open(sys.argv[1],'r')
     genes= {}
     samples={}
     matrix=[]  #sample then gene
@@ -32,8 +32,21 @@ if __name__ == "__main__":
 
     print "genes: ", len(genes)
 
-    count =0
+    # samples
+    os.system("cut -f 1 " + sys.argv[1] + " | sed 1d | sort |uniq > id")
+    fin = open("id", 'r')
+    for line in fin.readlines():
+        sample = string.strip(line)
+        samples[sample]=len(samples)
+        matrix.append(copy.deepcopy(oneSample))
+        matrix_weight.append(copy.deepcopy(oneSample))
+    fin.close()
+    print "samples: ", len(samples)
 
+
+
+    fin =open(sys.argv[1],'r')
+    count =0
     while 1:
         count = count+1
         line =fin.readline()
@@ -53,11 +66,6 @@ if __name__ == "__main__":
         seg = segToProbeMap.probeseg("", tmp[1], int(tmp[2]), int(tmp[3]),".")
         sample = tmp[0]
         value = float(tmp[4])
-
-        if sample not in samples:
-            samples[sample]=len(samples)
-            matrix.append(copy.deepcopy(oneSample))
-            matrix_weight.append(copy.deepcopy(oneSample))
 
         hits={}
         for hit in probeMapper.find_overlap( seg, refgene ):
