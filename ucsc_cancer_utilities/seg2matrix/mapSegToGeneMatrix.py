@@ -20,12 +20,10 @@ if __name__ == "__main__":
 
     genes= {}
     samples={}
-    matrix=[]  #sample then gene
-    matrix_weight =[]
     for gene in refgene.get_gene_list():
         genes[gene]=len(genes)
 
-    Ngene = len(genes.keys())
+    Ngene = len(genes)
     oneSample=[]
     for i in range(0, Ngene):
         oneSample.append('');
@@ -38,19 +36,22 @@ if __name__ == "__main__":
     for line in fin.readlines():
         sample = string.strip(line)
         samples[sample]=len(samples)
-        matrix.append(copy.deepcopy(oneSample))
-        matrix_weight.append(copy.deepcopy(oneSample))
+
     fin.close()
     print "samples: ", len(samples)
 
+    matrix= ([''] * Ngene) * len(samples)  #sample then gene
+    matrix_weight =([''] * Ngene) * len(samples)
 
+#        matrix.append(copy.deepcopy(oneSample))
+#        matrix_weight.append(copy.deepcopy(oneSample))
 
     fin =open(sys.argv[1],'r')
     count =0
     while 1:
         count = count+1
         line =fin.readline()
-        #print line, count
+        print count
         if line =="": # end of file
             break
         if count ==1:
@@ -79,11 +80,11 @@ if __name__ == "__main__":
             overlap_length = overlap_end - overlap_start + 1
             weight = overlap_length / float(gene_length)
 
-            if matrix[samples[sample]][genes[gene]] == '':
-                matrix[samples[sample]][genes[gene]] = 0.0
-                matrix_weight[samples[sample]][genes[gene]] = 0.0
-            matrix[samples[sample]][genes[gene]] =+ value * weight
-            matrix_weight[samples[sample]][genes[gene]] =+ weight
+            if matrix[samples[sample] * Ngene + genes[gene]] == '':
+                matrix[samples[sample] * Ngene + genes[gene]]  = 0.0
+                matrix_weight[samples[sample] * Ngene + genes[gene]] = 0.0
+            matrix[samples[sample] * Ngene + genes[gene]] =+ value * weight
+            matrix_weight[samples[sample] * Ngene + genes[gene]] =+ weight
 
             #print int(tmp[2]), int(tmp[3]), hit.chrom_start, hit.chrom_end, gene_length, overlap_length, weight
     fin.close()
@@ -101,8 +102,8 @@ if __name__ == "__main__":
             if total == '':
                 average = NORMAL_CNV
             else:
-                total=matrix[samples[sample]][genes[gene]]
-                t_weight =matrix_weight[samples[sample]][genes[gene]]
+                total= matrix[samples[sample] * Ngene + genes[gene]]
+                t_weight =matrix_weight[samples[sample] * Ngene + genes[gene]]
                 average = total / t_weight
                 average =round(average,6)
             fout.write("\t"+str(average))
