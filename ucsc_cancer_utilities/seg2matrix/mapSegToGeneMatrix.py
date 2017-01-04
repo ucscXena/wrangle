@@ -95,11 +95,10 @@ if __name__ == "__main__":
     for gene in genes.keys():
         fout.write(gene)
         for sample in sample_list:
-            total = matrix[samples[sample]][genes[gene]]
+            total= matrix[samples[sample] * Ngene + genes[gene]]
             if total == '':
                 average = NORMAL_CNV
             else:
-                total= matrix[samples[sample] * Ngene + genes[gene]]
                 t_weight =matrix_weight[samples[sample] * Ngene + genes[gene]]
                 average = total / t_weight
                 average =round(average,6)
