@@ -1,5 +1,5 @@
-import json,re,subprocess
-import os,sys,copy,string,datetime
+import json, re, subprocess
+import os, sys, copy, string, datetime
 from ClinicalMatrixNew  import *
 from SampleMapNew import *
 from CGDataUtil import *
@@ -57,12 +57,12 @@ def cgWalk(dir, ignore):
                 else:
                     print "CRITICAL ERROR already has this name in repo", name
                     return 0
-            if type in ["genomicMatrix","clinicalMatrix","mutationVector"] and not trackName_good(name): 
+            if type in ["genomicMatrix","clinicalMatrix","mutationVector"] and not trackName_good(name):
                 print "ERROR name has bad characters or too long", name
                 return 0
             bookDic[name]=J
     return bookDic
-                
+
 def collectNamesBelongToSampleMap(bookDic, sampleMapName):
     list=[]
     for name in bookDic.keys():
@@ -158,7 +158,7 @@ def checkIdsAllIn(sMap, bookDic):
                     if not sMap.inData(sample):
                         sMap.addNode(sample)
                         sMapChanged=1
-                        
+
             elif obj['type']=="genomicMatrix":
                 path = obj['path']
                 fin = open(path,'r')

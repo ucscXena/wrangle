@@ -1,5 +1,5 @@
 import string, os, sys, glob
-import json,datetime
+import json, datetime
 
 LEVEL="Level_3"
 
@@ -7,8 +7,8 @@ import TCGAUtil
 sys.path.insert(0,"../CGDataNew")
 from CGDataUtil import *
 
-#in the SDRF file, Extract  column will use UUIDs in addition to TCGA barcodes. 
-#This can result in an SDRF file that has mixed UUIDs and TCGA barcodes in this column.Namethe 
+#in the SDRF file, Extract  column will use UUIDs in addition to TCGA barcodes.
+#This can result in an SDRF file that has mixed UUIDs and TCGA barcodes in this column.Namethe
 
 #/inside/depot/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/cgcc/broad.mit.edu/ht_hg-u133a/transcriptome/
 
@@ -38,10 +38,10 @@ def Affy (inDir, outDir, cancer,flog,REALRUN):
         if not os.path.exists(inDir +file+".md5"):
             print "file has no matching .md5 throw out", file
             continue
-        
+
         #find lastest in each archive
         info = string.split(file,".")
-        archive = info [-5] 
+        archive = info [-5]
         release = int(info [-4])
 
         if not lastRelease.has_key(archive):
@@ -58,13 +58,13 @@ def Affy (inDir, outDir, cancer,flog,REALRUN):
             pass
         else:
             continue
-        
+
         if not os.path.exists(inDir +file+".md5"):
             continue
 
         #find the file that is the lastest release for the archive
         info = string.split(file,".")
-        archive = info [-5] 
+        archive = info [-5]
         release = int(info [-4])
 
         if release != lastRelease[archive]:
@@ -79,7 +79,7 @@ def Affy (inDir, outDir, cancer,flog,REALRUN):
 
         #is tar.gz?, uncompress multiple file mode
         if string.find(file,".tar.gz")!=-1: # and REALRUN:
-            os.system("tar -xzf "+inDir+file +" -C tmptmp/") 
+            os.system("tar -xzf "+inDir+file +" -C tmptmp/")
             rootDir ="tmptmp/"
             if not REALRUN:
                 break
@@ -109,7 +109,7 @@ def Affy (inDir, outDir, cancer,flog,REALRUN):
         if release != lastMageTab:
             continue
         if REALRUN:
-            os.system("tar -xzf "+inDir+file +" -C tmptmp/mageTab/") 
+            os.system("tar -xzf "+inDir+file +" -C tmptmp/mageTab/")
 
     mapping={}
     for dirpath, dirnames, filenames in os.walk(rootDir):
@@ -122,7 +122,7 @@ def Affy (inDir, outDir, cancer,flog,REALRUN):
         cleanGarbage(garbage)
         print "ERROR expect data, but wrong dirpath", rootDir, cancer, __name__
         return
-    
+
     #set output dir
     if not os.path.exists( outDir ):
         os.makedirs( outDir )
@@ -145,9 +145,9 @@ def Affy (inDir, outDir, cancer,flog,REALRUN):
 
         outfile = outDir+cancer+"/"+cgFileName
         outputMatrix(dataMatrix, samples, outfile, flog)
-    
+
     oHandle = open(outDir+cancer+"/"+cgFileName+".json","w")
-    
+
     J={}
     #stable
     suffix="AffyU133a"
@@ -170,7 +170,7 @@ def Affy (inDir, outDir, cancer,flog,REALRUN):
     J['domain']="TCGA"
     J['tags']=["cancer"] + TCGAUtil.tags[cancer]
     J['gdata_tags'] =["transcription"]
-    
+
     #change description
     J["colNormalization"]=True
     J["PLATFORM"]= suffix
@@ -181,9 +181,9 @@ def Affy (inDir, outDir, cancer,flog,REALRUN):
                       " Level 3 interpreted level data was downloaded from TCGA data coordination center. This dataset shows the gene-level transcription estimates. Data is in log space."+\
                       " Genes are mapped onto the human genome coordinates using UCSC xena HUGO probeMap."+\
                        "<br><br>In order to more easily view the differential expression between samples, we set the default view to center each gene or exon to zero by independently subtracting the mean of each gene or exon on the fly. Users can view the original non-normalized values by adjusting visualization settings."
-    
+
     J["description"] = J["description"] +"<br><br>"
-    
+
     #change cgData
     J["name"]="TCGA_"+cancer+"_exp_u133a"
     name = trackName_fix(J['name'])
@@ -193,19 +193,19 @@ def Affy (inDir, outDir, cancer,flog,REALRUN):
         flog.write(message+"\n")
         return
     else:
-        J["name"]=name        
+        J["name"]=name
     J[":probeMap"]= "hugo"
-    J["type"]= "genomicMatrix" 
+    J["type"]= "genomicMatrix"
     J[":sampleMap"]="TCGA."+cancer+".sampleMap"
     oHandle.write( json.dumps( J, indent=-1 ) )
     oHandle.close()
-            
+
     cleanGarbage(garbage)
     return
 
 def processMageTab (dic,file):
     P=7
-    
+
     fin= open(file,'r')
     fin.readline()
     for line in fin.readlines():
@@ -236,7 +236,7 @@ def process(dataMatrix,samples,cancer,infile,mapping, flog):
         flog.write(message+"\n")
         print message
         return
-    
+
     if sample in samples:
         fin.close()
         message =  "ERROR duplicated sample = "+ sample+ " " +cancer+" "+ __name__
@@ -262,7 +262,7 @@ def process(dataMatrix,samples,cancer,infile,mapping, flog):
 
     samples.append(sample)
     fin.readline()
-    
+
     for line in fin.readlines():
         hugo,value =string.split(line[:-1],"\t")
         if not dataMatrix.has_key(hugo):
@@ -273,7 +273,7 @@ def process(dataMatrix,samples,cancer,infile,mapping, flog):
             dataMatrix[hugo][sample]="NA"
 
     fin.close()
-    return 
+    return
 
 def  outputMatrix(dataMatrix, samples, outfile, flog):
     fout = open(outfile,"w")
