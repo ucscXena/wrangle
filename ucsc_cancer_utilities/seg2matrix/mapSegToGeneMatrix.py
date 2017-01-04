@@ -51,7 +51,6 @@ if __name__ == "__main__":
     while 1:
         count = count+1
         line =fin.readline()
-        print count
         if line =="": # end of file
             break
         if count ==1:
@@ -86,7 +85,6 @@ if __name__ == "__main__":
             matrix[samples[sample] * Ngene + genes[gene]] =+ value * weight
             matrix_weight[samples[sample] * Ngene + genes[gene]] =+ weight
 
-            #print int(tmp[2]), int(tmp[3]), hit.chrom_start, hit.chrom_end, gene_length, overlap_length, weight
     fin.close()
 
     print "segments: ", count
@@ -94,7 +92,6 @@ if __name__ == "__main__":
     fout =open(sys.argv[3],'w')
     sample_list =samples.keys()
     fout.write("sample\t"+string.join(sample_list,"\t")+"\n")
-    print genes["MYC"]
     for gene in genes.keys():
         fout.write(gene)
         for sample in sample_list:
