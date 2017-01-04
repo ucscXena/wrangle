@@ -5,7 +5,7 @@ import CGData.RefGene
 import CGData.GeneMap
 import segToProbeMap
 
-if __name__ == "__main__":    
+if __name__ == "__main__":
     if len(sys.argv[:])!=5:
         print "python mapSegToGeneMatrix.py genomicsSegmentIn refGene GeneLevelMatrixOut NORMAL_CNV\n"
         sys.exit()
@@ -14,20 +14,21 @@ if __name__ == "__main__":
 
     NORMAL_CNV=sys.argv[4]
 
-    #* b for cnv 
+    #* b for cnv
     probeMapper = CGData.GeneMap.ProbeMapper('b')
 
     fin =open(sys.argv[1],'r')
     genes= {}
     samples={}
     matrix=[]  #sample then gene
+    matrix_weight =[]
     for gene in refgene.get_gene_list():
         genes[gene]=len(genes)
 
     Ngene = len(genes.keys())
-    oneSample=[]    
+    oneSample=[]
     for i in range(0, Ngene):
-        oneSample.append([]);
+        oneSample.append('');
 
     print "genes: ", len(genes)
 
@@ -56,7 +57,8 @@ if __name__ == "__main__":
         if sample not in samples:
             samples[sample]=len(samples)
             matrix.append(copy.deepcopy(oneSample))
-            
+            matrix_weight.append(copy.deepcopy(oneSample))
+
         hits={}
         for hit in probeMapper.find_overlap( seg, refgene ):
             gene = hit.name
@@ -69,7 +71,12 @@ if __name__ == "__main__":
             overlap_length = overlap_end - overlap_start + 1
             weight = overlap_length / float(gene_length)
 
-            matrix[samples[sample]][genes[gene]].append([value, weight])
+            if matrix[samples[sample]][genes[gene]] == '':
+                matrix[samples[sample]][genes[gene]] = 0.0
+                matrix_weight[samples[sample]][genes[gene]] = 0.0
+            matrix[samples[sample]][genes[gene]] =+ value * weight
+            matrix_weight[samples[sample]][genes[gene]] =+ weight
+
             #print int(tmp[2]), int(tmp[3]), hit.chrom_start, hit.chrom_end, gene_length, overlap_length, weight
     fin.close()
 
@@ -80,24 +87,15 @@ if __name__ == "__main__":
     fout.write("sample\t"+string.join(sample_list,"\t")+"\n")
     print genes["MYC"]
     for gene in genes.keys():
-        if gene == "MYC":
-            print MYC
         fout.write(gene)
         for sample in sample_list:
-            list = matrix[samples[sample]][genes[gene]]
-            if len(list)==0:
+            total = matrix[samples[sample]][genes[gene]]
+            if total == '':
                 average = NORMAL_CNV
-            elif len(list)==1:
-                average = list[0][0]
-                average =round(average,6)
             else:
-                total=0.0
-                t_weight =0.0
-                for item in list:
-                    value, weight = item
-                    total = total + value * weight
-                    t_weight = t_weight + weight
-                average = total/ t_weight
+                total=matrix[samples[sample]][genes[gene]]
+                t_weight =matrix_weight[samples[sample]][genes[gene]]
+                average = total / t_weight
                 average =round(average,6)
             fout.write("\t"+str(average))
         fout.write("\n")
