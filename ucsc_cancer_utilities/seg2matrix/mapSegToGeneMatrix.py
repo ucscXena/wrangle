@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import sys,string,os,copy
+import uuid
 
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + '/CGData/')
 
@@ -34,13 +35,14 @@ if __name__ == "__main__":
     print "genes: ", len(genes)
 
     # samples
-    os.system("cut -f 1 " + sys.argv[1] + " | sed 1d | sort |uniq > id")
-    fin = open("id", 'r')
+    tmpfile = str(uuid.uuid4())
+    os.system("cut -f 1 " + sys.argv[1] + " | sed 1d | sort |uniq > " + tmpfile)
+    fin = open(tmpfile, 'r')
     for line in fin.readlines():
         sample = string.strip(line)
         samples[sample]=len(samples)
     fin.close()
-    os.system("rm id")
+    os.system("rm " + tmpfile)
 
     print "samples: ", len(samples)
 
