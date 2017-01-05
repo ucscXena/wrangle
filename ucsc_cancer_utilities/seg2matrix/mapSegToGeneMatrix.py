@@ -69,7 +69,6 @@ if __name__ == "__main__":
         seg = segToProbeMap.probeseg("", tmp[1], int(tmp[2]), int(tmp[3]),".")
         sample = tmp[0]
         value = float(tmp[4])
-
         hits={}
         for hit in probeMapper.find_overlap( seg, refgene ):
             gene = hit.name
@@ -85,8 +84,8 @@ if __name__ == "__main__":
             if matrix[samples[sample] * Ngene + genes[gene]] == '':
                 matrix[samples[sample] * Ngene + genes[gene]]  = 0.0
                 matrix_weight[samples[sample] * Ngene + genes[gene]] = 0.0
-            matrix[samples[sample] * Ngene + genes[gene]] =+ value * weight
-            matrix_weight[samples[sample] * Ngene + genes[gene]] =+ weight
+            matrix[samples[sample] * Ngene + genes[gene]] += value * weight
+            matrix_weight[samples[sample] * Ngene + genes[gene]] += weight
     fin.close()
 
     print "segments: ", count
