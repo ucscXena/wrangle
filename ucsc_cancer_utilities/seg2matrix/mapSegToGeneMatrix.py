@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 
 import sys,string,os,copy
-import CGData.RefGene
-import CGData.GeneMap
+
+sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + '/CGData/')
+
+import RefGene
+import GeneMap
 import segToProbeMap
 
 if __name__ == "__main__":
@@ -10,13 +13,13 @@ if __name__ == "__main__":
         print "python mapSegToGeneMatrix.py genomicsSegmentIn refGene GeneLevelMatrixOut NORMAL_CNV\n"
         sys.exit()
 
-    refgene = CGData.RefGene.RefGene()
+    refgene = RefGene.RefGene()
     refgene.load( sys.argv[2] )
 
     NORMAL_CNV=sys.argv[4]
 
     #* b for cnv
-    probeMapper = CGData.GeneMap.ProbeMapper('b')
+    probeMapper = GeneMap.ProbeMapper('b')
 
     genes= {}
     samples={}
@@ -36,15 +39,13 @@ if __name__ == "__main__":
     for line in fin.readlines():
         sample = string.strip(line)
         samples[sample]=len(samples)
-
     fin.close()
+    os.system("rm id")
+
     print "samples: ", len(samples)
 
     matrix= ([''] * Ngene) * len(samples)  #sample then gene
     matrix_weight =([''] * Ngene) * len(samples)
-
-#        matrix.append(copy.deepcopy(oneSample))
-#        matrix_weight.append(copy.deepcopy(oneSample))
 
     fin =open(sys.argv[1],'r')
     count =0
@@ -84,7 +85,6 @@ if __name__ == "__main__":
                 matrix_weight[samples[sample] * Ngene + genes[gene]] = 0.0
             matrix[samples[sample] * Ngene + genes[gene]] =+ value * weight
             matrix_weight[samples[sample] * Ngene + genes[gene]] =+ weight
-
     fin.close()
 
     print "segments: ", count

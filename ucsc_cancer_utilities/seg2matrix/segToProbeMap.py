@@ -3,10 +3,7 @@
 import sys,string
 sys.path.insert(0,"../CGDataNew")
 
-import CGData.GenomicSegment
-import CGData.SegToMatrix
-import CGData.RefGene
-import CGData.GeneMap
+import RefGene
 import optparse
 
 class segs:
