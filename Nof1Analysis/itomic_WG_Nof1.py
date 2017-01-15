@@ -1,4 +1,6 @@
 import string, sys
+import scipy.stats
+import numpy
 from Nof1_functions import *
 
 #itomic specific
@@ -20,19 +22,38 @@ def getMatrixData(file):
         id = data [0]
         dic [id] = data[1:]
     fin.close()
-    return dic 
+    return dic
 
 def file_header (comparison_item, Nof1_item, fout):
     topline = "ITOMIC samples vs. "+ comparison_item["label"] + ' (n=' + str(len(comparison_item["samples"])) + ")"
     headerList =["label","gene"]
     header2ndList =["",""]
 
+    headerList.append("")
+    header2ndList.append("logTPM p")
+
+    headerList.append("")
+    header2ndList.append("logTPM t")
+
+    headerList.append("")
+    header2ndList.append("logTPM ave")
+
+    headerList.append("")
+    header2ndList.append("SD")
+
+    headerList.append("")
+    header2ndList.append("SD p")
+
+    headerList.append("")
+    header2ndList.append("SD t")
+
+    headerList.append("")
+    header2ndList.append("SD ave")
+
     for sample in Nof1_item["samples"]:
         headerList.append(sample)
         header2ndList.append("Rank %")
 
-    headerList.append("")
-    header2ndList.append("Rank % SD")
 
     for sample in Nof1_item["samples"]:
         headerList.append(sample)
@@ -48,12 +69,7 @@ def file_header (comparison_item, Nof1_item, fout):
 
 
 def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_item, outputfile):
-    if len(Nof1_item["samples"]) == 1: 
-        Nof1_sample = Nof1_item["samples"][0]
-        itomic_samples = dataset_samples(Nof1_item["hub"], Nof1_item["dataset"])
-    else:
-        Nof1_sample = None
-        itomic_samples = None
+    itomic_samples = dataset_samples(Nof1_item["hub"], Nof1_item["dataset"])
 
     fout = open(outputfile,'w')
     foutdata = open(outputfile+"_percentRank",'w') #pure data file
@@ -69,7 +85,7 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_item, outpu
         cData = getMatrixData(file)
     else:
         cData = None
-        
+
     hub = comparison_item["hub"]
     dataset = comparison_item["dataset"]
     samples = comparison_item["samples"]
@@ -82,26 +98,24 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_item, outpu
         n = int(100000/len(samples))
         if n < 100:
             n =100
-        print n 
+        print n
 
+    n =10
     for k in range (0, len(original_labels), n):
         labels = original_labels[k:k+n]
         genes = map(lambda original_label: geneMappping[original_label] if (original_label in geneMappping) else original_label,labels)
 
         print genes[:10], "..."
 
-        # get back an array
-        itomic_Data_list = get_itomic_Data (genes, Nof1_item["hub"], Nof1_item["dataset"], Nof1_item["samples"])
+        #all itomic data
+        all_data_list = get_itomic_Data (genes, Nof1_item["hub"], Nof1_item["dataset"], itomic_samples)
 
-        if Nof1_sample:
-            all_data_list = get_itomic_Data (genes, Nof1_item["hub"], Nof1_item["dataset"], itomic_samples)
-            
         if cData:
             compare_data_list = None
         else:
             # get data for comparison
             if mode == "gene":
-                compare_data_list = Genes_values (hub, dataset, samples, genes) 
+                compare_data_list = Genes_values (hub, dataset, samples, genes)
             if mode == "probe":
                 compare_data_list = Probes_values (hub, dataset, samples, genes)
 
@@ -112,13 +126,13 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_item, outpu
             label = labels[m]
             outputList =[label, gene]
             data_outputList = [gene]
-            itomic_Data = itomic_Data_list[m]
+            all_Data = all_data_list[m]
 
-            itomic_values = map(lambda sample: itomic_Data[sample], Nof1_item["samples"])
+            itomic_values = map(lambda sample: all_Data[sample], Nof1_item["samples"])
 
-            if Nof1_sample:
-                allsample_Data = all_data_list[m]
-            
+            #all itomic
+            allsample_Data = all_data_list[m]
+
             # cohort data
             if cData:
                 if gene in cData:
@@ -126,32 +140,55 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_item, outpu
                 else:
                     values =[]
                 #print len(values)
-                #h_l_values = clean (values)            
-                #r_and_p_values = map(lambda x: rank_and_percentage(x, h_l_values), itomic_values)  
+                #h_l_values = clean (values)
+                #r_and_p_values = map(lambda x: rank_and_percentage(x, h_l_values), itomic_values)
                 #print r_and_p_values
 
             if compare_data_list:
                 compare_gene_obj = compare_data_list[m]
                 values = compare_gene_obj['scores'][0] #############
                 #print len(values)
-                #h_l_values = clean (values)            
-                #r_and_p_values = map(lambda x: rank_and_percentage(x, h_l_values), itomic_values)  
+                #h_l_values = clean (values)
+                #r_and_p_values = map(lambda x: rank_and_percentage(x, h_l_values), itomic_values)
                 #print r_and_p_values
-            
-            h_l_values = clean (values)            
-            r_and_p_values = map(lambda x: rank_and_percentage(x, h_l_values), itomic_values)  
 
-            outputList.extend(map(lambda x: '{:.2f}%'.format(x[1]), r_and_p_values)) #rank %
+            h_l_values = clean (values)
+            r_and_p_values = map(lambda x: rank_and_percentage(x, h_l_values), itomic_values)
+
             data_outputList.extend(map(lambda x: '{:.2f}'.format(x[1]), r_and_p_values)) #rank %
 
+            #ttest p value
+            try:
+                tStat, p = scipy.stats.ttest_ind(allsample_Data.values(), h_l_values, equal_var=False)
+                ave = numpy.mean( allsample_Data.values())
+                outputList.append ('{:.4f}'.format(p)) # ttest p value
+                outputList.append (str(tStat)) # ttest p value
+                outputList.append (str(ave))
+            except:
+                outputList.append ('')
+                outputList.append ('')
+                outputList.append ('')
+            print p, tStat, ave
             #SD
-            if Nof1_sample:
-                all_r_and_p_values = map(lambda x: rank_and_percentage(x, h_l_values), allsample_Data.values())
-                SD = standard_deviation(map(lambda x: x[1], all_r_and_p_values)) 
-            else:
-                SD = standard_deviation(map(lambda x: x[1], r_and_p_values)) 
+            all_r_and_p_values = map(lambda x: rank_and_percentage(x, h_l_values), allsample_Data.values())
+            SD = standard_deviation(map(lambda x: x[1], all_r_and_p_values))
             outputList.append ('{:.2f}'.format(SD))#rank SD
-                
+
+            try:
+                r_list = map(lambda x: x[1], r_and_p_values)
+                tStat, p = scipy.stats.ttest_ind(r_list, range(0,100), equal_var=False)
+                ave = numpy.mean(r_list)
+                outputList.append ('{:.4f}'.format(p)) # ttest p value
+                outputList.append (str(tStat)) # ttest p value
+                outputList.append (str(ave))
+            except:
+                outputList.append ('')
+                outputList.append ('')
+                outputList.append ('')
+            print SD
+            print p, tStat, ave
+
+            outputList.extend(map(lambda x: '{:.2f}%'.format(x[1]), r_and_p_values)) #rank %
             outputList.extend(map(lambda x: '{:.2f}'.format(x), itomic_values)) #Log2TPM
             outputList.extend(map(lambda x: '{:.2f}'.format(revert_Log2_theta(x, Nof1_item["log2Theta"])), itomic_values)) #TPM
 
