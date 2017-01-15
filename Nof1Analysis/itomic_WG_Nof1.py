@@ -39,16 +39,17 @@ def file_header (comparison_item, Nof1_item, fout):
     header2ndList.append("logTPM ave")
 
     headerList.append("")
-    header2ndList.append("SD")
+    header2ndList.append("rank p")
 
     headerList.append("")
-    header2ndList.append("SD p")
+    header2ndList.append("rank t")
 
     headerList.append("")
-    header2ndList.append("SD t")
+    header2ndList.append("rank ave")
 
     headerList.append("")
-    header2ndList.append("SD ave")
+    header2ndList.append("rank SD")
+
 
     for sample in Nof1_item["samples"]:
         headerList.append(sample)
@@ -172,7 +173,6 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_item, outpu
             #SD
             all_r_and_p_values = map(lambda x: rank_and_percentage(x, h_l_values), allsample_Data.values())
             SD = standard_deviation(map(lambda x: x[1], all_r_and_p_values))
-            outputList.append ('{:.2f}'.format(SD))#rank SD
 
             try:
                 r_list = map(lambda x: x[1], r_and_p_values)
@@ -185,6 +185,7 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_item, outpu
                 outputList.append ('')
                 outputList.append ('')
                 outputList.append ('')
+            outputList.append ('{:.2f}'.format(SD))#rank SD
             print SD
             print p, tStat, ave
 
