@@ -189,6 +189,7 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_item, outpu
     foutdata.close()
 
     #add multiple hypo adjusted p values to file
+    #http://statsmodels.sourceforge.net/devel/generated/statsmodels.sandbox.stats.multicomp.fdrcorrection0.html
     pCorDic = {}
     genes = pDic.keys()
     rejected, pvalue_corrected =  statsmodels.sandbox.stats.multicomp.fdrcorrection0( map( lambda x : pDic[x], genes),
@@ -196,7 +197,6 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_item, outpu
     for i in range(0, len(genes)):
         gene = genes[i]
         pCorDic[gene] = pvalue_corrected[i]
-
 
     fout = open(outputfile, 'w')
     fin = open(tmpfile, 'r')
@@ -208,12 +208,11 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_item, outpu
             break
         data = string.split(line, '\t')
         gene = data[0]
-        print gene
         data[3] = str(pCorDic[gene])
         fout.write(string.join(data,'\t'))
     fin.close()
     fout.close()
-    #os.system("mv " + tmpfile + " " + outputfile)
+    os.system("rm -f " + tmpfile)
 
 def itomic_legend():
     print "\nExpression values are sorted from high to low."
