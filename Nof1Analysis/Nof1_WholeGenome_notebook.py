@@ -37,7 +37,7 @@ print Nof1_item["samples"]
 
 # In[ ]:
 
-# enter gene 
+# enter gene
 genes = raw_input('Enter a single or a list of gene names (e.g. PTEN, AR, or ALL): ') or "ALL"
 
 if Nof1_item["mode"] == "probe":
@@ -46,7 +46,7 @@ if Nof1_item["mode"] == "probe":
     else:
         genes = string.split(genes,',')
     genaname_mapping ={}
-    
+
 if len(genes) >10:
     print "genes:", genes[:10],"..."
 else:
@@ -84,6 +84,6 @@ comparison_list = [
 # ## Run
 import itomic_WG_Nof1
 for comparison_item in comparison_list:
-    itomic_WG_Nof1.itomic_Nof1(Nof1_item, genes, genaname_mapping, comparison_item, outputfile + "_vs_"+ comparison_item["fileLabel"]) 
+    itomic_WG_Nof1.itomic_Nof1(Nof1_item, genes, genaname_mapping, comparison_item, outputfile + "_vs_"+ comparison_item["fileLabel"])
 print "Done"
 

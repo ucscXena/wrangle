@@ -146,7 +146,7 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_item, outpu
                 mean1 = numpy.mean( allsample_Data.values())
                 mean2 = numpy.mean( h_l_values)
                 outputList.append (str(p)) # ttest p value
-                outputList.append ('')
+                outputList.append ('') ## ttest adjusted p value (to be filled later)
                 outputList.append (str(tStat)) # ttest t
                 outputList.append (str(mean1))
                 outputList.append (str(mean2))
@@ -154,7 +154,7 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_item, outpu
             except:
                 continue
 
-            #SD
+            #rank statistics, SD
             all_r_and_p_values = map(lambda x: rank_and_percentage(x, h_l_values), allsample_Data.values())
             SD = standard_deviation(map(lambda x: x[1], all_r_and_p_values))
 
@@ -168,7 +168,6 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_item, outpu
                 outputList.append ('{:.2f}'.format(SD))#rank SD
             except:
                 continue
-
 
             # per sample data output
             itomic_values = map(lambda sample: all_Data[sample], Nof1_item["samples"])
@@ -188,8 +187,8 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_item, outpu
     fout.close()
     foutdata.close()
 
-    #add multiple hypo adjusted p values to file
-    #http://statsmodels.sourceforge.net/devel/generated/statsmodels.sandbox.stats.multicomp.fdrcorrection0.html
+    # add multiple hypo adjusted p values to file
+    # http://statsmodels.sourceforge.net/devel/generated/statsmodels.sandbox.stats.multicomp.fdrcorrection0.html
     pCorDic = {}
     genes = pDic.keys()
     rejected, pvalue_corrected =  statsmodels.sandbox.stats.multicomp.fdrcorrection0( map( lambda x : pDic[x], genes),
@@ -214,9 +213,4 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_item, outpu
     fout.close()
     os.system("rm -f " + tmpfile)
 
-def itomic_legend():
-    print "\nExpression values are sorted from high to low."
-    print "Low rank means high expression."
-    print "Rank % is the percentile of samples with lower expression than sample of interest."
-    print "Higher Rank %  means higher expression."
-    print
+
