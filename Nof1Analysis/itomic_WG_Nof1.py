@@ -87,7 +87,6 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_item, outpu
             n =100
         print n
 
-    n =10
     for k in range (0, len(original_labels), n):
         labels = original_labels[k:k+n]
         genes = map(lambda original_label: geneMappping[original_label] if (original_label in geneMappping) else original_label,labels)
