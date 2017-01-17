@@ -1,4 +1,7 @@
 import string, sys
+import scipy.stats
+import numpy
+import statsmodels.sandbox.stats.multicomp
 from Nof1_functions import *
 
 #itomic specific
@@ -26,10 +29,23 @@ def filer_header (comparison_list, Nof1_sample, fout):
     for item in comparison_list:
         headerList.append(item["label"]+ ' (n=' + str(len(item["samples"]))+")")
         headerList.append("Range of ITOMIC samples vs. " + item["label"])
-        headerList.append("")
+        headerList.append("") #p
+        headerList.append("") # adj p
+        headerList.append("") # t
+        headerList.append("") # mean itomic
+        headerList.append("") # mean 2
+        headerList.append("") # Rank % mean
+        headerList.append("") # Rank % SD
         header2ndList.append("Rank %")
         header2ndList.append("Rank %")
+        header2ndList.append("ttest p")
+        header2ndList.append("adjusted p")
+        header2ndList.append("ttest t")
+        header2ndList.append("mean itomic")
+        header2ndList.append("mean 2")
+        header2ndList.append("Rank % Mean")
         header2ndList.append("Rank % SD")
+
     headerList.extend([Nof1_sample, Nof1_sample])
     header2ndList.extend(["log2(TPM)","TPM"])
 
@@ -67,7 +83,7 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_list, outpu
             gene = string.upper(gene)
 
             values = Gene_values(hub, dataset, samples, gene)
-            h_l_values = clean (values)
+            h_l_values = clean (values) # comparison larger cohort values
 
             rank, percentage =  rank_and_percentage (Nof1_value, h_l_values)
             outputList.append('{:.2f}%'.format(percentage))
@@ -75,8 +91,35 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_list, outpu
             r_and_p_values = map(lambda x: rank_and_percentage(x, h_l_values), itomic_Data.values())
             outputList.append(string.join(map(lambda x: '100' if (x[1] > 99.5) else '{:.2g}'.format(x[1]),
                 r_and_p_values),', '))
-            SD = standard_deviation(map(lambda x: x[1], r_and_p_values))
-            outputList.append ('{:.2g}'.format(SD))
+
+            # log2TPM statistics
+            # ttest p value
+            try:
+                tStat, p = scipy.stats.ttest_ind(itomic_Data.values(), h_l_values, equal_var=False)
+                mean1 = numpy.mean( itomic_Data.values())
+                mean2 = numpy.mean( h_l_values)
+                outputList.append (str(p)) # ttest p value
+                outputList.append ('') ## ttest adjusted p value (to be filled later)
+                outputList.append (str(tStat)) # ttest t
+                outputList.append (str(mean1))
+                outputList.append (str(mean2))
+                pDic[gene] = p
+            except:
+                outputList.append('')
+                outputList.append('')
+                outputList.append('')
+                outputList.append('')
+                outputList.append('')
+
+            # rank SD
+            r_list = map(lambda x: x[1], r_and_p_values)
+            try:
+                mean1 = numpy.mean(r_list)
+                SD = numpy.std(r_list)
+                outputList.append ('{:.2g}'.format(SD))
+            except:
+                outputList.append('')
+                outputList.append('')
 
             print
             print name +" ( n=", len(h_l_values), "):"
