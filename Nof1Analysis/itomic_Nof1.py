@@ -30,7 +30,6 @@ def filer_header (comparison_list, Nof1_sample, fout):
         headerList.append(item["label"]+ ' (n=' + str(len(item["samples"]))+")")
         headerList.append("Range of ITOMIC samples vs. " + item["label"])
         headerList.append("") #p
-        headerList.append("") # adj p
         headerList.append("") # t
         headerList.append("") # mean itomic
         headerList.append("") # mean 2
@@ -39,7 +38,6 @@ def filer_header (comparison_list, Nof1_sample, fout):
         header2ndList.append("Rank %")
         header2ndList.append("Rank %")
         header2ndList.append("ttest p")
-        header2ndList.append("adjusted p")
         header2ndList.append("ttest t")
         header2ndList.append("mean itomic")
         header2ndList.append("mean 2")
@@ -56,10 +54,12 @@ def filer_header (comparison_list, Nof1_sample, fout):
 def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_list, outputfile):
     itomic_samples = dataset_samples(Nof1_item["hub"], Nof1_item["dataset"])
     Nof1_sample = Nof1_item["samples"][0]
+
     #file header output
     fout = open(outputfile,'w')
     filer_header (comparison_list, Nof1_sample, fout)
 
+    pDic = {} # pvalue collection
     for original_label in original_labels:
         if original_label in geneMappping:
             gene = geneMappping[original_label]
@@ -99,13 +99,11 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_list, outpu
                 mean1 = numpy.mean( itomic_Data.values())
                 mean2 = numpy.mean( h_l_values)
                 outputList.append (str(p)) # ttest p value
-                outputList.append ('') ## ttest adjusted p value (to be filled later)
                 outputList.append (str(tStat)) # ttest t
                 outputList.append (str(mean1))
                 outputList.append (str(mean2))
                 pDic[gene] = p
             except:
-                outputList.append('')
                 outputList.append('')
                 outputList.append('')
                 outputList.append('')
@@ -116,6 +114,7 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_list, outpu
             try:
                 mean1 = numpy.mean(r_list)
                 SD = numpy.std(r_list)
+                outputList.append ('{:.2g}'.format(mean1))
                 outputList.append ('{:.2g}'.format(SD))
             except:
                 outputList.append('')
