@@ -22,6 +22,7 @@ TCGA_TNBC = {
 
 
 TCGA_tumors = {
+    "fileLabel":"TCGA_all",
     "hub" : "https://toil.xenahubs.net",
     "dataset" : "tcga_RSEM_gene_tpm",
     "name" : "TCGA_tumors",
@@ -41,6 +42,7 @@ GTEX_breast = {
 }
 
 TCGA_Breast_Basal = {
+    "fileLabel":"TCGA_basal",
     "hub" : "https://toil.xenahubs.net",
     "dataset" : "tcga_RSEM_gene_tpm",
     "name" : "TCGA_Breast_Basal",
@@ -50,6 +52,7 @@ TCGA_Breast_Basal = {
 }
 
 TCGA_Breast_Her2 = {
+    "fileLabel":"TCGA_her2",
     "hub" : "https://toil.xenahubs.net",
     "dataset" : "tcga_RSEM_gene_tpm",
     "name" : "TCGA_Breast_Her2",
@@ -59,6 +62,7 @@ TCGA_Breast_Her2 = {
 }
 
 TCGA_Breast_LumA = {
+    "fileLabel":"TCGA_LumA",
     "hub" : "https://toil.xenahubs.net",
     "dataset" : "tcga_RSEM_gene_tpm",
     "name" : "TCGA_Breast_LumA",
@@ -68,6 +72,7 @@ TCGA_Breast_LumA = {
 }
 
 TCGA_Breast_LumB = {
+    "fileLabel":"TCGA_LumB",
     "hub" : "https://toil.xenahubs.net",
     "dataset" : "tcga_RSEM_gene_tpm",
     "name" : "TCGA_Breast_LumB",
@@ -77,6 +82,7 @@ TCGA_Breast_LumB = {
 }
 
 TCGA_Breast_Adjacent_Normal = {
+    "fileLabel":"TCGA_breast_adjnorm",
     "hub" : "https://toil.xenahubs.net",
     "dataset" : "tcga_RSEM_gene_tpm",
     "name" : "TCGA_Breast_Adjacent_Normal",
