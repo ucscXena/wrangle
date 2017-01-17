@@ -1,7 +1,10 @@
-import string, sys
+import string, sys, os
+import uuid
 import scipy.stats
 import numpy
+import statsmodels.sandbox.stats.multicomp
 from Nof1_functions import *
+
 
 #itomic specific
 def get_itomic_Data (genes, hub, dataset, samples):
@@ -28,6 +31,7 @@ def file_header (comparison_item, Nof1_item, fout):
     topline = "ITOMIC samples vs. "+ comparison_item["label"] + ' (n=' + str(len(comparison_item["samples"])) + ")"
     headerList =["label","gene"]
     headerList.append("logTPM p")
+    headerList.append("logTPM fdr_bh p")
     headerList.append("logTPM t")
     headerList.append("logTPM ave itomic")
     headerList.append("logTPM ave2")
@@ -46,7 +50,8 @@ def file_header (comparison_item, Nof1_item, fout):
 def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_item, outputfile):
     itomic_samples = dataset_samples(Nof1_item["hub"], Nof1_item["dataset"])
 
-    fout = open(outputfile,'w')
+    tmpfile = str(uuid.uuid4())
+    fout = open(tmpfile,'w')
     foutdata = open(outputfile+"_data",'w') #pure data file
 
     #full file header output
@@ -65,6 +70,8 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_item, outpu
     foutdata.write('\t'+ string.join(map(lambda x : "TPM", Nof1_item["samples"]),'\t'))
     foutdata.write('\n')
 
+
+    pDic = {} # all p values for multiple hypo adjustment
 
     # comparison data
     if "file" in comparison_item:
@@ -114,8 +121,6 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_item, outpu
             data_outputList = [gene]
             all_Data = all_data_list[m]
 
-            itomic_values = map(lambda sample: all_Data[sample], Nof1_item["samples"])
-
             #all itomic
             allsample_Data = all_data_list[m]
 
@@ -125,53 +130,49 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_item, outpu
                     values = cData[gene]
                 else:
                     values =[]
-                #print len(values)
-                #h_l_values = clean (values)
-                #r_and_p_values = map(lambda x: rank_and_percentage(x, h_l_values), itomic_values)
-                #print r_and_p_values
 
             if compare_data_list:
                 compare_gene_obj = compare_data_list[m]
                 values = compare_gene_obj['scores'][0] #############
-                #print len(values)
-                #h_l_values = clean (values)
-                #r_and_p_values = map(lambda x: rank_and_percentage(x, h_l_values), itomic_values)
-                #print r_and_p_values
 
             h_l_values = clean (values)
-            r_and_p_values = map(lambda x: rank_and_percentage(x, h_l_values), itomic_values)
+
+            if len(h_l_values) == 0: #no comparison data
+                continue
 
             #ttest p value
             try:
                 tStat, p = scipy.stats.ttest_ind(allsample_Data.values(), h_l_values, equal_var=False)
                 mean1 = numpy.mean( allsample_Data.values())
                 mean2 = numpy.mean( h_l_values)
-                outputList.append ('{:.4f}'.format(p)) # ttest p value
+                outputList.append (str(p)) # ttest p value
+                outputList.append ('')
                 outputList.append (str(tStat)) # ttest t
                 outputList.append (str(mean1))
                 outputList.append (str(mean2))
+                pDic[gene] = p
             except:
-                outputList.append ('')
-                outputList.append ('')
-                outputList.append ('')
+                continue
 
             #SD
             all_r_and_p_values = map(lambda x: rank_and_percentage(x, h_l_values), allsample_Data.values())
             SD = standard_deviation(map(lambda x: x[1], all_r_and_p_values))
 
             try:
-                r_list = map(lambda x: x[1], r_and_p_values)
+                r_list = map(lambda x: x[1], all_r_and_p_values)
                 tStat, p = scipy.stats.ttest_ind(r_list, range(0,100), equal_var=False)
                 mean1 = numpy.mean(r_list)
-                outputList.append ('{:.4f}'.format(p)) # ttest p value
+                outputList.append (str(p)) # ttest p value
                 outputList.append (str(tStat)) # ttest t
                 outputList.append (str(mean1))
+                outputList.append ('{:.2f}'.format(SD))#rank SD
             except:
-                outputList.append ('')
-                outputList.append ('')
-                outputList.append ('')
+                continue
 
-            outputList.append ('{:.2f}'.format(SD))#rank SD
+
+            # per sample data output
+            itomic_values = map(lambda sample: all_Data[sample], Nof1_item["samples"])
+            r_and_p_values = map(lambda x: rank_and_percentage(x, h_l_values), itomic_values)
             outputList.extend(map(lambda x: '{:.2f}%'.format(x[1]), r_and_p_values)) #rank %
 
             data_outputList.extend(map(lambda x: '{:.2f}%'.format(x[1]), r_and_p_values)) #rank %
@@ -186,6 +187,33 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_item, outpu
     fout.write("Higher Rank %  means higher expression.\n")
     fout.close()
     foutdata.close()
+
+    #add multiple hypo adjusted p values to file
+    pCorDic = {}
+    genes = pDic.keys()
+    rejected, pvalue_corrected =  statsmodels.sandbox.stats.multicomp.fdrcorrection0( map( lambda x : pDic[x], genes),
+        alpha=0.05, method='indep', is_sorted=False)
+    for i in range(0, len(genes)):
+        gene = genes[i]
+        pCorDic[gene] = pvalue_corrected[i]
+
+
+    fout = open(outputfile, 'w')
+    fin = open(tmpfile, 'r')
+    fout.write(fin.readline())
+    fout.write(fin.readline())
+    while 1:
+        line = fin.readline()
+        if line == '' or line == '\n':
+            break
+        data = string.split(line, '\t')
+        gene = data[0]
+        print gene
+        data[3] = str(pCorDic[gene])
+        fout.write(string.join(data,'\t'))
+    fin.close()
+    fout.close()
+    #os.system("mv " + tmpfile + " " + outputfile)
 
 def itomic_legend():
     print "\nExpression values are sorted from high to low."
