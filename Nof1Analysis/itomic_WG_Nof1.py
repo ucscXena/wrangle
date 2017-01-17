@@ -27,58 +27,44 @@ def getMatrixData(file):
 def file_header (comparison_item, Nof1_item, fout):
     topline = "ITOMIC samples vs. "+ comparison_item["label"] + ' (n=' + str(len(comparison_item["samples"])) + ")"
     headerList =["label","gene"]
-    header2ndList =["",""]
-
-    headerList.append("")
-    header2ndList.append("logTPM p")
-
-    headerList.append("")
-    header2ndList.append("logTPM t")
-
-    headerList.append("")
-    header2ndList.append("logTPM ave")
-
-    headerList.append("")
-    header2ndList.append("rank p")
-
-    headerList.append("")
-    header2ndList.append("rank t")
-
-    headerList.append("")
-    header2ndList.append("rank ave")
-
-    headerList.append("")
-    header2ndList.append("rank SD")
-
+    headerList.append("logTPM p")
+    headerList.append("logTPM t")
+    headerList.append("logTPM ave itomic")
+    headerList.append("logTPM ave2")
+    headerList.append("rank % p")
+    headerList.append("rank % t")
+    headerList.append("rank % ave")
+    headerList.append("rank % SD")
 
     for sample in Nof1_item["samples"]:
-        headerList.append(sample)
-        header2ndList.append("Rank %")
-
-
-    for sample in Nof1_item["samples"]:
-        headerList.append(sample)
-        header2ndList.append("log2(TPM)")
-
-    for sample in Nof1_item["samples"]:
-        headerList.append(sample)
-        header2ndList.append("TPM")
+        headerList.append("Rank %")
 
     fout.write(topline+'\n')
     fout.write(string.join(headerList,'\t') +'\n')
-    fout.write(string.join(header2ndList,'\t') +'\n')
 
 
 def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_item, outputfile):
     itomic_samples = dataset_samples(Nof1_item["hub"], Nof1_item["dataset"])
 
     fout = open(outputfile,'w')
-    foutdata = open(outputfile+"_percentRank",'w') #pure data file
+    foutdata = open(outputfile+"_data",'w') #pure data file
 
     #full file header output
     file_header (comparison_item, Nof1_item, fout)
+
     #data file header
-    foutdata.write("gene\t"+string.join(Nof1_item["samples"],'\t')+'\n')
+    foutdata.write("gene")
+    foutdata.write('\t'+ string.join(Nof1_item["samples"],'\t'))
+    foutdata.write('\t'+ string.join(Nof1_item["samples"],'\t'))
+    foutdata.write('\t'+ string.join(Nof1_item["samples"],'\t'))
+    foutdata.write('\n')
+
+    foutdata.write("gene")
+    foutdata.write('\t'+ string.join(map(lambda x : "RANK %", Nof1_item["samples"]),'\t'))
+    foutdata.write('\t'+ string.join(map(lambda x : "Log2TPM", Nof1_item["samples"]),'\t'))
+    foutdata.write('\t'+ string.join(map(lambda x : "TPM", Nof1_item["samples"]),'\t'))
+    foutdata.write('\n')
+
 
     # comparison data
     if "file" in comparison_item:
@@ -156,20 +142,20 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_item, outpu
             h_l_values = clean (values)
             r_and_p_values = map(lambda x: rank_and_percentage(x, h_l_values), itomic_values)
 
-            data_outputList.extend(map(lambda x: '{:.2f}'.format(x[1]), r_and_p_values)) #rank %
-
             #ttest p value
             try:
                 tStat, p = scipy.stats.ttest_ind(allsample_Data.values(), h_l_values, equal_var=False)
-                ave = numpy.mean( allsample_Data.values())
+                mean1 = numpy.mean( allsample_Data.values())
+                mean2 = numpy.mean( h_l_values)
                 outputList.append ('{:.4f}'.format(p)) # ttest p value
-                outputList.append (str(tStat)) # ttest p value
-                outputList.append (str(ave))
+                outputList.append (str(tStat)) # ttest t
+                outputList.append (str(mean1))
+                outputList.append (str(mean2))
             except:
                 outputList.append ('')
                 outputList.append ('')
                 outputList.append ('')
-            print p, tStat, ave
+
             #SD
             all_r_and_p_values = map(lambda x: rank_and_percentage(x, h_l_values), allsample_Data.values())
             SD = standard_deviation(map(lambda x: x[1], all_r_and_p_values))
@@ -177,21 +163,21 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_item, outpu
             try:
                 r_list = map(lambda x: x[1], r_and_p_values)
                 tStat, p = scipy.stats.ttest_ind(r_list, range(0,100), equal_var=False)
-                ave = numpy.mean(r_list)
+                mean1 = numpy.mean(r_list)
                 outputList.append ('{:.4f}'.format(p)) # ttest p value
-                outputList.append (str(tStat)) # ttest p value
-                outputList.append (str(ave))
+                outputList.append (str(tStat)) # ttest t
+                outputList.append (str(mean1))
             except:
                 outputList.append ('')
                 outputList.append ('')
                 outputList.append ('')
-            outputList.append ('{:.2f}'.format(SD))#rank SD
-            print SD
-            print p, tStat, ave
 
+            outputList.append ('{:.2f}'.format(SD))#rank SD
             outputList.extend(map(lambda x: '{:.2f}%'.format(x[1]), r_and_p_values)) #rank %
-            outputList.extend(map(lambda x: '{:.2f}'.format(x), itomic_values)) #Log2TPM
-            outputList.extend(map(lambda x: '{:.2f}'.format(revert_Log2_theta(x, Nof1_item["log2Theta"])), itomic_values)) #TPM
+
+            data_outputList.extend(map(lambda x: '{:.2f}%'.format(x[1]), r_and_p_values)) #rank %
+            data_outputList.extend(map(lambda x: '{:.2f}'.format(x), itomic_values)) #Log2TPM
+            data_outputList.extend(map(lambda x: '{:.2f}'.format(revert_Log2_theta(x, Nof1_item["log2Theta"])), itomic_values)) #TPM
 
             fout.write(string.join(outputList,'\t') +'\n')
             foutdata.write(string.join(data_outputList,'\t') +'\n')
