@@ -207,7 +207,8 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_item, outpu
             break
         data = string.split(line, '\t')
         gene = data[0]
-        data[3] = str(pCorDic[gene])
+        if gene in pCorDic:
+            data[3] = str(pCorDic[gene])
         fout.write(string.join(data,'\t'))
     fin.close()
     fout.close()
