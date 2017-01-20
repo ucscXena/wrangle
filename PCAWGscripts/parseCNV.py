@@ -24,7 +24,7 @@ def process(inDir, output):
             fout.write(sampleName +'\t')
             data = string.split(line,'\t')
             data[1] = str(int(float(data[1])))  #start
-            data[2] = str(int(float(data[1])))   #end
+            data[2] = str(int(float(data[2])))   #end
             fout.write(string.join(data[0:3],'\t') +'\t')
             fout.write(data[dataCol]+'\t')
             fout.write(string.join(data[3:],'\t'))
