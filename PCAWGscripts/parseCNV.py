@@ -5,7 +5,7 @@ def writeHeader(fout, line):
     fout.write("sampleID\tchr\tstart\tend\tvalue" +'\t')
     data = string.split(line,'\t')
     fout.write(string.join(data[3:],'\t'))
-    
+
 def process(inDir, output):
     fout = open(output,'w')
     count = 0
@@ -23,6 +23,8 @@ def process(inDir, output):
         for line in fin.readlines():
             fout.write(sampleName +'\t')
             data = string.split(line,'\t')
+            data[1] = str(int(float(data[1])))  #start
+            data[2] = str(int(float(data[1])))   #end
             fout.write(string.join(data[0:3],'\t') +'\t')
             fout.write(data[dataCol]+'\t')
             fout.write(string.join(data[3:],'\t'))
