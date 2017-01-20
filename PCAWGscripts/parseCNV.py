@@ -2,7 +2,7 @@ import string, sys, os
 dataCol = 3
 
 def writeHeader(fout, line):
-    fout.write("sample\tchr\tstart\tend\tvalue" +'\t')
+    fout.write("sampleID\tchr\tstart\tend\tvalue" +'\t')
     data = string.split(line,'\t')
     fout.write(string.join(data[3:],'\t'))
     
@@ -16,6 +16,8 @@ def process(inDir, output):
         fin = open(fname,'r')
         if count == 0:
             writeHeader(fout, fin.readline())
+        else:
+            fin.readline()
         count = count + 1
 
         for line in fin.readlines():
