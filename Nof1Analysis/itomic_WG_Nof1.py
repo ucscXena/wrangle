@@ -33,10 +33,10 @@ def file_header (comparison_item, Nof1_item, fout):
     headerList.append("logTPM p")
     headerList.append("logTPM fdr_bh p")
     headerList.append("logTPM t")
+    headerList.append("variance itomic")
+    headerList.append("variance 2")
     headerList.append("logTPM ave itomic")
     headerList.append("logTPM ave2")
-    headerList.append("rank % p")
-    headerList.append("rank % t")
     headerList.append("rank % ave")
     headerList.append("rank % SD")
 
@@ -145,29 +145,29 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_item, outpu
                 tStat, p = scipy.stats.ttest_ind(allsample_Data.values(), h_l_values, equal_var=False)
                 mean1 = numpy.mean( allsample_Data.values())
                 mean2 = numpy.mean( h_l_values)
+                var1 = numpy.var(allsample_Data.values())
+                var2 = numpy.var( h_l_values)
+
                 outputList.append (str(p)) # ttest p value
                 outputList.append ('') ## ttest adjusted p value (to be filled later)
                 outputList.append (str(tStat)) # ttest t
+                outputList.append (str(var1))
+                outputList.append (str(var2))
                 outputList.append (str(mean1))
                 outputList.append (str(mean2))
                 pDic[gene] = p
             except:
+                print "bad"
                 continue
 
             #rank statistics, SD
             all_r_and_p_values = map(lambda x: rank_and_percentage(x, h_l_values), allsample_Data.values())
-            SD = standard_deviation(map(lambda x: x[1], all_r_and_p_values))
+            r_list = map(lambda x: x[1], all_r_and_p_values)
+            mean1 = numpy.mean(r_list)
+            SD = numpy.std(r_list)
 
-            try:
-                r_list = map(lambda x: x[1], all_r_and_p_values)
-                tStat, p = scipy.stats.ttest_ind(r_list, range(0,100), equal_var=False)
-                mean1 = numpy.mean(r_list)
-                outputList.append (str(p)) # ttest p value
-                outputList.append (str(tStat)) # ttest t
-                outputList.append (str(mean1))
-                outputList.append ('{:.2f}'.format(SD))#rank SD
-            except:
-                continue
+            outputList.append (str(mean1))
+            outputList.append ('{:.2f}'.format(SD)) #rank SD
 
             # per sample data output
             itomic_values = map(lambda sample: all_Data[sample], Nof1_item["samples"])
