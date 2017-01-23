@@ -16,7 +16,6 @@ headers = string.split(line[:-1],'\t')[1:]
 
 J={}
 for line in fin.readlines():
-    print line
     list = string.split(string.strip(line),'\t')
     cohort = list[0]
     datasets = list[1:]
