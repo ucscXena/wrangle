@@ -10,6 +10,7 @@ output = sys.argv[2]
 
 allCohorts = xena.all_cohorts(hub)
 fout = open(output,'w')
+fout.write (hub + '\n')
 fout.write('\n')
 for cohort in allCohorts:
     fout.write(cohort+'\n')

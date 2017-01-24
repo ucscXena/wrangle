@@ -11,6 +11,11 @@ fin = open(input,'U')
 output = sys.argv[2]
 fout = open(output,'w')
 
+#hub
+line = fin.readline()
+hub = string.strip(line)
+
+#header
 line = fin.readline()
 headers = string.split(line[:-1],'\t')[1:]
 
@@ -25,8 +30,9 @@ for line in fin.readlines():
     for i in range (0, min(len(headers), len(datasets))):
         header = headers[i]
         dataset = datasets[i]
-        J[cohort][header] = dataset
-
+        J[cohort][header] = {}
+        J[cohort][header]['host'] = hub
+        J[cohort][header]['dataset'] = dataset
 fout.write(json.dumps( J, indent= 4 ))
 fin.close()
 fout.close()
