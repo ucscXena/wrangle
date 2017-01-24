@@ -1,9 +1,9 @@
-import string, os
+import string, sys
 import numpy
 
 #cleaned up pos=7 (zero) 8th column VAF
 
-def process(input, output):
+def process(inputfile, outputfile):
     fin = open(inputfile,'r')
     fout = open(outputfile,'w')
     fout.write(fin.readline())
