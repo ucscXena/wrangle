@@ -11,15 +11,13 @@ def averageDup (inputfile, outputfile):
     line = fin.readline()
     data = string.split(line[:-1], '\t')
     for i in range (1, len(data)):
-        print data
         sample = data[i]
         if sample not in dupHeader:
             dupHeader[sample]=[i]
         else:
             DUP =1
-            print "dup", sample
             dupHeader[sample].append(i)
-            print dupHeader[sample]
+            print sample, dupHeader[sample]
 
     #no dup data
     if not DUP:
@@ -44,6 +42,8 @@ def averageDup (inputfile, outputfile):
                     values = map(lambda p: data[p],  pos_list)
                     ave = numpy.average(map(float, filter(lambda v: v!='' or v!= 'NA', values)))
                     fout.write('\t' + str(ave))
+                    if ave not in [0,1]:
+                        print ave
                 else:
                     fout.write('\t' + data[pos_list[0]])
             fout.write("\n")
