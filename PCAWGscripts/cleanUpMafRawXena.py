@@ -1,7 +1,7 @@
 import string, sys
 import numpy
 
-#cleaned up pos=7 (zero) 8th column VAF
+#cleaned up pos=8 (zero) 9th column VAF
 
 def process(inputfile, outputfile):
     fin = open(inputfile,'r')
@@ -13,9 +13,10 @@ def process(inputfile, outputfile):
         if line == "":
             break
         data = string.split(line,'\t')
-        if string.find(data[7],'|') != -1:
-            average = numpy.average(map(float, string.split(data[7])))
-            data[7]= str(average)
+        if string.find(data[8],'|') != -1:
+            values = filter(lambda x :x !='', string.split(data[8],'|'))
+            average = numpy.average(map(float, values))
+            data[8]= str(average)
             fout.write(string.join(data,'\t'))
         else:
             fout.write(line)
