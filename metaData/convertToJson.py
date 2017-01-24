@@ -30,6 +30,9 @@ for line in fin.readlines():
     for i in range (0, min(len(headers), len(datasets))):
         header = headers[i]
         dataset = datasets[i]
+        if dataset == "":
+            continue
+
         J[cohort][header] = {}
         J[cohort][header]['host'] = hub
         J[cohort][header]['dataset'] = dataset
