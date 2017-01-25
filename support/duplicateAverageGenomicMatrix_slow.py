@@ -41,10 +41,12 @@ def averageDup (inputfile, outputfile):
 
                 if len(pos_list) >1:
                     values = map(lambda p: data[p],  pos_list)
-                    ave = numpy.average(map(float, filter(lambda v: v!='' or v!= 'NA', values)))
-                    fout.write('\t' + str(ave))
-                    if ave not in [0,1]:
-                        print ave
+                    values = map(float, filter(lambda v: v!='' and v!= 'NA', values))
+                    if len(values) == 0:
+                        fout.write('\t')
+                    else:
+                        ave = numpy.average(values)
+                        fout.write('\t' + str(ave))
                 else:
                     fout.write('\t' + data[pos_list[0]])
             fout.write("\n")
