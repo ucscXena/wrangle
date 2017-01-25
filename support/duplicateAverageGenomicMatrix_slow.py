@@ -26,7 +26,7 @@ def averageDup (inputfile, outputfile):
     else:
         #dup data
         samples = dupHeader.keys()
-        fout.write('sample' + string.join(samples,'\t')+'\n')
+        fout.write('sample\t' + string.join(samples,'\t')+'\n')
 
         while 1:
             line = fin.readline()
@@ -38,6 +38,7 @@ def averageDup (inputfile, outputfile):
 
             for sample in samples:
                 pos_list = dupHeader[sample]
+
                 if len(pos_list) >1:
                     values = map(lambda p: data[p],  pos_list)
                     ave = numpy.average(map(float, filter(lambda v: v!='' or v!= 'NA', values)))
