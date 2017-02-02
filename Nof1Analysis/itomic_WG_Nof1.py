@@ -3,13 +3,15 @@ import uuid
 import scipy.stats
 import numpy
 import statsmodels.sandbox.stats.multicomp
+sys.path.insert(0,"../")
+import xenaAPI
 from Nof1_functions import *
 
 
 #itomic specific
 def get_itomic_Data (genes, hub, dataset, samples):
     dic ={}
-    values_list= Probes_values(hub, dataset, samples, genes)
+    values_list= xenaAPI.Probes_values(hub, dataset, samples, genes)
     ret_list = map(lambda values: dict(zip(samples, values)), values_list)
     return ret_list  # a list of dictionaries, orders by genes
 
@@ -48,7 +50,7 @@ def file_header (comparison_item, Nof1_item, fout):
 
 
 def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_item, outputfile):
-    itomic_samples = dataset_samples(Nof1_item["hub"], Nof1_item["dataset"])
+    itomic_samples = xenaAPI.dataset_samples(Nof1_item["hub"], Nof1_item["dataset"])
 
     tmpfile = str(uuid.uuid4())
     fout = open(tmpfile,'w')
@@ -108,9 +110,9 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_item, outpu
         else:
             # get data for comparison
             if mode == "gene":
-                compare_data_list = Genes_values (hub, dataset, samples, genes)
+                compare_data_list = xenaAPI.Genes_values (hub, dataset, samples, genes)
             if mode == "probe":
-                compare_data_list = Probes_values (hub, dataset, samples, genes)
+                compare_data_list = xenaAPI.Probes_values (hub, dataset, samples, genes)
 
         for m in range (0, n):
             if m  == len(genes):

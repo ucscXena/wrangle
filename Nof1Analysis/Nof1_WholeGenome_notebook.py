@@ -3,6 +3,8 @@
 # In[ ]:
 
 import sys, string
+sys.path.insert(0,"../")
+import xenaAPI
 
 
 # In[ ]:
@@ -25,7 +27,7 @@ Nof1_item = {
 Nof1_sample = raw_input('Enter sample name (e.g. 10-3-B1 or ALL): ') or "ALL"
 
 if Nof1_sample == "ALL":
-    Nof1_item["samples"] = Nof1_functions.dataset_samples( Nof1_item["hub"], Nof1_item["dataset"])
+    Nof1_item["samples"] = xenaAPI.dataset_samples( Nof1_item["hub"], Nof1_item["dataset"])
 else:
     if (Nof1_functions.checkSamples (Nof1_sample, Nof1_item["hub"], Nof1_item["dataset"])):
         sys.exit()
@@ -42,7 +44,7 @@ genes = raw_input('Enter a single or a list of gene names (e.g. PTEN, AR, or ALL
 
 if Nof1_item["mode"] == "probe":
     if genes =="ALL":
-        genes = Nof1_functions.dataset_fields( Nof1_item["hub"],  Nof1_item["dataset"])
+        genes = xenaAPI.dataset_fields( Nof1_item["hub"],  Nof1_item["dataset"])
     else:
         genes = string.split(genes,',')
     genaname_mapping ={}
