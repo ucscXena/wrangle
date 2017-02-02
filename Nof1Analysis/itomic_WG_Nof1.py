@@ -3,7 +3,7 @@ import uuid
 import scipy.stats
 import numpy
 import statsmodels.sandbox.stats.multicomp
-sys.path.insert(0,"../")
+sys.path.insert(0,"../xena/")
 import xenaAPI
 from Nof1_functions import *
 

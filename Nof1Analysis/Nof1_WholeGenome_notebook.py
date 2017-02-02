@@ -3,7 +3,7 @@
 # In[ ]:
 
 import sys, string
-sys.path.insert(0,"../")
+sys.path.insert(0,"../xena/")
 import xenaAPI
 import xena_datasetlist
 

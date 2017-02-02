@@ -10,7 +10,7 @@ print Nof1_sample
 # In[ ]:
 
 import sys
-sys.path.insert(0,"../")
+sys.path.insert(0,"../xena/")
 import xena_datasetlist
 
 import Nof1_functions

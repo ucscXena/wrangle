@@ -1,5 +1,5 @@
 import string, math, sys
-sys.path.insert(0,"../")
+sys.path.insert(0,"../xena/")
 import xenaAPI
 
 def average (v_list):
