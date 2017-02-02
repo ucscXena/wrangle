@@ -70,14 +70,14 @@ print "output:", outputfile
 import xena_datasetlist
 
 comparison_list = [
-    xena_datasetlist.TCGA_TNBC,
-    xena_datasetlist.TCGA_BRCA_tumors,
-    xena_datasetlist.GTEX_breast,
-    #xena_datasetlist.TCGA_Breast_Basal,
-    #xena_datasetlist.TCGA_Breast_Her2,
-    #xena_datasetlist.TCGA_Breast_LumA,
-    #xena_datasetlist.TCGA_Breast_LumB,
-    #xena_datasetlist.TCGA_Breast_Adjacent_Normal,
+    xena_datasetlist.TCGA_TNBC_geneExp,
+    xena_datasetlist.TCGA_BRCA_tumors_geneExp,
+    xena_datasetlist.GTEX_breast_geneExp,
+    #xena_datasetlist.TCGA_Breast_Basal_geneExp,
+    #xena_datasetlist.TCGA_Breast_Her2_geneExp,
+    #xena_datasetlist.TCGA_Breast_LumA_geneExp,
+    #xena_datasetlist.TCGA_Breast_LumB_geneExp,
+    #xena_datasetlist.TCGA_Breast_Adjacent_Normal_geneExp,
 ]
 
 
