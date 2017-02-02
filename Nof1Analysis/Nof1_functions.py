@@ -1,4 +1,5 @@
-import string, math
+import string, math, sys
+sys.path.insert(0,"../CGDataNew")
 import xena_query as xena
 
 def average (v_list):
