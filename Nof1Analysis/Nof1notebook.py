@@ -10,6 +10,8 @@ print Nof1_sample
 # In[ ]:
 
 import sys
+sys.path.insert(0,"../")
+import xena_datasetlist
 
 import Nof1_functions
 Nof1_item = {
@@ -33,7 +35,7 @@ else:
     print "pass"
 
 
-# # enter gene 
+# # enter gene
 
 # In[ ]:
 
