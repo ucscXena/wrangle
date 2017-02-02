@@ -1,6 +1,6 @@
 import string, math, sys
-sys.path.insert(0,"../CGDataNew")
-import xena_query as xena
+sys.path.insert(0,"../")
+import xenaAPI
 
 def average (v_list):
     return reduce(lambda x, y: x+y, v_list, 0)/float(len(v_list))
@@ -43,7 +43,7 @@ def revert_Log2_theta (Nof1_value, theta):
     return math.pow(2, Nof1_value)- theta
 
 def checkSamples (Nof1_sample, hub, dataset):
-    samples = dataset_samples(hub, dataset)
+    samples = xenaAPI.dataset_samples(hub, dataset)
 
     if Nof1_sample not in samples:
         print Nof1_sample, "is not found in dataset."
@@ -55,7 +55,7 @@ def checkSamples (Nof1_sample, hub, dataset):
         return 0
 
 def checkFields (fields, mapping, hub, dataset, cleanFuntion):
-    d_fields = dataset_fields (hub, dataset)
+    d_fields = xenaAPI.dataset_fields (hub, dataset)
     for original_field in fields:
         field = cleanFuntion (original_field)
         if field in d_fields:
@@ -71,27 +71,6 @@ def checkFields (fields, mapping, hub, dataset, cleanFuntion):
             return 1
     return 0
 
-def Gene_values (hub, dataset, samples, gene):
-    values = xena.dataset_gene_values (hub, dataset, samples, [gene])
-    return values[0]["scores"][0]
-
-def Genes_values (hub, dataset, samples, genes):
-    values = xena.dataset_gene_values (hub, dataset, samples, genes)
-    return values
-
-def Probe_values (hub, dataset, samples, probe):
-    values = xena.dataset_probe_values (hub, dataset, samples, [probe])
-    return values[0]
-
-def Probes_values (hub, dataset, samples, probes):
-    values = xena.dataset_probe_values (hub, dataset, samples, probes)
-    return values
-
-def dataset_samples (hub,dataset):
-    return xena.dataset_samples(hub, dataset)
-
-def dataset_fields (hub, dataset):
-    return xena.dataset_field (hub, dataset)
 
 
 
