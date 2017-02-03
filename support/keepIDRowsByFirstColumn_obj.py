@@ -40,7 +40,7 @@ def keepProbes (obj, outputFile, keep_dic):
                 values = values_list[i]["scores"][0]
             elif obj['mode'] == "probe":
                 values = values_list[i]
-            fout.write(id + string.join(map(lambda x : str(x), values), '\t') +'\n')
+            fout.write(id + '\t'+ string.join(map(lambda x : str(x), values), '\t') +'\n')
 
     fout.close()
 
