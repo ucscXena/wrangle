@@ -1,6 +1,6 @@
 import string, sys, os
 import json
-sys.path.insert(0,"../xena/")
+sys.path.insert(0,os.path.dirname(os.path.realpath(__file__))+"/../xena/")
 import xenaAPI
 
 def listing (mfile):
@@ -18,8 +18,8 @@ def listing (mfile):
 def keepProbes (obj, outputFile, keep_dic):
     fout = open(outputFile,'w')
     n = int(100000/len(obj["samples"]))
-    if n < 20:
-        n = 20
+    if n < 100:
+        n = 100
     if n > 500:
         n = 500
     print n
@@ -40,7 +40,7 @@ def keepProbes (obj, outputFile, keep_dic):
                 values = values_list[i]["scores"][0]
             elif obj['mode'] == "probe":
                 values = values_list[i]
-            fout.write(id + map(lambda x : str(x), values) +'\n')
+            fout.write(id + string.join(map(lambda x : str(x), values), '\t') +'\n')
 
     fout.close()
 
