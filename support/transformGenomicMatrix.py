@@ -11,15 +11,10 @@ def parseUnit(unit):  # working progress
     else:
         return None
 
-def setZeroNA_log2TMPplus (value):
-    #for unit = log2(tmp+0.001)
-    r = parseUnit("log2(tmp+0.001)")
-    logBase, theta = r
-
-    zeroInLog = math.log(theta, logBase)
-
+def setLowNA_log2TMPplus (value):
+    #for unit = log2(tmp+0.001)  turn all value < -6 to NA
     try:
-        if abs(float(value) - zeroInLog) < 0.001:
+        if float(value) < -6:
             return ' '
         else:
             return value
