@@ -1,4 +1,5 @@
 import string, sys, os
+import math
 
 def parseUnit(unit):  # working progress
     if string.find(unit,"log") != -1:
