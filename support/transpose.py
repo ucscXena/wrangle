@@ -1,18 +1,26 @@
-import csv, sys
-from itertools import izip
+import string, sys, os
+
+def process (infile, outfile):
+    fout=open(outfile,'w')
+    fout.close()
+
+    #header
+    fin=open(infile,'rU')
+    line = fin.readline()
+    totalN = len(string.split(line,'\t'))
+    fin.close()
+
+    for i in range (0, totalN):
+        start = i + 1 #linux cut
+        command = "cut -f " + str(start) + " " + infile + " | tr '\\n' '\\t' | sed 's/.$/\\n/' >> " + outfile
+        #print command
+        os.system(command)
 
 if len(sys.argv[:])!= 3:
-    print "python transpose.py fin fout"
+    print "python transpose_memEfficient.py fin fout"
     sys.exit()
-    
+
 infile = sys.argv[1]
-fin=open(infile,'rU')
-a = izip(*csv.reader(fin,delimiter="\t"))
-
 outfile= sys.argv[2]
-fout=open(outfile,'w')
-csv.writer(fout,delimiter="\t").writerows(a)
 
-fout.close()
-fin.close()
-                
+process(infile, outfile)
