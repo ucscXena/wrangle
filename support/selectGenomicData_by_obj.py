@@ -15,7 +15,7 @@ def listing (mfile):
     fin.close()
     return dic
 
-def keepProbes (obj, outputFile, keep_dic):
+def keepProbes (obj, outputFile, keep_dic = None):
     fout = open(outputFile,'w')
     n = int(100000/len(obj["samples"]))
     if n < 100:
@@ -26,7 +26,11 @@ def keepProbes (obj, outputFile, keep_dic):
 
     fout.write("id\t" + string.join(obj['samples'], '\t') + '\n')
 
-    IDs = keep_dic.keys()
+    if keep_dic:
+        IDs = keep_dic.keys()
+    else:
+        IDs = xenaAPI.dataset_fields (obj['hub'], obj['dataset'])
+
     for k in range (0, len(IDs), n):
         ids = IDs[k:k+n]
         if obj['mode'] == "gene":
@@ -44,17 +48,24 @@ def keepProbes (obj, outputFile, keep_dic):
 
     fout.close()
 
-if len(sys.argv[:])!=4:
-    print "python keepIDRowsByFirstColumn.py json_file(input) output keep_list(first_column_id)"
+if len(sys.argv[:]) < 3 or len(sys.argv[:]) > 5 :
+    print "python selectGenomicData_by_obj.py obj_file(json) outputMatrix optional_ID_list(first_column_id)"
     sys.exit()
-
-listfile = sys.argv[3]
-keep_dic  = listing (listfile)
 
 inputfile = sys.argv[1]
 fin = open(inputfile,'r')
 obj = json.load(fin)
 fin.close()
+
+if len(sys.argv[:]) ==4:
+    listfile = sys.argv[3]
+    keep_dic  = listing (listfile)
+else:
+    keep_dic = None
+    if obj['mode'] == 'gene':
+        print "can't do gene selection mode without telling me what genes to select (use optional_ID_list to specify genes)"
+        sys.exit()
+
 outputfile = sys.argv[2]
 
 keepProbes (obj, outputfile, keep_dic)
