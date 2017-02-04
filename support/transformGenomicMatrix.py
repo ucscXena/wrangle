@@ -46,4 +46,4 @@ if len(sys.argv[:])!= 3:
 infile = sys.argv[1]
 outfile= sys.argv[2]
 
-process(infile, outfile, setZeroNA_log2TMPplus)
+process(infile, outfile, setLowNA_log2TMPplus)
