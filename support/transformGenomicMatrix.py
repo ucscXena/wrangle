@@ -19,7 +19,7 @@ def setZeroNA_log2TMPplus (value):
     zeroInLog = math.log(theta, logBase)
 
     try:
-        if abs(value - zeroInLog) < 0.001:
+        if abs(float(value) - zeroInLog) < 0.001:
             return ' '
         else:
             return value
