@@ -2,7 +2,7 @@ import string, math, sys
 import scipy.stats
 import numpy
 
-sys.path.insert(0,"../xena/")
+sys.path.insert(0,os.path.dirname(os.path.realpath(__file__))+"/../xena/")
 import xena_datasetlist, gene_list
 import xenaAPI
 
@@ -51,6 +51,31 @@ def mean_variance_countZero_countOne (values, unit):
         "mean": mean,
         "var": var,
         "zeros": len(zeros),
+        "ones": len(ones)
+    }
+
+def mean_variance_countZero_countOne_countPointOne (values, unit):
+    r = parseUnit(unit)
+    if r == None:
+        return None
+    logBase, theta = r
+    zeroInLog = math.log(theta, logBase)
+    pointOneInLog = math.log(0.1+theta, logBase)
+    oneInLog = math.log(1+theta, logBase)
+
+    cValues = clean(values)
+    mean = numpy.mean(cValues)
+    var = numpy.var(cValues)
+    zeros = filter(lambda x : abs(x - zeroInLog) < 0.001, cValues)
+    pointOnes = filter(lambda x : (x - pointOneInLog) < 0.001, cValues)
+    ones = filter(lambda x : (x - oneInLog) < 0.001, cValues)
+
+    return {
+        "n": len(cValues),
+        "mean": mean,
+        "var": var,
+        "zeros": len(zeros),
+        "pointOnes": len(pointOnes),
         "ones": len(ones)
     }
 
@@ -114,11 +139,8 @@ def output(id, stats_obj, fout, header = False):
 
 
 
-#outfile = 'TCGA_tumors_log2TPM'
-#process (xena_datasetlist.TCGA_tumors_geneExp, coding_genes, outfile, mean_variance_countZero_countOne)
-
-#outfile = 'TCGA_tumors_TPM'
-#process (xena_datasetlist.TCGA_tumors_geneExp, coding_genes, outfile, revertLog2_mean_variance_countZero_countOne)
+outfile = 'TCGA_tumors_log2TPM_stats'
+process (xena_datasetlist.TCGA_tumors_geneExp, coding_genes, outfile, mean_variance_countZero_countOne_countPointOne)
 
 #outfile = 'TCGA_breasts_log2TPM'
 #process (xena_datasetlist.TCGA_BRCA_tumors_geneExp, coding_genes, outfile, mean_variance_countZero_countOne)
