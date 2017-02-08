@@ -12,7 +12,8 @@ def process (infile, outfile):
 
     for i in range (0, totalN):
         start = i + 1 #linux cut
-        command = "cut -f " + str(start) + " " + infile + " | tr '\\n' '\\t' | sed 's/.$/\\n/' >> " + outfile
+        #command = "cut -f " + str(start) + " " + infile + " | tr '\\n' '\\t' | sed 's/.$/\\n/' >> " + outfile
+        command = "cut -f " + str(start) + " " + infile + " | tr '\\n' '\\t' >> " + outfile
         #print command
         os.system(command)
 
