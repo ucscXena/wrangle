@@ -49,7 +49,7 @@ def keepProbes (obj, outputFile, keep_dic = None):
     fout.close()
 
 if len(sys.argv[:]) < 3 or len(sys.argv[:]) > 5 :
-    print "python selectGenomicData_by_obj.py obj_file(json) outputMatrix optional_ID_list(first_column_id)"
+    print "python selectGenomicData_by_obj.py dataset_obj_file(json) outputMatrix optional_ID_list(first_column_id)"
     sys.exit()
 
 inputfile = sys.argv[1]

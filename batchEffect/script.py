@@ -139,8 +139,20 @@ def output(id, stats_obj, fout, header = False):
 
 
 
-outfile = 'TCGA_tumors_log2TPM_stats'
-process (xena_datasetlist.TCGA_tumors_geneExp, coding_genes, outfile, mean_variance_countZero_countOne_countPointOne)
+if len(sys.argv[:])!= 3:
+    print "python script.py dataset_obj_file(json) output_stats"
+    sys.exit()
+
+inputfile = sys.argv[1]
+fin = open(inputfile,'r')
+obj = json.load(fin)
+fin.close()
+
+outfile = sys.argv[2]
+# obj = xena_datasetlist.TCGA_tumors_geneExp
+#outfile = 'TCGA_tumors_log2TPM_stats'
+
+process (obj, coding_genes, outfile, mean_variance_countZero_countOne_countPointOne)
 
 #outfile = 'TCGA_breasts_log2TPM'
 #process (xena_datasetlist.TCGA_BRCA_tumors_geneExp, coding_genes, outfile, mean_variance_countZero_countOne)
