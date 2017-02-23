@@ -51,6 +51,7 @@ def averageDup (inputfile, outputfile):
                         v = float(v)
                     except:
                         value = string.join(values,',')
+                        print "bad dups", sample, header, value
                         allFloats = 0
                 if allFloats:
                     values = map(float, values)
