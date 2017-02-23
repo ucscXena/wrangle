@@ -9,12 +9,11 @@ def mapping (mfile):
     mapDic ={}
     for line in fin.readlines():
         data = string.split(line[:-1],'\t')
-        if len(data)==2:
-            xenaSampleID, sourceID = data
-            if sourceID not in mapDic:
-                mapDic [sourceID]=xenaSampleID
-            else:
-                print "ERROR", sourceID, "exists"
+        xenaSampleID, sourceID = data[0:2]
+        if sourceID not in mapDic:
+            mapDic [sourceID]=xenaSampleID
+        else:
+            print "ERROR", sourceID, "exists"
     fin.close()
     return mapDic
 
