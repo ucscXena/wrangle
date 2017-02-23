@@ -51,7 +51,7 @@ def averageDup (inputfile, outputfile):
                         v = float(v)
                     except:
                         values.sort()
-                        value = string.join(values,',')
+                        value = string.join(values,', ')
                         print "bad dups", sample, header, values
                         allFloats = 0
                 if allFloats:
