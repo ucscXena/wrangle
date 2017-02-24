@@ -49,7 +49,11 @@ def merge (infile_list, outfile, root ="./"):
             files.append(tmpfile)
 
     #paste all together
-    os.system("paste "+string.join(files," ")+" > "+ outfile)
+    fout.write(outfile,'w')
+    fout.close()
+    for i in range(0, len(files), 100):
+        files[i: i+100]
+        os.system("paste "+string.join(files[i: i+100], " ") + " >> " + outfile)
 
     os.system("rm -rf "+ tmpDir)
     return
@@ -62,7 +66,7 @@ def posToGene(genes):
     return allGenes
 
 def outputallgenes(allgenes,outfile):
-    fout=open(outfile,'w') 
+    fout=open(outfile,'w')
     fout.write("sample\n")
     for i in range(0,len(allgenes)):
         gene = allgenes[i]
@@ -71,7 +75,7 @@ def outputallgenes(allgenes,outfile):
 
 def setGeneOrder (infile,genes, tmpDir):
     os.system("cut -f 1 "+infile +" > "+ tmpDir+"/tmpid")
-    fin=open(tmpDir+"/tmpid",'U')    
+    fin=open(tmpDir+"/tmpid",'U')
     fin.readline()
     for line in fin.readlines():
         hugo = line[:-1]
@@ -82,14 +86,14 @@ def setGeneOrder (infile,genes, tmpDir):
     return genes
 
 def getColumnSize (infile):
-    fin=open(infile,'U')    
+    fin=open(infile,'U')
     line =fin.readline()
     fin.close()
     return len(string.split(line[:-1],"\t"))
 
 def process(cur_genes, infile, allgenes, outfile):
-    fin=open(infile,'r')    
-    fout=open(outfile,'w') 
+    fin=open(infile,'r')
+    fout=open(outfile,'w')
 
     line = fin.readline()
     fout.write(line)
@@ -111,7 +115,7 @@ def process(cur_genes, infile, allgenes, outfile):
             fout.write(emptyLine)
     fin.close()
     fout.close()
-    return 
+    return
 
 if __name__ == "__main__" and len(sys.argv[:])<4:
     print "python mergeGenomicMatrixFiles_memEfficient.py outfile tmpDirRoot infiles"
