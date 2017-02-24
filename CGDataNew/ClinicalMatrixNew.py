@@ -57,7 +57,7 @@ class ClinicalMatrixNew():
                     #ClinF.replaceFeatureName(d, new_d)
                     ClinF.replicateFeatureName(d, new_d)
                 d =new_d
-                
+
             #do not use _PATIENT
             """
             if d in ["_PATIENT","_INTEGRATION"]:
@@ -71,7 +71,7 @@ class ClinicalMatrixNew():
                     ignoreCol.append(i)
                 else:
                     return
-                
+
         self.__COL = len(self.__COLs)
 
 
@@ -96,7 +96,7 @@ class ClinicalMatrixNew():
                     data.append("")
                 print "Fix", len(data[1:]), self.__COL+len(ignoreCol), len(ignoreCol)
                 continue
-            
+
             for i in range(0,len(data)):
                 data[i]= string.strip(data[i])
             if FirstColAuto == "auto":
@@ -112,7 +112,7 @@ class ClinicalMatrixNew():
             else:
                 print "WARNING detected duplicate sample", sample, rFHandle,name
                 continue
-            
+
             countIgnore=0
 
             for i in range (1, len(data)):
@@ -125,12 +125,12 @@ class ClinicalMatrixNew():
                     col = self.__COLs[i-1]
 
                 if not self.__DATA[sample].has_key(col) :
-                    if data[i] in ["NA","na","NULL", "null"]: #bad formatting in clinical data, clinical data NULL use empty
-                        data[i]=""
+                    #if data[i] in ["NA","na","NULL", "null"]: #bad formatting in clinical data, clinical data NULL use empty
+                    #    data[i]=""
                     self.__DATA[sample][col]=data[i]
                 else:
                     self = emptySelf
-                    return  
+                    return
 
         if self.validate() != True:
             self = emptySelf
@@ -176,7 +176,7 @@ class ClinicalMatrixNew():
             return True
         else:
             return False
-        
+
     def getCOLs(self):
         return self.__COLs[:]
 
@@ -206,7 +206,7 @@ class ClinicalMatrixNew():
 
     def onlyKeepRows(self, rows, validation=False):
         oldRows = self.__ROWs[:]
-        for row in oldRows: 
+        for row in oldRows:
             if row not in rows:
                 self.__ROW = self.__ROW-1
                 self.__ROWs.remove(row)
@@ -218,7 +218,7 @@ class ClinicalMatrixNew():
 
     def removeRows(self, rows, validation=False):
         oldRows = self.__ROWs[:]
-        for row in rows: 
+        for row in rows:
             if row in oldRows:
                 self.__ROW = self.__ROW-1
                 self.__ROWs.remove(row)
@@ -232,7 +232,7 @@ class ClinicalMatrixNew():
     def addOneColWithSameValue(self, colName, value):
         if colName in self.__COLs:
             return False
-        
+
         #build out uniq new cols
         self.__COL = self.__COL+ 1
         self.__COLs.append(colName)
@@ -247,7 +247,7 @@ class ClinicalMatrixNew():
             return False
         if newCol in self.__COLs:
             return False
-        
+
         #build out uniq new cols
         self.__COL = self.__COL+ 1
         self.__COLs.append(newCol)
@@ -284,7 +284,7 @@ class ClinicalMatrixNew():
                 dupCols.append(col)
         origSelf= copy.deepcopy(self)
 
-                        
+
         #build out uniq new cols
         self.__COL = self.__COL+ len(uniqCols)
         self.__COLs.extend(uniqCols)
@@ -303,12 +303,12 @@ class ClinicalMatrixNew():
         self.__ROW = self.__ROW +len(missingSample)
         self.__ROWs.extend(missingSample)
 
-        tempDic={}        
+        tempDic={}
         for col in self.__COLs:
             tempDic[col]=""
         for sample in missingSample:
             self.__DATA[sample]= copy.deepcopy(tempDic)
-            
+
         for sample in aCMatrix.getROWs():
             for col in dupCols:
                 if aCMatrix.getDATA(sample,col) is None or  string.strip(aCMatrix.getDATA(sample,col))=="":
@@ -322,7 +322,7 @@ class ClinicalMatrixNew():
                         #if col=="days_to_new_tumor_event_after_initial_treatment":
                         #    print "WARNING use old matrix",sample,col,self.__name,"old:",self.__DATA[sample][col] ,"new:",aCMatrix.getDATA(sample,col), "choose:", self.__DATA[sample][col]
                         pass
-                        
+
         # load uniq col aCMatrix data to self
         for sample in aCMatrix.getROWs():
             for col in uniqCols:
@@ -336,7 +336,7 @@ class ClinicalMatrixNew():
                 return True
         else:
             return True
-                
+
     # add more __ROW, but keep __COL the same
     def addNewRows(self, idlist, dataDic,validation=False):
         newIds=[]
@@ -351,14 +351,14 @@ class ClinicalMatrixNew():
         #self.__COLs.sort()
         #if testKeys != self.__COLs:
         #    return False
-        
+
         for col in testKeys:
             if col not in self.__COLs:
                 return False
         for col in self.__COLs:
             if col not in testKeys:
                 dataDic[col]=""
-            
+
         self.__ROWs.extend(newIds)
         self.__ROW = self.__ROW+len(newIds)
         for id in newIds:
@@ -368,7 +368,7 @@ class ClinicalMatrixNew():
             return True
         else:
             return self.validate()
-        
+
     def addColRoot(self, sampleMap):
         ColRoot ="_PATIENT"
         self.removeCols([ColRoot])
@@ -386,10 +386,10 @@ class ClinicalMatrixNew():
         if ColInt not in self.__COLs:
             self.__COL= self.__COL+1
             self.__COLs.append(ColInt)
-            
+
         for sample in self.__ROWs:
             self.__DATA[sample][ColInt]=sampleMap.getIntegrationId(sample, integrationList)
-        
+
     """
     def isTypeCategory (self, col):
         getRoot(sample)
@@ -420,7 +420,7 @@ class ClinicalMatrixNew():
             return True #small number of states
 
         if isInt and isFloat:
-            return False #stay as int -> float 
+            return False #stay as int -> float
         elif not isInt and isFloat:
             return False #"float"
         else:
@@ -477,7 +477,7 @@ class ClinicalMatrixNew():
                           "old:", child, self.getDATA(child, col) , \
                           "new:", parent,parentData[col]
                     #return False
-            
+
         # add missingChildren
         self.addNewRows(missingChildren,parentData)
         # initiate  children pushing data
@@ -488,23 +488,23 @@ class ClinicalMatrixNew():
             if r != True:
                 return False
         return True
-    
+
     def validate (self):
         for col in self.__COLs:
             if self.__COLs.count(col) !=1:
                 return False
             if len(col)>self.__maxColLen:
                 return False
-                
+
         if self.__ROW != len(self.__ROWs):
             return False
-        
+
         for row in self.__ROWs:
             if self.__ROWs.count(row) !=1:
                 return False
         if self.__DATA.keys().sort() != self.__ROWs.sort():
             return False
-    
+
         for sample in self.__DATA.keys():
             if self.__COL != len(self.__DATA[sample]):
                 return False
@@ -583,7 +583,7 @@ class ClinicalMatrixNew():
         self.__COLs.remove(feature)
         self.validate()
         return
-    
+
     def store(self, oHandle, validation=False):
         if validation and self.validate()!=True:
             return False
