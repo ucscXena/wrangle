@@ -38,7 +38,7 @@ def averageDup (inputfile, outputfile):
         for header in headers[1:]:
             values = dic[sample][header]
             for v in values:
-                if v in ['', 'NA']:
+                if v in ['']:
                     values.remove(v)
             if len(values) == 0:
                 value = ''
