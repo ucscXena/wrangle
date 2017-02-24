@@ -49,7 +49,7 @@ def merge (infile_list, outfile, root ="./"):
             files.append(tmpfile)
 
     #paste all together
-    fout.write(outfile,'w')
+    fout = open(outfile,'w')
     fout.close()
     for i in range(0, len(files), 100):
         files[i: i+100]
