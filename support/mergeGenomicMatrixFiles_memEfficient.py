@@ -52,8 +52,8 @@ def merge (infile_list, outfile, root ="./"):
     fout = open(outfile,'w')
     fout.close()
     for i in range(0, len(files), 100):
-        files[i: i+100]
-        os.system("paste "+string.join(files[i: i+100], " ") + " >> " + outfile)
+        os.system("paste "+ outfile + ' ' + string.join(files[i: i+100], " ") + " > new ")
+        os.system("mv new " + outfile)
 
     os.system("rm -rf "+ tmpDir)
     return
