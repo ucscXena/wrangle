@@ -49,11 +49,12 @@ def merge (infile_list, outfile, root ="./"):
             files.append(tmpfile)
 
     #paste all together
-    fout = open(outfile,'w')
-    fout.close()
-    for i in range(0, len(files), 100):
-        os.system("paste "+ outfile + ' ' + string.join(files[i: i+100], " ") + " > new ")
-        os.system("mv new " + outfile)
+    k = 100
+    os.system("paste "+ string.join(files[:k], " ") + " > " + outfile)
+    for i in range(k, len(files), k):
+        tmpfile = str(uuid.uuid4())
+        os.system("paste "+ outfile + ' ' + string.join(files[i: i+k], " ") + " > " + tmpfile)
+        os.system("mv " + tmpfile + ' ' + outfile)
 
     os.system("rm -rf "+ tmpDir)
     return
