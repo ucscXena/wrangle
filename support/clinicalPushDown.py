@@ -36,6 +36,8 @@ def pushDown (inputFile, outputFile, mapDic):
                 donor = data[0]
                 fout.write(sample+'\t'+donor+'\t')
                 fout.write(string.join(data[1:],'\t'))
+                if (data[-1][-1]!='\n'):
+                    fout.write('\n')
         #else: #no data do not generate output
         #    fout.write(line)
 
