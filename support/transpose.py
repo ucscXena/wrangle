@@ -12,7 +12,7 @@ def process (infile, outfile):
 
     for i in range (0, totalN):
         start = i + 1 #linux cut
-        command = "cut -f " + str(start) + " " + infile + " | tr '\\n' '\\t' | sed 's/.$/\\n/' | sed -e 's/\r//g' >> " + outfile
+        command = "cut -f " + str(start) + " " + infile + " | tr '\\n' '\\t' | sed -e 's/\r//g' >> " + outfile
         os.system(command)
 
 if len(sys.argv[:])!= 3:
