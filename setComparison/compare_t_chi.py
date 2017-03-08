@@ -4,11 +4,11 @@ import scipy.stats
 import numpy
 import math
 
-sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + "/../xenaAPI/")
-import Nof1_functions
+sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + "/../xena/")
+import xenaAPI
 
 def getIDs(geneListfile):
-    fin = open(genelistfile, 'r')
+    fin = open(geneListfile, 'r')
     genes = {}
     for line in fin.readlines():
         gene = string.split(string.strip(line),'\t')[0]
@@ -82,7 +82,7 @@ def ttest_by_ids (hub1, hub2, dataset1, dataset2, ids, samples1, samples2, mode1
         if mode2 == "probe":
             values2 = xenaAPI.Probes_values (hub2, dataset2, samples2, pList)
         elif mode2 == "gene":
-            values2 = xenaAPI.Probes_values (hub2, dataset2, samples2, pList)
+            values2 = xenaAPI.Genes_values (hub2, dataset2, samples2, pList)
 
         for j in range(0, len(pList)):
             probe = pList[j]
@@ -116,7 +116,7 @@ if __name__ == "__main__":
 
     hub1 =J1["hub"]
     dataset1 = J1["dataset"]
-    samples1 = J["samples"]
+    samples1 = J1["samples"]
     mode1 = J1["mode"]
 
     hub2 =J2["hub"]
@@ -127,7 +127,7 @@ if __name__ == "__main__":
     ids = getIDs(sys.argv[3])
 
     output = sys.argv[4]
-    ttest_by_probes (hub, dataset_cnv, ids, samples1, samples2, mode1, mode2, output)
+    ttest_by_ids (hub1, hub2, dataset1, dataset2, ids, samples1, samples2, mode1, mode2, output)
 
     """
     dataset_mut = "mc3.v0.2.8.PUBLIC.nonsilentGene.xena"
