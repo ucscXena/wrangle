@@ -47,10 +47,13 @@ def uq_scale_include_zero_revertLog2 (values, pseudo = 0):
     values = filter (lambda x: not math.isnan(x), values)
     var = numpy.var(values)
     sd = math.sqrt(var)
+    values.sort()
+    L = len(values)
     return {
         "uq": uq,
         "log2_uq": math.log(uq,2),
-        "log2_scale": sd
+        "log2_scale": sd,
+        "log2_75_50": values[ L * 0.75] - values[ L * 0.5]
     }
 
 def process (hub, dataset, samples, mode, pseudo, genes, method,
@@ -89,7 +92,7 @@ def process (hub, dataset, samples, mode, pseudo, genes, method,
             print sample, ret["uq"], ret["log2_uq"], ret["log2_scale"]
             #output
             fout_Offset.write(
-                string.join([sample, str(ret["uq"]), str(ret["log2_uq"]), str(ret["log2_scale"])], '\t')
+                string.join([sample, str(ret["uq"]), str(ret["log2_uq"]), str(ret["log2_scale"]), str(ret["log2_75_50"])], '\t')
                 + '\n')
     fout_Offset.close()
 
