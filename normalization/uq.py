@@ -53,7 +53,7 @@ def uq_scale_include_zero_revertLog2 (values, pseudo = 0):
         "uq": uq,
         "log2_uq": math.log(uq,2),
         "log2_scale": sd,
-        "log2_75_50": int(values[ L * 0.75]) - int(values[ L * 0.5])
+        "log2_75_50": values[int(L * 0.75)]- values[int(L * 0.5)]
     }
 
 def process (hub, dataset, samples, mode, pseudo, genes, method,
