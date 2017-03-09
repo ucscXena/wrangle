@@ -65,6 +65,8 @@ def process (hub, dataset, samples, mode, pseudo, genes, method,
     gN = 500
     sN = 100
 
+    fout_Offset.write(string.join(["sample", "uq", "log2_uq", "log2_scale", "log2_75_50"], '\t')+ '\n')
+
     #compute uq offset
     offsets = {}
     log2scales = {}
@@ -94,6 +96,7 @@ def process (hub, dataset, samples, mode, pseudo, genes, method,
             fout_Offset.write(
                 string.join([sample, str(ret["uq"]), str(ret["log2_uq"]), str(ret["log2_scale"]), str(ret["log2_75_50"])], '\t')
                 + '\n')
+
     fout_Offset.close()
 
     #convert data
