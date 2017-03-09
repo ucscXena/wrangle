@@ -6,6 +6,7 @@ sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + "/../xena/")
 import xenaAPI
 
 uq_target = 28.87894851
+uq_scale_target = 2.336337271
 
 def getIDs(geneListfile):
     fin = open(geneListfile, 'r')
@@ -30,7 +31,7 @@ def uq_include_zero_revertLog2 (values, pseudo = 0):
     return {
         "uq": uq,
         "log2_uq": math.log(uq,2),
-        "log2_scale" : 1
+        "log2_scale" : uq_scale_target
     }
 
 #revert log, include zero, upper quantile + spread
@@ -85,9 +86,10 @@ def process (hub, dataset, samples, mode, pseudo, genes, method,
             offsets[sample] = ret["uq"]
             log2scales[sample] = ret["log2_scale"]
 
-            print sample, ret["uq"], ret["log2_uq"]
+            print sample, ret["uq"], ret["log2_uq"], ret["log2_scale"]
             #output
-            fout_Offset.write( string.join([sample, str(ret["uq"]), str(ret["log2_uq"])], '\t')
+            fout_Offset.write(
+                string.join([sample, str(ret["uq"]), str(ret["log2_uq"]), str(ret["log2_scale"])], '\t')
                 + '\n')
     fout_Offset.close()
 
@@ -113,7 +115,7 @@ def process (hub, dataset, samples, mode, pseudo, genes, method,
             log2_scale = log2scales[sample]
             values = map(lambda x: float(x), values)
             values = map(lambda x: math.pow(2,x) - pseudo if not math.isnan(x) else x, values)
-            values = map(lambda x: math.log((x/uq*uq_target + pseudo), 2)/log2_scale if not math.isnan(x) else x, values)
+            values = map(lambda x: (math.log((x/uq*uq_target + pseudo), 2)- math.log(uq_target + pseudo,2))/log2_scale * uq_scale_target if not math.isnan(x) else x, values)
 
             fout_T.write(sample+'\t')
             fout_T.write(string.join(map(lambda x: str(x), values),'\t')+'\n')
@@ -123,7 +125,7 @@ def process (hub, dataset, samples, mode, pseudo, genes, method,
 
 if __name__ == "__main__":
     if len(sys.argv[:])!= 5:
-        print "python up-count.py dataset_json id_file(first_column_gene) outputMatrix_T outputOffset\n"
+        print "python uq.py dataset_json gene_file(first_column_gene) outputMatrix_T outputOffset\n"
         sys.exit()
 
     jsonFile = sys.argv[1]
@@ -146,5 +148,5 @@ if __name__ == "__main__":
     outputMatrix_T = sys.argv[3]
     outputOffset = sys.argv[4]
 
-    process (hub, dataset, samples, mode, pseudo, genes, uq_include_zero_revertLog2,
+    process (hub, dataset, samples, mode, pseudo, genes, uq_scale_include_zero_revertLog2,
         outputMatrix_T, outputOffset)
