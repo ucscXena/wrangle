@@ -9,13 +9,13 @@ import xenaAPI
 
 def getIDs(geneListfile):
     fin = open(geneListfile, 'r')
-    genes = {}
+    IDs = {}
     for line in fin.readlines():
         gene = string.split(string.strip(line),'\t')[0]
-        if gene not in genes:
-            genes[gene]=0
+        if gene not in IDs:
+            IDs[gene]=0
     fin.close()
-    return genes.keys()
+    return IDs.keys()
 
 #chiq_contigency (add mutual information if the table is 2 x2)
 def chi2_contingency_by_probes (hub, dataset, probes, samples1, samples2, output, kp = None):
@@ -105,7 +105,7 @@ def ttest_by_ids (hub1, hub2, dataset1, dataset2, ids, samples1, samples2, mode1
 
 if __name__ == "__main__":
     if len(sys.argv[:])!= 5:
-        print "python compare_t_chi.py json1 json2 ids(genes/probes) output\n"
+        print "python compare_t_chi.py json1 json2 id_file(first_column_gene) output\n"
         sys.exit()
 
     jsonFile1 = sys.argv[1]

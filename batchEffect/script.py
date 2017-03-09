@@ -4,11 +4,22 @@ import scipy.stats
 import numpy
 
 sys.path.insert(0,os.path.dirname(os.path.realpath(__file__))+"/../xena/")
-import xena_datasetlist, gene_list
 import xenaAPI
 
 #coding_genes =["APOOP5","ARGFX","ESR1","blah"]
 coding_genes = gene_list.protein_coding_genes["genes"]
+
+def getIDs(geneListfile):
+    fin = open(geneListfile, 'r')
+    IDs = {}
+    for line in fin.readlines():
+        gene = string.split(string.strip(line),'\t')[0]
+        if gene[0] =="#":
+            continue
+        if gene not in IDs:
+            IDs[gene]=0
+    fin.close()
+    return IDs.keys()
 
 def clean (v_list):
     l = filter (lambda x: not math.isnan(x), map(float, v_list))
@@ -140,8 +151,8 @@ def output(id, stats_obj, fout, header = False):
 
 
 
-if len(sys.argv[:])!= 3:
-    print "python script.py dataset_obj_file(json) output_stats"
+if len(sys.argv[:])!= 4:
+    print "python gene_stats.py dataset_obj_file(json) id_file(first_column_gene) output_stats"
     sys.exit()
 
 inputfile = sys.argv[1]
@@ -149,15 +160,12 @@ fin = open(inputfile,'r')
 obj = json.load(fin)
 fin.close()
 
-outfile = sys.argv[2]
-# obj = xena_datasetlist.TCGA_tumors_geneExp
-#outfile = 'TCGA_tumors_log2TPM_stats'
+coding_genes = getIDs(sys.argv[2])
+
+outfile = sys.argv[3]
 
 process (obj, coding_genes, outfile, mean_variance_countZero_countOne_countPointOne)
 
 #outfile = 'TCGA_breasts_log2TPM'
 #process (xena_datasetlist.TCGA_BRCA_tumors_geneExp, coding_genes, outfile, mean_variance_countZero_countOne)
-
-#outfile = 'itomic_log2TPM'
-#process (xena_datasetlist.itomic_geneExp, coding_genes, outfile, mean_variance_countZero_countOne)
 
