@@ -12,6 +12,8 @@ def getIDs(geneListfile):
     IDs = {}
     for line in fin.readlines():
         gene = string.split(string.strip(line),'\t')[0]
+        if gene[0] =="#":
+            continue
         if gene not in IDs:
             IDs[gene]=0
     fin.close()
