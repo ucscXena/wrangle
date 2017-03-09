@@ -5,8 +5,8 @@ import math, numpy
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + "/../xena/")
 import xenaAPI
 
-uq_target = 28.87894851
-uq_scale_target = 2.336337271
+uq_target = 32.0
+uq_scale_target = 2.5
 
 def getIDs(geneListfile):
     fin = open(geneListfile, 'r')
@@ -31,9 +31,15 @@ def uq_scale_include_zero_revertLog2 (values, uq, scale, pseudo = 0):
     #float
     values = map(lambda x: float(x), values)
     #revert log
-    values = map(lambda x: math.pow(2,x) - pseudo if not math.isnan(x) else x, values)
+    values = map(lambda x: math.pow(2,x) - pseudo if not math.isnan(x)
+        else x, values)
     #upper
-    values = map(lambda x: (math.log((x/uq*uq_target + pseudo), 2)- math.log(uq_target + pseudo,2))/scale * uq_scale_target if not math.isnan(x) else x, values)
+    values = map(lambda x: (
+            (math.log((x/uq*uq_target + pseudo), 2)- math.log(uq_target + pseudo,2))/scale * uq_scale_target
+                if abs(x-pseudo) < 0.001 else math.log(pseudo,2)) if not math.isnan(x)
+            else x, values)
+    values = map(lambda x: (math.log(pseudo,2) if x<math.log(pseudo,2) else x) if not math.isnan(x)
+            else x, values)
     return values
 
 #revert log, include zero, upper quantile + spread
@@ -106,6 +112,7 @@ def process (hub, dataset, samples, mode, pseudo, method, outputMatrix_T, offset
 
     #convert data
     probes = xenaAPI.dataset_fields(hub, dataset)
+    probes.remove("sampleID")
     fout_T.write('sample\t'+string.join(probes,"\t")+'\n')
 
     for k in range (0, len(samples), sN):
