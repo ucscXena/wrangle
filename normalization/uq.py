@@ -35,7 +35,7 @@ def uq_scale_include_zero_revertLog2 (values, uq, scale, pseudo = 0):
         else x, values)
     #upper
     values = map(lambda x: (
-            (math.log((x/uq*uq_target + pseudo), 2)- math.log(uq_target + pseudo,2))/scale * uq_scale_target
+            (math.log((x/uq*uq_target + pseudo), 2)- math.log(uq_target + pseudo,2))/scale * uq_scale_target + math.log(uq_target + pseudo,2)
                 if abs(x-pseudo) > 0.001 else math.log(pseudo,2)) if not math.isnan(x)
             else x, values)
     values = map(lambda x: x if x > math.log(pseudo,2) else (math.log(pseudo,2)) if not math.isnan(x)
