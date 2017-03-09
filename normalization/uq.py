@@ -36,9 +36,9 @@ def uq_scale_include_zero_revertLog2 (values, uq, scale, pseudo = 0):
     #upper
     values = map(lambda x: (
             (math.log((x/uq*uq_target + pseudo), 2)- math.log(uq_target + pseudo,2))/scale * uq_scale_target
-                if abs(x-pseudo) < 0.001 else math.log(pseudo,2)) if not math.isnan(x)
+                if abs(x-pseudo) > 0.001 else math.log(pseudo,2)) if not math.isnan(x)
             else x, values)
-    values = map(lambda x: (math.log(pseudo,2) if x<math.log(pseudo,2) else x) if not math.isnan(x)
+    values = map(lambda x: x if x > math.log(pseudo,2) else (math.log(pseudo,2)) if not math.isnan(x)
             else x, values)
     return values
 
@@ -88,6 +88,8 @@ def getStats (hub, dataset, samples, mode, pseudo, genes, outputOffset):
                 values = xenaAPI.Genes_values (hub, dataset, sList, pList)
             sample_values.extend(values)
             print i
+            #if i>500:
+            #    break
         sample_values = zip(*sample_values)
 
         for j in range(0, len(sList)):
@@ -123,6 +125,8 @@ def process (hub, dataset, samples, mode, pseudo, method, outputMatrix_T, offset
             values = xenaAPI.Probes_values (hub, dataset, sList, pList)
             sample_values.extend(values)
             print i
+            #if i>500:
+            #    break
         sample_values = zip(*sample_values)
 
         for j in range(0, len(sList)):
