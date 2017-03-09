@@ -20,22 +20,24 @@ def getIDs(geneListfile):
     fin.close()
     return IDs.keys()
 
+
 #revert log, include zero, upper quantile
-def uq_include_zero_revertLog2 (values, pseudo = 0):
-    values = map(lambda x: float(x), values)
-    values = map(lambda x: math.pow(2,x) - pseudo if not math.isnan(x) else x, values)
-    newValues = sorted(values, key=lambda f: float('-inf') if math.isnan(f) else f)
-    L = len(values)
-    pos = int(L * 0.75)
-    uq = newValues[pos]
-    return {
-        "uq": uq,
-        "log2_uq": math.log(uq,2),
-        "log2_scale" : uq_scale_target
-    }
+def uq_include_zero_revertLog2 (values, uq, scale, pseudo = 0):
+    scale = uq_scale_target
+    return uq_scale_include_zero_revertLog2(values, up, scale, pseudo)
 
 #revert log, include zero, upper quantile + spread
-def uq_scale_include_zero_revertLog2 (values, pseudo = 0):
+def uq_scale_include_zero_revertLog2 (values, uq, scale, pseudo = 0):
+    #float
+    values = map(lambda x: float(x), values)
+    #revert log
+    values = map(lambda x: math.pow(2,x) - pseudo if not math.isnan(x) else x, values)
+    #upper
+    values = map(lambda x: (math.log((x/uq*uq_target + pseudo), 2)- math.log(uq_target + pseudo,2))/scale * uq_scale_target if not math.isnan(x) else x, values)
+    return values
+
+#revert log, include zero, upper quantile + spread
+def stats_uq_scale_include_zero_revertLog2 (values, pseudo = 0):
     values = map(lambda x: float(x), values)
     values = map(lambda x: math.pow(2,x) - pseudo if not math.isnan(x) else x, values)
     newValues = sorted(values, key=lambda f: float('-inf') if math.isnan(f) else f)
@@ -43,7 +45,7 @@ def uq_scale_include_zero_revertLog2 (values, pseudo = 0):
     pos = int(L * 0.75)
     uq = newValues[pos]
 
-    values = map(lambda x: math.log((x/uq + pseudo), 2) if not math.isnan(x) else x, values)
+    values = map(lambda x: math.log((x/uq*uq_target + pseudo), 2) if not math.isnan(x) else x, values)
     values = filter (lambda x: not math.isnan(x), values)
     var = numpy.var(values)
     sd = math.sqrt(var)
@@ -52,12 +54,11 @@ def uq_scale_include_zero_revertLog2 (values, pseudo = 0):
     return {
         "uq": uq,
         "log2_uq": math.log(uq,2),
-        "log2_scale": sd,
+        "log2_sd": sd,
         "log2_75_50": values[int(L * 0.75)]- values[int(L * 0.5)]
     }
 
-def process (hub, dataset, samples, mode, pseudo, genes, method,
-    outputMatrix_T, outputOffset):
+def getStats (hub, dataset, samples, mode, pseudo, genes, outputOffset):
 
     fout_T = open(outputMatrix_T, 'w')
     fout_Offset = open(outputOffset, 'w')
@@ -65,7 +66,7 @@ def process (hub, dataset, samples, mode, pseudo, genes, method,
     gN = 500
     sN = 100
 
-    fout_Offset.write(string.join(["sample", "uq", "log2_uq", "log2_scale", "log2_75_50"], '\t')+ '\n')
+    fout_Offset.write(string.join(["sample", "uq", "log2_uq", "log2_sd", "log2_75_50"], '\t')+ '\n')
 
     #compute uq offset
     offsets = {}
@@ -81,23 +82,27 @@ def process (hub, dataset, samples, mode, pseudo, genes, method,
                 values = xenaAPI.Genes_values (hub, dataset, sList, pList)
             sample_values.extend(values)
             print i
-
         sample_values = zip(*sample_values)
 
         for j in range(0, len(sList)):
             sample = sList[j]
             values = sample_values[j]
-            ret = method(values, pseudo)
+            ret = stats_uq_scale_include_zero_revertLog2(values, pseudo)
             offsets[sample] = ret["uq"]
-            log2scales[sample] = ret["log2_scale"]
+            log2scales[sample] = ret["log2_sd"]
 
-            print sample, ret["uq"], ret["log2_uq"], ret["log2_scale"]
-            #output
+            print sample, ret["uq"], ret["log2_uq"], ret["log2_sd"], ret["log2_75_50"]
             fout_Offset.write(
-                string.join([sample, str(ret["uq"]), str(ret["log2_uq"]), str(ret["log2_scale"]), str(ret["log2_75_50"])], '\t')
+                string.join([sample, str(ret["uq"]), str(ret["log2_uq"]), str(ret["log2_sd"]), str(ret["log2_75_50"])], '\t')
                 + '\n')
-
     fout_Offset.close()
+    return offsets, log2scales
+
+def process (hub, dataset, samples, mode, pseudo, method, outputMatrix_T, offsets, log2scales):
+    fout_T = open(outputMatrix_T, 'w')
+
+    gN = 500
+    sN = 100
 
     #convert data
     probes = xenaAPI.dataset_fields(hub, dataset)
@@ -111,7 +116,6 @@ def process (hub, dataset, samples, mode, pseudo, genes, method,
             values = xenaAPI.Probes_values (hub, dataset, sList, pList)
             sample_values.extend(values)
             print i
-
         sample_values = zip(*sample_values)
 
         for j in range(0, len(sList)):
@@ -119,9 +123,8 @@ def process (hub, dataset, samples, mode, pseudo, genes, method,
             values = sample_values[j]
             uq = offsets[sample]
             log2_scale = log2scales[sample]
-            values = map(lambda x: float(x), values)
-            values = map(lambda x: math.pow(2,x) - pseudo if not math.isnan(x) else x, values)
-            values = map(lambda x: (math.log((x/uq*uq_target + pseudo), 2)- math.log(uq_target + pseudo,2))/log2_scale * uq_scale_target if not math.isnan(x) else x, values)
+
+            values = method(values, uq, log2_scale, pseudo)
 
             fout_T.write(sample+'\t')
             fout_T.write(string.join(map(lambda x: str(x), values),'\t')+'\n')
@@ -154,5 +157,7 @@ if __name__ == "__main__":
     outputMatrix_T = sys.argv[3]
     outputOffset = sys.argv[4]
 
-    process (hub, dataset, samples, mode, pseudo, genes, uq_scale_include_zero_revertLog2,
-        outputMatrix_T, outputOffset)
+    offsets, log2scales = getStats(hub, dataset, samples, mode, pseudo, genes, outputOffset)
+
+    process (hub, dataset, samples, mode, pseudo, uq_scale_include_zero_revertLog2,
+        outputMatrix_T, offsets, log2scales)
