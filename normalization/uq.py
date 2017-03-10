@@ -22,18 +22,32 @@ def getIDs(geneListfile):
 
 
 #revert log, include zero, upper quantile
-def uq_include_zero_revertLog2 (values, uq, scale, pseudo = 0):
-    scale = uq_scale_target
-    return uq_scale_include_zero_revertLog2(values, up, scale, pseudo)
-
-#revert log, include zero, upper quantile + spread
-def uq_scale_include_zero_revertLog2 (values, uq, scale, pseudo = 0):
+def uq_include_zero_revertLog2 (values, parameter, pseudo = 0):
+    uq = parameter["uq"]
     #float
     values = map(lambda x: float(x), values)
     #revert log
     values = map(lambda x: math.pow(2,x) - pseudo if not math.isnan(x)
         else x, values)
-    #upper
+    #upper q
+    values = map(lambda x: (math.log((x/uq*uq_target + pseudo), 2)
+                if abs(x-pseudo) > 0.001 else math.log(pseudo,2))
+            if not math.isnan(x)
+            else x, values)
+    return values
+    #scale = uq_scale_target
+    #return uq_scale_include_zero_revertLog2(values, up, scale, pseudo)
+
+#revert log, include zero, upper quantile + spread
+def uq_SDscale_include_zero_revertLog2 (values, parameter, pseudo = 0):
+    uq = parameter["uq"]
+    scale = parameter["log2_sd"]
+    #float
+    values = map(lambda x: float(x), values)
+    #revert log
+    values = map(lambda x: math.pow(2,x) - pseudo if not math.isnan(x)
+        else x, values)
+    #upper q
     values = map(lambda x: (
             (math.log((x/uq*uq_target + pseudo), 2)- math.log(uq_target + pseudo,2))/scale * uq_scale_target + math.log(uq_target + pseudo,2)
                 if abs(x-pseudo) > 0.001 else math.log(pseudo,2)) if not math.isnan(x)
@@ -65,18 +79,11 @@ def stats_uq_scale_include_zero_revertLog2 (values, pseudo = 0):
     }
 
 def getStats (hub, dataset, samples, mode, pseudo, genes, outputOffset):
-
-    fout_T = open(outputMatrix_T, 'w')
-    fout_Offset = open(outputOffset, 'w')
-
     gN = 500
     sN = 100
 
-    fout_Offset.write(string.join(["sample", "uq", "log2_uq", "log2_sd", "log2_75_50"], '\t')+ '\n')
-
     #compute uq offset
-    offsets = {}
-    log2scales = {}
+    params = {}
     for k in range (0, len(samples), sN):
         sList = samples[k:k+sN]
         sample_values =[]
@@ -96,17 +103,24 @@ def getStats (hub, dataset, samples, mode, pseudo, genes, outputOffset):
             sample = sList[j]
             values = sample_values[j]
             ret = stats_uq_scale_include_zero_revertLog2(values, pseudo)
-            offsets[sample] = ret["uq"]
-            log2scales[sample] = ret["log2_sd"]
+            params[sample] = ret
 
             print sample, ret["uq"], ret["log2_uq"], ret["log2_sd"], ret["log2_75_50"]
-            fout_Offset.write(
-                string.join([sample, str(ret["uq"]), str(ret["log2_uq"]), str(ret["log2_sd"]), str(ret["log2_75_50"])], '\t')
-                + '\n')
-    fout_Offset.close()
-    return offsets, log2scales
 
-def process (hub, dataset, samples, mode, pseudo, method, outputMatrix_T, offsets, log2scales):
+    #output
+    fout_Offset = open(outputOffset, 'w')
+    header = params[samples[0]].keys()
+    fout_Offset.write("sample\t"+ string.join(header, '\t')+ '\n')
+    for sample in samples:
+        sample_param =  params[sample]
+        fout_Offset.write(sample)
+        for key in header:
+            fout_Offset.write('\t'+str(sample_param[key]))
+        fout_Offset.write('\n')
+    fout_Offset.close()
+    return params
+
+def process (hub, dataset, samples, mode, pseudo, method, outputMatrix_T, params):
     fout_T = open(outputMatrix_T, 'w')
 
     gN = 500
@@ -132,10 +146,9 @@ def process (hub, dataset, samples, mode, pseudo, method, outputMatrix_T, offset
         for j in range(0, len(sList)):
             sample = sList[j]
             values = sample_values[j]
-            uq = offsets[sample]
-            log2_scale = log2scales[sample]
+            parameter = params[sample]
 
-            values = method(values, uq, log2_scale, pseudo)
+            values = method(values, parameter, pseudo)
 
             fout_T.write(sample+'\t')
             fout_T.write(string.join(map(lambda x: str(x), values),'\t')+'\n')
@@ -168,7 +181,8 @@ if __name__ == "__main__":
     outputMatrix_T = sys.argv[3]
     outputOffset = sys.argv[4]
 
-    offsets, log2scales = getStats(hub, dataset, samples, mode, pseudo, genes, outputOffset)
+    params = getStats(hub, dataset, samples, mode, pseudo, genes, outputOffset)
 
-    process (hub, dataset, samples, mode, pseudo, uq_scale_include_zero_revertLog2,
-        outputMatrix_T, offsets, log2scales)
+    method = uq_include_zero_revertLog2
+    #method = uq_SDscale_include_zero_revertLog2
+    process (hub, dataset, samples, mode, pseudo, method, outputMatrix_T, params)
