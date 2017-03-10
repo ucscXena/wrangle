@@ -6,7 +6,8 @@ sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + "/../xena/")
 import xenaAPI
 
 uq_target = 32.0
-uq_scale_target = 2.5
+uq_sd_scale_target = 2.5
+uq_75_50_scale_target = 1.25
 
 def getIDs(geneListfile):
     fin = open(geneListfile, 'r')
@@ -35,10 +36,8 @@ def uq_include_zero_revertLog2 (values, parameter, pseudo = 0):
             if not math.isnan(x)
             else x, values)
     return values
-    #scale = uq_scale_target
-    #return uq_scale_include_zero_revertLog2(values, up, scale, pseudo)
 
-#revert log, include zero, upper quantile + spread
+#revert log, include zero, upper quantile, scale with SD
 def uq_SDscale_include_zero_revertLog2 (values, parameter, pseudo = 0):
     uq = parameter["uq"]
     scale = parameter["log2_sd"]
@@ -49,7 +48,25 @@ def uq_SDscale_include_zero_revertLog2 (values, parameter, pseudo = 0):
         else x, values)
     #upper q
     values = map(lambda x: (
-            (math.log((x/uq*uq_target + pseudo), 2)- math.log(uq_target + pseudo,2))/scale * uq_scale_target + math.log(uq_target + pseudo,2)
+            (math.log((x/uq*uq_target + pseudo), 2)- math.log(uq_target + pseudo,2))/scale * uq_sd_scale_target + math.log(uq_target + pseudo,2)
+                if abs(x-pseudo) > 0.001 else math.log(pseudo,2)) if not math.isnan(x)
+            else x, values)
+    values = map(lambda x: x if x > math.log(pseudo,2) else (math.log(pseudo,2)) if not math.isnan(x)
+            else x, values)
+    return values
+
+#revert log, include zero, upper quantile, scale with 75-50
+def uq_7550scale_include_zero_revertLog2 (values, parameter, pseudo = 0):
+    uq = parameter["uq"]
+    scale = parameter["log2_75_50"]
+    #float
+    values = map(lambda x: float(x), values)
+    #revert log
+    values = map(lambda x: math.pow(2,x) - pseudo if not math.isnan(x)
+        else x, values)
+    #upper q
+    values = map(lambda x: (
+            (math.log((x/uq*uq_target + pseudo), 2)- math.log(uq_target + pseudo,2))/scale * uq_75_50_scale_target + math.log(uq_target + pseudo,2)
                 if abs(x-pseudo) > 0.001 else math.log(pseudo,2)) if not math.isnan(x)
             else x, values)
     values = map(lambda x: x if x > math.log(pseudo,2) else (math.log(pseudo,2)) if not math.isnan(x)
@@ -183,6 +200,8 @@ if __name__ == "__main__":
 
     params = getStats(hub, dataset, samples, mode, pseudo, genes, outputOffset)
 
-    method = uq_include_zero_revertLog2
+    #method = uq_include_zero_revertLog2
     #method = uq_SDscale_include_zero_revertLog2
+    method = uq_7550scale_include_zero_revertLog2
+
     process (hub, dataset, samples, mode, pseudo, method, outputMatrix_T, params)
