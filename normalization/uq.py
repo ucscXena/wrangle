@@ -118,7 +118,7 @@ def process (hub, dataset, samples, mode, pseudo, method, genes, outputMatrix_T,
             for m in range (0, len(values)):
                 if len(values[m]) == 0:
                     values[m] = ['nan'] * len(sList)
-                    print pList, i, values[m]
+                    print pList[m], m, values[m]
             sample_values.extend(values)
             print i
             #if i>gN:
