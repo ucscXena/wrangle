@@ -95,7 +95,7 @@ def uq_7550scale_include_zero_revertLog2 (values, parameter, pseudo = 0):
 def process (hub, dataset, samples, mode, pseudo, method, genes, outputMatrix_T, params):
     fout_T = open(outputMatrix_T, 'w')
 
-    gN = 10
+    gN = 500
     sN = 100
 
     #convert data
@@ -115,15 +115,14 @@ def process (hub, dataset, samples, mode, pseudo, method, genes, outputMatrix_T,
                 values = xenaAPI.Probes_values (hub, dataset, sList, pList)
             else:
                 values = xenaAPI.Genes_values (hub, dataset, sList, pList)
-            for i in range (0, len(values)):
-                print pList, len(values[i]), len(sList)
-                if len(values[i]) != len(sList):
-                    values[i] = [''] * len(sList)
-            #print values
+            for m in range (0, len(values)):
+                if len(values[m]) == 0:
+                    values[m] = ['nan'] * len(sList)
+                    print pList, i, values
             sample_values.extend(values)
-
-            if i>gN:
-                break
+            print i
+            #if i>gN:
+            #    break
         sample_values = zip(*sample_values)
         for j in range(0, len(sList)):
             sample = sList[j]
@@ -160,9 +159,9 @@ if __name__ == "__main__":
     else:
         pseudo = 0
 
-    #method = uq_include_zero_revertLog2
+    method = uq_include_zero_revertLog2
     #method = uq_SDscale_include_zero_revertLog2
-    method = uq_7550scale_include_zero_revertLog2
+    #method = uq_7550scale_include_zero_revertLog2
 
     genefile = sys.argv[2]
     if genefile == "ALL":
