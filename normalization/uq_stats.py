@@ -56,6 +56,9 @@ def getStats (hub, dataset, samples, mode, pseudo, genes, outputOffset):
                 values = xenaAPI.Probes_values (hub, dataset, sList, pList)
             elif mode == "gene":
                 values = xenaAPI.Genes_values (hub, dataset, sList, pList)
+            for m in range (0, len(values)):
+                if len(values[m]) == 0:
+                    values[m] = ['nan'] * len(sList)
             sample_values.extend(values)
             print i
             #if i>gN:

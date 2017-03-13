@@ -51,7 +51,7 @@ def uq_include_zero_revertLog2 (values, parameter, pseudo = 0):
         else x, values)
     #upper q
     values = map(lambda x: (math.log((x/uq*uq_target + pseudo), 2)
-                if abs(x-pseudo) > 0.001 else math.log(pseudo,2))
+                if x-pseudo > 0.001 else math.log(pseudo,2))
             if not math.isnan(x)
             else x, values)
     return values
@@ -68,7 +68,7 @@ def uq_SDscale_include_zero_revertLog2 (values, parameter, pseudo = 0):
     #upper q
     values = map(lambda x: (
             (math.log((x/uq*uq_target + pseudo), 2)- math.log(uq_target + pseudo,2))/scale * uq_sd_scale_target + math.log(uq_target + pseudo,2)
-                if abs(x-pseudo) > 0.001 else math.log(pseudo,2)) if not math.isnan(x)
+                if x-pseudo > 0.001 else math.log(pseudo,2)) if not math.isnan(x)
             else x, values)
     values = map(lambda x: x if x > math.log(pseudo,2) else (math.log(pseudo,2)) if not math.isnan(x)
             else x, values)
@@ -86,7 +86,7 @@ def uq_7550scale_include_zero_revertLog2 (values, parameter, pseudo = 0):
     #upper q
     values = map(lambda x: (
             (math.log((x/uq*uq_target + pseudo), 2)- math.log(uq_target + pseudo,2))/scale * uq_75_50_scale_target + math.log(uq_target + pseudo,2)
-                if abs(x-pseudo) > 0.001 else math.log(pseudo,2)) if not math.isnan(x)
+                if x-pseudo > 0.001 else math.log(pseudo,2)) if not math.isnan(x)
             else x, values)
     values = map(lambda x: x if x > math.log(pseudo,2) else (math.log(pseudo,2)) if not math.isnan(x)
             else x, values)
