@@ -118,12 +118,18 @@ if __name__ == "__main__":
 
     hub1 =J1["hub"]
     dataset1 = J1["dataset"]
-    samples1 = J1["samples"]
+    if J1.has_key("samples"):
+        samples1 = J1["samples"]
+    else:
+        samples1 = xenaAPI.dataset_samples(hub, dataset)
     mode1 = J1["mode"]
 
     hub2 =J2["hub"]
     dataset2 = J2["dataset"]
-    samples2 = J2["samples"]
+    if J2.has_key("samples"):
+        samples2 = J2["samples"]
+    else:
+        samples2 = xenaAPI.dataset_samples(hub, dataset)
     mode2 = J2["mode"]
 
     ids = getIDs(sys.argv[3])
