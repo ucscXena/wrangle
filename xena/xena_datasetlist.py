@@ -1,13 +1,3 @@
-itomic_geneExp = {
-    "hub" : "https://itomic.xenahubs.net",
-    "dataset" : "latestCCI_EXP_G_TPM_log",
-    "name" : "itomic_all",
-    "label" : "itomic_all",
-    "mode" : "probe",
-    "unit": "log2(tpm+0.001)",
-    "samples":["17-1-B1","16-2-B2","15-1-B2","19-0-B1","18-0-B1","18-0-B2","19-0-B2","18-0-B4","09-3-B1","18-1-B2","19-0-B3","18-1-B1","16-2-B1","15-2-B1","14-3-B1","14-2-B1","14-1-B1","14-1-B2","10-3-B1","13-1-B1","15-1-B1","10-3-B2","16-1-B4","16-1-B1","18-0-B3","14-2-B2","18-0-B5"]
-}
-
 TCGA_tumors_geneExp = {
     "fileLabel": "TCGA_all",
     "hub" : "https://toil.xenahubs.net",
