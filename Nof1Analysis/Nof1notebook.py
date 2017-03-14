@@ -35,7 +35,7 @@ else:
     print "pass"
 
 
-# # enter gene
+# # enter gene 
 
 # In[ ]:
 
@@ -72,7 +72,15 @@ genaname_mapping ={
     "p18" : "CDKN2C",
     "MLL2" :"KMT2D",
     "CD105" : "ENG",
-    "YB1" : "YBX1"
+    "YB1" : "YBX1",
+    "MMP-9": "MMP9",
+    "CHK1": "CHEK1",
+    "CHK2": "CHEK2",
+    "FOXO3a": "FOXO3",
+    "IGFR1": "IGF1R",
+    "MLL3": "KMT2C",
+    "ROS":"ROS1",
+    "TSC":"TSC1"
 }
 
 
@@ -101,17 +109,13 @@ outputfile = "Results_Folder/" + outputfile
 
 # In[ ]:
 
-
-
-
-# In[ ]:
-
 print genes
 import xena_datasetlist
 
 comparison_list = [
     xena_datasetlist.TCGA_TNBC_geneExp,
     xena_datasetlist.TCGA_BRCA_tumors_geneExp,
+    #xena_datasetlist.GTEX_breast_geneExp,
     #xena_datasetlist.TCGA_Breast_Basal_geneExp,
     #xena_datasetlist.TCGA_Breast_Her2_geneExp,
     #xena_datasetlist.TCGA_Breast_LumA_geneExp,
