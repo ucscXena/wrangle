@@ -1,8 +1,12 @@
 import string, sys, os
+import csv
+from itertools import izip
+import uuid
 
 def process (infile, outfile):
     fout=open(outfile,'w')
     fout.close()
+    fout=open(outfile,'a')
 
     #header
     fin=open(infile,'rU')
@@ -10,16 +14,30 @@ def process (infile, outfile):
     totalN = len(string.split(line,'\t'))
     fin.close()
 
-    for i in range (0, totalN):
+    k = 10
+    count = 0
+    tmpFile = str(uuid.uuid4())
+    for i in range (0, totalN, K):
+        count = count + 1
+        infile = tmpFile + "." + str(count)
         start = i + 1 #linux cut
-        command = "cut -f " + str(start) + " " + infile + " | tr '\\n' '\\t' | sed -e 's/\r//g' >> " + outfile
+        command = "cut -f " + str(start) + "-" + str(start+k-1) +" " + infile > outfile
         os.system(command)
 
+        fin=open(infile,'rU')
+        a = izip(*csv.reader(fin,delimiter="\t"))
+        fin.close()
+        csv.writer(fout,delimiter="\t").writerows(a)
+        break
+    fout.close()
+    os.system("rm " + tmpFile + ".*")
+
 if len(sys.argv[:])!= 3:
-    print "python transpose_memEfficient.py fin fout"
+    print "python transpose.py fin fout"
     sys.exit()
 
 infile = sys.argv[1]
 outfile= sys.argv[2]
 
 process(infile, outfile)
+
