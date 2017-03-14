@@ -121,7 +121,7 @@ if __name__ == "__main__":
     if J1.has_key("samples"):
         samples1 = J1["samples"]
     else:
-        samples1 = xenaAPI.dataset_samples(hub, dataset)
+        samples1 = xenaAPI.dataset_samples(hub1, dataset1)
     mode1 = J1["mode"]
 
     hub2 =J2["hub"]
@@ -129,7 +129,7 @@ if __name__ == "__main__":
     if J2.has_key("samples"):
         samples2 = J2["samples"]
     else:
-        samples2 = xenaAPI.dataset_samples(hub, dataset)
+        samples2 = xenaAPI.dataset_samples(hub2, dataset2)
     mode2 = J2["mode"]
 
     ids = getIDs(sys.argv[3])
