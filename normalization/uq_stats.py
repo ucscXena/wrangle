@@ -5,8 +5,6 @@ import math, numpy
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + "/../xena/")
 import xenaAPI
 
-from uq import uq_target
-
 def getIDs(geneListfile):
     fin = open(geneListfile, 'r')
     IDs = {}
@@ -28,7 +26,7 @@ def stats_uq_scale_include_zero_revertLog2 (values, pseudo = 0):
     pos = int(L * 0.75)
     uq = newValues[pos]
 
-    values = map(lambda x: math.log((x/uq*uq_target + pseudo), 2) if not math.isnan(x) else x, values)
+    values = map(lambda x: math.log((x/uq + pseudo), 2) if not math.isnan(x) else x, values)
     values = filter (lambda x: not math.isnan(x), values)
     var = numpy.var(values)
     sd = math.sqrt(var)

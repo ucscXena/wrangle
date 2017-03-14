@@ -138,10 +138,16 @@ def process (hub, dataset, samples, mode, pseudo, method, genes, outputMatrix_T,
 
 
 if __name__ == "__main__":
-    if len(sys.argv[:])!= 5:
-        print "python uq.py dataset_json \
+    if len(sys.argv[:])!= 6:
+        print "python uq.py  dataset_json \
             whole_genome_gene_file(\"ALL\" or gene file) \
-            input_offsetsFile outputMatrix_T\n"
+            parameter_file \
+            method \
+            outputMatrix_T\n"
+        print "method: uq_include_zero_revertLog2"
+        print "        uq_SDscale_include_zero_revertLog2"
+        print "        uq_7550scale_include_zero_revertLog2"
+        print
         sys.exit()
 
     jsonFile = sys.argv[1]
@@ -159,10 +165,6 @@ if __name__ == "__main__":
     else:
         pseudo = 0
 
-    method = uq_include_zero_revertLog2
-    #method = uq_SDscale_include_zero_revertLog2
-    #method = uq_7550scale_include_zero_revertLog2
-
     genefile = sys.argv[2]
     if genefile == "ALL":
         genes =[]
@@ -173,5 +175,21 @@ if __name__ == "__main__":
     #paramters read from file
     params = getParams(sys.argv[3])
 
-    outputMatrix_T = sys.argv[4]
+    methodname = sys.argv[4]
+    if methodname not in [
+        "uq_include_zero_revertLog2",
+        "uq_SDscale_include_zero_revertLog2",
+        "uq_7550scale_include_zero_revertLog2"
+        ]:
+        print "wrong method name\n"
+        sys.exit()
+    else:
+        if methodname == "uq_include_zero_revertLog2":
+            method = uq_include_zero_revertLog2
+        elif methodname ==  "uq_SDscale_include_zero_revertLog2":
+            method =  uq_SDscale_include_zero_revertLog2
+        elif methodname ==    "uq_7550scale_include_zero_revertLog2":
+            method = uq_7550scale_include_zero_revertLog2
+
+    outputMatrix_T = sys.argv[5]
     process (hub, dataset, samples, mode, pseudo, method, genes, outputMatrix_T, params)
