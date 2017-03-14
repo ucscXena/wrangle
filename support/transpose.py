@@ -17,7 +17,7 @@ def process (infile, outfile):
     k = 10
     count = 0
     tmpFile = str(uuid.uuid4())
-    for i in range (0, totalN, K):
+    for i in range (0, totalN, k):
         count = count + 1
         infile = tmpFile + "." + str(count)
         start = i + 1 #linux cut
