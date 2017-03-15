@@ -168,10 +168,10 @@ if __name__ == "__main__":
     else:
         samples = xenaAPI.dataset_samples(hub, dataset)
     mode = J["mode"]
-    if J.has_key("pseudo"):
-        pseudo = J["pseudo"]
+    if J.has_key("pseudocount"):
+        pseudo = J["pseudocount"]
     else:
-        print "no pseudo specified"
+        print "no pseudocount specified"
         sys.exit()
 
     genefile = sys.argv[2]
