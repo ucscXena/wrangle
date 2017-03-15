@@ -5,9 +5,13 @@ import math, numpy
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + "/../xena/")
 import xenaAPI
 
-uq_target = 32.0
-uq_sd_scale_target = 2.5
-uq_75_50_scale_target = 1.25
+tpm_uq_target = 32.0
+tpm_uq_sd_scale_target = 2.5
+tpm_uq_75_50_scale_target = 1.25
+
+uq_target = tpm_uq_target
+uq_sd_scale_target = tpm_uq_sd_scale_target
+uq_75_50_scale_target = tpm_uq_75_50_scale_target
 
 def getIDs(geneListfile):
     fin = open(geneListfile, 'r')
@@ -138,15 +142,18 @@ def process (hub, dataset, samples, mode, pseudo, method, genes, outputMatrix_T,
 
 
 if __name__ == "__main__":
-    if len(sys.argv[:])!= 6:
+    if len(sys.argv[:])!= 7:
         print "python uq.py  dataset_json \
             whole_genome_gene_file(\"ALL\" or gene file) \
             parameter_file \
             method \
+            unit \
             outputMatrix_T\n"
         print "method: uq_include_zero_revertLog2"
         print "        uq_SDscale_include_zero_revertLog2"
         print "        uq_7550scale_include_zero_revertLog2"
+        print
+        print "unit: tpm"
         print
         sys.exit()
 
@@ -163,7 +170,8 @@ if __name__ == "__main__":
     if J.has_key("pseudo"):
         pseudo = J["pseudo"]
     else:
-        pseudo = 0
+        print "no pseudo specified"
+        sys.exit()
 
     genefile = sys.argv[2]
     if genefile == "ALL":
@@ -191,5 +199,10 @@ if __name__ == "__main__":
         elif methodname ==    "uq_7550scale_include_zero_revertLog2":
             method = uq_7550scale_include_zero_revertLog2
 
-    outputMatrix_T = sys.argv[5]
+    unit = sys.argv[5]
+    if unit not in ["tpm"]:
+        print "wrong unit"
+        sys.exit()
+
+    outputMatrix_T = sys.argv[6]
     process (hub, dataset, samples, mode, pseudo, method, genes, outputMatrix_T, params)
