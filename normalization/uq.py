@@ -147,13 +147,14 @@ if __name__ == "__main__":
             whole_genome_gene_file(\"ALL\" or gene file) \
             parameter_file \
             method \
-            unit \
+            unit/target_p_file \
             outputMatrix_T\n"
         print "method: uq_include_zero_revertLog2"
         print "        uq_SDscale_include_zero_revertLog2"
         print "        uq_7550scale_include_zero_revertLog2"
         print
         print "unit: tpm"
+        print "      target_param_file"
         print
         sys.exit()
 
@@ -182,7 +183,11 @@ if __name__ == "__main__":
 
     #paramters read from file
     params = getParams(sys.argv[3])
-
+    goodSamples =[]
+    for sample in samples:
+        if sample in params.keys():
+            goodSamples.append(sample)
+    samples = goodSamples
     methodname = sys.argv[4]
     if methodname not in [
         "uq_include_zero_revertLog2",
@@ -201,8 +206,29 @@ if __name__ == "__main__":
 
     unit = sys.argv[5]
     if unit not in ["tpm"]:
-        print "wrong unit"
-        sys.exit()
+        try:
+            target_p_file = sys.argv[5]
+            J = json.loads(open(target_p_file).read())
+            if J.has_key("uq_target"):
+                uq_target = J["uq_target"]
+            else:
+                print "bad target p config file"
+                sys.exit()
+            if method ==  "uq_SDscale_include_zero_revertLog2":
+                if J.has_key("uq_sd_scale_target"):
+                    uq_sd_scale_target = J["uq_sd_scale_target"]
+                else:
+                    print "bad target p config file"
+                    sys.exit()
+            if method ==  "uq_7550scale_include_zero_revertLog2":
+                if J.has_key("uq_75_50_scale_target"):
+                    uq_75_50_scale_target = J["uq_75_50_scale_target"]
+                else:
+                    print "bad target p config file"
+                    sys.exit()
+        except:
+            print "wrong unit"
+            sys.exit()
 
     outputMatrix_T = sys.argv[6]
     process (hub, dataset, samples, mode, pseudo, method, genes, outputMatrix_T, params)
