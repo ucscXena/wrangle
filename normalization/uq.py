@@ -5,9 +5,13 @@ import math, numpy
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + "/../xena/")
 import xenaAPI
 
-uq_target = 32.0
-uq_sd_scale_target = 2.5
-uq_75_50_scale_target = 1.25
+tpm_uq_target = 32.0
+tpm_uq_sd_scale_target = 2.5
+tpm_uq_75_50_scale_target = 1.25
+
+uq_target = tpm_uq_target
+uq_sd_scale_target = tpm_uq_sd_scale_target
+uq_75_50_scale_target = tpm_uq_75_50_scale_target
 
 def getIDs(geneListfile):
     fin = open(geneListfile, 'r')
@@ -138,15 +142,19 @@ def process (hub, dataset, samples, mode, pseudo, method, genes, outputMatrix_T,
 
 
 if __name__ == "__main__":
-    if len(sys.argv[:])!= 6:
+    if len(sys.argv[:])!= 7:
         print "python uq.py  dataset_json \
             whole_genome_gene_file(\"ALL\" or gene file) \
             parameter_file \
             method \
+            unit/target_p_file \
             outputMatrix_T\n"
         print "method: uq_include_zero_revertLog2"
         print "        uq_SDscale_include_zero_revertLog2"
         print "        uq_7550scale_include_zero_revertLog2"
+        print
+        print "unit: tpm"
+        print "      target_param_file"
         print
         sys.exit()
 
@@ -160,10 +168,11 @@ if __name__ == "__main__":
     else:
         samples = xenaAPI.dataset_samples(hub, dataset)
     mode = J["mode"]
-    if J.has_key("pseudo"):
-        pseudo = J["pseudo"]
+    if J.has_key("pseudocount"):
+        pseudo = J["pseudocount"]
     else:
-        pseudo = 0
+        print "no pseudocount specified"
+        sys.exit()
 
     genefile = sys.argv[2]
     if genefile == "ALL":
@@ -174,7 +183,11 @@ if __name__ == "__main__":
 
     #paramters read from file
     params = getParams(sys.argv[3])
-
+    goodSamples =[]
+    for sample in samples:
+        if sample in params.keys():
+            goodSamples.append(sample)
+    samples = goodSamples
     methodname = sys.argv[4]
     if methodname not in [
         "uq_include_zero_revertLog2",
@@ -191,5 +204,31 @@ if __name__ == "__main__":
         elif methodname ==    "uq_7550scale_include_zero_revertLog2":
             method = uq_7550scale_include_zero_revertLog2
 
-    outputMatrix_T = sys.argv[5]
+    unit = sys.argv[5]
+    if unit not in ["tpm"]:
+        try:
+            target_p_file = sys.argv[5]
+            J = json.loads(open(target_p_file).read())
+            if J.has_key("uq_target"):
+                uq_target = J["uq_target"]
+            else:
+                print "bad target p config file"
+                sys.exit()
+            if method ==  "uq_SDscale_include_zero_revertLog2":
+                if J.has_key("uq_sd_scale_target"):
+                    uq_sd_scale_target = J["uq_sd_scale_target"]
+                else:
+                    print "bad target p config file"
+                    sys.exit()
+            if method ==  "uq_7550scale_include_zero_revertLog2":
+                if J.has_key("uq_75_50_scale_target"):
+                    uq_75_50_scale_target = J["uq_75_50_scale_target"]
+                else:
+                    print "bad target p config file"
+                    sys.exit()
+        except:
+            print "wrong unit"
+            sys.exit()
+
+    outputMatrix_T = sys.argv[6]
     process (hub, dataset, samples, mode, pseudo, method, genes, outputMatrix_T, params)

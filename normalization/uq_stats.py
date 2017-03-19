@@ -26,12 +26,21 @@ def stats_uq_scale_include_zero_revertLog2 (values, pseudo = 0):
     pos = int(L * 0.75)
     uq = newValues[pos]
 
+    # might be single cell data, or data with HUGE drop off, sample should not be normalized
+    if uq == 0:
+        return None
+
     values = map(lambda x: math.log((x/uq + pseudo), 2) if not math.isnan(x) else x, values)
     values = filter (lambda x: not math.isnan(x), values)
     var = numpy.var(values)
     sd = math.sqrt(var)
     values.sort()
     L = len(values)
+
+    # might be single cell data, or data with HUGE drop off, sample should not be normalized
+    if sd == 0 or (values[int(L * 0.75)]- values[int(L * 0.5)]) == 0:
+        return None
+
     return {
         "uq": uq,
         "log2_uq": math.log(uq,2),
@@ -67,15 +76,19 @@ def getStats (hub, dataset, samples, mode, pseudo, genes, outputOffset):
             sample = sList[j]
             values = sample_values[j]
             ret = stats_uq_scale_include_zero_revertLog2(values, pseudo)
-            params[sample] = ret
-
-            print sample, ret["uq"], ret["log2_uq"], ret["log2_sd"], ret["log2_75_50"]
+            if ret:
+                params[sample] = ret
+                print sample, ret["uq"], ret["log2_uq"], ret["log2_sd"], ret["log2_75_50"]
+            else:
+                print sample, "with HUGO drop off, should not be normalized"
 
     #output
     fout_Offset = open(outputOffset, 'w')
-    header = params[samples[0]].keys()
+    header = params[params.keys()[0]].keys()
     fout_Offset.write("sample\t"+ string.join(header, '\t')+ '\n')
     for sample in samples:
+        if sample not in params:
+            continue
         sample_param =  params[sample]
         fout_Offset.write(sample)
         for key in header:
