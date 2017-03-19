@@ -87,7 +87,6 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_list, outpu
                 values = xenaAPI.Gene_values(hub, dataset, samples, gene)
             elif mode == "probe":
                 values = xenaAPI.Probe_values(hub, dataset, samples, gene)
-
             h_l_values = clean (values) # comparison larger cohort values
 
             rank, percentage =  rank_and_percentage (Nof1_value, h_l_values)
@@ -128,12 +127,12 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_list, outpu
             print
             print name +" ( n=", len(h_l_values), "):"
             print "rank:", rank
-            print map(lambda x: x[0], r_and_p_values)
+            #print map(lambda x: x[0], r_and_p_values)
 
             print "Rank %:", '{:.2f}%'.format(percentage)
 
-            for list in zip(itomic_Data.keys(), r_and_p_values):
-                print list[0], list[1][0], '{:.2f}%'.format(list[1][1])
+            #for list in zip(itomic_Data.keys(), r_and_p_values):
+            #    print list[0], list[1][0], '{:.2f}%'.format(list[1][1])
 
         outputList.append('{:.2f}'.format(Nof1_value))
         outputList.append('{:.2f}'.format(revert_Log2_theta(Nof1_value, Nof1_item["log2Theta"])))
