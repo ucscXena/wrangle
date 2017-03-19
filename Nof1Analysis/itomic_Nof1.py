@@ -80,9 +80,14 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_list, outpu
             dataset = item["dataset"]
             samples = item["samples"]
             name = item["name"]
+            mode = item["mode"]
             gene = string.upper(gene)
 
-            values = xenaAPI.Gene_values(hub, dataset, samples, gene)
+            if mode == "gene":
+                values = xenaAPI.Gene_values(hub, dataset, samples, gene)
+            elif mode == "probe":
+                values = xenaAPI.Probe_values(hub, dataset, samples, gene)
+
             h_l_values = clean (values) # comparison larger cohort values
 
             rank, percentage =  rank_and_percentage (Nof1_value, h_l_values)
