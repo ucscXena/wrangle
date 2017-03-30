@@ -77,7 +77,6 @@ def itomic_Nof1(Nof1_sample, Nof1_item, original_labels, geneMappping, external_
         rank, percentage =  rank_and_percentage (Nof1_value, itomic_Data.values())
         outputList.append('{:.2f}%'.format(percentage))
 
-
         for item in external_comparison_list:
             hub = item["hub"]
             dataset = item["dataset"]
@@ -109,19 +108,15 @@ def itomic_Nof1(Nof1_sample, Nof1_item, original_labels, geneMappping, external_
                 outputList.append('')
                 outputList.append('')
 
-            print
-            print name +" ( n=", len(h_l_values), "):"
-            print "rank:", rank
-            #print map(lambda x: x[0], r_and_p_values)
-
-            print "Rank %:", '{:.2f}%'.format(percentage)
-
-            #for list in zip(itomic_Data.keys(), r_and_p_values):
-            #    print list[0], list[1][0], '{:.2f}%'.format(list[1][1])
+        print
+        print Nof1_item["label"] +" ( n=", len(itomic_samples), "):"
+        print "rank:", rank
+        print "Rank %:", '{:.2f}%'.format(percentage)
 
         outputList.append('{:.2f}'.format(Nof1_value))
         outputList.append('{:.2f}'.format(revert_Log2_theta(Nof1_value, Nof1_item["log2Theta"])))
         fout.write(string.join(outputList,'\t') +'\n')
+
     fout.write("\n")
     fout.write("Rank % : percentile of samples with lower expression than sample of interest.\n")
     fout.write("Higher Rank %  means higher expression.\n")
