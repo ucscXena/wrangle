@@ -154,7 +154,6 @@ if __name__ == "__main__":
         print "        uq_7550scale_include_zero_revertLog2"
         print
         print "unit: tpm"
-        print "      target_param_file"
         print
         sys.exit()
 
