@@ -50,9 +50,11 @@ def filer_header (comparison_list, itomic_samples, Nof1_item, fout):
     fout.write(string.join(header2ndList,'\t') +'\n')
 
 
-def itomic_Nof1(Nof1_item, original_labels, geneMappping, external_comparison_list, outputfile):
-    itomic_samples = xenaAPI.dataset_samples(Nof1_item["hub"], Nof1_item["dataset"])
-    Nof1_sample = Nof1_item["samples"][0]
+def itomic_Nof1(Nof1_sample, Nof1_item, original_labels, geneMappping, external_comparison_list, outputfile):
+    if Nof1_item.has_key("samples"):
+        itomic_samples = Nof1_item["samples"]
+    else:
+        itomic_samples = xenaAPI.dataset_samples(Nof1_item["hub"], Nof1_item["dataset"])
 
     #file header output
     fout = open(outputfile,'w')
