@@ -23,14 +23,15 @@ def Nof1_output (Nof1_sample, original_label, gene, itomic_Data, Nof1_theta):
 
     print "log2(TPM):", Nof1_value, "TPM:", '{:.2f}'.format(Nof1_TPM)
 
-def filer_header (comparison_list, itomic_samples, Nof1_sample, fout):
+def filer_header (comparison_list, itomic_samples, Nof1_item, fout):
     headerList =["label","gene"]
     header2ndList =["",""]
-    headerList.append('ITOMIC (n=' + str(len(itomic_samples))+")")
+    headerList.append(Nof1_item["label"]+ ' (n=' + str(len(itomic_samples))+")")
     header2ndList.append("Rank %")
 
     for item in comparison_list:
-        headerList.append("ITOMIC samples vs. " +
+        headerList.append(Nof1_item["label"]+ " samples (n=" + str(len(itomic_samples)) + ')' +
+            "vs. " +
             item["label"] + ' (n=' + str(len(item["samples"]))+")") #p
         headerList.append("") # t
         headerList.append("") # mean itomic
@@ -41,6 +42,7 @@ def filer_header (comparison_list, itomic_samples, Nof1_sample, fout):
         header2ndList.append("mean itomic")
         header2ndList.append("mean " + item["label"])
 
+    Nof1_sample = Nof1_item["samples"][0]
     headerList.extend([Nof1_sample, Nof1_sample])
     header2ndList.extend(["log2(TPM)","TPM"])
 
@@ -54,7 +56,7 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, external_comparison_li
 
     #file header output
     fout = open(outputfile,'w')
-    filer_header (external_comparison_list, itomic_samples, Nof1_sample, fout)
+    filer_header (external_comparison_list, itomic_samples, Nof1_item, fout)
 
     pDic = {} # pvalue collection
     for original_label in original_labels:
