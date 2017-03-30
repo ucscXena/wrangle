@@ -31,7 +31,7 @@ def filer_header (comparison_list, itomic_samples, Nof1_item, fout):
 
     for item in comparison_list:
         headerList.append(Nof1_item["label"]+ " samples (n=" + str(len(itomic_samples)) + ')' +
-            "vs. " +
+            " vs. " +
             item["label"] + ' (n=' + str(len(item["samples"]))+")") #p
         headerList.append("") # t
         headerList.append("") # mean itomic
