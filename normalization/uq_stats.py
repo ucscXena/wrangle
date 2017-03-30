@@ -101,7 +101,7 @@ if __name__ == "__main__":
     if len(sys.argv[:])!= 4:
         print "python uq_stats.py dataset_json \
             normalization_gene_file(first_column_gene) \
-            outputOffset\n"
+            output_stats\n"
         sys.exit()
 
     jsonFile = sys.argv[1]
