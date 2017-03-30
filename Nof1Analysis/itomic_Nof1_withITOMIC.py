@@ -54,7 +54,7 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, external_comparison_li
 
     #file header output
     fout = open(outputfile,'w')
-    filer_header (comparison_list, itomic_samples, Nof1_sample, fout) #############
+    filer_header (external_comparison_list, itomic_samples, Nof1_sample, fout)
 
     pDic = {} # pvalue collection
     for original_label in original_labels:
