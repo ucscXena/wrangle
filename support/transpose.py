@@ -26,9 +26,11 @@ def process (infile, outfile):
         os.system(command)
 
         fin=open(tmpinfile,'rU')
-        a = izip(*csv.reader(fin,delimiter="\t"))
+        a = izip(*csv.reader(fin, delimiter="\t"))
         fin.close()
-        csv.writer(fout,delimiter="\t").writerows(a)
+        csv.writer(fout, delimiter="\t", lineterminator="\n").writerows(a)
+        os.system("rm -rf " + tmpinfile)
+
     fout.close()
     os.system("rm -rf " + tmpFile)
 
