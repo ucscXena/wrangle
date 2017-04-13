@@ -17,9 +17,10 @@ def process (infile, outfile):
     k = 200
     count = 0
     tmpFile = str(uuid.uuid4())
+    os.system("mkdir " + tmpFile)
     for i in range (0, totalN, k):
         count = count + 1
-        tmpinfile = tmpFile + "." + str(count)
+        tmpinfile = tmpFile + "/." + str(count)
         start = i + 1 #linux cut
         command = "cut -f " + str(start) + "-" + str(start+k-1) +" " + infile + " > " + tmpinfile
         os.system(command)
@@ -29,7 +30,7 @@ def process (infile, outfile):
         fin.close()
         csv.writer(fout,delimiter="\t").writerows(a)
     fout.close()
-    os.system("rm " + tmpFile + ".*")
+    os.system("rm -rf " + tmpFile)
 
 if len(sys.argv[:])!= 3:
     print "python transpose.py fin fout"
