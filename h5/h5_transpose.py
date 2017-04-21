@@ -1,6 +1,6 @@
 import h5py
 import string, sys
-import numpy
+import itertools
 
 def print_attrs(name, obj):
     print name, len(obj)
@@ -37,22 +37,17 @@ def transpose_h5 (data, indices, indptr, new_indptr_size):
             new_indices[j].append(i)
 
 
-    data =[]
-    indices =[]
-    indptr = []
-    index = 0
-    for i in range (0, new_indptr_size):
-        if i % 500 == 0:
-            print "new", i
-        indptr.append(index)
-        index = index + len(new_data[i])
-        data.extend(new_data[i])
-        new_data[i]=0
-        indices.extend(new_indices[i])
-        new_indices[i]=0
-    indptr.append(index)
+    new_indptr =[]
+    total = 0
+    length_list = map(lambda x: len(x), new_data)
+    for i in range (0, len(length_list)):
+        new_indptr.append(total)
+        total = total + length_list[i]
+    new_indptr.append(total)
+    return [list(itertools.chain.from_iterable(new_data)),
+        list(itertools.chain.from_iterable(new_indices)),
+        new_indptr]
 
-    return [data, indices, indptr]
 
 def output_h5 (output, group, data, indices, indptr, shape, genes, gene_names, barcodes):
     f = h5py.File(output,'w')
