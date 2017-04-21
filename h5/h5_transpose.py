@@ -26,7 +26,8 @@ def transpose_h5 (data, indices, indptr, new_indptr_size):
 
     N = len(indptr) -1 ### ?
     for i in range (0, N):
-        print i
+        if i % 500 == 0:
+            print "old", i
         indices_range = indices[indptr[i]:indptr[i+1]]
         data_range = data[indptr[i]:indptr[i+1]]
         for index in range (0, len(indices_range)):
@@ -40,7 +41,8 @@ def transpose_h5 (data, indices, indptr, new_indptr_size):
     indptr = []
     index = 0
     for i in range (0, new_indptr_size):
-        print "new", i
+        if i % 500 == 0:
+            print "new", i
         indptr.append(index)
         index = index + len(new_data[i])
         data.extend(new_data[i])
