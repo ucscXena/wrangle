@@ -28,11 +28,11 @@ def output_to_mtx (output, colN, indices, data):
             fout.write(str(row)+'\t'+str(col)+'\t'+str(value)+'\n')
     fout.close()
 
-def h5_T_to_xena (output, data, indices, indptr, new_indptr_size, genes, barcodes):
+def h5_T_to_xena (output, data, indices, indptr, counter_indptr_size, genes, barcodes):
     new_data= []
     new_indices= []
 
-    for i in range (0, new_indptr_size):
+    for i in range (0, counter_indptr_size):
         new_data.append([])
         new_indices.append([])
 
@@ -58,7 +58,7 @@ def h5_T_to_xena (output, data, indices, indptr, new_indptr_size, genes, barcode
     for i in range (0, N):
         l.append(0)
 
-    for i in range (0, new_indptr_size):
+    for i in range (0, counter_indptr_size):
         gene = genes[i]
         data_range = new_data[i]
         indices_range = new_indices[i]
@@ -71,7 +71,7 @@ def h5_T_to_xena (output, data, indices, indptr, new_indptr_size, genes, barcode
     fout.close()
 
 
-def h5_to_xena (output, data, indices, indptr, genes, barcodes):
+def h5_to_xena (output, data, indices, indptr, counter_indptr_size, genes, barcodes):
     fout =open(output,'w')
     fout.write("sample\t"+string.join(barcodes,'\t')+'\n')
 
@@ -83,7 +83,7 @@ def h5_to_xena (output, data, indices, indptr, genes, barcodes):
     N = len(indptr) -1 ### ?
 
     l=[]
-    for i in range (0, N):
+    for i in range (0, counter_indptr_size):
         l.append(0)
 
     for i in range (0, N):
@@ -123,8 +123,8 @@ print "col", colN
 
 assert(len(indptr) -1 == colN)
 
-new_indptr_size = rowN
-h5_to_xena (output, data, indices, indptr, new_indptr_size, genes, barcodes)
+counter_indptr_size = rowN
+h5_to_xena (output, data, indices, indptr, counter_indptr_size, genes, barcodes)
 
 
 

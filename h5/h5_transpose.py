@@ -36,6 +36,7 @@ def transpose_h5 (data, indices, indptr, new_indptr_size):
             new_data[j].append(value)
             new_indices[j].append(i)
 
+
     data =[]
     indices =[]
     indptr = []
@@ -57,8 +58,8 @@ def output_h5 (output, group, data, indices, indptr, shape, genes, gene_names, b
     f = h5py.File(output,'w')
     g = f.create_group(group)
     g.create_dataset('data', data= data, compression="gzip")
-    g.create_dataset('indptr',data=indptr, compression="gzip")
-    g.create_dataset('indices',data=indices, compression="gzip")
+    g.create_dataset('indptr',data= indptr, compression="gzip")
+    g.create_dataset('indices',data= indices, compression="gzip")
     g.create_dataset('genes', data = genes, compression="gzip")
     g.create_dataset('gene_names', data = gene_names, compression="gzip")
     g.create_dataset('barcodes', data = barcodes, compression="gzip")
