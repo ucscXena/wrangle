@@ -59,7 +59,7 @@ def h5_T_to_xena (output, data, indices, indptr, new_indptr_size, genes, barcode
         l.append(0)
 
     for i in range (0, new_indptr_size):
-        fout.write(genes[i])
+        gene = genes[i]
         data_range = new_data[i]
         indices_range = new_indices[i]
         values = l[:]
@@ -67,13 +67,40 @@ def h5_T_to_xena (output, data, indices, indptr, new_indptr_size, genes, barcode
             index = indices_range[j]
             value = data_range[j]
             values[index] = value
-        values = map(lambda x: fout.write('\t'+str(x)), values)
-        fout.write('\n')
+        fout.write(gene+'\t'+string.join(map(lambda x: str(x), values),'\t')+'\n')
+    fout.close()
+
+
+def h5_to_xena (output, data, indices, indptr, genes, barcodes):
+    fout =open(output,'w')
+    fout.write("sample\t"+string.join(barcodes,'\t')+'\n')
+
+    #the standard CSC representation
+    #where the row indices for column i are stored in indices[indptr[i]:indptr[i+1]] and
+    #their corresponding values are stored in data[indptr[i]:indptr[i+1]].
+    #If the shape parameter is not supplied, the matrix dimensions are inferred from the index arrays.
+
+    N = len(indptr) -1 ### ?
+
+    l=[]
+    for i in range (0, N):
+        l.append(0)
+
+    for i in range (0, N):
+        gene = genes[i]
+        indices_range = indices[indptr[i]:indptr[i+1]]
+        data_range = data[indptr[i]:indptr[i+1]]
+        values = l[:]
+        for j in range (0, len(indices_range)):
+            index = indices_range[j]
+            value = data_range[j]
+            values[index] = value
+        fout.write(gene+'\t'+string.join(map(lambda x: str(x), values),'\t')+'\n')
     fout.close()
 
 
 if __name__ == "__main__" and len(sys.argv[:])!=4:
-    print "pyton h5_xena_T.py h5_input group_name tsv_output"
+    print "pyton h5_xena.py h5_input group_name tsv_output"
     sys.exit()
 
 matrix_h5 = sys.argv[1]

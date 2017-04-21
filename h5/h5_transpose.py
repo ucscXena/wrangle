@@ -26,6 +26,7 @@ def transpose_h5 (data, indices, indptr, new_indptr_size):
 
     N = len(indptr) -1 ### ?
     for i in range (0, N):
+        print i
         indices_range = indices[indptr[i]:indptr[i+1]]
         data_range = data[indptr[i]:indptr[i+1]]
         for index in range (0, len(indices_range)):
@@ -64,7 +65,7 @@ def output_h5 (output, group, data, indices, indptr, shape, genes, gene_names, b
 
 
 if __name__ == "__main__" and len(sys.argv[:])!=4:
-    print "pyton h5_xena_T.py h5_input group_name tsv_output"
+    print "pyton h5_transpose.py h5_input group_name h5_output"
     sys.exit()
 
 matrix_h5 = sys.argv[1]
