@@ -1,6 +1,7 @@
 import h5py
 import string, sys
 import itertools
+import numpy as np
 
 def print_attrs(name, obj):
     print name, len(obj)
@@ -13,18 +14,20 @@ def get_h5_info (h5_file):
 def transpose_h5 (data, indices, indptr, new_indptr_size):
     new_data= []
     new_indices= []
-    new_indptr = []
+    new_indptr = np.zeros(new_indptr_size, dtype=int)
+
+    N = len(indptr) -1 ### ?
 
     for i in range (0, new_indptr_size):
-        new_data.append([])
-        new_indices.append([])
+        new_data.append( np.empty(N, dtype=int))
+        new_indices.append( np.empty(N, dtype=int))
 
     #the standard CSC representation
     #where the row indices for column i are stored in indices[indptr[i]:indptr[i+1]] and
     #their corresponding values are stored in data[indptr[i]:indptr[i+1]].
     #If the shape parameter is not supplied, the matrix dimensions are inferred from the index arrays.
 
-    N = len(indptr) -1 ### ?
+
     for i in range (0, N):
         if i % 500 == 0:
             print "old", i
@@ -33,20 +36,21 @@ def transpose_h5 (data, indices, indptr, new_indptr_size):
         for index in range (0, len(indices_range)):
             j = indices_range[index]
             value = data_range[index]
-            new_data[j].append(value)
-            new_indices[j].append(i)
+            new_data[j][new_indptr[j]] = value
+            new_indices[j][new_indptr[j]] = i
+            new_indptr[j] += 1
 
+    for i in range (0, len(new_indptr)):
+        new_data[i].resize(new_indptr[i])
+        new_indices[i].resize(new_indptr[i])
 
-    new_indptr =[]
     total = 0
-    length_list = map(lambda x: len(x), new_data)
-    for i in range (0, len(length_list)):
-        new_indptr.append(total)
-        total = total + length_list[i]
-    new_indptr.append(total)
-    return [list(itertools.chain.from_iterable(new_data)),
-        list(itertools.chain.from_iterable(new_indices)),
-        new_indptr]
+    for i in range (0, len(new_indptr)):
+        new_indptr[i] = total
+        total = total + new_indptr[i]
+    new_indptr[i] = total
+
+    return [np.concatenate(new_data, axis=0 ), np.concatenate(new_indices, axis=0 ), new_indptr]
 
 
 def output_h5 (output, group, data, indices, indptr, shape, genes, gene_names, barcodes):
