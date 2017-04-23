@@ -1,6 +1,6 @@
 import h5py
 import string, sys
-import numpy
+import numpy as np
 
 def print_attrs(name, obj):
     print name, len(obj)
@@ -31,38 +31,43 @@ def output_to_mtx (output, colN, indices, data):
 def h5_T_to_xena (output, data, indices, indptr, counter_indptr_size, genes, barcodes):
     new_data= []
     new_indices= []
+    new_indptr = np.zeros(counter_indptr_size, dtype=int)
+
+    N = len(indptr) -1 ### ?
 
     for i in range (0, counter_indptr_size):
-        new_data.append([])
-        new_indices.append([])
+        new_data.append( np.empty(N, dtype=int))
+        new_indices.append( np.empty(N, dtype=int))
 
     #the standard CSC representation
     #where the row indices for column i are stored in indices[indptr[i]:indptr[i+1]] and
     #their corresponding values are stored in data[indptr[i]:indptr[i+1]].
     #If the shape parameter is not supplied, the matrix dimensions are inferred from the index arrays.
 
-    N = len(indptr) -1 ### ?
     for i in range (0, N):
+        if i % 500 == 0:
+            print "old", i
         indices_range = indices[indptr[i]:indptr[i+1]]
         data_range = data[indptr[i]:indptr[i+1]]
         for index in range (0, len(indices_range)):
             j = indices_range[index]
             value = data_range[index]
-            new_data[j].append(value)
-            new_indices[j].append(i)
+            new_data[j][new_indptr[j]] = value
+            new_indices[j][new_indptr[j]] = i
+            new_indptr[j] += 1
+
+    for i in range (0, len(new_indptr)):
+        new_data[i].resize(new_indptr[i])
+        new_indices[i].resize(new_indptr[i])
 
     fout =open(output,'w')
     fout.write("sample\t"+string.join(barcodes,'\t')+'\n')
-
-    l=[]
-    for i in range (0, N):
-        l.append(0)
 
     for i in range (0, counter_indptr_size):
         gene = genes[i]
         data_range = new_data[i]
         indices_range = new_indices[i]
-        values = l[:]
+        values = np.zeros(N, dtype=int)
         for j in range (0, len(indices_range)):
             index = indices_range[j]
             value = data_range[j]
@@ -82,15 +87,11 @@ def h5_to_xena (output, data, indices, indptr, counter_indptr_size, genes, barco
 
     N = len(indptr) -1 ### ?
 
-    l=[]
-    for i in range (0, counter_indptr_size):
-        l.append(0)
-
     for i in range (0, N):
         gene = genes[i]
         indices_range = indices[indptr[i]:indptr[i+1]]
         data_range = data[indptr[i]:indptr[i+1]]
-        values = l[:]
+        values = np.zeros(counter_indptr_size, dtype=int)
         for j in range (0, len(indices_range)):
             index = indices_range[j]
             value = data_range[j]
@@ -124,8 +125,8 @@ print "col", colN
 assert(len(indptr) -1 == colN)
 
 counter_indptr_size = rowN
-h5_to_xena (output, data, indices, indptr, counter_indptr_size, genes, barcodes)
-
+#h5_to_xena (output, data, indices, indptr, counter_indptr_size, genes, barcodes)
+h5_T_to_xena (output, data, indices, indptr, counter_indptr_size, genes, barcodes)
 
 
 

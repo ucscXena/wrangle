@@ -38,17 +38,17 @@ def transpose_h5 (data, indices, indptr, new_indptr_size):
             value = data_range[index]
             new_data[j][new_indptr[j]] = value
             new_indices[j][new_indptr[j]] = i
-            new_indptr[j] += 1
+            new_indptr[j] = new_indptr[j] + 1
 
-    for i in range (0, len(new_indptr)):
-        new_data[i].resize(new_indptr[i])
-        new_indices[i].resize(new_indptr[i])
+    for i in range (0, new_indptr_size):
+        new_data[i] = new_data[i][:new_indptr[i]]
+        new_indices[i] = new_indices[i][:new_indptr[i]]
 
     total = 0
-    for i in range (0, len(new_indptr)):
-        new_indptr[i] = total
+    for i in range (0, new_indptr_size):
         total = total + new_indptr[i]
-    new_indptr[i] = total
+        new_indptr[i] = total
+    new_indptr = np.insert(new_indptr,0,0)
 
     return [np.concatenate(new_data, axis=0 ), np.concatenate(new_indices, axis=0 ), new_indptr]
 
