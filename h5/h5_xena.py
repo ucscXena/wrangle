@@ -125,8 +125,8 @@ print "col", colN
 assert(len(indptr) -1 == colN)
 
 counter_indptr_size = rowN
-#h5_to_xena (output, data, indices, indptr, counter_indptr_size, genes, barcodes)
-h5_T_to_xena (output, data, indices, indptr, counter_indptr_size, genes, barcodes)
+h5_to_xena (output, data, indices, indptr, counter_indptr_size, genes, barcodes)
+#h5_T_to_xena (output, data, indices, indptr, counter_indptr_size, genes, barcodes)
 
 
 
