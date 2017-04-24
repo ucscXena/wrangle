@@ -59,7 +59,6 @@ def transpose_h5 (data, indices, indptr, new_indptr_size):
         return_indices[new_indptr[i]: new_indptr[i+1]]=new_indices[i]
         new_indices[i] = np.array(0)
 
-    #return [np.concatenate(new_data, axis=0 ), np.concatenate(new_indices, axis=0 ), new_indptr]
     return [return_data, return_indices, new_indptr]
 
 def output_h5 (output, group, data, indices, indptr, shape, genes, gene_names, barcodes):
