@@ -50,8 +50,17 @@ def transpose_h5 (data, indices, indptr, new_indptr_size):
         new_indptr[i] = total
     new_indptr = np.insert(new_indptr,0,0)
 
-    return [np.concatenate(new_data, axis=0 ), np.concatenate(new_indices, axis=0 ), new_indptr]
+    # due to memory size, build data, indices and empty lists one by one
+    return_data = np.array(data.size, dtype=int)
+    return_indices = np.array(data.size, dtype=int)
+    for i in range (0, new_indptr_size):
+        return_data[new_indptr[i]: new_indptr[i+1]]=new_data[i]
+        new_data[i] = np.empty(0)
+        return_indices[new_indptr[i]: new_indptr[i+1]]=new_indices[i]
+        new_indices[i] = np.empty(0)
 
+    #return [np.concatenate(new_data, axis=0 ), np.concatenate(new_indices, axis=0 ), new_indptr]
+    return [return_data, return_indices, new_indptr]
 
 def output_h5 (output, group, data, indices, indptr, shape, genes, gene_names, barcodes):
     f = h5py.File(output,'w')
