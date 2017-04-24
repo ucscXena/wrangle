@@ -96,7 +96,11 @@ def h5_to_xena (output, data, indices, indptr, counter_indptr_size, genes, barco
             index = indices_range[j]
             value = data_range[j]
             values[index] = value
-        fout.write(gene+'\t'+string.join(map(lambda x: str(x), values),'\t')+'\n')
+        fout.write(gene+'\t')
+        print values
+        np.savetxt(fout, values[:counter_indptr_size-1], fmt='%i', delimiter='\t', newline='\t')
+        fout.write(str(values[-1])+'\n')
+        #fout.write(gene+'\t'+string.join(map(lambda x: str(x), values),'\t')+'\n')
     fout.close()
 
 
