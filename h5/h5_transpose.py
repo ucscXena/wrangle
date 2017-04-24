@@ -51,13 +51,13 @@ def transpose_h5 (data, indices, indptr, new_indptr_size):
     new_indptr = np.insert(new_indptr,0,0)
 
     # due to memory size, build data, indices and empty lists one by one
-    return_data = np.array(data.size, dtype=int)
-    return_indices = np.array(data.size, dtype=int)
+    return_data = np.zeros(data.size, dtype=int)
+    return_indices = np.zeros(data.size, dtype=int)
     for i in range (0, new_indptr_size):
         return_data[new_indptr[i]: new_indptr[i+1]]=new_data[i]
-        new_data[i] = np.empty(0)
+        new_data[i] = np.array(0)
         return_indices[new_indptr[i]: new_indptr[i+1]]=new_indices[i]
-        new_indices[i] = np.empty(0)
+        new_indices[i] = np.array(0)
 
     #return [np.concatenate(new_data, axis=0 ), np.concatenate(new_indices, axis=0 ), new_indptr]
     return [return_data, return_indices, new_indptr]
