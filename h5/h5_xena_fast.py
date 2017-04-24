@@ -48,6 +48,6 @@ for i in range(0, N, K):
     end = min(i+K,N)
     output = tmpDir +"/" + str(count)
     print start, end
-    os.system("python h5_xena.py " + matrix_h5 + ' ' + group +' ' + output +' ' +str(start)+' '+str(end) +"&")
+    os.system("python " + os.path.dirname(os.path.realpath(__file__)) + "/h5_xena.py " + matrix_h5 + ' ' + group +' ' + output +' ' +str(start)+' '+str(end) +"&")
 
 print "outputs are in directory", tmpDir, "combine when all done"
