@@ -1,6 +1,5 @@
 import h5py
-import string, sys
-import itertools
+import sys
 import numpy as np
 
 def print_attrs(name, obj):
@@ -26,7 +25,6 @@ def transpose_h5 (data, indices, indptr, new_indptr_size):
     #where the row indices for column i are stored in indices[indptr[i]:indptr[i+1]] and
     #their corresponding values are stored in data[indptr[i]:indptr[i+1]].
     #If the shape parameter is not supplied, the matrix dimensions are inferred from the index arrays.
-
 
     for i in range (0, N):
         if i % 500 == 0:
