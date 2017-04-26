@@ -51,3 +51,5 @@ for i in range(0, N, K):
     os.system("python " + os.path.dirname(os.path.realpath(__file__)) + "/h5_xena.py " + matrix_h5 + ' ' + group +' ' + output +' ' +str(start)+' '+str(end) +"&")
 
 print "outputs are in directory", tmpDir, "combine when all done"
+print ""
+print " cat $(ls -v dir/*) > tsv_output"
