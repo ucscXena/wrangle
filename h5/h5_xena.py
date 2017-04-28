@@ -1,7 +1,7 @@
+import string, sys
 import h5py
-import string
 import numpy as np
-import sys
+
 
 #output to mtx format -- still need to add header lines
 def output_to_mtx (output, colN, indices, data):
@@ -91,8 +91,9 @@ def h5_to_xena (output, data, indices, indptr, counter_indptr_size, genes, barco
         fout.write(gene+'\t'+string.join(map(lambda x: str(x), values),'\t')+'\n')
     fout.close()
 
-if __name__ == "__main__" and len(sys.argv[:])!=6:
+if __name__ == "__main__" and len(sys.argv[:])!= 4 and len(sys.argv[:])!= 6:
     print "pyton h5_xena.py h5_input group_name tsv_output start_list(inclusive) end_list(exlusive)\n"
+    print "pyton h5_xena.py h5_input group_name tsv_output\n"
     sys.exit()
 
 matrix_h5 = sys.argv[1]
@@ -110,13 +111,17 @@ shape = hF[group + "/shape"]
 rowN = shape[0]
 colN = shape[1]
 
-start = int(sys.argv[4])
-end = int(sys.argv[5])
-
-assert(len(indptr) -1 == colN)
-assert (end < len(indptr))
-
+assert(len(indptr) - 1 == colN)
 counter_indptr_size = rowN
+
+#optional start and end
+if len(sys.argv[:]) == 6:
+    start = int(sys.argv[4])
+    end = int(sys.argv[5])
+    assert (end < len(indptr))
+else:
+    start = 0
+    end = len(indptr) -1 ### total
 
 h5_to_xena (output, data, indices, indptr, counter_indptr_size, genes, barcodes, start, end)
 
