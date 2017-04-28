@@ -1,5 +1,5 @@
 import h5py
-import string, sys
+import sys
 
 def print_attrs(name, obj):
     print name, len(obj), obj
