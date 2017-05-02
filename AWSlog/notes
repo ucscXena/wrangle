@@ -1,6 +1,7 @@
 aws s3 sync s3://xenalog/AWSLogs/659676827912/elasticloadbalancing/us-east-1/2017/03 03
 
-cat */*.log > LOG
-cut -d " " -f 1,2,3,8,9,10,11,13 LOG |grep -v "404 404" |grep -e "data" > data_log
-cut -d " " -f 1,2,3,8,9,10,11,13 LOG |grep -v "404 404" |grep -e "download" > download_log
-grep -v data LOG | grep -v download > bots_log
+python s3logcleanup.py
+
+cat */cleanMerge > allclean
+
+python script.py
