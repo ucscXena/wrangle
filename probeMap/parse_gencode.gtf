@@ -1,3 +1,5 @@
+# gencode.v23.annotation.transcript.probemap
+
 grep $'\t'transcript$'\t' gencode.v23.annotation.gtf |awk 'BEGIN {FS="\t"; OFS="\t"} {split($9, a, ";"); split(a[2], b, " "); split(a[5], c, " "); print substr(b[2],2, length(b[2])-2),substr(c[2],2, length(c[2])-2), $1,$4,$5,$7}' > gencode.v23.annotation.transcript.probemap
 
 cat header gencode.v23.annotation.transcript.probemap > new
