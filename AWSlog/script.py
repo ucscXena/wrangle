@@ -16,7 +16,7 @@ while 1:
 		t1 = t1 + n1
 		t2 = t2 + n2
 	except:
-		print data
+		continue
 fin.close()
 print "IN", (t1)/1e9,"GB"
 print "OUT", t2/1e9, "GB"

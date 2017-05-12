@@ -6,7 +6,7 @@ def removeVeryCloseSameIPSameFile (logfile, cleanedlog):
 	# collect info
 	fin = open(logfile, 'r')
 	time_dic = {} #key = ip_target, values: timestamp
-	
+
 	for line in fin.readlines():
 		data = string.split(line, ' ')
 		try:
@@ -38,12 +38,12 @@ def removeVeryCloseSameIPSameFile (logfile, cleanedlog):
 			d1 = dateutil.parser.parse(time_list[i])
 			d2 = dateutil.parser.parse(time_list[i+1])
 			d = d2 - d1
-			if (d.total_seconds() < 60.0): 
+			if (d.total_seconds() < 60.0):
 				if time_list[i+1] not in bad_line_dic:
 					bad_line_dic[time_list[i+1]] = [key]
 				else:
 					bad_line_dic[time_list[i+1]].append(key)
-	
+
 	#remove bad lines
 	fin = open(logfile, 'r')
 	fout = open(cleanedlog, 'w')
@@ -65,8 +65,8 @@ def process (indir):
 	for root, dirs, files in os.walk(indir):
 		for dir in dirs:
 			dirpath = root+'/'+dir
-			mergedlog = root+'/'+dir + '/rawMerge'  
-			cleanedlog = root+'/'+dir + '/cleanMerge'  
+			mergedlog = root+'/'+dir + '/rawMerge'
+			cleanedlog = root+'/'+dir + '/cleanMerge'
 			print "clean", dirpath
 			os.system("cat " + dirpath + "/*.log | LC_ALL='C' sort > " + mergedlog)
 			removeVeryCloseSameIPSameFile (mergedlog, cleanedlog)
