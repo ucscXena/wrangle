@@ -102,7 +102,7 @@ def process (indir):
 			unifyLog(mergedlog, unifiedlog)
 			os.system("LC_ALL='C' sort " + unifiedlog + " > " + sortedlog)
 			removeVeryCloseSameIPSameFile (sortedlog, cleanedlog)
-			os.system("rm " + string.join([mergedlog, unifiedlog, sortedlog], ' '))
+			os.system("rm " + string.join([mergedlog, unifiedlog], ' '))
 
 if len(sys.argv[:]) != 2 :
 	print "python s2logcleanup.py directory_name"
