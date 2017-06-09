@@ -3,10 +3,11 @@ import scipy.stats
 import numpy
 import statsmodels.sandbox.stats.multicomp
 from Nof1_functions import *
+import xenaPython
 
 #itomic specific
 def get_itomic_Data (gene, hub, dataset, samples):
-    values= xenaAPI.Probe_values(hub, dataset, samples, gene)
+    values= xena.xenaAPI.Probe_values(hub, dataset, samples, gene)
     itomic_Data =dict(zip(samples, values))
     return itomic_Data
 
@@ -53,7 +54,7 @@ def itomic_Nof1(Nof1_sample, Nof1_item, original_labels, geneMappping, external_
     if Nof1_item.has_key("samples"):
         itomic_samples = Nof1_item["samples"]
     else:
-        itomic_samples = xenaAPI.dataset_samples(Nof1_item["hub"], Nof1_item["dataset"])
+        itomic_samples = xena.xenaAPI.dataset_samples(Nof1_item["hub"], Nof1_item["dataset"])
 
     #file header output
     fout = open(outputfile,'w')
@@ -86,9 +87,9 @@ def itomic_Nof1(Nof1_sample, Nof1_item, original_labels, geneMappping, external_
             gene = string.upper(gene)
 
             if mode == "gene":
-                values = xenaAPI.Gene_values(hub, dataset, samples, gene)
+                values = xena.xenaAPI.Gene_values(hub, dataset, samples, gene)
             elif mode == "probe":
-                values = xenaAPI.Probe_values(hub, dataset, samples, gene)
+                values = xena.xenaAPI.Probe_values(hub, dataset, samples, gene)
             h_l_values = clean (values) # comparison larger cohort values
 
             # log2TPM statistics
