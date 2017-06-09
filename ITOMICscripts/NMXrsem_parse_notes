@@ -1,0 +1,28 @@
+cut -f 11,21 14/14-5-B2.rsem.txt |sort|uniq > > 14/14-5-B2_EXP_G_TPM
+
+# add header
+id sampleid
+
+NMXrsem_format
+     1	'Isoform'
+     2	 'Chromosome'
+     3	 'Strand'
+     4	 'txStart'
+     5	 'txEnd'
+     6	 'cdsStart'
+     7	 'cdsEnd'
+     8	 'exonCount'
+     9	 'exonStarts'
+    10	 'exonEnds'
+    11	 'proteinID/Hugo'
+    12	 'alignID'
+    13	 'Canonical'
+    14	 'length'
+    15	 'effective_length'
+    16	 'expected_count'
+    17	 'TPM'
+    18	 'FPKM'
+    19	 'IsoPct'
+    20	 'gene_expected_count'
+    21	'gene_TPM'
+    22	'gene_FPKM'

@@ -1,0 +1,3 @@
+python ~/cgDataNew/normalization/uq_stats.py latest_itomic.json ~/cgDataNew/xena/gene_lists/GTEX_TCGA_genes latest_itomic_stats
+
+python ~/cgDataNew/normalization/uq.py latest_itomic.json ALL latest_itomic_stats uq_7550scale_include_zero_revertLog2 tpm latest_itomic_uq_7550
