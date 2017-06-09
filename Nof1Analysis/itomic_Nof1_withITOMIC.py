@@ -44,7 +44,7 @@ def filer_header (comparison_list, itomic_samples, Nof1_item, Nof1_sample, fout)
         header2ndList.append("mean " + item["label"])
 
     headerList.extend([Nof1_sample, Nof1_sample])
-    header2ndList.extend(["log2(TPM)","TPM"])
+    header2ndList.extend(["log2(TPM-uq)","TPM-uq"])
 
     fout.write(string.join(headerList,'\t') +'\n')
     fout.write(string.join(header2ndList,'\t') +'\n')
