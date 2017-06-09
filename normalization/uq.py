@@ -1,9 +1,7 @@
 import string, sys, os
 import json
 import math, numpy
-
-sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + "/../xena/")
-import xenaAPI
+import xenaPython as xena
 
 tpm_uq_target = 32.0
 tpm_uq_sd_scale_target = 2.5
@@ -104,7 +102,7 @@ def process (hub, dataset, samples, mode, pseudo, method, genes, outputMatrix_T,
 
     #convert data
     if len(genes)==0:
-        probes = xenaAPI.dataset_fields(hub, dataset)
+        probes = xena.xenaAPI.dataset_fields(hub, dataset)
         probes.remove("sampleID")
     else:
         probes = genes
@@ -116,9 +114,9 @@ def process (hub, dataset, samples, mode, pseudo, method, genes, outputMatrix_T,
         for i in range (0, len(probes), gN):
             pList = probes[i:i+gN]
             if mode =="probe":
-                values = xenaAPI.Probes_values (hub, dataset, sList, pList)
+                values = xena.xenaAPI.Probes_values (hub, dataset, sList, pList)
             else:
-                values = xenaAPI.Genes_values (hub, dataset, sList, pList)
+                values = xena.xenaAPI.Genes_values (hub, dataset, sList, pList)
             for m in range (0, len(values)):
                 if len(values[m]) == 0:
                     values[m] = ['nan'] * len(sList)
@@ -165,7 +163,7 @@ if __name__ == "__main__":
     if J.has_key("samples"):
         samples = J["samples"]
     else:
-        samples = xenaAPI.dataset_samples(hub, dataset)
+        samples = xena.xenaAPI.dataset_samples(hub, dataset)
     mode = J["mode"]
     if J.has_key("pseudocount"):
         pseudo = J["pseudocount"]
