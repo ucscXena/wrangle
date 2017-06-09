@@ -2,8 +2,7 @@ import string, sys, os
 import json
 import math, numpy
 
-sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)) + "/../xena/")
-import xenaAPI
+import xenaPython as xena
 
 def getIDs(geneListfile):
     fin = open(geneListfile, 'r')
@@ -60,9 +59,9 @@ def getStats (hub, dataset, samples, mode, pseudo, genes, outputOffset):
         for i in range (0, len(genes), gN):
             pList = genes[i:i+gN]
             if mode == "probe":
-                values = xenaAPI.Probes_values (hub, dataset, sList, pList)
+                values = xena.xenaAPI.Probes_values (hub, dataset, sList, pList)
             elif mode == "gene":
-                values = xenaAPI.Genes_values (hub, dataset, sList, pList)
+                values = xena.xenaAPI.Genes_values (hub, dataset, sList, pList)
             for m in range (0, len(values)):
                 if len(values[m]) == 0:
                     values[m] = ['nan'] * len(sList)
@@ -112,7 +111,7 @@ if __name__ == "__main__":
     if J.has_key("samples"):
         samples = J["samples"]
     else:
-        samples = xenaAPI.dataset_samples(hub, dataset)
+        samples = xena.xenaAPI.dataset_samples(hub, dataset)
     mode = J["mode"]
     if J.has_key("pseudo"):
         pseudo = J["pseudo"]
