@@ -3,10 +3,11 @@ import scipy.stats
 import numpy
 import statsmodels.sandbox.stats.multicomp
 from Nof1_functions import *
+import xenaPython as xena
 
 #itomic specific
 def get_itomic_Data (gene, hub, dataset, samples):
-    values= xenaAPI.Probe_values(hub, dataset, samples, gene)
+    values= xena.xenaAPI.Probe_values(hub, dataset, samples, gene)
     itomic_Data =dict(zip(samples, values))
     return itomic_Data
 
@@ -52,7 +53,7 @@ def filer_header (comparison_list, Nof1_sample, fout):
 
 
 def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_list, outputfile):
-    itomic_samples = xenaAPI.dataset_samples(Nof1_item["hub"], Nof1_item["dataset"])
+    itomic_samples = xena.xenaAPI.dataset_samples(Nof1_item["hub"], Nof1_item["dataset"])
     Nof1_sample = Nof1_item["samples"][0]
 
     #file header output
@@ -84,9 +85,9 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_list, outpu
             gene = string.upper(gene)
 
             if mode == "gene":
-                values = xenaAPI.Gene_values(hub, dataset, samples, gene)
+                values = xena.xenaAPI.Gene_values(hub, dataset, samples, gene)
             elif mode == "probe":
-                values = xenaAPI.Probe_values(hub, dataset, samples, gene)
+                values = xena.xenaAPI.Probe_values(hub, dataset, samples, gene)
             h_l_values = clean (values) # comparison larger cohort values
 
             rank, percentage =  rank_and_percentage (Nof1_value, h_l_values)
