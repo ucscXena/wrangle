@@ -1,6 +1,5 @@
 import string, math, sys
-sys.path.insert(0,"../xena/")
-import xenaAPI
+import xenaPython as xena
 
 def average (v_list):
     return reduce(lambda x, y: x+y, v_list, 0)/float(len(v_list))
@@ -43,7 +42,7 @@ def revert_Log2_theta (Nof1_value, theta):
     return math.pow(2, Nof1_value)- theta
 
 def checkSamples (Nof1_sample, hub, dataset):
-    samples = xenaAPI.dataset_samples(hub, dataset)
+    samples = xena.xenaAPI.dataset_samples(hub, dataset)
 
     if Nof1_sample not in samples:
         print Nof1_sample, "is not found in dataset."
@@ -55,7 +54,7 @@ def checkSamples (Nof1_sample, hub, dataset):
         return 0
 
 def checkFields (fields, mapping, hub, dataset, cleanFuntion):
-    d_fields = xenaAPI.dataset_fields (hub, dataset)
+    d_fields = xena.xenaAPI.dataset_fields (hub, dataset)
     for original_field in fields:
         field = cleanFuntion (original_field)
         if field in d_fields:

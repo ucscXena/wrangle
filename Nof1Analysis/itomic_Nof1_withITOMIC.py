@@ -3,7 +3,7 @@ import scipy.stats
 import numpy
 import statsmodels.sandbox.stats.multicomp
 from Nof1_functions import *
-import xenaPython
+import xenaPython as xena
 
 #itomic specific
 def get_itomic_Data (gene, hub, dataset, samples):
