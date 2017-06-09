@@ -113,8 +113,8 @@ if __name__ == "__main__":
     else:
         samples = xena.xenaAPI.dataset_samples(hub, dataset)
     mode = J["mode"]
-    if J.has_key("pseudo"):
-        pseudo = J["pseudo"]
+    if J.has_key("pseudocount"):
+        pseudo = J["pseudocount"]
     else:
         pseudo = 0
 
