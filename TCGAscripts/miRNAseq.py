@@ -408,7 +408,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     J["idSubType"] = "gene"
     J["dataSubType"]="miRNA mature strand expression RNAseq"
     J["label"]= "miRNA mature strand expression ("+suffix+")"
-    J["wrangling_procedure"]= "Level_3 Data (file names: *.isoform.quantification.txt) download from TCGA DCC, for each sample, all isoform expression for the same miRNA gene are added together, log2(total_RPM +1) transformed, and deposited at UCSC into Xena repository."
+    J["wrangling_procedure"]= "Level_3 Data (file names: *.isoform.quantification.txt) download from TCGA DCC, for each sample, all isoform expression for the same miRNA mature strand are added together, log2(total_RPM +1) transformed, and deposited at UCSC into Xena repository."
     oHandle.write( json.dumps( J, indent=-1 ) )
     oHandle.close()
 
