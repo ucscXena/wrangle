@@ -353,7 +353,6 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     J["version"]= datetime.date.today().isoformat()
     J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
     J["unit"]="log2(RPM+1)"
-    J["idSubType"] = "isoform"
     J[":probeMap"]= cancer+'_'+namesuffix+".probeMap"
 
     if PATHPATTERN in ["IlluminaHiSeq_miRNASeq"]:
@@ -405,7 +404,6 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     J.pop(":probeMap")
     J.pop("description")
     J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") miRNA mature strand expression by RNAseq ("+suffix+")"
-    J["idSubType"] = "gene"
     J["dataSubType"]="miRNA mature strand expression RNAseq"
     J["label"]= "miRNA mature strand expression ("+suffix+")"
     J["wrangling_procedure"]= "Level_3 Data (file names: *.isoform.quantification.txt) download from TCGA DCC, for each sample, all isoform expression for the same miRNA mature strand are added together, log2(total_RPM +1) transformed, and deposited at UCSC into Xena repository."
