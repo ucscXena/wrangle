@@ -404,10 +404,10 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     J.pop("name")
     J.pop(":probeMap")
     J.pop("description")
-    J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") miRNA gene expression by RNAseq ("+suffix+")"
+    J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") miRNA mature strand expression by RNAseq ("+suffix+")"
     J["idSubType"] = "gene"
-    J["dataSubType"]="miRNA gene expression RNAseq"
-    J["label"]= "miRNA gene expression ("+suffix+")"
+    J["dataSubType"]="miRNA mature strand expression RNAseq"
+    J["label"]= "miRNA mature strand expression ("+suffix+")"
     J["wrangling_procedure"]= "Level_3 Data (file names: *.isoform.quantification.txt) download from TCGA DCC, for each sample, all isoform expression for the same miRNA gene are added together, log2(total_RPM +1) transformed, and deposited at UCSC into Xena repository."
     oHandle.write( json.dumps( J, indent=-1 ) )
     oHandle.close()
