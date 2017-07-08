@@ -324,7 +324,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
 
         #gene datafile
         genefile = outDir+cancer+"/"+cgFileName+"_gene"
-        os.system("python ../support/genomicMatrixToGeneMatrix_memInEfficient.py "+ datafile + " " + probefile +' ' +  genefile + " add log2 1")
+        os.system("python ../support/genomicMatrixToGeneMatrix_memInEfficient.py "+ datafile + " " + probefile +' ' +  genefile + " add 1 1")
 
     #probeMap json
     probefile= outDir+cancer+"/"+namesuffix+".probeMap"
