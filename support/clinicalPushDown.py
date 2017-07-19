@@ -45,7 +45,7 @@ def pushDown (inputFile, outputFile, mapDic):
     fout.close()
 
 if len(sys.argv[:])!= 4:
-    print "python clinicalPushDown.py patientLevelFile mapping(sample patient) sampleLevelFile"
+    print "python clinicalPushDown.py patientLevelFile mapping(sample patient no_header) sampleLevelFile"
     sys.exit()
 
 mappingfile = sys.argv[2]
