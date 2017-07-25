@@ -1,0 +1,1 @@
+head gc19_pc.promDomain.bed | awk 'BEGIN {FS="\t"; OFS="\t"} {split($11, a, ","); split($12, b, ","); blockS=""; blockE =""; for (i = 1; i < length(a); ++i) {blockS = blockS$2+b[i]","; blockE = blockE$2+a[i]+b[i]",";} print $4, $1, $6, $2, $3, $7, $8, $10, blockS, blockE, $5, $4}'> gc19_pc.promDomain.genePred
