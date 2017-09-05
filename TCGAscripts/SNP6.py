@@ -140,29 +140,11 @@ def SNP6 (inDir, outDir, cancer,flog, REALRUN):
                     infile = rootDir+dataDir+"/"+file
                     process(samples,cancer,infile,flog,mapping, fout)
         fout.close()
-        if samples!=[]:
-            # segToMatrix
-            #os.system("python seg2matrix/segToMatrix.py "+outfile +" seg2matrix/refGene_hg19 "+ gMoutput)
-            os.system("python seg2matrix/segToMatrixGalaxy.py "+outfile +" seg2matrix/refGene_hg19 "+ gMoutput+".matrix "+gMoutput+".probeMap 0")
-        else:
-            os.system("rm -f "+outfile)
-            os.system("rm -f "+outfile+".json")
-            os.system("rm -f "+gMoutput+".matrix")
-            os.system("rm -f "+gMoutput+".probeMap")
-            os.system("rm -f "+gMoutput+".matrix.json")
-            os.system("rm -f "+gMoutput+".probeMap.json")
             
     noCNV=0
     if os.path.exists(outfile):
         oHandle = open(outfile+".json","w")
         makeJSON(oHandle,cancer,lastMageTab,inDir,noCNV,"genomicSegment")
-    if os.path.exists(gMoutput+".matrix"):
-        oHandle = open(gMoutput+".matrix.json","w")
-        makeJSON(oHandle,cancer,lastMageTab,inDir,noCNV,"genomicMatrix")
-        #probeMap
-        oHandle = open(gMoutput+".probeMap.json","w")
-        makeProbeJSON(oHandle,cancer,noCNV)
-    
 
 
     outfile =  outDir+cancer+"/"+"SNP6_nocnv_genomicSegment"
@@ -178,27 +160,12 @@ def SNP6 (inDir, outDir, cancer,flog, REALRUN):
                     infile = rootDir+dataDir+"/"+file
                     process(samples,cancer,infile,flog,mapping, fout)
         fout.close()
-        if samples!=[]:
-            # segToMatrix
-            #os.system("python seg2matrix/segToMatrix.py "+outfile +" seg2matrix/refGene_hg19 "+ gMoutput)
-            os.system("python seg2matrix/segToMatrixGalaxy.py "+outfile +" seg2matrix/refGene_hg19 "+ gMoutput+".matrix "+gMoutput+".probeMap 0")
-        else:
-            os.system("rm -f "+outfile)
-            os.system("rm -f "+outfile+".json")
-            os.system("rm -f "+gMoutput+".matrix")
-            os.system("rm -f "+gMoutput+".probeMap")
-            os.system("rm -f "+gMoutput+".matrix.json")
-            os.system("rm -f "+gMoutput+".probeMap.json")
+
     noCNV=1
     if os.path.exists(outfile):
         oHandle = open(outfile+".json","w")
         makeJSON(oHandle,cancer,lastMageTab,inDir,noCNV,"genomicSegment")
-    if os.path.exists(gMoutput+".matrix"):
-        oHandle = open(gMoutput+".matrix.json","w")
-        makeJSON(oHandle,cancer,lastMageTab,inDir,noCNV,"genomicMatrix")
-        #probeMap
-        oHandle = open(gMoutput+".probeMap.json","w")
-        makeProbeJSON(oHandle,cancer,noCNV)
+
             
     cleanGarbage(garbage)
     return
@@ -277,11 +244,6 @@ def makeJSON(oHandle,cancer,lastMageTab,inDir,noCNV,type):
         else:
             J["name"]="TCGA_"+cancer+"_GSNP6raw_gSeg"
 
-    if type=="genomicMatrix":
-        if noCNV:
-            J["name"]="TCGA_"+cancer+"_GSNP6noCNV"
-        else:
-            J["name"]="TCGA_"+cancer+"_GSNP6raw"
             
     name = trackName_fix(J['name'])
     if name ==False:
@@ -295,13 +257,6 @@ def makeJSON(oHandle,cancer,lastMageTab,inDir,noCNV,type):
     J["type"]= type
     if type=="genomicSegment":
         J["assembly"]= "hg19"
-    if type=="genomicMatrix":
-        J[":probeMap"]=J['name']+"_probeMap"
-        if noCNV:
-            J[":genomicSegment"] =trackName_fix("TCGA_"+cancer+"_GSNP6noCNV_gSeg")
-        else:
-            J[":genomicSegment"] =trackName_fix("TCGA_"+cancer+"_GSNP6raw_gSeg")
-
         
     J[":sampleMap"]="TCGA."+cancer+".sampleMap"
                 
