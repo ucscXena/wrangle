@@ -467,13 +467,16 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
 
     #change description
     if string.find(PATHPATTERN, "curated")!=-1 :
-        J["label"]= "somatic mutation SNPs and small INDELs ("+suffix+" curated)"
+        #J["label"]= "somatic mutation SNPs and small INDELs ("+suffix+" curated)"
+        J["label"]= suffix+" curated"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") somatic mutation ("+suffix+" curated)"
     elif string.find(PATHPATTERN, "automated")!=-1 :
-        J["label"]= "somatic mutation SNPs and small INDELs ("+suffix+" automated)"
+        #J["label"]= "somatic mutation SNPs and small INDELs ("+suffix+" automated)"
+        J["label"]= suffix+" automated"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") somatic mutation ("+suffix+" automated)"
     else:
-        J["label"]= "somatic mutation SNPs and small INDELs ("+suffix+")"
+        #J["label"]= "somatic mutation SNPs and small INDELs ("+suffix+")"
+        J["label"]= suffix
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") somatic mutation ("+suffix+")"
 
     J["assembly"]=assembly
@@ -667,13 +670,16 @@ def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, data
 
     #change
     if string.find(PATHPATTERN, "curated")!=-1 :
-        J["label"]= "somatic gene-level non-silent mutation ("+suffix+" curated)"
+        #J["label"]= "somatic gene-level non-silent mutation ("+suffix+" curated)"
+        J["label"]= suffix+" curated"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene-level nonsilent somatic mutation ("+suffix+" curated)"
     elif string.find(PATHPATTERN, "automated")!=-1 :
-        J["label"]= "somatic gene-level non-silent mutation ("+suffix+" automated)"
+        #J["label"]= "somatic gene-level non-silent mutation ("+suffix+" automated)"
+        J["label"]= suffix+" automated"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene-level nonsilent somatic mutation ("+suffix+" automated)"
     else:
         J["label"]= "somatic gene-level non-silent mutation ("+suffix+")"
+        J["label"]= suffix
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene-level nonsilent somatic mutation ("+suffix+")"
 
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
