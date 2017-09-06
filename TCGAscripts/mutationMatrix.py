@@ -82,7 +82,7 @@ def mutationMatrix (inDir, outDir, cancer,flog,REALRUN):
     if cancer not in ["PANCAN12","PANCAN"]:
         J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
         J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
-        J["shortTitle"]= "somatic gene-level non-silent mutation (pancan awg)"
+        J["label"]= "PANCAN AWG"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene-level non-silent somatic mutation (pancan awg)"
 
     else:
@@ -90,14 +90,14 @@ def mutationMatrix (inDir, outDir, cancer,flog,REALRUN):
         J["anatomical_origin"]=""
        
         if cancer =="PANCAN12":
-            J["shortTitle"]= "somatic gene-level non-silent mutation (pancan awg 12 cohorts)"
+            J["label"]= "PANCAN AWG (12 cohorts)"
             J["longTitle"]="TCGA PANCAN AWG gene-level non-silent somatic mutation (12 cohorts)"
             J["citation"] = "Cell 2014 http://dx.doi.org/10.1016/j.cell.2014.06.049"
             J["articleTitle"]= "Multi-platform analysis of 12 cancer types reveals molecular classification within and across tissues-of-origin"
             J["dataProducer"]= "Hoadley, K.M., Yau, C., Wolf, D.M., et al. and TCGA PANCAN AWG"
 
         if cancer =="PANCAN":
-            J["shortTitle"]= "somatic gene-level non-silent mutation (pancan awg 19 cohorts)"
+            J["label"]= "PANCAN AWG (19 cohorts)"
             J["longTitle"]="TCGA PANCAN AWG gene-level non-silent somatic mutation (19 cohorts)"
 
         J["tags"]=["PANCAN12"]
@@ -129,7 +129,6 @@ def mutationMatrix (inDir, outDir, cancer,flog,REALRUN):
             
         J["tags"]= J["tags"]+origin
 
-    J["label"] = J["shortTitle"] 
     J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") somatic mutation data. Red (=1) indicates that a non-silent somatic mutation (nonsense, missense, frame-shif indels, splice site mutations, stop codon readthroughs) was identified in the protein coding region of a gene, or any mutation identified in a non-coding gene. White (=0) indicates that none of the above mutation calls were made in this gene for the specific sample.<br><br>Somatic mutations calls (even on the same tumor DNA extract) are affected by many factors including library prep, sequencing process, read mapping method, reference genome used, genome annotation, calling algorithms, and ad-hoc pre/postprocessing such as black list genes, target selection regions, and black list samples. This dataset is the best effort made by the TCGA PANCANCER Analysis Working Group. Raw PANCAN mutation data can be downloaded at the url site shown below."
     J["description"] = J["description"] +"<br><br>"
     

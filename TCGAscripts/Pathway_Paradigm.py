@@ -128,7 +128,7 @@ def Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN):
     #stable
     if PATHPATTERN== "Pathway_Paradigm_mRNA.":
         suffix="PDMarray"
-        J["label"]= "exprssion"
+        J["label"]= "exprssion (array)"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") PARADIGM inference activity (array mRNA)"
         
     if PATHPATTERN== "Pathway_Paradigm_mRNA_And_Copy_Number.":
