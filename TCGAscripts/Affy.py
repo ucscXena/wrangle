@@ -151,7 +151,7 @@ def Affy (inDir, outDir, cancer,flog,REALRUN):
     J={}
     #stable
     suffix="AffyU133a"
-    J["label"]="gene expression ("+suffix+")"
+    J["label"]= suffix
     J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression ("+suffix+" array)"
     J["dataSubType"]="gene expression array"
     J["redistribution"]= True

@@ -125,7 +125,7 @@ def AgilentG4502A (inDir, outDir, cancer,flog,PATHPATTERN,REALRUN):
     J={}
     #stable
     suffix=PATHPATTERN
-    J["label"]="gene expression ("+suffix+")"
+    J["label"]=suffix
     J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression ("+suffix+" array)"
     J["dataSubType"]="gene expression array"
     J["redistribution"]= True
