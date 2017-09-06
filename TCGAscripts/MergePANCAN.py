@@ -712,7 +712,7 @@ def processRNA (filename, dir,outDir, cancer,flog, REALRUN):
         J["sample_type"]="tumor"
         J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]+" ("+cancer+")"
         J[":sampleMap"]="TCGA."+cancer+".sampleMap"
-        J['label']="gene expression RNAseq ("+ J["RNAtype"]+ " IlluminaHiSeq pancan normalized)"
+        J['label']=J["RNAtype"]+ " IlluminaHiSeq pancan normalized"
         J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression by RNAseq ("+ J["RNAtype"]+" IlluminaHiSeq), pancan normalized"
         J["unit"]="pan-cancer normalized log2(norm_counts+1)"
         J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression by RNAseq, mean-normalized (per gene) across all TCGA cohorts. Values in this dataset are generated at UCSC by combining \"gene expression RNAseq\" values of all TCGA cohorts, values are then mean-centered per gene, then extracting the converted data only belongs to the this cohort."
