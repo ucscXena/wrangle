@@ -128,27 +128,25 @@ def Pathway_Paradigm (inDir, outDir, cancer,flog, PATHPATTERN, REALRUN):
     #stable
     if PATHPATTERN== "Pathway_Paradigm_mRNA.":
         suffix="PDMarray"
-        J["shortTitle"]= "Paradigm.mRNAarray (Firehose)"
+        J["label"]= "exprssion"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") PARADIGM inference activity (array mRNA)"
         
     if PATHPATTERN== "Pathway_Paradigm_mRNA_And_Copy_Number.":
         suffix="PDMarrayCNV"
-        J["shortTitle"]="Paradigm.mRNAarray+CNV (Firehose)"
+        J["label"]="expression (array)+CNV"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") PARADIGM inference activity (array mRNA + CNV)"
         
     if PATHPATTERN== "Pathway_Paradigm_RNASeq.":
         suffix="PDMRNAseq"
-        J["shortTitle"]="Paradigm.RNAseq (Firehose)"
+        J["label"]="expression"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") PARADIGM inference activity (RNAseq)"
 
     if PATHPATTERN=="Pathway_Paradigm_RNASeq_And_Copy_Number.":
         suffix="PDMRNAseqCNV"
-        J["shortTitle"]="Paradigm.RNAseq+CNV (Firehose)"
+        J["label"]="expression+CNV"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") PARADIGM inference activity (RNAseq + CNV)"
 
     J["dataSubType"]="PARADIGM pathway activity"
-    
-    J["label"] = J["shortTitle"] 
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
     J["sample_type"]=["tumor"]
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]

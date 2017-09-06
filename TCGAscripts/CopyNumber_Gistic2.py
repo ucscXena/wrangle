@@ -97,12 +97,12 @@ def CopyNumber_Gistic2 (inDir, outDir, cancer,flog,REALRUN):
             namesuffix="gistic2"
             unit = "Gistic2 copy number"
         if pattern=="all_thresholded.by_genes":
-            suffix="gistic2_thresholded"
+            suffix="gistic2 thresholded"
             namesuffix="gistic2thd"
             unit = "-2,-1,0,1,2: 2 copy del, 1 copy del, no change, amplification, high-amplification"
             J["max"]= 2.0
             J["min"]= -2.0
-        J["label"]= "copy number ("+suffix+")"
+        J["label"]= suffix
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") copy number "+suffix+" estimate"
         J["dataSubType"]="copy number (gene-level)"
         J["redistribution"]= True

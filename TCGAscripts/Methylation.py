@@ -148,11 +148,11 @@ def humanmethylation (inDir, outDir, cancer,flog,PATHPATTERN, REALRUN):
     suffix=PATHPATTERN
     
     if suffix =="HumanMethylation27":
-        J["label"]= "DNA methylation (Methylation27k)"
+        J["label"]= "Methylation27k"
         namesuffix="hMethyl27"
         
     if suffix =="HumanMethylation450":
-        J["label"]= "DNA methylation (Methylation450k)"
+        J["label"]= "Methylation450k"
         namesuffix="hMethyl450" 
 
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]

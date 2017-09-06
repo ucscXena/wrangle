@@ -539,14 +539,14 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
         J["dataSubType"]="gene expression RNAseq"
 
         if cancer not in ["OV", "STAD"]:
-            J["shortTitle"]= "gene expression RNAseq (" + J["RNAtype"] + " " + suffix + ")"
+            J["label"]= J["RNAtype"] + " " + suffix
             J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression by RNAseq ("+ J["RNAtype"] + " "+ suffix+")"
         else:
             if dataProducer =="University of North Carolina TCGA genome characterization center":
-                J["shortTitle"]= "gene expression RNAseq (" +  J["RNAtype"] + " "+ suffix +" UNC)"
+                J["label"]= J["RNAtype"] + " "+ suffix +" UNC"
                 J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression by RNAseq ("+ J["RNAtype"] + " "+ suffix+" UNC)"
             else:
-                J["shortTitle"]= "gene expression RNAseq ("+ J["RNAtype"] + " "+ suffix+" BC)"
+                J["label"]= J["RNAtype"] + " "+ suffix+" BC"
                 J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression by RNAseq ("+ J["RNAtype"] + " "+ suffix+" BC)"
                 
         J["notes"]= "the probeMap is hugo for the short term, however probably around 10% of the gene symbols are not HUGO names, but ENTRE genes"
@@ -562,14 +562,14 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
         J[":probeMap"]= "unc_RNAseq_exon.hg19" 
 
         if cancer not in [ "OV","STAD"]:
-            J["shortTitle"]= "exon expression RNAseq ("+ J["RNAtype"] + " "+ suffix+")"
+            J["label"]= J["RNAtype"] + " "+ suffix
             J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") exon expression by RNAseq ("+ J["RNAtype"] + " "+ suffix+")"
         else:
             if dataProducer =="University of North Carolina TCGA genome characterization center":
-                J["shortTitle"]= "exon expression RNAseq ("+ J["RNAtype"] + " "+ suffix+" UNC)"
+                J["label"]= J["RNAtype"] + " "+ suffix+" UNC"
                 J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") exon expression by RNAseq ("+ J["RNAtype"] + " "+ suffix+" UNC)"
             else:
-                J["shortTitle"]= "exon expression RNAseq ("+suffix+" BC)"
+                J["label"]= J["RNAtype"] + " "+ suffix+" BC"
                 J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") exon expression by RNAseq ("+ J["RNAtype"] + " "+ suffix+" BC)"
 
 
@@ -616,7 +616,6 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
                        "<br><br>In order to more easily view the differential expression between samples, we set the default view to center each gene or exon to zero by independently subtracting the mean of each gene or exon on the fly. Users can view the original non-normalized values by adjusting visualization settings."
     J["description"] = J["description"] +"<br><br>"
 
-    J["label"] = J["shortTitle"] 
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
     J["sample_type"]=["tumor"]
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]

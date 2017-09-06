@@ -171,7 +171,8 @@ def RPPA (inDir, outDir, cancer, flog,REALRUN):
     J["version"]= datetime.date.today().isoformat()
     J["wrangler"]= "Xena TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
     J["wrangling_procedure"]= "Level_3 Data (file names: *.protein_expression.*) download from TCGA DCC, and processed at UCSC into Xena repository"
-    J["label"]= "protein expression RPPA"
+    #J["label"]= "protein expression RPPA"
+    J["label"]= "RPPA"
     J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") reverse phase protein array"
     
     J[":probeMap"]= "md_anderson_antibodies"

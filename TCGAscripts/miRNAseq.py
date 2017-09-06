@@ -363,7 +363,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     #change description
     J["description"]=""
     J["dataSubType"]="miRNA isoform expression RNAseq"
-    J["label"]= "miRNA isoform expression ("+suffix+")"
+    J["label"]= suffix
     J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") miRNA isoform expression by RNAseq ("+suffix+")"
     J["description"]= J["description"] +"TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") miRNA expression by RNAseq. The miRNA expression profile was measured experimentally using the "+platformTitle+" by the "+ dataProducer +"." + \
         " Level 3 interpreted level data was downloaded from TCGA data coordination center. Download data is in the unit of reads per million mapped reads (RPM). This dataset shows the miRNA transcription estimates in log2 (RPM). For more information see: http://nar.oxfordjournals.org/content/early/2015/08/13/nar.gkv808.full ."
@@ -405,7 +405,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     J.pop("description")
     J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") miRNA mature strand expression by RNAseq ("+suffix+")"
     J["dataSubType"]="miRNA mature strand expression RNAseq"
-    J["label"]= "miRNA mature strand expression ("+suffix+")"
+    J["label"]= suffix
     J["wrangling_procedure"]= "Level_3 Data (file names: *.isoform.quantification.txt) download from TCGA DCC, for each sample, all isoform expression for the same miRNA mature strand are added together, log2(total_RPM +1) transformed, and deposited at UCSC into Xena repository."
     oHandle.write( json.dumps( J, indent=-1 ) )
     oHandle.close()
