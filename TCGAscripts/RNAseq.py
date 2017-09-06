@@ -136,7 +136,7 @@ def illuminaga_rnaseq_bcgsc (inDir, outDir, cancer, flog,REALRUN):
 def illuminahiseq_rnaseq_bcgsc  (inDir, outDir, cancer, flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
     PATHPATTERN = "IlluminaHiSeq_RNASeq"
-    suffix      = "IlluminaHiseq"
+    suffix      = "IlluminaHiSeq"
     namesuffix = "HiSeq"
     dataProducer = "British Columbia Cancer Agency TCGA genome characterization center"
     clean = 1
@@ -144,7 +144,7 @@ def illuminahiseq_rnaseq_bcgsc  (inDir, outDir, cancer, flog,REALRUN):
 
     print cancer, "illuminahiseq_rnaseq_bcgsc_exon"
     PATHPATTERN = "IlluminaHiSeq_RNASeq"
-    suffix      = "IlluminaHiseq"
+    suffix      = "IlluminaHiSeq"
     namesuffix = "HiSeq_exon"
     dataProducer = "British Columbia Cancer Agency TCGA genome characterization center"
     clean =0
