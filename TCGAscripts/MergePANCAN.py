@@ -714,7 +714,7 @@ def processRNA (filename, dir,outDir, cancer,flog, REALRUN):
         J[":sampleMap"]="TCGA."+cancer+".sampleMap"
         J['label']=J["RNAtype"]+ " IlluminaHiSeq pancan normalized"
         J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression by RNAseq ("+ J["RNAtype"]+" IlluminaHiSeq), pancan normalized"
-        J["unit"]="pan-cancer normalized log2(norm_counts+1)"
+        J["unit"]="pan-cancer normalized log2(norm_count+1)"
         J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression by RNAseq, mean-normalized (per gene) across all TCGA cohorts. Values in this dataset are generated at UCSC by combining \"gene expression RNAseq\" values of all TCGA cohorts, values are then mean-centered per gene, then extracting the converted data only belongs to the this cohort."
 
         J["description"]= J["description"] +"<br><br>For comparing data within this cohort, we recommend to use the \"gene expression RNAseq\" dataset. For questions regarding the gene expression of this particular cohort in relation to other types tumors, you can use the pancan normalized version of the \"gene expression RNAseq\" data. For comparing with data outside TCGA, we recommend using the percentile version if the non-TCGA data is normalized by percentile ranking. For more information, please see our Data FAQ: <a href=https://docs.google.com/document/d/1q-7Tkzd7pci4Rz-_IswASRMRzYrbgx1FTTfAWOyHbmk/edit?usp=sharing target=\"_blank\"><u>here</u></a>.<br>"
