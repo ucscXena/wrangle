@@ -63,19 +63,17 @@ def RPPA_RBN (inDir, outDir, cancer,flog,REALRUN):
     J["version"]= datetime.date.today().isoformat()
     J["wrangler"]= "cgData TCGAscript "+ __name__ +" processed on "+ datetime.date.today().isoformat()
     J[":probeMap"]= "md_anderson_antibodies"
-
+    J["label"]= "RPPA (replicate-base normalization)"
     J["sample_type"]=["tumor"]
     J["redistribution"]= True
     J['tags']=["cancer"]+ TCGAUtil.tags[cancer]
     if cancer !="PANCAN12":
         J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
         J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
-        J["shortTitle"]= "protein expression RPPA (RBN)"
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") phospho- or total protein expression by reverse phase protein array (replicate-base normalization)"
     else:
         J["primary_disease"] = "cancer"
         J["anatomical_origin"]= ""
-        J["shortTitle"]= "PANCAN AWG protein expression RPPA (RBN)"
         J["longTitle"]="TCGA PANCAN AWG phospho- or total- protein expression by reverse phase protein array (replicate-base normalization)"
         J["citation"] = "Cell 2014 http://dx.doi.org/10.1016/j.cell.2014.06.049"
         J["articleTitle"]= "Multi-platform analysis of 12 cancer types reveals molecular classification within and across tissues-of-origin"
@@ -100,8 +98,7 @@ def RPPA_RBN (inDir, outDir, cancer,flog,REALRUN):
                     origin.append(value)
 
         J["tags"]= J["tags"]+origin
-
-    J["label"] = J["shortTitle"]        
+      
     J["cohort"] ="TCGA "+TCGAUtil.cancerHumanReadable[cancer]+" ("+cancer+")"
     J['domain']="TCGA"
     J['owner']="TCGA"
