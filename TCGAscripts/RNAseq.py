@@ -580,7 +580,7 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
     if PATHPATTERN in [ "IlluminaHiSeq_RNASeqV2","IlluminaGA_RNASeqV2"] and string.find(namesuffix, "exon")==-1:
         if  string.find(namesuffix, "percentile")==-1: #basic
             J["description"] = J["description"] + "as in log2(x+1) transformed RSEM normalized count."
-            J["unit"]="log2(norma_count+1)"
+            J["unit"]="log2(norm_count+1)"
             J["wrangling_procedure"]= "Level_3 data (file names: *.rsem.genes.normalized_results) are downloaded from TCGA DCC, log2(x+1) transformed, and processed at UCSC into Xena repository"
         else: #percentile
             J["unit"]="percentile rank"
