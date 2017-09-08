@@ -90,10 +90,12 @@ def process (outDir, cancer, c1, c2, file, REALRUN,type):
         if type =="mutation":
             print "todo"
         elif type =="SNP6_genomicSegment":
-            os.system("cat "+c1file+" "+c2file +" > "+outDir+cancer+"/"+file)
-            outfile=outDir+cancer+"/"+file
-            gMoutput = outDir+cancer+"/"+string.replace(file,"_genomicSegment","")
-        else: 
+            outfile = outDir+cancer+"/"+file
+            os.system("cp "+ c1file + ' ' + outfile)
+            #the second file start with the second line
+            os.system("tail -n +2  " + c2file + " >> "+ outfile)
+
+        else:
             root = "/data/TCGA/"
             os.system("python mergeGenomicMatrixFiles_memEfficient.py "+outDir+cancer+"/"+file + " "+root+" "+c1file +" "+ c2file) 
 

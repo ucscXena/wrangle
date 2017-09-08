@@ -138,7 +138,7 @@ def SNP6 (inDir, outDir, cancer,flog, REALRUN):
                 pattern =".hg19.seg."
                 if string.find(file,pattern)!=-1:
                     infile = rootDir+dataDir+"/"+file
-                    process(samples,cancer,infile,flog,mapping, fout)
+                    process(samples, cancer, infile, flog, mapping, fout)
         fout.close()
             
     noCNV=0
@@ -158,7 +158,7 @@ def SNP6 (inDir, outDir, cancer,flog, REALRUN):
                 pattern ="nocnv_hg19.seg."
                 if string.find(file,pattern)!=-1:
                     infile = rootDir+dataDir+"/"+file
-                    process(samples,cancer,infile,flog,mapping, fout)
+                    process(samples, cancer, infile, flog, mapping, fout)
         fout.close()
 
     noCNV=1
