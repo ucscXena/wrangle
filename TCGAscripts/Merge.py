@@ -28,7 +28,7 @@ def matrix (dir,outDir, cancer,flog,REALRUN):
     type= "matrix"
 
     for file in [
-ƒ        "mutation",
+        "mutation",
         "HiSeqV2",
         "HiSeqV2_exon",
         "AgilentG4502A_07_3",
