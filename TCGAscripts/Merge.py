@@ -28,7 +28,7 @@ def matrix (dir,outDir, cancer,flog,REALRUN):
     type= "matrix"
 
     for file in [
-        "mutation",
+ƒ        "mutation",
         "HiSeqV2",
         "HiSeqV2_exon",
         "AgilentG4502A_07_3",
@@ -91,13 +91,9 @@ def process (outDir, cancer, c1, c2, file, REALRUN,type):
             print "todo"
         elif type =="SNP6_genomicSegment":
             os.system("cat "+c1file+" "+c2file +" > "+outDir+cancer+"/"+file)
-            # segToMatrix
             outfile=outDir+cancer+"/"+file
             gMoutput = outDir+cancer+"/"+string.replace(file,"_genomicSegment","")
-            #os.system("python seg2matrix/segToMatrix.py "+outfile +" seg2matrix/refGene_hg19 "+ gMoutput)
-            os.system("python seg2matrix/segToMatrixGalaxy.py "+outfile +" seg2matrix/refGene_hg19 "+ gMoutput+".matrix "+gMoutput+".probeMap 0")
         else: 
-            #os.system("python mergeGenomicMatrixFiles.py "+outDir+cancer+"/"+file + " "+c1file +" "+ c2file)
             root = "/data/TCGA/"
             os.system("python mergeGenomicMatrixFiles_memEfficient.py "+outDir+cancer+"/"+file + " "+root+" "+c1file +" "+ c2file) 
 
@@ -149,45 +145,4 @@ def process (outDir, cancer, c1, c2, file, REALRUN,type):
     output.write(json.dumps(J,indent=-1))
     output.close()
 
-    if type =="SNP6_genomicSegment":
-        J={}
-        gMoutput = outDir+cancer+"/"+string.replace(file,"_genomicSegment","")
-        cfile = string.replace(c1file,"_genomicSegment","") + ".matrix.json"
-        iHandle =open(cfile,"r")
-        Jinput= json.loads(iHandle.read())
-        J["dataSubType"]=  Jinput["dataSubType"]
-        J["version"]=  Jinput["version"]
-        J["type"]=  Jinput["type"]
-        s= Jinput["label"]
-        s = string.replace(s,c1,cancer)
-        J["label"] = s
-        J[":probeMap"]=string.replace(Jinput[":probeMap"],c1,cancer)
-        
-        if Jinput.has_key("min"):
-            J["min"]= Jinput["min"]
-        if Jinput.has_key("max"):
-            J["max"]= Jinput["max"]
-        
-        s= Jinput ["longTitle"]
-        s = string.replace(s,c1,cancer)
-        s = string.replace(s,TCGAUtil.cancerOfficial[c1],TCGAUtil.cancerOfficial[cancer])
-        J["longTitle"]=s
-        J[":sampleMap"]="TCGA."+cancer+".sampleMap"
-
-        s = Jinput["name"]
-        s = string.replace(s,c1,cancer)
-        J["name"]=s
-        output = open(gMoutput+".matrix.json","w")
-        output.write(json.dumps(J,indent=-1))
-        output.close()
-
-        J={}
-        cfile = string.replace(c1file,"_genomicSegment","") + ".probeMap.json"
-        iHandle =open(cfile,"r")
-        Jinput= json.loads(iHandle.read())
-        J=Jinput
-        J["name"]=string.replace(J["name"],c1, cancer)
-        output = open(gMoutput+".probeMap.json","w")
-        output.write(json.dumps(J,indent=-1))
-        output.close()
     return
