@@ -1,6 +1,6 @@
 import string, sys
 
-def removeRowGenomicMatrix_nodata  (inputFile, outputFile, nodata_value):
+def removeRowGenomicMatrix_nodata  (inputFile, outputFile, nodata_values):
     fin = open(inputFile,'U')
     fout = open(outputFile,'w')
 
@@ -23,7 +23,7 @@ def removeRowGenomicMatrix_nodata  (inputFile, outputFile, nodata_value):
 
         found = 0
         for i in range(1, nCOL):
-            if float(data[i]) != nodata_value:
+            if data[i] not in nodata_values:
                 found =1
                 break
         if not found:
@@ -42,11 +42,11 @@ def removeRowGenomicMatrix_nodata  (inputFile, outputFile, nodata_value):
     fout.close()
 
 if len(sys.argv[:])!=4:
-    print "python removeRowGenomicMatrix_nodata.py input output no_data(value like 0)"
+    print "python removeRowGenomicMatrix_nodata.py input output no_data(value like 0) no_data(value like NA)"
     print
     sys.exit()
 
 inputfile = sys.argv[1]
 outputfile = sys.argv[2]
-nodata_value = float(sys.argv[3])
-removeRowGenomicMatrix_nodata (inputfile, outputfile, nodata_value)
+nodata_values = sys.argv[3:]
+removeRowGenomicMatrix_nodata (inputfile, outputfile, nodata_values)
