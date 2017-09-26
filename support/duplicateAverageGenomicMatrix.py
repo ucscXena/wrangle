@@ -55,7 +55,7 @@ def averageDup (inputfile, outputfile):
     fout.close()
 
 if len(sys.argv[:]) != 3:
-    print "python duplicateAverageGenomicMatrix_slow.py matrixinput outputfile"
+    print "python duplicateAverageGenomicMatrix.py matrixinput outputfile"
     sys.exit()
 
 inputfile = sys.argv[1]
