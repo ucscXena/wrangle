@@ -41,7 +41,7 @@ def removeRowGenomicMatrix_nodata  (inputFile, outputFile, nodata_values):
     fin.close()
     fout.close()
 
-if len(sys.argv[:])!=4:
+if len(sys.argv[:]) < 4:
     print "python removeRowGenomicMatrix_nodata.py input output no_data(value like 0) no_data(value like NA)"
     print
     sys.exit()
