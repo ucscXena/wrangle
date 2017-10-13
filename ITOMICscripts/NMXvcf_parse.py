@@ -130,7 +130,7 @@ if sampleTumor not in samples or sampleNormal not in samples:
 
 if sampleTumorRNA not in samples:
     print "bad sample name"
-    sys.exi()
+    sys.exit()
 
 if dataType == "EXP":
     EXP_data(vcffile, sampleTumorRNA, outdir, sampleLabel)
