@@ -539,14 +539,14 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
         J["dataSubType"]="gene expression RNAseq"
 
         if cancer not in ["OV", "STAD"]:
-            J["label"]= J["RNAtype"] + " " + suffix
+            J["label"]= suffix
             J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression by RNAseq ("+ J["RNAtype"] + " "+ suffix+")"
         else:
             if dataProducer =="University of North Carolina TCGA genome characterization center":
-                J["label"]= J["RNAtype"] + " "+ suffix +" UNC"
+                J["label"]= suffix +" UNC"
                 J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression by RNAseq ("+ J["RNAtype"] + " "+ suffix+" UNC)"
             else:
-                J["label"]= J["RNAtype"] + " "+ suffix+" BC"
+                J["label"]= suffix+" BC"
                 J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") gene expression by RNAseq ("+ J["RNAtype"] + " "+ suffix+" BC)"
                 
         J["notes"]= "the probeMap is hugo for the short term, however probably around 10% of the gene symbols are not HUGO names, but ENTRE genes"
@@ -562,14 +562,14 @@ def geneRPKM (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, dataPro
         J[":probeMap"]= "unc_RNAseq_exon.hg19" 
 
         if cancer not in [ "OV","STAD"]:
-            J["label"]= J["RNAtype"] + " "+ suffix
+            J["label"]= suffix
             J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") exon expression by RNAseq ("+ J["RNAtype"] + " "+ suffix+")"
         else:
             if dataProducer =="University of North Carolina TCGA genome characterization center":
-                J["label"]= J["RNAtype"] + " "+ suffix+" UNC"
+                J["label"]= suffix+" UNC"
                 J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") exon expression by RNAseq ("+ J["RNAtype"] + " "+ suffix+" UNC)"
             else:
-                J["label"]= J["RNAtype"] + " "+ suffix+" BC"
+                J["label"]= suffix+" BC"
                 J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") exon expression by RNAseq ("+ J["RNAtype"] + " "+ suffix+" BC)"
 
 
