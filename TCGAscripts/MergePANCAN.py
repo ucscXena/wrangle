@@ -259,19 +259,8 @@ def processFiles (filename, dir,outDir, cancer , MUTATION= False):
         cancerDir= outDir+ cancer
         cancerFile = cancerDir+"/"+filename
 
-        #if not os.path.exists(cancerFile):
-        #    if filename =="miRNA":
-        #        cancerFile = cancerDir+"/"+filename+"_HiSeq"
-        #        if not os.path.exists(cancerFile):
-        #            cancerFile = cancerDir+"/"+filename+"_GA"
-        #            if not os.path.exists(cancerFile):
-        #                continue
-        #            else:
-        #                inFiles.append(cancerFile)
-        #        else:
-        #            inFiles.append(cancerFile)
-        #    else:
-        #        continue
+        if not os.path.exists(cancerFile):
+            continue
 
         if MUTATION:
             fin = open(cancerFile+".json",'r')
@@ -307,7 +296,8 @@ def processMutationData (filename, dir, outDir, cancer,flog, REALRUN):
                 fout.write(header)
             else:
                 if header != fin.readline():
-                    print "check header"
+                    print "bad header", infile, "skipped"
+                    continue
             fout.write(fin.read())
                     
             fin.close()
