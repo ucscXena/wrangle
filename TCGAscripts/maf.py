@@ -226,19 +226,19 @@ def wustl_illuminaga_dnaseq (inDir, outDir, cancer,flog,REALRUN):
     namesuffix = "mutation_wustl"
     mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
-def wustl_illuminaga_dnaseq_automated (inDir, outDir, cancer,flog,REALRUN):
+def wustl_illuminahiseq_dnaseq_automated (inDir, outDir, cancer,flog,REALRUN):
     print cancer, sys._getframe().f_code.co_name
     distribution = True
-    PATHPATTERN= "IlluminaGA_DNASeq_automated"
-    PLATFORM = "IlluminaGA"
-    suffix     = "wustl"
-    namesuffix = "mutation_wustl_gene"
+    PATHPATTERN= "IlluminaHiSeq_DNASeq_automated"
+    PLATFORM = "IlluminaHiSeq"
+    suffix     = "wustl_hiseq"
+    namesuffix = "mutation_wustl_hiseq_gene"
     dataProducer = "Genome Institute at Washington University Sequencing Center"
     clean=1
     mafToMatrix (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
     clean =0
-    namesuffix = "mutation_wustl"
+    namesuffix = "mutation_wustl_hiseq"
     mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, dataProducer,REALRUN,clean, PLATFORM,distribution)
 
 def wustl_illuminaga_dnaseq_curated (inDir, outDir, cancer,flog,REALRUN):
@@ -305,6 +305,9 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
     #VAF =true is saying use VAF_cut, for broad data mostly 
     if REALRUN == 2:
         return
+
+    REALRUN = 1 # always do real run 
+    clean =1 #always clean up and rerun
 
     garbage=[tmpDir]
     os.system("rm -rf tmp_*")
@@ -477,7 +480,7 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
         J["longTitle"]="TCGA "+TCGAUtil.cancerOfficial[cancer]+" ("+cancer+") somatic mutation ("+suffix+")"
 
     J["assembly"]=assembly
-    J["wholeGenome"]= True
+    J["target"]= "whole exome"
     J["anatomical_origin"]= TCGAUtil.anatomical_origin[cancer]
     J["sample_type"]=["tumor"]
     J["primary_disease"]=TCGAUtil.cancerGroupTitle[cancer]
