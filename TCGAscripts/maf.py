@@ -625,7 +625,7 @@ def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, data
                     process (infile, allGenes, samples, genes, dic, VAF)
 
         if len(samples)!=0:
-            outputMatrix(samples, genes, dic, outDir+cancer+"/"+cgFileName)
+            xenaToMatrix.output(outDir+cancer+"/"+cgFileName, samples, genes, dic)
 
     if not os.path.exists(outDir+cancer+"/"+cgFileName):
         return
@@ -766,26 +766,6 @@ def process (file, allGenes, samples, genes, dic, VAF):
             if mtype < dic[gene][sample]:
                 dic[gene][sample]=mtype
     fin.close()
-
-def outputMatrix(samples, genes, dic, outfile):
-    print len(genes), len(dic)
-    fout=open(outfile,'w')
-    fout.write("sample\t"+string.join(samples,"\t")+"\n")
-    for gene in dic:
-        if gene =="":
-            continue
-        fout.write(gene)
-        for sample in samples:
-            try:
-                mtype = dic[gene][sample]
-                if mtype < xenaToMatrix.non_silent_cutoff :
-                    fout.write("\t1")
-                else:
-                    fout.write("\t0")
-            except:
-                fout.write("\t0")
-        fout.write("\n")
-    fout.close()
 
 def process_xena (file, fout, VAF):
     fin =open(file, 'r')
