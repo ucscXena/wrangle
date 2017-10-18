@@ -419,7 +419,7 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
                     infile = rootDir+dataDir+"/"+file
                     print infile
                     found =1
-                    data_assembly, throwout, kept = process_xena (infile, fout, VAF)
+                    data_assembly, throwout, kept = process_xena (infile, fout, assembly, VAF)
                     if not assembly:
                         assembly = data_assembly
                     if data_assembly != assembly:
@@ -771,7 +771,7 @@ def process (file, allGenes, samples, genes, dic, VAF):
                 dic[gene][sample]=mtype
     fin.close()
 
-def process_xena (file, fout, VAF):
+def process_xena (file, fout, assembly, VAF):
     fin =open(file, 'r')
     header=""
     ASSEMBLY=""
@@ -838,6 +838,8 @@ def process_xena (file, fout, VAF):
                 ASSEMBLY = "hg19"
             if data[NCBI_Build] in ["hg18","36","GRCh36","GRCh36-lite"]:
                 ASSEMBLY = "hg18"
+            if assembly and assembly != ASSEMBLY:
+                continue
 
         # use the maf input
         sample = data[Tumor_Sample_Barcode]
