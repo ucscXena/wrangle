@@ -403,7 +403,7 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
         os.makedirs( outDir+cancer+"/" )
 
     cgFileName= namesuffix
-    assembly="hg19"
+    assembly= None
     totalThrowout =0
     totalKept =0
     xena = outDir+cancer+"/"+cgFileName
@@ -419,7 +419,11 @@ def mafToXena (inDir, outDir, cancer,flog, PATHPATTERN, suffix, namesuffix, data
                     infile = rootDir+dataDir+"/"+file
                     print infile
                     found =1
-                    assembly, throwout, kept = process_xena (infile, fout, VAF)
+                    data_assembly, throwout, kept = process_xena (infile, fout, VAF)
+                    if not assembly:
+                        assembly = data_assembly
+                    if data_assembly != assembly:
+                        continue 
                     totalKept = totalKept +kept
                     totalThrowout = totalThrowout +throwout
         fout.close()
