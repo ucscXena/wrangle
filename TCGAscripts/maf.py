@@ -838,6 +838,7 @@ def process_xena (file, fout, assembly, VAF):
                 ASSEMBLY = "hg19"
             if data[NCBI_Build] in ["hg18","36","GRCh36","GRCh36-lite"]:
                 ASSEMBLY = "hg18"
+            print assembly, ASSEMBLY
             if assembly and assembly != ASSEMBLY:
                 continue
 
