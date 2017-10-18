@@ -840,7 +840,8 @@ def process_xena (file, fout, assembly, VAF):
                 ASSEMBLY = "hg18"
             print assembly, ASSEMBLY
             if assembly and assembly != ASSEMBLY:
-                continue
+                fin.close()
+                return ASSEMBLY, throwout, kept
 
         # use the maf input
         sample = data[Tumor_Sample_Barcode]
