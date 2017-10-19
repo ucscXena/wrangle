@@ -438,10 +438,10 @@ def commonJSON(J, cancer):
 def mutation_bcgscJSON(J,cancer,genelevel):
     J['name']= "TCGA_PANCAN_mutation_bcgsc"+string.strip(genelevel).replace("-","")
     if genelevel =="":
-        J["label"]= "somatic mutation SNPs and small INDELs (bcgsc)"
+        J["label"]= "bcgsc"
         J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+genelevel+" somatic mutation (bcgsc)"
     else:
-        J["label"]= "somatic gene-level non-silent mutation (bcgsc)"
+        J["label"]= "bcgsc"
         J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+genelevel+" nonsilent somatic mutation (bcgsc)"
     J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" somatic mutation dataa, compiled using data from all TCGA cohorts all TCGA cohorts. The calls are generated at Michael Smith Genome Sciences Centre (British Columbia Genome Sciences Centre, BCGSC) using the BCGSC pipeline method. BCGSC's calls from various TCGA cohorts are combined to produce this dataset."
     J["description"] = J["description"] +"<br><br>"    
@@ -449,10 +449,10 @@ def mutation_bcgscJSON(J,cancer,genelevel):
 def mutation_wustlSON (J, cancer,genelevel):
     J['name']= "TCGA_PANCAN_mutation_wustl"+string.strip(genelevel).replace("-","")
     if genelevel =="":
-        J["label"]= "somatic mutation SNPs and small INDELs (wustl)"
+        J["label"]= "wustl"
         J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+genelevel+" somatic mutation (wustl)"
     else:
-        J["label"]= "somatic gene-level non-silent mutation (wustl)"
+        J["label"]= "wustl"
         J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+genelevel+" nonsilent somatic mutation (wustl)"
     J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" somatic mutation dataa, compiled using data from all TCGA cohorts. The calls are generated at Washington University Genome Center using the WashU pipeline method. BCGSC's calls from various TCGA cohorts are combined to produce this dataset."
     J["description"] = J["description"] +"<br><br>"
@@ -460,7 +460,7 @@ def mutation_wustlSON (J, cancer,genelevel):
 def mutation_ucsc_mafJSON(J,cancer,genelevel):
     J['name']= "TCGA_PANCAN_mutation_ucsc_maf"+string.strip(genelevel).replace("-","")
     if genelevel =="":
-        J["label"]= "somatic mutation SNPs and small INDELs (ucsc)"
+        J["label"]= "ucsc"
         J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+ genelevel+" somatic mutation (ucsc)"
     else:
         J["label"]= "somatic gene-level non-silent mutation (ucsc)"
@@ -471,10 +471,10 @@ def mutation_ucsc_mafJSON(J,cancer,genelevel):
 def mutation_bcmJSON(J,cancer,genelevel):
     J['name']= "TCGA_PANCAN_mutation_bcm"+string.strip(genelevel).replace("-","")
     if genelevel =="":
-        J["label"]= "somatic mutation SNPs and small INDELs (bcm)"
+        J["label"]= "bcm"
         J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+ genelevel+ " somatic mutation (bcm)"
     else:
-        J["label"]= "somatic gene-level non-silent mutation (bcm)"
+        J["label"]= "bcm"
         J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+ genelevel+ " nonsilent somatic mutation (bcm)"
     J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" somatic mutation dataa, compiled using data from all TCGA cohorts.  The calls are generated at Baylor College of Medicine Human Genome Sequencing Center using the Baylor pipeline method. Baylor's calls from various TCGA cohorts are combined to produce this dataset."
     J["description"] = J["description"] +"<br><br>"    
@@ -482,10 +482,10 @@ def mutation_bcmJSON(J,cancer,genelevel):
 def mutation_broadJSON(J,cancer,genelevel):
     J['name']= "TCGA_PANCAN_mutation_broad"+string.strip(genelevel).replace("-","")
     if genelevel =="":
-        J["label"]= "somatic mutation SNPs and small INDELs (broad)"
+        J["label"]= "broad"
         J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+ genelevel+" somatic mutation (broad)"
     else:
-        J["label"]= "somatic gene-level non-silent mutation (broad)"
+        J["label"]= "broad"
         J['longTitle']="TCGA "+TCGAUtil.cancerOfficial[cancer]+ genelevel+" nonsilent somatic mutation (broad)"
     J["description"]= "TCGA "+ TCGAUtil.cancerOfficial[cancer]+" somatic mutation data, compiled using data from all TCGA cohorts. The calls are generated at Broad Institute Genome Sequencing Center using the MuTect method. MuTect calls from various TCGA cohorts are combined to produce this dataset."
     J["description"] = J["description"] +"<br><br>"    
