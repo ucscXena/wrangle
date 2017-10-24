@@ -47,7 +47,7 @@ def checkSamples (Nof1_sample, hub, dataset):
     if Nof1_sample not in samples:
         print Nof1_sample, "is not found in dataset."
         print
-        print "Find out the dataset samples:", "https://genome-cancer.soe.ucsc.edu/proj/site/xena/datapages/?host="+ hub + "&dataset="+ dataset + "&allSamples=true&label="+dataset
+        print "Find out the dataset samples:", "https://xenabrowser.net/datapages/?host="+ hub + "&dataset="+ dataset + "&allSamples=true&label="+dataset
         print
         return 1
     else:
@@ -66,7 +66,7 @@ def checkFields (fields, mapping, hub, dataset, cleanFuntion):
         else:
             print original_field, "is not found in dataset."
             print
-            print "Find out the dataset identifiers:", "https://genome-cancer.soe.ucsc.edu/proj/site/xena/datapages/?host="+ hub + "&dataset="+ dataset + "&allFields=true"
+            print "Find out the dataset identifiers:", "https://xenabrowser.net/datapages/?host="+ hub + "&dataset="+ dataset + "&allFields=true"
             return 1
     return 0
 
