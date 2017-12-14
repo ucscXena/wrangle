@@ -25,9 +25,6 @@ def merge (infile_list, outfile, root ="./"):
     infile_list = tmpList
 
     for infile in infile_list:
-        if not os.path.exists(infile):
-            print infile, "not exists"
-            sys.exit()
         genes = setGeneOrder (infile,genes, tmpDir)
 
     allgenes = posToGene(genes)
