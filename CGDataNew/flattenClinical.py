@@ -6,7 +6,7 @@ from ClinicalFeatureNew  import *
 from IntegrationId  import *
 from CGDataUtil import *
 
-def runFlatten(inDir, outDir,REALRUN, onlyGenomicSamples, SMAPNAME=None):
+def runFlatten(inDir, outDir, REALRUN, onlyGenomicSamples, SMAPNAME=None):
     dir = inDir
     bookDic={}
     sampleMaps={}
