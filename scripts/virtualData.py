@@ -96,12 +96,12 @@ def outputMutationVector (outfile, mutationVectorDatasets):
 
 
 if (len(sys.argv[:]) < 4):
-    print "python virtualData.py dataType(e.g.somatic mutations) outputfile dataDir(s)"
+    print "python virtualData.py dataType(e.g.somatic mutation) outputfile dataDir(s)"
     sys.exit()
 
 dataType = sys.argv[1]
 if dataType not in ["somatic mutation"]:
-    print "unknown dataType"
+    print "unknown dataType", dataType
     sys.exit()
 
 

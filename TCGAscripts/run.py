@@ -72,7 +72,7 @@ for line in fin.readlines():
             cancer = string.replace(cancer,"TCGA.","")
             cancer = string.replace(cancer,".SAMPLEMAP","")
 
-            #if cancer not in ["LUAD"]:
+            #if cancer not in ["OV"]:
             #    continue
 
             """

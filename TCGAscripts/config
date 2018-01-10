@@ -8,31 +8,31 @@ $TMP=preFreeze/TCGA/
 
 #maf mutation open
 #ucsc   : illuminaga_dnaseq_automated
-1	1	maf	ucsc_illuminaga_dnaseq_automated	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/gsc/ucsc.edu/illuminaga_dnaseq_automated/mutations/	$TMP
+0	0	maf	ucsc_illuminaga_dnaseq_automated	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/gsc/ucsc.edu/illuminaga_dnaseq_automated/mutations/	$TMP
 
 #bcm solid
-1	1	maf	hgsc_solid_dnaseq_curated	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/gsc/hgsc.bcm.edu/solid_dnaseq_curated/mutations/	$TMP
-1	1	maf	hgsc_solid_dnaseq	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/gsc/hgsc.bcm.edu/solid_dnaseq/mutations/	$TMP
+0	0	maf	hgsc_solid_dnaseq_curated	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/gsc/hgsc.bcm.edu/solid_dnaseq_curated/mutations/	$TMP
+0	0	maf	hgsc_solid_dnaseq	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/gsc/hgsc.bcm.edu/solid_dnaseq/mutations/	$TMP
 
 #broad  : illuminaga_dnaseq
 #bcm    : illuminaga_dnaseq, solid_dnaseq
 #washU  : illuminaga_dnaseq, illuminahiseq_dnaseq
 #bcgsc  : illuminahiseq_dnaseq
-1	1	maf	bcgsc_illuminahiseq_dnaseq	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/gsc/bcgsc.ca/illuminahiseq_dnaseq/mutations/	$TMP
-1	1	maf	broad_illuminaga_dnaseq	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/gsc/broad.mit.edu/illuminaga_dnaseq/mutations/	$TMP
-1	1	maf	wustl_illuminaga_dnaseq	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/gsc/genome.wustl.edu/illuminaga_dnaseq/mutations/	$TMP
-1	1	maf	hgsc_illuminaga_dnaseq	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/gsc/hgsc.bcm.edu/illuminaga_dnaseq/mutations/	$TMP
+0	0	maf	bcgsc_illuminahiseq_dnaseq	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/gsc/bcgsc.ca/illuminahiseq_dnaseq/mutations/	$TMP
+0	0	maf	broad_illuminaga_dnaseq	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/gsc/broad.mit.edu/illuminaga_dnaseq/mutations/	$TMP
+0	0	maf	wustl_illuminaga_dnaseq	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/gsc/genome.wustl.edu/illuminaga_dnaseq/mutations/	$TMP
+0	0	maf	hgsc_illuminaga_dnaseq	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/gsc/hgsc.bcm.edu/illuminaga_dnaseq/mutations/	$TMP
 
 
-1	1	maf	bcgsc_illuminahiseq_dnaseq_automated	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/gsc/bcgsc.ca/illuminahiseq_dnaseq_automated/mutations/	$TMP
-1	1	maf	broad_illuminaga_dnaseq_automated	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/gsc/broad.mit.edu/illuminaga_dnaseq_automated/mutations/	$TMP
-1	1	maf	hgsc_illuminaga_dnaseq_automated	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/gsc/hgsc.bcm.edu/illuminaga_dnaseq_automated/mutations/	$TMP
-1	1	maf	wustl_illuminahiseq_dnaseq_automated	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/gsc/genome.wustl.edu/illuminahiseq_dnaseq_automated/mutations/	$TMP
+0	0	maf	bcgsc_illuminahiseq_dnaseq_automated	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/gsc/bcgsc.ca/illuminahiseq_dnaseq_automated/mutations/	$TMP
+0	0	maf	broad_illuminaga_dnaseq_automated	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/gsc/broad.mit.edu/illuminaga_dnaseq_automated/mutations/	$TMP
+0	0	maf	hgsc_illuminaga_dnaseq_automated	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/gsc/hgsc.bcm.edu/illuminaga_dnaseq_automated/mutations/	$TMP
+0	0	maf	wustl_illuminahiseq_dnaseq_automated	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/gsc/genome.wustl.edu/illuminahiseq_dnaseq_automated/mutations/	$TMP
 
-1	1	maf	bcgsc_illuminahiseq_dnaseq_curated	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/gsc/bcgsc.ca/illuminahiseq_dnaseq_curated/mutations/	$TMP
-1	1	maf	broad_illuminaga_dnaseq_curated	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/gsc/broad.mit.edu/illuminaga_dnaseq_curated/mutations/	$TMP
-1	1	maf	hgsc_illuminaga_dnaseq_curated	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/gsc/hgsc.bcm.edu/illuminaga_dnaseq_curated/mutations/	$TMP
-1	1	maf	wustl_illuminaga_dnaseq_curated	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/gsc/genome.wustl.edu/illuminaga_dnaseq_curated/mutations/	$TMP
+0	0	maf	bcgsc_illuminahiseq_dnaseq_curated	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/gsc/bcgsc.ca/illuminahiseq_dnaseq_curated/mutations/	$TMP
+0	0	maf	broad_illuminaga_dnaseq_curated	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/gsc/broad.mit.edu/illuminaga_dnaseq_curated/mutations/	$TMP
+0	0	maf	hgsc_illuminaga_dnaseq_curated	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/gsc/hgsc.bcm.edu/illuminaga_dnaseq_curated/mutations/	$TMP
+0	0	maf	wustl_illuminaga_dnaseq_curated	/data/TCGA/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/*/gsc/genome.wustl.edu/illuminaga_dnaseq_curated/mutations/	$TMP
 
 #FH analysis
 $FIREHOSEDATE_ana
@@ -75,7 +75,7 @@ $FIREHOSEDATE_ana_version
 0	0	MergePANCAN	mutation_bcm	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
 0	0	MergePANCAN	mutation_ucsc_maf	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
 0	0	MergePANCAN	mutation_bcgsc	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
-0	0	MergePANCAN	mutation_wustl	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
+1	1	MergePANCAN	mutation_wustl	/inside/home/jzhu/cgDataJing/scripts/data/public/TCGA/*	$TMP
 
 #last to do
 #primary_disease
