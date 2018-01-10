@@ -55,18 +55,6 @@ def miRNA  ( dir, outDir, cancer,flog,REALRUN):
         return
     print cancer, sys._getframe().f_code.co_name
 
-    filename = "miRNA_HiSeq"
-    processMatrix (filename, dir, outDir, cancer,flog, REALRUN)
-
-    filename = "miRNA_HiSeq.probeMap"
-    processProbeMap (filename, dir, outDir, cancer, REALRUN)
-
-    filename = "miRNA_GA"
-    processMatrix (filename, dir,outDir, cancer,flog, REALRUN)
-
-    filename = "miRNA_GA.probeMap"
-    processProbeMap (filename, dir, outDir, cancer, REALRUN)
-
     filename = "miRNA_HiSeq_gene"
     processMatrix (filename, dir,outDir, cancer,flog, REALRUN)
 
