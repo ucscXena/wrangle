@@ -608,7 +608,7 @@ def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, data
 
     #data processing multiple dirs mode
     if REALRUN == 1:
-        fgene=open("/data/TCGA/tcgaDataOneOff/Genomic/PANCAN/genes",'r')
+        fgene=open("/inside/home/jzhu/mergeRefGene/genes_hg19",'r')
         allGenes=[]
         for gene in string.split(fgene.read(),"\n"):
             allGenes.append(string.strip(gene))
