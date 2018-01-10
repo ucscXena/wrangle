@@ -30,11 +30,13 @@ def totalDatasets(hubs):
 
 
 hubs = [
-  #"https://genome-cancer.ucsc.edu/proj/public/xena",
-  "https://tcga.xenahubs.net",
-  "https://icgc.xenahubs.net",
-  "https://toil.xenahubs.net",
-  "https://ucscpublic.xenahubs.net"
+#  "https://tcga.xenahubs.net",
+#  "https://icgc.xenahubs.net",
+#  "https://toil.xenahubs.net",
+  "https://ucscpublic.xenahubs.net",
+#  "https://icgc.xenahubs.net",
+#  "https://gdc.xenahubs.net",
+#  "https://treehouse.xenahubs.net"
 ]
 totalSamples(hubs)
 
