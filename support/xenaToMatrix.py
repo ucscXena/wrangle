@@ -88,9 +88,9 @@ typeDic={
 
 
 #xena data file
-#ALLGENE_FILE = "/inside/home/jzhu/scripts/name2/RefGene.name2"
-#ALLGENE_FILE = "/data/TCGA/tcgaDataOneOff/Genomic/PANCAN/genes"
-ALLGENE_FILE = "/inside/home/jzhu/cgDataJing/TCGAscripts/gencode_genes"
+ALLGENE_FILE = {
+    "hg19": "/inside/home/jzhu/mergeRefGene/genes_hg19"
+}
 
 def allGeneList(file):
     fin = open(file,'r')
@@ -161,17 +161,18 @@ def output (outfile, samples, genes, dic):
 
 
 if __name__ == '__main__':
-    if len(sys.argv[:]) < 3:
-        print "python xenaToMatrix.py matrixOut xenaFile(s)\n"
+    if len(sys.argv[:]) < 4:
+        print "python xenaToMatrix.py assembly(hg19) matrixOut xenaFile(s)\n"
         sys.exit()
 
-    outfile = sys.argv[1]
-    files = sys.argv[2:]
+    assembly = sys.argv[1]
+    outfile = sys.argv[2]
+    files = sys.argv[3:]
     samples=[]
     genes=[]
     dic={}
 
-    allGeneList = allGeneList(ALLGENE_FILE)
+    allGeneList = allGeneList(ALLGENE_FILE[assembly])
     for gene in allGeneList:
         dic[gene]={}
     

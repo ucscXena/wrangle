@@ -608,7 +608,7 @@ def mafToMatrix (inDir, outDir, cancer,flog,PATHPATTERN,suffix, namesuffix, data
 
     #data processing multiple dirs mode
     if REALRUN == 1:
-        fgene=open("/inside/home/jzhu/mergeRefGene/genes_hg19",'r')
+        fgene=open(xenaToMatrix.ALLGENE_FILE["hg19"],'r')
         allGenes=[]
         for gene in string.split(fgene.read(),"\n"):
             allGenes.append(string.strip(gene))
@@ -767,7 +767,7 @@ def process (file, allGenes, samples, genes, dic, VAF):
         if sample not in dic[gene]:
             dic[gene][sample]=mtype
         else:
-            if mtype < dic[gene][sample]:
+            if mtype > dic[gene][sample]:
                 dic[gene][sample]=mtype
     fin.close()
 
