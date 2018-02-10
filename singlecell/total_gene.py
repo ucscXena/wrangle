@@ -8,15 +8,19 @@ def column_N(input):
 
 def process (input, colN):
     fin = open(input,'r')
-    fin.readline()
+    line = fin.readline()
     cells = string.split(line[:-1],'\t')
 
     total =[]
     for i in range (0, colN):
     	total.append(0)
 
-    while:
-    	line = fin.readline()
+    count = 0
+    while 1:
+        count = count +1
+        if count % 500 == 0:
+            print count
+     	line = fin.readline()
     	if line =='':
     		break
     	values = string.split(line[:-1],'\t')
