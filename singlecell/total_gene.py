@@ -1,10 +1,10 @@
 import string, sys, os
 
 def column_N(input):
-	fin = open(input,'r')
-	N = len(string.split(fin.readline(),'\t'))
-        fin.close()
-	return N
+    fin = open(input,'r')
+    N = len(string.split(fin.readline(),'\t'))
+    fin.close()
+    return N
 
 def process (input, colN):
     fin = open(input,'r')
@@ -34,7 +34,7 @@ def writeout(cells, values, output):
         for i in range (1, len(cells)):
                 cell = cells[i]
                 value = values[i]
-                fout.write(cell +'\t'+ value+'\n')
+                fout.write(cell +'\t'+ str(value)+'\n')
         fout.close()
 
 if len(sys.argv[:])!=3:
