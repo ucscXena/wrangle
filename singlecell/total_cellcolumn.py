@@ -10,6 +10,17 @@ if len(sys.argv[:])!=3:
 	sys.exit()
 
 input = sys.argv[1]
+output = sys.argv[2]
+fout = open(output,'w')
+fout.close()
+
 colN = column_N(input)
-for i in range(1,colN):
-	os.system("cut -f "+ str(i) + " | datamash sum 1 > .out")
+K = 1000
+
+os.system("datamash -H sum 2-" + str(colN) + " < "+ input + ">>" + output)
+
+"""
+for i in range(1, colN, K):
+        print i
+	os.system("datamash -H sum "+ str(i+1) +"-" + str(i+K-1) + "< "+ input + ">>" + output)
+"""
