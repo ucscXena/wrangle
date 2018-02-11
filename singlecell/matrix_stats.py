@@ -50,9 +50,9 @@ def process (input, colN):
             gene_stats_UMI[gene] = gene_stats_UMI[gene] + value
     fin.close()
 
-    return cells, total_gene, total_UMI, gene_stats
+    return cells, total_gene, total_UMI, gene_stats_count, gene_stats_UMI
 
-def writeout(outputdir, cells, total_gene, total_UMI, gene_stats):
+def writeout(outputdir, cells, total_gene, total_UMI, gene_stats_count, gene_stats_UMI):
     fcellStat = open(outputdir + geneoutput,'w')
     fcellStat.write("cell\ttotal_gene_expressed\ttotal_UMI_counts\n")
     fgeneStat = open(outputdir + geneStatoutput,'w')
@@ -78,6 +78,6 @@ if outputdir[-1] !="/":
     outputdir = outputdir +'/' 
 
 colN = column_N(input)
-cells, total_gene, total_UMI, gene_stats = process (input, colN)
+cells, total_gene, total_UMI, gene_stats_count, gene_stats_UMI = process (input, colN)
 
-writeout(outputdir, cells, total_gene, total_UMI, gene_stats)
+writeout(outputdir, cells, total_gene, total_UMI, gene_stats_count, gene_stats_UMI)
