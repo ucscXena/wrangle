@@ -53,7 +53,7 @@ def process (input, colN):
     return cells, total_gene, total_UMI, gene_stats_count, gene_stats_UMI
 
 def writeout(outputdir, cells, total_gene, total_UMI, gene_stats_count, gene_stats_UMI):
-    fcellStat = open(outputdir + geneoutput,'w')
+    fcellStat = open(outputdir + cellStatoutput,'w')
     fcellStat.write("cell\ttotal_gene_expressed\ttotal_UMI_counts\n")
     fgeneStat = open(outputdir + geneStatoutput,'w')
     fgeneStat.write("gene\ttotal_cell\ttotal_UMI\n")
