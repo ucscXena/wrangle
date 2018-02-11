@@ -68,9 +68,9 @@ def writeout(outputdir, cells, total_gene, total_UMI, gene_stats_count, gene_sta
     fcellStat.close()
     fgeneStat.close()
 
-    os.system("sort -nk 2 " + outputdir + cellStatoutput + '> .out')
+    os.system("sort -nk 2 " + outputdir + cellStatoutput + ' > .out')
     os.system("mv .out > " + outputdir + cellStatoutput)
-    os.system("sort -nk 2 " + outputdir + geneStatoutput + '> .out')
+    os.system("sort -nk 2 " + outputdir + geneStatoutput + ' > .out')
     os.system("mv .out > " + outputdir + geneStatoutput)
 
 if len(sys.argv[:])!=3:
