@@ -62,7 +62,7 @@ def writeout(outputdir, cells, total_gene, total_UMI, gene_stats_count, gene_sta
         cell = cells[i]
         fcellStat.write(cell +'\t'+ str(total_gene[i])+ '\t'+ str(total_UMI[i])+'\n')
 
-    for gene in gene_stats:
+    for gene in gene_stats_count:
         fgeneStat.write(gene + '\t' + str(gene_stats_count[gene])+ '\t' + str(gene_stats_UMI[gene]) + '\n')
 
     fcellStat.close()
