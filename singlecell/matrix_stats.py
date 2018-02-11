@@ -40,7 +40,7 @@ def process (input, colN):
     	for i in range (1, colN):
             value = float(values[i])
             if value != 0:
-                total_gene[i] = total[i] +1
+                total_gene[i] = total_gene[i] +1
             total_UMI[i] = total_UMI[i] + value
             gene_stats[gene] = gene_stats[gene] + value
     fin.close()
