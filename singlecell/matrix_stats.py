@@ -1,7 +1,6 @@
 import string, sys, os
 
-geneoutput = "gene_counts_per_sample"
-UMIoutput = "UMI_counts_per_sample"
+cellStatoutput = "cell_statistics"
 geneStatoutput = "gene_statistics"
 
 def column_N(input):
@@ -17,7 +16,8 @@ def process (input, colN):
 
     total_gene =[]
     total_UMI =[]
-    gene_stats ={}
+    gene_stats_UMI ={}
+    gene_stats_count ={}
 
     for i in range (0, colN):
     	total_gene.append(0)
@@ -33,43 +33,39 @@ def process (input, colN):
     		break
     	values = string.split(line[:-1],'\t')
         gene = values[0]
-        if gene in gene_stats:
+        if gene in gene_stats_UMI:
             print "error, duplicated", gene
-        gene_stats[gene]=0
+        if gene in gene_stats_count:
+            print "error, duplicated", gene
+        gene_stats_UMI[gene]=0
+        gene_stats_count[gene] = 0
 
     	for i in range (1, colN):
             value = float(values[i])
             if value != 0:
                 total_gene[i] = total_gene[i] +1
-            total_UMI[i] = total_UMI[i] + value
-            gene_stats[gene] = gene_stats[gene] + value
-    fin.close()
+                gene_stats_count[gene] = gene_stats_count[gene] + 1
 
-    for gene in gene_stats:
-        gene_stats[gene] = gene_stats[gene]/colN
+            total_UMI[i] = total_UMI[i] + value
+            gene_stats_UMI[gene] = gene_stats_UMI[gene] + value
+    fin.close()
 
     return cells, total_gene, total_UMI, gene_stats
 
 def writeout(outputdir, cells, total_gene, total_UMI, gene_stats):
-    fgene = open(outputdir + geneoutput,'w')
-    fgene.write("cell\ttotal_gene_counts\n")
-    fUMI = open(outputdir + UMIoutput,'w')
-    fUMI.write("cell\ttotal_UMI_counts\n")
+    fcellStat = open(outputdir + geneoutput,'w')
+    fcellStat.write("cell\ttotal_gene_expressed\ttotal_UMI_counts\n")
     fgeneStat = open(outputdir + geneStatoutput,'w')
-    fgeneStat.write("gene\taverage_UMI\n")
+    fgeneStat.write("gene\ttotal_cell\ttotal_UMI\n")
 
     for i in range (1, len(cells)):
         cell = cells[i]
-        value = total_gene[i]
-        fgene.write(cell +'\t'+ str(value)+'\n')
-        value = total_UMI[i]
-        fUMI.write(cell +'\t'+ str(value)+'\n')
+        fcellStat.write(cell +'\t'+ str(total_gene[i])+ '\t'+ str(total_UMI[i])+'\n')
 
     for gene in gene_stats:
-        fgeneStat.write(gene + '\t' + str(gene_stats[gene])+'\n')
+        fgeneStat.write(gene + '\t' + str(gene_stats_count[gene])+ '\t' + str(gene_stats_UMI[gene]) + '\n')
 
-    fgene.close()
-    fUMI.close()
+    fcellStat.close()
     fgeneStat.close()
 
 if len(sys.argv[:])!=3:
