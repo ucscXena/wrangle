@@ -1,6 +1,6 @@
 import string, sys, os
 
-DATAfile = "data.tsv"
+DATAfile = "matrix.tsv"
 cellStatfile = "cell_statistics"
 geneStatfile = "gene_statistics"
 
