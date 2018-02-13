@@ -63,7 +63,7 @@ def filter(infile, good_cells, good_genes, data_dir, output):
 		for j in range (i, i+K):
 			if j >= len(good_cols):
 				break
-			col_list.append(str(good_cols[j]))
+			col_list.append(str(good_cols[j+1]))
 		os.system("cut -f " + string.join(col_list,',') + ' ' + tmpDir + '/.out >' + tmpDir + "/data_" + str(count))	
 	
 	#paste
@@ -73,7 +73,7 @@ def filter(infile, good_cells, good_genes, data_dir, output):
 	os.system("paste " + string.join(files,' ') + ' > ' + output)
 
 	#clean up
-	os.system("rm -rf " + tmpDir)
+	#os.system("rm -rf " + tmpDir)
 
 if len(sys.argv[:])!=4:
 	print "python filter_gene_cell.py data_dir cell(per_cell_gene_count_min) gene(per_gene_cell_count_min)"
