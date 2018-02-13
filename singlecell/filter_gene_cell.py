@@ -32,7 +32,7 @@ def filter(infile, good_cells, good_genes, output):
 		if cells[i] in good_cells:
 			good_cols.append(i)
 			fout.write('\t' + cells[i])
-			
+
 	while 1:
 		line = fin.readline()
 		if line == '':
@@ -67,5 +67,5 @@ good_genes = check(data_dir + geneStatfile, per_gene_cell_count_min)
 print "Cells:", len(good_cells)
 print "Genes:", len(good_genes)
 
-output = "data_c"+per_cell_gene_count_min+"_g"+per_gene_cell_count_min
+output = "data_c"+ str(per_cell_gene_count_min)+"_g"+ str(per_gene_cell_count_min)
 filter(data_dir + cellStatfile, good_cells, good_genes, output)
