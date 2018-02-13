@@ -31,7 +31,8 @@ def filter(infile, good_cells, good_genes, output):
 	for i in range (1, len(cells)):
 		if cells[i] in good_cells:
 			good_cols.append(i)
-			fout.write('\t' + cells[i])
+			fout.write("\t" + cells[i])
+	fout.write('\n')
 
 	while 1:
 		line = fin.readline()
