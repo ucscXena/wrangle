@@ -1,6 +1,6 @@
 import string, sys, os
 
-DATAfile = "data.tsv"
+DATAfile = "matrix.tsv"
 cellStatfile = "cell_statistics"
 geneStatfile = "gene_statistics"
 
@@ -31,18 +31,18 @@ def filter(infile, good_cells, good_genes, output):
 	for i in range (1, len(cells)):
 		if cells[i] in good_cells:
 			good_cols.append(i)
-			fout.write("\t" + cells[i])
+                        fout.write("\t" + cells[i])
 	fout.write('\n')
 
 	while 1:
 		line = fin.readline()
 		if line == '':
 			break
-		data = string.split(line, '\t')
+		data = string.split(line[:-1], '\t')
 		gene = data[0]
-		fout.write(gene)
 		if gene not in good_genes:
 			continue
+		fout.write(gene)
 		for i in range(1, len(data)):
 			if i in good_cols:
 				fout.write('\t' + data[i])
@@ -68,5 +68,5 @@ good_genes = check(data_dir + geneStatfile, per_gene_cell_count_min)
 print "Cells:", len(good_cells)
 print "Genes:", len(good_genes)
 
-output = "data_c"+ str(per_cell_gene_count_min)+"_g"+ str(per_gene_cell_count_min)
-filter(data_dir + cellStatfile, good_cells, good_genes, output)
+output = "matrix_c"+ str(per_cell_gene_count_min)+"_g"+ str(per_gene_cell_count_min)
+filter(data_dir + DATAfile, good_cells, good_genes, output)
