@@ -1,7 +1,8 @@
 import string, sys, os
 
-cellStatoutput = "cell_statistics"
-geneStatoutput = "gene_statistics"
+DATAfile = "data.tsv"
+cellStatfile = "cell_statistics"
+geneStatfile = "gene_statistics"
 
 def column_N(input):
     fin = open(input,'r')
@@ -52,10 +53,10 @@ def process (input, colN):
 
     return cells, total_gene, total_UMI, gene_stats_count, gene_stats_UMI
 
-def writeout(outputdir, cells, total_gene, total_UMI, gene_stats_count, gene_stats_UMI):
-    fcellStat = open(outputdir + cellStatoutput,'w')
+def writeout(data_dir, cells, total_gene, total_UMI, gene_stats_count, gene_stats_UMI):
+    fcellStat = open(data_dir + cellStatfile,'w')
     fcellStat.write("cell\ttotal_gene_expressed\ttotal_UMI_counts\n")
-    fgeneStat = open(outputdir + geneStatoutput,'w')
+    fgeneStat = open(data_dir + geneStatfile,'w')
     fgeneStat.write("gene\ttotal_cell\ttotal_UMI\n")
 
     for i in range (1, len(cells)):
@@ -68,21 +69,20 @@ def writeout(outputdir, cells, total_gene, total_UMI, gene_stats_count, gene_sta
     fcellStat.close()
     fgeneStat.close()
 
-    os.system("sort -gk 2 " + outputdir + cellStatoutput + ' > .out')
-    os.system("mv .out " + outputdir + cellStatoutput)
-    os.system("sort -gk 2 " + outputdir + geneStatoutput + ' > .out')
-    os.system("mv .out " + outputdir + geneStatoutput)
+    os.system("sort -gk 2 " + data_dir + cellStatfile + ' > .out')
+    os.system("mv .out " + data_dir + cellStatfile)
+    os.system("sort -gk 2 " + data_dir + geneStatfile + ' > .out')
+    os.system("mv .out " + data_dir + geneStatfile)
 
-if len(sys.argv[:])!=3:
-	print "python matrix_stats.py xena_matrix_input outputdir"
+if len(sys.argv[:])!=2:
+	print "python matrix_stats.py data_dir"
 	sys.exit()
 
-input = sys.argv[1]
-outputdir = sys.argv[2]
-if outputdir[-1] !="/":
-    outputdir = outputdir +'/' 
+data_dir = sys.argv[1]
+if data_dir[-1] !="/":
+    data_dir = data_dir +'/' 
 
-colN = column_N(input)
-cells, total_gene, total_UMI, gene_stats_count, gene_stats_UMI = process (input, colN)
+colN = column_N(data_dir + DATAfile)
+cells, total_gene, total_UMI, gene_stats_count, gene_stats_UMI = process (data_dir + DATAfile, colN)
 
-writeout(outputdir, cells, total_gene, total_UMI, gene_stats_count, gene_stats_UMI)
+writeout(data_dir, cells, total_gene, total_UMI, gene_stats_count, gene_stats_UMI)
