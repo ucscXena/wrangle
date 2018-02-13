@@ -24,6 +24,7 @@ def check(infile, min_threshold):
 def filter(infile, good_cells, good_genes, data_dir, output):
 	fin = open(infile, 'r')
 	tmpDir =data_dir + str(uuid.uuid4())
+        os.system("mkdir "+ tmpDir)
 	ftmp = open(tmpDir + "/.out", 'w')
 	
 	#genes
@@ -63,13 +64,12 @@ def filter(infile, good_cells, good_genes, data_dir, output):
 			if j >= len(good_cols):
 				break
 			col_list.append(str(good_cols[j]))
-		os.system("cut -f " + string.join(col_list,',') + tmpDir + '/.out >' + tmpDir + "/data_" + str(count))
-	
+		os.system("cut -f " + string.join(col_list,',') + ' ' + tmpDir + '/.out >' + tmpDir + "/data_" + str(count))	
 	
 	#paste
 	files = []
 	for i in range(0, count):
-		files.append("data_" + str(count))
+		files.append(tmpDir+"/data_" + str(count))
 	os.system("paste " + string.join(files,' ') + ' > ' + output)
 
 	#clean up
