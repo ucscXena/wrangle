@@ -1,4 +1,5 @@
 import string, sys, os
+import uuid
 
 DATAfile = "matrix.tsv"
 cellStatfile = "cell_statistics"
@@ -20,36 +21,59 @@ def check(infile, min_threshold):
 	fin.close()
 	return good_list
 
-def filter(infile, good_cells, good_genes, output):
+def filter(infile, good_cells, good_genes, data_dir, output):
 	fin = open(infile, 'r')
-	fout = open(output, 'w') 
-	#cells
-	line = fin.readline()
-	cells = string.split(line[:-1],'\t')
-	good_cols =[]
-	fout.write("cell")
-	for i in range (1, len(cells)):
-		if cells[i] in good_cells:
-			good_cols.append(i)
-                        fout.write("\t" + cells[i])
-	fout.write('\n')
-
+	tmpDir =data_dir + str(uuid.uuid4())
+	ftmp = open(tmpDir + "/.out", 'w')
+	
+	#genes
+	ftmp.write(fin.readline())
 	while 1:
 		line = fin.readline()
 		if line == '':
 			break
-		data = string.split(line[:-1], '\t')
+		data = string.split(line, '\t')
 		gene = data[0]
 		if gene not in good_genes:
 			continue
-		fout.write(gene)
-		for i in range(1, len(data)):
-			if i in good_cols:
-				fout.write('\t' + data[i])
-		fout.write('\n')
-
+		ftmp.write(line)
+	ftmp.close()
 	fin.close()
-	fout.close()
+
+	#cells
+	fin = open(infile, 'r')
+	line = fin.readline()
+	cells = string.split(line[:-1],'\t')
+	good_cols =[]
+	for i in range (1, len(cells)):
+		if cells[i] in good_cells:
+			good_cols.append(i)
+	fin.close()
+
+	#cut
+	count = 0
+	os.system("cut -f 1 " + tmpDir + '/.out > ' + tmpDir + "/data_" + str(count))
+
+	K=5000 
+
+	for i in range(0, len(good_cols), K):
+		count = count + 1
+		col_list =[]
+		for j in range (i, i+K):
+			if j >= len(good_cols):
+				break
+			col_list.append(str(good_cols[j]))
+		os.system("cut -f " + string.join(col_list,',') + tmpDir + '/.out >' + tmpDir + "/data_" + str(count))
+	
+	
+	#paste
+	files = []
+	for i in range(0, count):
+		files.append("data_" + str(count))
+	os.system("paste " + string.join(files,' ') + ' > ' + output)
+
+	#clean up
+	os.system("rm -rf " + tmpDir)
 
 if len(sys.argv[:])!=4:
 	print "python filter_gene_cell.py data_dir cell(per_cell_gene_count_min) gene(per_gene_cell_count_min)"
@@ -69,4 +93,4 @@ print "Cells:", len(good_cells)
 print "Genes:", len(good_genes)
 
 output = "matrix_c"+ str(per_cell_gene_count_min)+"_g"+ str(per_gene_cell_count_min)
-filter(data_dir + DATAfile, good_cells, good_genes, output)
+filter(data_dir + DATAfile, good_cells, good_genes, data_dir, output)
