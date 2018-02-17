@@ -93,6 +93,5 @@ good_genes = check(data_dir + geneStatfile, per_gene_cell_count_min)
 print "Cells:", len(good_cells)
 print "Genes:", len(good_genes)
 
-outputdir = "matrix_c"+ str(per_cell_gene_count_min)+"_g"+ str(per_gene_cell_count_min)
-output = outputdir + "/" + outputdir + ".tsv"
+output = "matrix_c"+ str(per_cell_gene_count_min)+"_g"+ str(per_gene_cell_count_min) + ".tsv"
 filter(data_dir + DATAfile, good_cells, good_genes, data_dir, output)
