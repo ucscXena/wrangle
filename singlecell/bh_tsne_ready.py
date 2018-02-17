@@ -1,7 +1,7 @@
 import string, sys, os
 
 def bh_tsne_ready(input, output):
-	os.system("head -n 1 " + input + " | tr '\t' '\n' | tail -n 2 > bh_tsne_cells")
+	os.system("head -n 1 " + input + " | tr '\t' '\n' | tail -n +2 > bh_tsne_cells")
 
 	os.system("tail -n +2 " + input + " | cut -f 2- > .bh_tsne_T")
 	
