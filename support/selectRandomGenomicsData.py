@@ -26,7 +26,8 @@ def process(infile, outfile):
 if len(sys.argv[:])!=3:
 	print "python selectRandomGenomicsData.py. infile outfile"
 	print
-
+	sys.exit()
+	
 infile = sys.argv[1]
 outfile = sys.argv[2]
 	
