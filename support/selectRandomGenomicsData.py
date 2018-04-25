@@ -2,7 +2,7 @@ import string, sys
 import random
 
 def writeShuffledData(items, cellOrder, fout):
-	fout.write(item[0])
+	fout.write(items[0])
 	for index in cellOrder:
 		fout.write('\t' + items[index])
 	fout.write('\n')
@@ -10,24 +10,26 @@ def writeShuffledData(items, cellOrder, fout):
 def process(infile, outfile):
 	fin = open(infile,'r')
 	fout = open(outfile, 'w')
-	header = string.split(fin.readline(),'\t')
+        line = fin.readline()[:-1]
+	header = string.split(line,'\t')
 	cellN = len(header)
-	cellOrder = random.shuffle(1, cellN)
+	cellOrder = range(1, cellN)
+        random.shuffle(cellOrder)
 	writeShuffledData(header, cellOrder, fout)
 	while (1):
-		line = fin.readline()
+		line = fin.readline()[:-1]
 		if line == '':
 			break
-		data = string.split(fin.readline(),'\t')
+		data = string.split(line, '\t')
 		writeShuffledData(data, cellOrder, fout)
 	fin.close()
 	fout.close()
 
 if len(sys.argv[:])!=3:
-	print "python selectRandomGenomicsData.py. infile outfile"
+	print "python selectRandomGenomicsData.py infile outfile"
 	print
 	sys.exit()
 	
 infile = sys.argv[1]
 outfile = sys.argv[2]
-	
+process(infile, outfile)
