@@ -9,9 +9,12 @@ def bh_tsne_ready(input, output):
 
 if len(sys.argv[:])!= 3:
 	print "python bh_tsne_ready.py input_matrix output_bhtsne(transpose no headers)"
+	print
 	sys.exit()
 
 input = sys.argv[1]
 output = sys.argv[2]
 
 bh_tsne_ready(input, output)
+
+print "cells are written to bh_tsne_cells"
