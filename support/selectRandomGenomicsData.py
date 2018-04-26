@@ -14,8 +14,9 @@ def process(infile, outfile, maxN):
 	header = string.split(line,'\t')
 	cellN = len(header)
 	cellOrder = range(1, cellN)
-        random.shuffle(cellOrder)
-        cellOrder = cellOrder[:maxN]
+    random.shuffle(cellOrder)
+    if maxN :
+	    cellOrder = cellOrder[:maxN]
 	writeShuffledData(header, cellOrder, fout)
 	while (1):
 		line = fin.readline()[:-1]
@@ -34,5 +35,7 @@ if len(sys.argv[:]) < 3 :
 infile = sys.argv[1]
 outfile = sys.argv[2]
 if len(sys.argv[:]) == 4:
-        maxN = int(sys.argv[3])
+	maxN = int(sys.argv[3])
+else:
+	maxN = None
 process(infile, outfile, maxN)
