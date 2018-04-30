@@ -75,7 +75,9 @@ def writeout(data_dir, cells, total_gene, total_UMI, gene_stats_count, gene_stat
     os.system("mv .out " + data_dir + geneStatfile)
 
 if len(sys.argv[:])!=2:
-	print "python matrix_stats.py data_dir"
+    print "python matrix_stats.py data_dir"
+    print "expect input data is called matrix.tsv"
+    print
 	sys.exit()
 
 data_dir = sys.argv[1]
