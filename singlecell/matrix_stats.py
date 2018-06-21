@@ -78,7 +78,7 @@ if len(sys.argv[:])!=2:
     print "python matrix_stats.py data_dir"
     print "expect input data is called matrix.tsv"
     print
-	sys.exit()
+    sys.exit()
 
 data_dir = sys.argv[1]
 if data_dir[-1] !="/":
