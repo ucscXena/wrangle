@@ -3,6 +3,8 @@ cut -f 1-12 TCGA_ATAC_Log2Counts_Matrix.180608.txt | awk 'BEGIN {FS="\t"; OFS="\
 
 modify header TCGA_ATAC_peak.probeMap
 
+fix scientific notation
+
 #data
 cut -f 6,15- TCGA_ATAC_Log2Counts_Matrix.180608.txt > TCGA_ATAC_peak.data
 
