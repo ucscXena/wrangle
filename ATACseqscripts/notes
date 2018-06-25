@@ -1,9 +1,12 @@
-#probeMap
+# probeMap from count matrix
 cut -f 1-12 TCGA_ATAC_Log2Counts_Matrix.180608.txt | awk 'BEGIN {FS="\t"; OFS="\t"} {print $6, $12, $1, $2, $3, $5}' > TCGA_ATAC_peak.probeMap
 
 modify header TCGA_ATAC_peak.probeMap
 
-fix scientific notation
+fix scientific notation:  fixScientificNotationProbeMap.py
+
+# build high quality probeMap using linkage data
+python2.7 ~/git/wrangle/ATACseqscripts/buildEnhancer.py 
 
 #data
 cut -f 6,15- TCGA_ATAC_Log2Counts_Matrix.180608.txt > TCGA_ATAC_peak.data
@@ -20,4 +23,7 @@ cat 180608_TCGA_ATAC_StanfordMetadata.txt |awk 'BEGIN {FS="\t"; OFS="\t"}{print 
 # GDC cohort version of the data
 replace header of the datafile using mapping_stanford_sampleGDC
  
-dedup one more time of the datafile 
+dedup one more time of the datafile
+
+# PancanAtals cohort version of the data
+
