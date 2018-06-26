@@ -52,7 +52,7 @@ def processPeakInfo(peakinfoFile, TTSDic, TTSchrom, probeMap):
 		fout.write(string.join([id, string.join(gene_list,','), chrom, str(start), str(end), strand ],'\t')+'\n')
 
 	fin.close()
-	fou.close()
+	fout.close()
 
 TTSDic, TTSchrom = processTranscriptProbeMap (transcriptProbeMap)
 processPeakInfo(peakinfoFile, TTSDic, TTSchrom, probeMap)

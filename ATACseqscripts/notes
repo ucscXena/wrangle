@@ -12,7 +12,7 @@ fix scientific notation:  fixScientificNotationProbeMap.py
 # build high quality probeMap using linkage data
 python2.7 ~/git/wrangle/ATACseqscripts/buildEnhancerProbeMap.py 
 
-#data
+# data
 cut -f 6,15- TCGA_ATAC_Log2Counts_Matrix.180608.txt > TCGA_ATAC_peak.data
 
 modify sample header
