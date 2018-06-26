@@ -22,7 +22,7 @@ def processLinkagefile(enhancerlinkageFile, probeMapDic):
 	fin = open(enhancerlinkageFile,'U')
 	fout = open(newProbeMap, 'w')
 	fin.readline()
-	fout.write("id\tgene\tchrom\tchromStart\tchromEnd\tstrand")
+	fout.write("id\tgene\tchrom\tchromStart\tchromEnd\tstrand\n")
 	for line in fin.readlines():
 		data = string.split(line[:-1], '\t')
 		enhancerID = data[-1]
