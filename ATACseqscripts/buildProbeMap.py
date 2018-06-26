@@ -2,7 +2,7 @@ import string, sys
 
 transcriptProbeMap = "gencode.v23.basic.annotation.transcript.probeMap"
 peakinfoFile = "TCGA_ATAC_Log2Counts_Matrix.peak.info"
-probeMap = "TCGA_ATAC_peak.probeMap"
+probeMap = "TCGA_ATAC_peak.all.probeMap"
 
 def processTranscriptProbeMap (transcriptProbeMap):
 	fin = open(transcriptProbeMap,'U')
@@ -36,8 +36,8 @@ def processPeakInfo(peakinfoFile, TTSDic, TTSchrom, probeMap):
 		print count
 		data = string.split(line[:-1], '\t')
 		chrom = data[0]
-		start = int(float(data[2]))
-		end = int(float(data[3]))
+		start = int(float(data[1]))
+		end = int(float(data[2]))
 		id = data[5]
 		strand = data[4]
 		peak_pos = start + 250
