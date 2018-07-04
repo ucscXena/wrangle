@@ -7,8 +7,8 @@ import string, sys
 
 #### gene enhancer linkage for brca
 enhancerlinkageFile = "BRCA_ATAC_Peak_Linage.txt"
-probeFile = "TCGA_ATAC_peak.probeMap"
-newProbeMap = "BRCA_ATAC_peak.Linkage.probeMap"
+probeFile = "brca_peak.probeMap"
+newProbeMap = "brca_enhencer.probeMap"
 
 def processLowQprobeMap(probeFile):
 	fin = open(probeFile,'U')
