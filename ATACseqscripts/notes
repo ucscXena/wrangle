@@ -1,6 +1,12 @@
+# in R example 
+read: object1<-readRDS("BRCA.fwp.filter.non_overlapping.annotated.rds")
+matrix: write.table(rowRanges(object), 'brca_peak_coord.txt', col.names = NA, quote = FALSE, sep="\t")
+probe coord: write.table(rowRanges(object), 'brca_peak_coord.txt', row.names = FALSE, quote = FALSE, sep="\t")
+
+
 # probeMap for all peaks within 1Mb region
-cut -f 1-14 TCGA_ATAC_Log2Counts_Matrix.180608.txt > TCGA_ATAC_Log2Counts_Matrix.peak.info
-~/git/wrangle/ATACseqscripts/buildProbeMap.py 
+cut -f 1-14 TCGA_ATAC_Log2Counts_Matrix.180608.txt > TCGA_peak_coord.txt
+~/git/wrangle/ATACseqscripts/buildProbeMap.py
 
 # probeMap from count matrix
 cut -f 1-12 TCGA_ATAC_Log2Counts_Matrix.180608.txt | awk 'BEGIN {FS="\t"; OFS="\t"} {print $6, $12, $1, $2, $3, $5}' > TCGA_ATAC_peak.probeMap

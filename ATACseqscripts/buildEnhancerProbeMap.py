@@ -1,8 +1,14 @@
 import string, sys
 
-enhancerlinkageFile = "ATAC_Peak_Linkage.txt"
+#### gene enhancer linkage for pan-can
+# enhancerlinkageFile = "ATAC_Peak_Linkage.txt"
+# probeFile = "TCGA_ATAC_peak.probeMap"
+# newProbeMap = "TCGA_ATAC_peak.Linkage.probeMap"
+
+#### gene enhancer linkage for brca
+enhancerlinkageFile = "BRCA_ATAC_Peak_Linage.txt"
 probeFile = "TCGA_ATAC_peak.probeMap"
-newProbeMap = "TCGA_ATAC_peak.Linkage.probeMap"
+newProbeMap = "BRCA_ATAC_peak.Linkage.probeMap"
 
 def processLowQprobeMap(probeFile):
 	fin = open(probeFile,'U')
@@ -31,8 +37,11 @@ def processLinkagefile(enhancerlinkageFile, probeMapDic):
 		end = str(int(float(data[2])))
 		targetGene = data[6]
 		coord_id = string.join([chrom, start, end],'_')
-		peakID = probeMapDic[coord_id]
-		fout.write(string.join([peakID, targetGene, chrom, start, end, '+'],'\t') + '\n')
+		try:
+			peakID = probeMapDic[coord_id]
+			fout.write(string.join([peakID, targetGene, chrom, start, end, '+'],'\t') + '\n')
+		except KeyError:
+			print coord_id
 	fin.close()
 	fout.close()
 
