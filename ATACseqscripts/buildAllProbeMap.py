@@ -1,8 +1,6 @@
 import string, sys
 
 transcriptProbeMap = "gencode.v23.basic.annotation.transcript.probeMap"
-peakinfoFile = "TCGA_ATAC_Log2Counts_Matrix.peak.info"
-probeMap = "TCGA_ATAC_peak.all.probeMap"
 
 def processTranscriptProbeMap (transcriptProbeMap):
 	fin = open(transcriptProbeMap,'U')
@@ -53,6 +51,15 @@ def processPeakInfo(peakinfoFile, TTSDic, TTSchrom, probeMap):
 
 	fin.close()
 	fout.close()
+
+
+if len(sys.argv[:])!=3:
+	print "python buildAllProbeMap.py peak_coord_info_file_in probeMap_file_out"
+	print
+	sys.exit()
+	
+peakinfoFile = sys.argv[1]
+probeMap = sys.argv[2]
 
 TTSDic, TTSchrom = processTranscriptProbeMap (transcriptProbeMap)
 processPeakInfo(peakinfoFile, TTSDic, TTSchrom, probeMap)
