@@ -7,6 +7,7 @@ def processTranscriptProbeMap (transcriptProbeMap):
 	fin.readline()
 	TTSDic = {} # key: hugo values: TTS list
 	TTSchrom = {}
+	TTSstrand = {} #key: hugo values: strand
 	chromGeneList ={} #key: chrom values: gene list
 	for line in fin.readlines():
 		data = string.split(line[:-1], '\t')
@@ -21,14 +22,14 @@ def processTranscriptProbeMap (transcriptProbeMap):
 			TTSDic[gene] =[]
 		TTSDic[gene].append(TTS)
 		TTSchrom[gene] = chrom
-
+		TTSstrand[gene] = strand
 		if chrom not in chromGeneList:
 			chromGeneList[chrom] =[]
 		chromGeneList[chrom].append(gene)
 	fin.close()
-	return [TTSDic, TTSchrom, chromGeneList]
+	return [TTSDic, TTSchrom, TTSstrand, chromGeneList]
 
-def processPeakInfo(peakinfoFile, TTSDic, TTSchrom, chromGeneList, probeMap):
+def processPeakInfo(peakinfoFile, TTSDic, TTSchrom, TTSstrand, chromGeneList, probeMap):
 	fin = open(peakinfoFile,'U')
 	fin.readline()
 	fout = open(probeMap ,'w')
@@ -48,10 +49,20 @@ def processPeakInfo(peakinfoFile, TTSDic, TTSchrom, chromGeneList, probeMap):
 		for gene in chromGeneList[chrom]:
 			if TTSchrom[gene] != chrom:
 				continue
+			if gene in gene_list:
+				continue
 			for pos in TTSDic[gene]:
-				if abs(peak_pos - pos) <= 500 * 1000:
-					if gene not in gene_list:
+				geneStrand = TTSstrand[gene]
+				if geneStrand == "+":
+					distance = (peak_pos - pos)
+					if distance >= -1000 and distance <=100:
 						gene_list.append(gene)
+						break
+				else:
+					distance = (peak_pos - pos)
+					if distance <= 1000 and distance >= -100:
+						gene_list.append(gene)
+						break
 		fout.write(string.join([id, string.join(gene_list,','), chrom, str(start), str(end), strand ],'\t')+'\n')
 
 	fin.close()
@@ -59,12 +70,12 @@ def processPeakInfo(peakinfoFile, TTSDic, TTSchrom, chromGeneList, probeMap):
 
 
 if len(sys.argv[:])!=3:
-	print "python buildAllProbeMap.py peak_coord_info_file_in probeMap_file_out"
+	print "python buildPromoterProbeMap.py peak_coord_info_file_in probeMap_file_out"
 	print
 	sys.exit()
 	
 peakinfoFile = sys.argv[1]
 probeMap = sys.argv[2]
 
-TTSDic, TTSchrom = processTranscriptProbeMap (transcriptProbeMap)
-processPeakInfo(peakinfoFile, TTSDic, TTSchrom, probeMap)
+TTSDic, TTSchrom, TTSstrand, chromGeneList = processTranscriptProbeMap (transcriptProbeMap)
+processPeakInfo(peakinfoFile, TTSDic, TTSchrom, TTSstrand, chromGeneList, probeMap)
