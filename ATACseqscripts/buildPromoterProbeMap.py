@@ -37,7 +37,8 @@ def processPeakInfo(peakinfoFile, TTSDic, TTSchrom, TTSstrand, chromGeneList, pr
 	count = 0
 	for line in fin.readlines():
 		count = count +1
-		print count
+		if count % 10 == 0:
+			print count
 		data = string.split(line[:-1], '\t')
 		chrom = data[0]
 		start = int(float(data[1]))
