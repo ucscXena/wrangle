@@ -1,5 +1,6 @@
-# in R example 
-read: object1<-readRDS("BRCA.fwp.filter.non_overlapping.annotated.rds")
+# in R example
+library(SummarizedExperiment) 
+read: object<-readRDS("TCGA_BRCA_ONLY_SE.rds")
 # data matrix: 
 write.table(rowRanges(object), 'brca_peak_coord.txt', col.names = NA, quote = FALSE, sep="\t")
 

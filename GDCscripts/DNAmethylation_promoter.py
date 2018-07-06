@@ -1,6 +1,6 @@
 import string, sys
 
-transcriptProbeMap = "gencode.v23.basic.annotation.transcript.probeMap"
+transcriptProbeMap = "gencode.v23.basic.annotation.transcript.probeMap".  #bad gene names
 
 def processTranscriptProbeMap (transcriptProbeMap):
 	fin = open(transcriptProbeMap,'U')
@@ -40,11 +40,11 @@ def processPeakInfo(peakinfoFile, TTSDic, TTSchrom, TTSstrand, chromGeneList, pr
 		if count % 10 == 0:
 			print count
 		data = string.split(line[:-1], '\t')
-		chrom = data[0]
-		start = int(float(data[1]))
-		end = int(float(data[2]))
-		id = data[5]
-		strand = data[4]
+		chrom = data[2]
+		start = int(float(data[3]))
+		end = int(float(data[4]))
+		id = data[0]
+		strand = data[5]
 		peak_pos = (start + end)/2
 		gene_list =[]
 		for gene in chromGeneList[chrom]:
@@ -71,7 +71,7 @@ def processPeakInfo(peakinfoFile, TTSDic, TTSchrom, TTSstrand, chromGeneList, pr
 
 
 if len(sys.argv[:])!=3:
-	print "python buildPromoterProbeMap.py peak_coord_info_file_in probeMap_file_out"
+	print "python DNAmethylation_promoter.py all_probemap_file_in probeMap_file_out"
 	print
 	sys.exit()
 	
