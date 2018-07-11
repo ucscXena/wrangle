@@ -1,6 +1,6 @@
 import string, sys
 
-transcriptProbeMap = "gencode.v23.basic.annotation.transcript.probeMap".  #bad gene names
+transcriptProbeMap = "gencode.v23.basic.annotation.transcript.probeMap"  #bad gene names
 
 def processTranscriptProbeMap (transcriptProbeMap):
 	fin = open(transcriptProbeMap,'U')
@@ -41,6 +41,8 @@ def processPeakInfo(peakinfoFile, TTSDic, TTSchrom, TTSstrand, chromGeneList, pr
 			print count
 		data = string.split(line[:-1], '\t')
 		chrom = data[2]
+                if chrom == "*":
+                        continue
 		start = int(float(data[3]))
 		end = int(float(data[4]))
 		id = data[0]
