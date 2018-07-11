@@ -1,8 +1,6 @@
 import string, sys
 
 illuminProbemapfile ="illuminaMethyl450_hg38_GDC"
-elemerfile = "getPair.hypo.pairs.significant.csv"
-outputProbeMap= "elmer.hypo.pairs.significant.probeMap"
 
 def probeMapParse(illuminProbemapfile):
 	probeDic ={}
@@ -24,10 +22,12 @@ def probeMapParse(illuminProbemapfile):
 def elmerFileParse (elemerfile):
 	elemerGeneDic ={}
 	fin = open(elemerfile, 'U')
-	fin.readline()
+	
 	for line in fin.readlines():
 		data= string.split(line[:-1],',')
 		id = data[0]
+		if id[:2] != "cg":
+			continue
 		gene =data[2]
 		if id not in elemerGeneDic:
 			elemerGeneDic[id]=[]
@@ -44,6 +44,14 @@ def buildElmerProbeMap(probeDic, elemerGeneDic,outputProbeMap):
 		chrom, start, end = probeDic[id]
 		fout.write(string.join([id, genes, chrom, start, end, '.'],'\t')+'\n')
 	fout.close()
+
+if len(sys.argv[:]) != 3:
+	print "python buildElmerProbeMap.py elemer_filein probeMap_fileout"
+	print
+	sys.exit()
+
+elemerfile = sys.argv[1]
+outputProbeMap= sys.argv[2]
 
 probeDic = probeMapParse(illuminProbemapfile)
 elemerGeneDic = elmerFileParse (elemerfile)
