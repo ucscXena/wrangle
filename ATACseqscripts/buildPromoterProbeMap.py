@@ -11,9 +11,9 @@ def processTranscriptProbeMap (transcriptProbeMap):
 	chromGeneList ={} #key: chrom values: gene list
 	for line in fin.readlines():
 		data = string.split(line[:-1], '\t')
-		gene = data[2]
+		gene = data[1]
 		strand = data[5]
-		chrom = data[1]
+		chrom = data[2]
 		if strand == "+":
 			TTS = int(data[3])
 		else:
