@@ -66,5 +66,5 @@ if len(sys.argv[:])!=3:
 peakinfoFile = sys.argv[1]
 probeMap = sys.argv[2]
 
-TTSDic, TTSchrom = processTranscriptProbeMap (transcriptProbeMap)
-processPeakInfo(peakinfoFile, TTSDic, TTSchrom, probeMap)
+TTSDic, TTSchrom, chromGeneList = processTranscriptProbeMap (transcriptProbeMap)
+processPeakInfo(peakinfoFile, TTSDic, TTSchrom, chromGeneList, probeMap)
