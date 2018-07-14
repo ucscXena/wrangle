@@ -1,11 +1,14 @@
-file=gencode.v23.annotation.gtf
+#!/bin/bash
+echo $1
+
+file=$1
 root=$(basename $file .gtf)
 
 genefile=$root.gene
 transcriptfile=$root.transcript
 
-geneProbemap=$root.probemap
-transcriptProbemap=$root.probemap
+geneProbemap=$root.gene.probemap
+transcriptProbemap=$root.transcript.probemap
 
 awk '$3 == "gene"' $file > $genefile
 awk '$3 == "transcript"' $file > $transcriptfile
