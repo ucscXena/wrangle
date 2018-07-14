@@ -1,6 +1,6 @@
 import string, sys
 
-transcriptProbeMap = "gencode.v23.basic.annotation.transcript.probeMap"
+transcriptProbeMap = "gencode.v23.basic.annotation.transcript.probemap"
 
 def processTranscriptProbeMap (transcriptProbeMap):
 	fin = open(transcriptProbeMap,'U')
