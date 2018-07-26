@@ -1,7 +1,0 @@
-# gencode.v27.annotation.gene.probemap
-
-grep '\t'gene'\t' gencode.v27.annotation.gtf |awk 'BEGIN {FS="\t"; OFS="\t"} {split($9, a, ";"); split(a[1], b, " "); split(b[2], c, "."); split(a[3], d, " ");print substr(c[1],2, length(c[1])), substr(d[2],2,length(d[2])-2), $1,$4,$5, $7}' > gencode.v27.annotation.gene.probemap
-
-cat header gencode.v27.annotation.gene.probemap > new
-
-mv new gencode.v27.annotation.gene.probemap
