@@ -45,18 +45,19 @@ def augmentProbeMap(probeMap_coord, regionDic, strandDic, chromGeneList, probeMa
 		id = data[0]
 		strand = data[5]
 		gene_list =[]
-		for i in range (0, len(chromGeneList[chrom])):
-			gene = chromGeneList[chrom][i]
-			if strandDic[gene] != strand:
-				continue
-			if start >= regionDic[gene][-1][-1] or end <= regionDic[gene][0][0]:
-				continue
-			for exon in regionDic[gene]:
-				eStart, eEnd = exon
-				if start < eEnd and end > eStart:
-					gene_list.append(gene)
-					break
-		fout.write(string.join([id, string.join(gene_list,','), chrom, str(start), str(end), strand ],'\t')+'\n')
+		if chrom in chromGeneList:
+			for i in range (0, len(chromGeneList[chrom])):
+				gene = chromGeneList[chrom][i]
+				if strandDic[gene] != strand:
+					continue
+				if start >= regionDic[gene][-1][-1] or end <= regionDic[gene][0][0]:
+					continue
+				for exon in regionDic[gene]:
+					eStart, eEnd = exon
+					if start < eEnd and end > eStart:
+						gene_list.append(gene)
+						break
+			fout.write(string.join([id, string.join(gene_list,','), chrom, str(start), str(end), strand ],'\t')+'\n')
 
 	fin.close()
 	fout.close()
