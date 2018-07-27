@@ -24,7 +24,8 @@ def processTranscriptProbeMap (transcriptProbeMap):
 
 		if chrom not in chromGeneList:
 			chromGeneList[chrom] =[]
-		chromGeneList[chrom].append(gene)
+		if gene not in chromGeneList[chrom]:
+			chromGeneList[chrom].append(gene)
 	fin.close()
 	return [TTSDic, TTSchrom, chromGeneList]
 

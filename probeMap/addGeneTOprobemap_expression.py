@@ -3,10 +3,9 @@ import string, sys
 #overlapping exon region only, strand specific
 
 def processTranscriptProbeMap (exonProbeMap):
-	fin = open(transcriptProbeMap,'U')
+	fin = open(exonProbeMap,'U')
 	fin.readline()
 	regionDic = {} # key: hugo values: region list
-	chromDic = {}
 	strandDic= {}
 	chromGeneList ={} #key: chrom values: gene list
 	for line in fin.readlines():
@@ -17,20 +16,19 @@ def processTranscriptProbeMap (exonProbeMap):
 		start = int(data[3])
 		end = int(data[4])
 		strandDic[gene] = strand
-		chromDic[gene] = chrom
 		if gene not in regionDic:
 			regionDic[gene] =[]
 		regionDic[gene].append([start,end])
 
 		if chrom not in chromGeneList:
 			chromGeneList[chrom] =[]
-		if gene not in chromGeneList:
+		if gene not in chromGeneList[chrom]:
 			chromGeneList[chrom].append(gene)
 
 	fin.close()
-	return [regionDic, strandDic, chromDic, chromGeneList]
+	return [regionDic, strandDic, chromGeneList]
 
-def augmentProbeMap(probeMap_coord, regionDic, strandDic, chromDic, chromGeneList, probeMap_out):
+def augmentProbeMap(probeMap_coord, regionDic, strandDic, chromGeneList, probeMap_out):
 	fin = open(probeMap_coord,'U')
 	fin.readline()
 	fout = open(probeMap_out ,'w')
@@ -46,12 +44,12 @@ def augmentProbeMap(probeMap_coord, regionDic, strandDic, chromDic, chromGeneLis
 		end = int(data[4])
 		id = data[0]
 		strand = data[5]
-
 		gene_list =[]
-		for gene in chromGeneList[chrom]:
-			if chromDic[gene] != chrom:
-				continue
+		for i in range (0, len(chromGeneList[chrom])):
+			gene = chromGeneList[chrom][i]
 			if strandDic[gene] != strand:
+				continue
+			if start >= regionDic[gene][-1][-1] or end <= regionDic[gene][0][0]:
 				continue
 			for exon in regionDic[gene]:
 				eStart, eEnd = exon
@@ -74,5 +72,9 @@ exonProbeMap = sys.argv[1]
 probeMap_coord = sys.argv[2]
 probeMap_out = sys.argv[3]
 
-regionDic, strandDic, chromDic, chromGeneList = processTranscriptProbeMap (exonProbeMap)
-augmentProbeMap(probeMap_coord, regionDic, strandDic, chromDic, chromGeneList, probeMap_out)
+regionDic, strandDic, chromGeneList = processTranscriptProbeMap (exonProbeMap)
+
+for gene in regionDic:
+	regionDic[gene].sort()
+
+augmentProbeMap(probeMap_coord, regionDic, strandDic, chromGeneList, probeMap_out)
