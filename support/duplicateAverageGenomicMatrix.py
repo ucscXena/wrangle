@@ -45,7 +45,7 @@ def averageDup (inputfile, outputfile, LOG, theta):
                         fout.write('\t')
                     else:
                         if LOG:
-                            values = map( lambda x: math.pow(x,2) - theta, values)
+                            values = map( lambda x: math.pow(2,x) - theta, values)
                         ave = numpy.average(values)
                         if LOG:
                             ave = math.log( (ave + theta), 2)
