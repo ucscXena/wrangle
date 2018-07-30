@@ -1,7 +1,7 @@
 import sys, string
-import numpy
+import math, numpy
 
-def averageDup (inputfile, outputfile):
+def averageDup (inputfile, outputfile, LOG, theta):
     fin = open(inputfile, 'U')
     fout = open(outputfile, 'w')
 
@@ -21,10 +21,9 @@ def averageDup (inputfile, outputfile):
 
     #no dup data
     if not DUP:
-        fout.write(line)
-        fout.write(fin.read())
+        os.system("cp " + inputfile + " " + outputfile)
+    #dup data
     else:
-        #dup data
         samples = dupHeader.keys()
         fout.write('sample\t' + string.join(samples,'\t')+'\n')
 
@@ -45,7 +44,11 @@ def averageDup (inputfile, outputfile):
                     if len(values) == 0:
                         fout.write('\t')
                     else:
+                        if LOG:
+                            values = map( lambda x: math.pow(x,2) - theta, values)
                         ave = numpy.average(values)
+                        if LOG:
+                            ave = math.log( (ave + theta), 2)
                         fout.write('\t' + str(ave))
                 else:
                     fout.write('\t' + data[pos_list[0]])
@@ -54,11 +57,21 @@ def averageDup (inputfile, outputfile):
     fin.close()
     fout.close()
 
-if len(sys.argv[:]) != 3:
-    print "python duplicateAverageGenomicMatrix.py matrixinput outputfile"
+if len(sys.argv[:]) not in [3, 5]:
+    print "python duplicateAverageGenomicMatrix.py matrixinput outputfile LOG2(0,1) Theta"
     sys.exit()
 
 inputfile = sys.argv[1]
 outputfile = sys.argv[2]
+LOG = 0
+theta =0
 
-averageDup (inputfile, outputfile)
+if len(sys.argv[:]) == 5:
+    LOG = sys.argv[3]
+    if LOG not in ["0", "1"]:
+        print "LOG must be 0 or 1\n"
+        sys.exit()
+    LOG = int(LOG)
+    theta = float(sys.argv[4])
+
+averageDup (inputfile, outputfile, LOG, theta)
