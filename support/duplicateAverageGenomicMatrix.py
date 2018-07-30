@@ -1,4 +1,4 @@
-import sys, string
+import sys, string, os
 import math, numpy
 
 def averageDup (inputfile, outputfile, LOG, theta):
