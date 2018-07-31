@@ -58,7 +58,7 @@ def averageDup (inputfile, outputfile, LOG, theta):
     fout.close()
 
 if len(sys.argv[:]) not in [3, 5]:
-    print "python duplicateAverageGenomicMatrix.py matrixinput outputfile LOG2(0,1) Theta"
+    print "python duplicateAverageGenomicMatrix.py matrixinput outputfile optional_LOG2(0,1) optional_Theta"
     sys.exit()
 
 inputfile = sys.argv[1]
