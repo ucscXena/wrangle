@@ -21,10 +21,10 @@ for dirpath, dirnames, filenames in os.walk(datadir):	# dirpath, dirnames, filen
 			fin = open(jsonFile, 'U')
 			meta = json.load(fin)
 			probemap = None
-			if 'probemap' in meta:
-				probemap = meta['probemap']
-			elif ':probemap' in meta:
-				probemap = meta[':probemap']
+			if 'probeMap' in meta:
+				probemap = meta['probeMap']
+			elif ':probeMap' in meta:
+				probemap = meta[':probeMap']
 			if probemap and probemap [0] == '/':
 				probemap = probemap[1:]
 			print jsonFile, probemap, 
