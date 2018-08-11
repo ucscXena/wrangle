@@ -1,7 +1,7 @@
 import string, sys
 
 if len(sys.argv[:]) !=3:
-	print "python xenaGeneModelToProbeMap.py xeneGeneGood_filein hugo_probemap_fileout"
+	print "python xenaGeneModelToProbeMap.py xeneGeneGood_filein(gene_pred) hugo_probemap_fileout"
 	print
 	sys.exit()
 
