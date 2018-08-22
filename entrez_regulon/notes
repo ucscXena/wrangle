@@ -1,0 +1,13 @@
+# regulon
+library(aracne.networks)
+data(package="aracne.networks")$results[, "Item"]
+write.regulon(regulonblca, file = "regulonBRCA")
+
+# entrez mapping
+library(org.Hs.eg.db)
+ids <- mappedkeys(org.Hs.egGENENAME)
+Mapping <- select(org.Hs.eg.db,
+    	keys = ids,
+		columns = c("ENTREZID", "SYMBOL"),
+		keytype = "ENTREZID")
+write.table(Mapping, file ="entrez_id_name", row.names = FALSE, quote= FALSE, sep='\t')

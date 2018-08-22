@@ -20,8 +20,8 @@ def removeRowGenomicMatrix_nodata  (inputFile, outputFile, nodata_values):
         if nCOL != len(data):
             print "Wrong nCOL", data[0]
             sys.exit()
-
-        found = 0
+ 
+        found = 0  # found real data
         for i in range(1, nCOL):
             if data[i] not in nodata_values:
                 found =1
@@ -41,12 +41,14 @@ def removeRowGenomicMatrix_nodata  (inputFile, outputFile, nodata_values):
     fin.close()
     fout.close()
 
-if len(sys.argv[:]) < 4:
-    print "python removeRowGenomicMatrix_nodata.py input output no_data(value like 0) no_data(value like NA)"
+if len(sys.argv[:]) < 3:
+    print "python removeRowGenomicMatrix_nodata.py input output additional_no_data(value like 0) additional_no_data(value like NA)"
+    print "default no data: is empty cell"
     print
     sys.exit()
 
 inputfile = sys.argv[1]
 outputfile = sys.argv[2]
 nodata_values = sys.argv[3:]
+nodata_values.append('')
 removeRowGenomicMatrix_nodata (inputfile, outputfile, nodata_values)

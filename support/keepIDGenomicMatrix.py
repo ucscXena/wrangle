@@ -4,7 +4,7 @@ def listing (mfile):
     fin = open(mfile,'r')
     list =[]
     for line in fin.readlines():
-        data = string.strip(line)
+        data = string.strip(string.split(line,'\t')[0])
         if data not in list:
             list.append(data)
     fin.close()
@@ -29,7 +29,7 @@ def keepIDs (inputFile, outputFile, keep_list):
     os.system(s)
 
 if len(sys.argv[:])!=4:
-    print "python keepIDGenomicMatrix.py matrixfile output keep_list(one_sample_id_per_line)"
+    print "python keepIDGenomicMatrix.py matrixfile output keep_list(one_sample_id_per_line, first column is id)"
     sys.exit()
 
 listfile = sys.argv[3]

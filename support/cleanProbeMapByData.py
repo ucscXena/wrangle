@@ -38,8 +38,8 @@ def cleanProbeMapByData (matrixfile, probeMapfile, outputfile):
     fout.close()
 
 if len(sys.argv[:])!=4:
-    print "python cleanProbeMapByData.py genomicMatrix probeMap newProbeMap"
-    print
+    print "\npython cleanProbeMapByData.py genomicMatrix probeMap newProbeMap"
+    print "\n new probeMap file remove all the null probes, i.e. probes that does not have any genomic data\n"
     sys.exit()
 
 matrixfile = sys.argv[1]
