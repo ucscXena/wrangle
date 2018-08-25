@@ -29,7 +29,7 @@ def keepIDs (inputFile, outputFile, keep_list):
     os.system(s)
 
 if len(sys.argv[:])!=4:
-    print "python keepIDGenomicMatrix.py matrixfile output keep_list(first column ids)"
+    print "python keepIDGenomicMatrix.py matrixfile output keep_list(one_sample_id_per_line, first column is id)"
     sys.exit()
 
 listfile = sys.argv[3]
