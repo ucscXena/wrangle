@@ -11,7 +11,6 @@ reference_probemaps =  xena.probemap_list(xena.PUBLIC_HUBS['reference'])
 
 probemapList =[]
 for map in reference_probemaps:
-	print map['name']
 	probemapList.append(map['name'])
 
 for dirpath, dirnames, filenames in os.walk(datadir):	# dirpath, dirnames, filenames
@@ -27,8 +26,8 @@ for dirpath, dirnames, filenames in os.walk(datadir):	# dirpath, dirnames, filen
 				probemap = meta[':probeMap']
 			if probemap and probemap [0] == '/':
 				probemap = probemap[1:]
-			print jsonFile, probemap, 
+			#print jsonFile, probemap, 
 			if probemap:
-				print probemap in probemapList
-			else:
-				print
+				print jsonFile, probemap in probemapList
+			#else:
+			#	print
