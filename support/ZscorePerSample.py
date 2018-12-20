@@ -48,8 +48,8 @@ def ZscorePerSample  (inputFile, outputFile):
                 fout.write("\tNA")
             else:
                 z = (float(data[i]) - average) / std
-                z = "%.4f" % (value)
-                fout.write("\t"+value)
+                z = "%.4f" % (z)
+                fout.write("\t"+ z)
         fout.write("\n")
 
     fin.close()
