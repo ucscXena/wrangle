@@ -44,7 +44,7 @@ def ZscorePerSample  (inputFile, outputFile):
 
         fout.write(data[0])
         for i in range(1, nCOL):
-            if data[i] in ["NA",""]:
+            if data[i] in ["NA",""] or std == 0.0:
                 fout.write("\tNA")
             else:
                 z = (float(data[i]) - average) / std

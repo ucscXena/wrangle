@@ -5,8 +5,8 @@ import copy
 import uuid
 
 def merge (infile_list, outfile, root ="./"):
-    genes={}
-    allgenes={}
+    genes={} #key: gene value position 0,1,2, ...
+    allgenes={} #key: position 0,1,2, ... value: gene
     files=[]
 
     if root[-1]!="/":
@@ -25,7 +25,7 @@ def merge (infile_list, outfile, root ="./"):
     infile_list = tmpList
 
     for infile in infile_list:
-        genes = setGeneOrder (infile,genes, tmpDir)
+        genes = setGeneOrder (infile, genes, tmpDir)
 
     allgenes = posToGene(genes)
     tmpfile = tmpDir+"/0_id"
