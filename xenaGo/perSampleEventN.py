@@ -198,11 +198,12 @@ def output(outputfile, mergedDataDic, mergedSampleTotalGenes):
 		fout.write(sample + '\t' + str(mergedSampleTotalGenes[sample]) + '\t' + str(mergedDataDic[sample]) + '\n')
 	fout.close()
 
-def perSampleEventN (inputfiles):
+def perSampleEventN (inputfiles, genome_total_gene_N):
 	mergedDataDic = {}
 	mergedGenes = Set([])
 	mergedSamples = Set ([])
 	mergedSampleTotalGenes = {} # key:sample value: total genes (if the sample has two datasets total = 2 *genes, if the sample has 1 datafile, total= genes) 
+	                            # if genome_total_gene_N != 0 : total_genes = genome_total_gene_N * number of datasets
 	allDataCollection =[] # list of type, dataDic, genes
 	
 	for file in inputfiles:
@@ -227,7 +228,10 @@ def perSampleEventN (inputfiles):
 			type, dataDic, genes = list
 			if sample in dataDic:
 				mergedDataDic[sample] = mergedDataDic[sample] + dataDic[sample]
-  				mergedSampleTotalGenes[sample] = mergedSampleTotalGenes[sample] + len(mergedGenes)
+				if genome_total_gene_N == 0:
+ 	 				mergedSampleTotalGenes[sample] = mergedSampleTotalGenes[sample] + len(mergedGenes)
+ 	 			else:
+ 	 				mergedSampleTotalGenes[sample] = mergedSampleTotalGenes[sample] + genome_total_gene_N
 	return mergedDataDic, mergedGenes, mergedSampleTotalGenes, mergedSamples
 
 
@@ -258,14 +262,15 @@ def perSampleEventInPathway (inputfiles, pathway_genes):
 	return mergedDataDic
 
 
-if len(sys.argv[:]) < 3 and (__name__ == "__main__"):
-	print "python  perSampleEventN.py output inputfile(s)"
+if len(sys.argv[:]) < 4 and (__name__ == "__main__"):
+	print "python  perSampleEventN.py output genome_total_gene_N inputfile(s)"
 	print
 	sys.exit()
 
 if __name__ == "__main__":
-	inputfiles = sys.argv[2:]
+	inputfiles = sys.argv[3:]
+	genome_total_gene_N = int(sys.argv[2])
 	outputfile = sys.argv[1]
-	mergedDataDic, mergedGenes, mergedSampleTotalGenes, mergedSamples = perSampleEventN (inputfiles)
+	mergedDataDic, mergedGenes, mergedSampleTotalGenes, mergedSamples = perSampleEventN (inputfiles, genome_total_gene_N)
 	output(outputfile, mergedDataDic, mergedSampleTotalGenes) 
 	print "genes:", len(mergedGenes)

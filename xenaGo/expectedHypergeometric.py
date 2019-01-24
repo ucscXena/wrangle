@@ -14,22 +14,23 @@ import perSampleEventN
 #          N * (N-1) * ... * (N- (n-1))
 # goal: calculate prob(k>=1)
 
-if len(sys.argv[:]) < 4 and (__name__ == "__main__"):
-	print "python  expectedHypergeometric.py pathway_input cohort dataInputfile(s)"
+if len(sys.argv[:]) < 5 and (__name__ == "__main__"):
+	print "python  expectedHypergeometric.py pathway_input cohort genome_total_gene_N dataInputfile(s)"
 	print
 	sys.exit()
 
 
 pathway_input  = sys.argv[1]
 cohort = sys.argv[2]
-dataInputfiles = sys.argv[3:]
+genome_total_gene_N = int(sys.argv[3])
+dataInputfiles = sys.argv[4:]
 
 perSampleN_input = cohort + "_sampleEvent"
 outputfile = cohort +"_sample_expected"
 summaryfile = cohort +"_pathway_expected"
 
 #calculate perSample Event number using module
-mergedDataDic, mergedGenes, mergedSampleTotalGenes, mergedSamples = perSampleEventN.perSampleEventN(dataInputfiles)
+mergedDataDic, mergedGenes, mergedSampleTotalGenes, mergedSamples = perSampleEventN.perSampleEventN(dataInputfiles, genome_total_gene_N)
 perSampleEventN.output(perSampleN_input, mergedDataDic, mergedSampleTotalGenes)
 
 # read pathway information

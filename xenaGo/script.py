@@ -3,6 +3,7 @@ import json
 
 defaultDatafile = "defaultDatasetForGeneset.json"
 step2datadir = "cnv_mutation/"
+genome_total_gene_N = 25 * 1000 
 
 def stepDir():
 	for cohort in defaults:
@@ -32,7 +33,10 @@ def stepRunExpObs():
 
 		print cohort
 		# expected and observed runs
-		os.system("python2.7 expectedHypergeometric.py tgac.js " + cohort + " " + cohort + "/* &")
+		os.system("python2.7 expectedHypergeometric.py tgac.js " + cohort + " " + str(genome_total_gene_N) + " " 
+			+ cohort + "/*mutation*" + " "
+			+ cohort + "/*CopyNumber*" + " " 
+			+ "&")
 		os.system("python2.7 observed.py tgac.js " + cohort + " " + cohort + "/* &")
 
 def stepRunChiSquare():
@@ -99,4 +103,4 @@ fdefaultdata.close()
 #stepDownload()
 #stepRunExpObs()
 #stepRunChiSquare()
-stepCompileOutput()
+#stepCompileOutput()
