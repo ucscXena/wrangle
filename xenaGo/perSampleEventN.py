@@ -1,9 +1,6 @@
 import string, sys
 from sets import Set
 
-#join = "union"
-join = "intersection"
-
 def PositiveGisticThreshold (value):
 	if value >=2.0 or value <=-2.0:
 		return 1
@@ -99,18 +96,17 @@ def parse_perSampleEvent(file):
 			sample = data[0]
 			if sample not in samples:
 				samples.append(sample)
+				dataDic[sample]={}
 			effect = data[headerDic['effect']]
 			gene = data[headerDic['gene']]
 			if gene not in genes:
 				genes.append(gene)
 			if PositiveProteinMutation(effect):
-				if sample not in dataDic:
-					dataDic[sample]={}
 				if gene not in dataDic[sample]:
 					dataDic[sample][gene] = 1
 		for sample in dataDic:
-			dataDic[sample] = reduce(lambda x, y : x+y , dataDic[sample].values())
-		
+			dataDic[sample] = reduce(lambda x, y : x+y , dataDic[sample].values(), 0)
+	
 	return type, dataDic, genes, samples
 
 
@@ -191,49 +187,21 @@ def parse_perSampleEventInPathway(file, genes):
 	return type, dataDic, genes, samples
 
 
-def output(outputfile, mergedDataDic, mergedSampleTotalGenes):
+def output(outputfile, dataDic, genome_total_gene_N):
 	fout = open(outputfile ,'w')
 	fout.write('sample\ttotal_pop_N\tevent_K\n')
-	for sample in mergedDataDic:
-		fout.write(sample + '\t' + str(mergedSampleTotalGenes[sample]) + '\t' + str(mergedDataDic[sample]) + '\n')
+	for sample in dataDic:
+		fout.write(sample + '\t' + str(genome_total_gene_N) + '\t' + str(dataDic[sample]) + '\n')
 	fout.close()
 
-def perSampleEventN (inputfiles, genome_total_gene_N):
-	mergedDataDic = {}
-	mergedGenes = Set([])
-	mergedSamples = Set ([])
-	mergedSampleTotalGenes = {} # key:sample value: total genes (if the sample has two datasets total = 2 *genes, if the sample has 1 datafile, total= genes) 
-	                            # if genome_total_gene_N != 0 : total_genes = genome_total_gene_N * number of datasets
-	allDataCollection =[] # list of type, dataDic, genes
-	
-	for file in inputfiles:
-		type, dataDic, genes, samples = parse_perSampleEvent(file) # key : sample value: total event for that sample
-		allDataCollection.append([type, dataDic, genes])
-		print file, len(genes), len(samples)
-		mergedGenes = mergedGenes.union(Set(genes))
-		if len(mergedSamples)== 0:
-			mergedSamples = Set(samples)
-		else:
-			# union approach: samples with any of the datafiles
-			if join == "union":
-				mergedSamples = mergedSamples.union(Set(samples))
-			# intersectin approach : samples with all the datafiles
-			elif join == "intersection":
-				mergedSamples = mergedSamples.intersection(Set(samples))
+def perSampleEventN (inputfile, genome_total_gene_N):
+	type, dataDic, genes, samples = parse_perSampleEvent(inputfile) # key : sample value: total event for that sample
+	print inputfile, len(genes), len(samples)
 
-	for sample in mergedSamples:
-		mergedDataDic[sample] = 0
-		mergedSampleTotalGenes [sample] = 0
-		for list in allDataCollection:
-			type, dataDic, genes = list
-			if sample in dataDic:
-				mergedDataDic[sample] = mergedDataDic[sample] + dataDic[sample]
-				if genome_total_gene_N == 0:
- 	 				mergedSampleTotalGenes[sample] = mergedSampleTotalGenes[sample] + len(mergedGenes)
- 	 			else:
- 	 				mergedSampleTotalGenes[sample] = mergedSampleTotalGenes[sample] + genome_total_gene_N
-	return mergedDataDic, mergedGenes, mergedSampleTotalGenes, mergedSamples
+	if genome_total_gene_N == 0:
+		genome_total_gene_N = len(genes)
 
+	return dataDic, genes, genome_total_gene_N, samples
 
 def perSampleEventInPathway (inputfiles, pathway_genes):
 	mergedDataDic = {}
@@ -246,12 +214,7 @@ def perSampleEventInPathway (inputfiles, pathway_genes):
 		if len(mergedSamples)== 0:
 			mergedSamples = Set(samples)
 		else:
-			# union approach: samples with any of the datafiles
-			if join == "union":
-				mergedSamples = mergedSamples.union(Set(samples))
-			# intersectin approach : samples with all the datafiles
-			elif join == "intersection":
-				mergedSamples = mergedSamples.intersection(Set(samples))
+			mergedSamples = mergedSamples.intersection(Set(samples))
 
 	for sample in mergedSamples:
 		mergedDataDic[sample] = 0
@@ -262,15 +225,15 @@ def perSampleEventInPathway (inputfiles, pathway_genes):
 	return mergedDataDic
 
 
-if len(sys.argv[:]) < 4 and (__name__ == "__main__"):
-	print "python  perSampleEventN.py output genome_total_gene_N inputfile(s)"
+if len(sys.argv[:]) != 4 and (__name__ == "__main__"):
+	print "python  perSampleEventN.py output genome_total_gene_N inputfile"
 	print
 	sys.exit()
 
 if __name__ == "__main__":
-	inputfiles = sys.argv[3:]
+	inputfiles = sys.argv[3]
 	genome_total_gene_N = int(sys.argv[2])
 	outputfile = sys.argv[1]
-	mergedDataDic, mergedGenes, mergedSampleTotalGenes, mergedSamples = perSampleEventN (inputfiles, genome_total_gene_N)
+	mergedDataDic, mergedGenes, mergedSampleTotalGenes, mergedSamples = perSampleEventN (inputfile, genome_total_gene_N)
 	output(outputfile, mergedDataDic, mergedSampleTotalGenes) 
 	print "genes:", len(mergedGenes)

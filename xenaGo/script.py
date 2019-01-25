@@ -1,9 +1,31 @@
 import string, sys, os
 import json
 
+mode = "cnv_mutation"
+#mode = "mutation"
+#mode = "cnv"
+
 defaultDatafile = "defaultDatasetForGeneset.json"
-step2datadir = "cnv_mutation/"
-genome_total_gene_N = 25 * 1000 
+genome_total_gene_N = 25 * 1000 # 0: use total gene in data
+settings = {
+	"cnv_mutation":{
+		"step2datadir": "cnv_mutation/",
+		"inputdata": ["mutation", "CopyNumber"],
+		"individualFilterDir": ["mutation", 'cnv']
+	},
+	"mutation":{
+		"step2datadir": "mutation/",
+		"inputdata": ["mutation"]
+	},
+	"cnv":{
+		"step2datadir": "cnv/",
+		"inputdata": ["CopyNumber"]
+	}
+}
+
+
+step2datadir = settings[mode]["step2datadir"]
+
 
 def stepDir():
 	for cohort in defaults:
@@ -28,22 +50,33 @@ def stepDownload():
 
 def stepRunExpObs():
 	for cohort in defaults:
-		#if cohort != "CCLE_Breast":
-		#	continue
+		if cohort != "CCLE_Breast":
+			continue
 
 		print cohort
-		# expected and observed runs
-		os.system("python2.7 expectedHypergeometric.py tgac.js " + cohort + " " + str(genome_total_gene_N) + " " 
-			+ cohort + "/*mutation*" + " "
-			+ cohort + "/*CopyNumber*" + " " 
-			+ "&")
-		os.system("python2.7 observed.py tgac.js " + cohort + " " + cohort + "/* &")
+		# expected runs
+		if len(settings[mode]["inputdata"]) == 1:
+			command = "python2.7 expectedHypergeometric.py tgac.js " + cohort + " " + str(genome_total_gene_N)
+			file = settings[mode]["inputdata"][0]
+			command = command + " " + cohort + "/*" + file + "*"
+			command= command + " &"	
+			os.system(command)
+		else:
+			command = "python2.7 mergeExpectedHypergeometric.py tgac.js " + cohort
+			for dir in settings[mode]["individualFilterDir"]:
+				command = command + " " + dir + "/" + cohort + "_sampleEvent"
+			command= command + " &"	
+			os.system(command)
+
+		# observed runs
+		command = "python2.7 observed.py tgac.js " + cohort
+		for file in settings[mode]["inputdata"]:
+			 command = command + " " + cohort + "/*" + file + "*"
+		command= command + " &"	
+		os.system(command)
 
 def stepRunChiSquare():
 	for cohort in defaults:
-		#if cohort != "CCLE_Breast":
-		#	continue
-
 		print cohort
 		os.system("python2.7 chiSquare.py tgac.js " + step2datadir + cohort + "_pathway_expected " 
 			+ step2datadir + cohort + "_pathway_observed " + cohort + "_output")
@@ -101,6 +134,6 @@ fdefaultdata.close()
 
 #stepDir()
 #stepDownload()
-#stepRunExpObs()
+stepRunExpObs()
 #stepRunChiSquare()
 #stepCompileOutput()

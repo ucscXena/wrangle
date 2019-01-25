@@ -14,8 +14,8 @@ import perSampleEventN
 #          N * (N-1) * ... * (N- (n-1))
 # goal: calculate prob(k>=1)
 
-if len(sys.argv[:]) < 5 and (__name__ == "__main__"):
-	print "python  expectedHypergeometric.py pathway_input cohort genome_total_gene_N dataInputfile(s)"
+if len(sys.argv[:]) !=5 and (__name__ == "__main__"):
+	print "python  expectedHypergeometric.py pathway_input cohort genome_total_gene_N dataInputfile"
 	print
 	sys.exit()
 
@@ -23,15 +23,15 @@ if len(sys.argv[:]) < 5 and (__name__ == "__main__"):
 pathway_input  = sys.argv[1]
 cohort = sys.argv[2]
 genome_total_gene_N = int(sys.argv[3])
-dataInputfiles = sys.argv[4:]
+dataInputfile = sys.argv[4]
 
 perSampleN_input = cohort + "_sampleEvent"
 outputfile = cohort +"_sample_expected"
 summaryfile = cohort +"_pathway_expected"
 
 #calculate perSample Event number using module
-mergedDataDic, mergedGenes, mergedSampleTotalGenes, mergedSamples = perSampleEventN.perSampleEventN(dataInputfiles, genome_total_gene_N)
-perSampleEventN.output(perSampleN_input, mergedDataDic, mergedSampleTotalGenes)
+dataDic, genes, genome_total_gene_N, samples = perSampleEventN.perSampleEventN(dataInputfile, genome_total_gene_N)
+perSampleEventN.output(perSampleN_input, dataDic, genome_total_gene_N)
 
 # read pathway information
 fpathway = open(pathway_input, 'U')
@@ -41,7 +41,8 @@ fpathway.close()
 dataDic = {} # key: pathway, value : sum of all samples probability
 
 fout = open(outputfile, 'w')
-fout.write('sample\ttotal_pop_N\tevent_K')
+#fout.write('sample\ttotal_pop_N\tevent_K')
+fout.write('sample')
 for pathway in pathways:
 	pathway_label = pathway['golabel'] + "_" + str(len(pathway['gene']))
 	fout.write('\t'+ pathway_label)
@@ -72,7 +73,7 @@ fout.close()
 fsummaryout = open(summaryfile, 'w')
 fsummaryout.write('Expexted\tgene_n\t' + cohort +'\n')
 for pathway in pathways:
-	fsummaryout.write(pathway['golabel']+'\t' + str(len(pathway['gene'])) + '\t' + str(dataDic[pathway['golabel']]) + ',' + str(len(mergedSamples))+'\n')
+	fsummaryout.write(pathway['golabel']+'\t' + str(len(pathway['gene'])) + '\t' + str(dataDic[pathway['golabel']]) + ',' + str(len(samples))+'\n')
 fsummaryout.close()
 
 
