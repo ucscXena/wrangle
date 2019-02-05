@@ -7,3 +7,9 @@ if len(sys.argv[:]) != 2:
 
 inputdir = sys.argv[1]
 
+for subdir in os.listdir(inputdir):
+	if os.path.isdir(subdir):
+		pass
+	else:
+		print subdir
+
