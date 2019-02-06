@@ -124,6 +124,27 @@
     },
     "viewInPathway": true
   },
+  "READ": {
+    "gene expression": {
+      "host": "https://tcga.xenahubs.net",
+      "dataset": "TCGA.READ.sampleMap/HiSeqV2"
+    },
+    "simple somatic mutation": {
+      "host": "https://tcga.xenahubs.net",
+      "dataset": "TCGA.READ.sampleMap/mutation_bcm"
+    },
+    "copy number": {
+      "host": "https://tcga.xenahubs.net",
+      "dataset": "TCGA.READ.sampleMap/SNP6_nocnv_genomicSegment"
+    },
+    "copy number for pathway view": {
+      "host": "https://tcga.xenahubs.net",
+      "dataset": "TCGA.READ.sampleMap/Gistic2_CopyNumber_Gistic2_all_thresholded.by_genes",
+      "amplificationThreshold": 2,
+      "deletionThreshold": -2
+    },
+    "viewInPathway": true
+  },
   "UVM": {
     "gene expression": {
       "host": "https://tcga.xenahubs.net",
