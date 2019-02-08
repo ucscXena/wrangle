@@ -14,6 +14,8 @@ import json
 
 from itertools import combinations 
 
+# https://www.thoughtco.com/probability-union-of-three-sets-more-3126263
+# Probability of the Union of Three or More Sets
 def addIndepProb (prob_list):	# p = PA + PB - PAB, etc
 	total_prob = 0.0
 	for i in range (1, len(prob_list)+1):
