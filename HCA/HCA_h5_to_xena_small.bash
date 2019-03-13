@@ -4,7 +4,7 @@ if [ "$#" -ne 1 ]; then
     exit
 fi
 
-pythonDir="~/xenaH5"
+pythonDir=$HOME/xenaH5
 
 echo $1
 inputdir=$1
