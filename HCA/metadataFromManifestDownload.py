@@ -1,6 +1,6 @@
-import string, json, sys, os
+import string, json, sys, os, os.path
 from sets import Set
-import cell_suspension_id
+sys.path.insert(0, os.path.dirname(__file__))
 
 cell_suspension_file = "cell_suspension_0.json"
 
@@ -115,6 +115,8 @@ if len(sys.argv[:]) != 4:
 	print
 	sys.exit()
 
+
+
 inputdir = sys.argv[1]
 mtx_type_output = sys.argv[2]
 clinicalMatrix_output = sys.argv[3]
@@ -124,15 +126,16 @@ cells = []
 
 fout = open(mtx_type_output, 'w')
 for subdir in os.listdir(inputdir):
-	if not os.path.isdir(subdir):
-		continue
 	dir = inputdir + "/" + subdir
+
+	if not os.path.isdir(dir):
+		continue
 
 	# get the id for the cell suspension
 	# for smart-seq2, cell suspension id is the id used in the matrix file
 	# h5 10xgenomics file, cell suspension id is used as prefix for barcode
-	cell_suspension_id = cell_suspension_id.cellSuspensionID(dir + "/" + cell_suspension_file)
-
+        import cell_suspension_id
+	cell_suspension_id = cell_suspension_id.cellSuspensionID (dir + "/" + cell_suspension_file)
 	feature_list = parseMeta_to_mtx (dir, cell_suspension_id, fout)
 
 	allFeatures = allFeatures.union(feature_list)

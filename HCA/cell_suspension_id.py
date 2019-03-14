@@ -9,10 +9,11 @@ def cellSuspensionID (cell_suspension_file):
 
 	return cell_suspension_id
 
-if __name__ == "__main__" and len(sys.argv[:]) != 2:
-	print "pyton cell_suspension_id.py cell_suspension_json_file\n"
-	sys.exit()
+if __name__ == "__main__":
+        if len(sys.argv[:]) != 2:
+                print "pyton cell_suspension_id.py cell_suspension_json_file\n"
+                sys.exit()
 
-cell_suspension_json_file = sys.argv[1]
-cell_suspension_id = cellSuspensionID(cell_suspension_json_file)
-print cell_suspension_id
+        cell_suspension_json_file = sys.argv[1]
+        cell_suspension_id = cellSuspensionID(cell_suspension_json_file)
+        print cell_suspension_id
