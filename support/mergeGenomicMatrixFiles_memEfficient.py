@@ -65,7 +65,7 @@ def posToGene(genes):
 
 def outputallgenes(allgenes,outfile):
     fout=open(outfile,'w')
-    fout.write("sample\n")
+    fout.write("xena_sample\n")
     for i in range(0,len(allgenes)):
         gene = allgenes[i]
         fout.write(gene+"\n")
