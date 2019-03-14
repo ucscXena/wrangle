@@ -1,18 +1,17 @@
 import string, json, sys, os
 from sets import Set
+import cell_suspension_id
 
 cell_suspension_file = "cell_suspension_0.json"
 
 datafiles =[
 	"cell_suspension_0.json",
-	"cell_line_0.json",
 	"specimen_from_organism_0.json",
 	"donor_organism_0.json"
 ]
 
 datafileShortTitle = {
 	"cell_line_0.json" : "cell_line",
-	"cell_suspension_0.json": "cell_suspension",
 	"specimen_from_organism_0.json": "specimen",
 	"donor_organism_0.json": "donor"
 }
@@ -20,11 +19,11 @@ datafileShortTitle = {
 def processFeature(fout, feature, feature_data, feature_list):
 	if feature not in feature_list:
 		feature_list.append(feature)
-		fout.write(cell_id + '\t' + feature + '\t' + str(feature_data) +'\n')
+		fout.write(cell_suspension_id + '\t' + feature + '\t' + str(feature_data) +'\n')
 	return feature_list
 
 
-def parseMeta (indir, cell_id, fout):
+def parseMeta (indir, cell_suspension_id, fout):
 	feature_list = []
 	# go through metadata files
 	for file in datafiles:
@@ -36,7 +35,7 @@ def parseMeta (indir, cell_id, fout):
 		J = json.loads(fin.read())
 		fin.close()
 		for key in J.keys():
-			if key in  ["describedBy","schema_type","provenance","publication"]:
+			if key in  ["describedBy","schema_type","provenance"]:
 				continue
 			value = J[key]
 			
@@ -117,16 +116,12 @@ for subdir in os.listdir(inputdir):
 	dir = inputdir + "/" + subdir
 
 	# get the id for the gene expression file, for smart-seq2 currently, that's the id used in the matrix file
-	fin = open(dir + "/" + cell_suspension_file, 'U')
-	J = json.loads(fin.read())
-	fin.close()
-	expressionfile = J["provenance"]["document_id"]
-	cell_id = expressionfile
+	cell_suspension_id = cell_suspension_id.cellSuspensionID(dir + "/" + cell_suspension_file)
 
-	feature_list = parseMeta (dir, cell_id, fout)
+	feature_list = parseMeta (dir, cell_suspension_id, fout)
 
 	allFeatures = allFeatures.union(feature_list)
-	cells = cells.union([cell_id])
+	cells = cells.union([cell_suspension_id])
 
 fout.close()
 
