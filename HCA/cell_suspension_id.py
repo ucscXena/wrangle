@@ -1,4 +1,4 @@
-import sys
+import sys, json
 
 def cellSuspensionID (cell_suspension_file):
 	# get the cell suspension id
