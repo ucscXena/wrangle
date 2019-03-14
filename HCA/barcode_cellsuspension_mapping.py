@@ -1,4 +1,4 @@
-import string, sys
+import string, sys, os
 import h5py
 sys.path.insert(0, os.path.dirname(__file__))
 
@@ -8,7 +8,7 @@ h5Group = "GRCh38"
 
 def output(barcodes, cell_suspension_id, fout):
 	for barcode in barcodes:
-		fout.write(barcode + '\t' _ cell_suspension_id +'\n')
+		fout.write(barcode + '\t' + cell_suspension_id +'\n')
 
 
 if len(sys.argv[:]) != 3:
