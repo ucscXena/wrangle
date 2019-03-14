@@ -4,7 +4,7 @@ import cell_suspension_id
 
 cell_suspension_file = "cell_suspension_0.json"
 
-datafiles =[
+bio_metadatafiles =[
 	"cell_suspension_0.json",
 	"specimen_from_organism_0.json",
 	"donor_organism_0.json"
@@ -23,20 +23,24 @@ def processFeature(fout, feature, feature_data, feature_list):
 	return feature_list
 
 
-def parseMeta (indir, cell_suspension_id, fout):
+def parseMeta_to_mtx (indir, cell_suspension_id, fout):
 	feature_list = []
-	# go through metadata files
-	for file in datafiles:
+
+	# go through bio metadata files
+	for file in bio_metadatafiles:
 		input = indir + "/" + file
+		
 		if not os.path.exists(input):
 			continue
 
 		fin = open(input, 'U')
 		J = json.loads(fin.read())
 		fin.close()
+
 		for key in J.keys():
 			if key in  ["describedBy","schema_type","provenance"]:
 				continue
+
 			value = J[key]
 			
 			#print input
@@ -44,11 +48,12 @@ def parseMeta (indir, cell_suspension_id, fout):
 
 			if (not type(value) is list) and (not type(value) is dict) :
 				'''
-				"cell_line_type": "stem cell",
+				"total_estimated_cells": 1800,
 				'''
 				feature = key
 				feature_data = value
 				feature_list = processFeature(fout, feature, feature_data, feature_list)
+			
 			elif type(value) is list and type(value[0]) is dict and value[0].has_key("text"):
 				'''
 				"selected_cell_type": [
@@ -74,6 +79,7 @@ def parseMeta (indir, cell_suspension_id, fout):
 				feature = key
 				feature_data = value["text"]
 				feature_list = processFeature(fout, feature, feature_data, feature_list)
+			
 			elif type(value) is dict:
 				'''
 				"biomaterial_core": {
@@ -85,16 +91,23 @@ def parseMeta (indir, cell_suspension_id, fout):
 				    ],
 				    "genotype": "DCX-Citrine"
 				}
+
+				"cell_morphology": {
+			        "cell_morphology": "Normal",
+			        "percent_cell_viability": 92,
+			        "cell_viability_method": "Trypan blue / manual haemacytometer (C-chip)"
+			    },
 				'''
 				for k in value:
 					if type (value[k]) is list:
 						continue
-					if k == "biomaterial_id":
-						feature = datafileShortTitle[file] + '_' + k
+					elif k in ["biomaterial_id", "biomaterial_name"]:
+						continue
 					else:
 						feature = k
-					feature_data = value[k]
-					feature_list = processFeature(fout, feature, feature_data, feature_list)
+						feature_data = value[k]
+						feature_list = processFeature(fout, feature, feature_data, feature_list)
+
 	return feature_list
 
 if len(sys.argv[:]) != 4:
@@ -107,7 +120,7 @@ mtx_type_output = sys.argv[2]
 clinicalMatrix_output = sys.argv[3]
 
 allFeatures = Set([])
-cells = Set([])
+cells = []
 
 fout = open(mtx_type_output, 'w')
 for subdir in os.listdir(inputdir):
@@ -115,18 +128,19 @@ for subdir in os.listdir(inputdir):
 		continue
 	dir = inputdir + "/" + subdir
 
-	# get the id for the gene expression file, for smart-seq2 currently, that's the id used in the matrix file
+	# get the id for the cell suspension
+	# for smart-seq2, cell suspension id is the id used in the matrix file
+	# h5 10xgenomics file, cell suspension id is used as prefix for barcode
 	cell_suspension_id = cell_suspension_id.cellSuspensionID(dir + "/" + cell_suspension_file)
 
-	feature_list = parseMeta (dir, cell_suspension_id, fout)
+	feature_list = parseMeta_to_mtx (dir, cell_suspension_id, fout)
 
 	allFeatures = allFeatures.union(feature_list)
-	cells = cells.union([cell_suspension_id])
+	cells.append(cell_suspension_id)
 
 fout.close()
 
 cellIndex ={} # key: cell value: cell index
-cells = list(cells)
 for i in range(0, len(cells)):
 	cellIndex[cells[i]] =  i
 
