@@ -134,7 +134,7 @@ for subdir in os.listdir(inputdir):
 	# get the id for the cell suspension
 	# for smart-seq2, cell suspension id is the id used in the matrix file
 	# h5 10xgenomics file, cell suspension id is used as prefix for barcode
-        import cell_suspension_id
+	import cell_suspension_id
 	cell_suspension_id = cell_suspension_id.cellSuspensionID (dir + "/" + cell_suspension_file)
 	feature_list = parseMeta_to_mtx (dir, cell_suspension_id, fout)
 
