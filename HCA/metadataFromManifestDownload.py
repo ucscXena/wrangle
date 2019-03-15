@@ -1,4 +1,4 @@
-import string, json, sys, os, os.path
+import string, json, sys, os, fnmatch
 from sets import Set
 sys.path.insert(0, os.path.dirname(__file__))
 
@@ -6,116 +6,131 @@ cell_suspension_file = "cell_suspension_0.json"
 
 bio_metadatafiles =[
 	"cell_suspension_0.json",
-	"specimen_from_organism_0.json",
-	"donor_organism_0.json"
+	"organoid_*.json",
+	"cell_line_*.json",
+	"specimen_from_organism_*.json",
+	"donor_organism_*.json"
 ]
 
 datafileShortTitle = {
+	"cell_suspension_0": "cell_suspension",
 	"cell_line_0.json" : "cell_line",
+	"organoid_0.json" : "organoid",
 	"specimen_from_organism_0.json": "specimen",
 	"donor_organism_0.json": "donor"
 }
 
-def processFeature(fout, feature, feature_data, feature_list):
-	if feature not in feature_list:
-		feature_list.append(feature)
-		fout.write(cell_suspension_id + '\t' + feature + '\t' + str(feature_data) +'\n')
-	return feature_list
 
+def mtx_output(feature_dic, cell_suspension_id, fout):
+	for feature in feature_dic:
+		value = string.join(feature_dic[feature].sort(), '; ')
+		fout.write(cell_suspension_id + '\t' + feature + '\t' + value +'\n')
 
-def parseMeta_to_mtx (indir, cell_suspension_id, fout):
-	feature_list = []
+def addToDic (dic, key, feature_data):
+	if key not in dic:
+		dic[key] =[]
+	elif feature_data not in dic[key]:
+		dic[key].append(feature_data)
+	return dic
+
+def parseMeta_to_mtx (indir, cell_suspension_id):
+	dic ={}
 
 	# go through bio metadata files
-	for file in bio_metadatafiles:
-		input = indir + "/" + file
-		
-		if not os.path.exists(input):
-			continue
+	for file_pattern in bio_metadatafiles:
+		files = fnmatch.filter(os.listdir(indir), file_pattern)
+		for file in files:
+			input = indir + "/" + file
+			fin = open(input, 'U')
+			J = json.loads(fin.read())
+			fin.close()
 
-		fin = open(input, 'U')
-		J = json.loads(fin.read())
-		fin.close()
+			for key in J.keys():
+				if key in  ["describedBy","schema_type","provenance"]:
+					continue
 
-		for key in J.keys():
-			if key in  ["describedBy","schema_type","provenance"]:
-				continue
+				value = J[key]
+				
+				#print input
+				#print key, value
 
-			value = J[key]
-			
-			#print input
-			#print key, value
+				if (not type(value) is list) and (not type(value) is dict) :
+					'''
+					"total_estimated_cells": 1800,
+					'''
+					feature = key
+					feature_data = value
+					dic = addToDic (dic, key, feature_data)
+					#feature_list = processFeature(fout, feature, feature_data, feature_list)
+				
+				elif type(value) is list and type(value[0]) is dict and value[0].has_key("text"):
+					'''
+					"selected_cell_type": [
+			        {
+			            "text": "inhibitory interneurons",
+			            "ontology": "CL:0000498",
+			            "ontology_label": "inhibitory interneuron"
+			        }
+		    		]
+		    		'''
+					feature = key
+					feature_data = value[0]["text"]
+					dic = addToDic (dic, key, feature_data)
+					#feature_list = processFeature(fout, feature, feature_data, feature_list)
+				
+				elif type(value) is dict and value.has_key("text"):
+					'''
+					    "cell_type": {
+				        "text": "embryonic stem cell",
+				        "ontology": "CL:0002322",
+				        "ontology_label": "embryonic stem cell"
+				    }
+					'''
+					feature = key
+					feature_data = value["text"]
+					dic = addToDic (dic, key, feature_data)
+					#feature_list = processFeature(fout, feature, feature_data, feature_list)
+				
+				elif type(value) is dict:
+					'''
+					"biomaterial_core": {
+					    "biomaterial_id": "D26Dp14B02",
+					    "biomaterial_name": "hESC-derived inhibitory interneurons",
+					    "biomaterial_description": "hESC-derived inhibitory interneurons at day 26",
+					    "ncbi_taxon_id": [
+					        9606
+					    ],
+					    "genotype": "DCX-Citrine"
+					}
 
-			if (not type(value) is list) and (not type(value) is dict) :
-				'''
-				"total_estimated_cells": 1800,
-				'''
-				feature = key
-				feature_data = value
-				feature_list = processFeature(fout, feature, feature_data, feature_list)
-			
-			elif type(value) is list and type(value[0]) is dict and value[0].has_key("text"):
-				'''
-				"selected_cell_type": [
-		        {
-		            "text": "inhibitory interneurons",
-		            "ontology": "CL:0000498",
-		            "ontology_label": "inhibitory interneuron"
-		        }
-	    		]
-	    		'''
-				feature = key
-				feature_data = value[0]["text"]
-				feature_list = processFeature(fout, feature, feature_data, feature_list)
-			
-			elif type(value) is dict and value.has_key("text"):
-				'''
-				    "cell_type": {
-			        "text": "embryonic stem cell",
-			        "ontology": "CL:0002322",
-			        "ontology_label": "embryonic stem cell"
-			    }
-				'''
-				feature = key
-				feature_data = value["text"]
-				feature_list = processFeature(fout, feature, feature_data, feature_list)
-			
-			elif type(value) is dict:
-				'''
-				"biomaterial_core": {
-				    "biomaterial_id": "D26Dp14B02",
-				    "biomaterial_name": "hESC-derived inhibitory interneurons",
-				    "biomaterial_description": "hESC-derived inhibitory interneurons at day 26",
-				    "ncbi_taxon_id": [
-				        9606
-				    ],
-				    "genotype": "DCX-Citrine"
-				}
+					"cell_morphology": {
+				        "cell_morphology": "Normal",
+				        "percent_cell_viability": 92,
+				        "cell_viability_method": "Trypan blue / manual haemacytometer (C-chip)"
+				    },
+					'''
+					for k in value:
+						if type (value[k]) is list:
+							continue
+						elif k in ["biomaterial_id", "biomaterial_name"]:
+							continue
+						elif k == "biomaterial_description":
+							feature = datafileShortTitle[file]
+							feature_data = value[k]
+							dic = addToDic (dic, key, feature_data)
+							#feature_list = processFeature(fout, feature, feature_data, feature_list)
+						else:
+							feature = k
+							feature_data = value[k]
+							dic = addToDic (dic, key, feature_data)
+							feature_list = processFeature(fout, feature, feature_data, feature_list)
 
-				"cell_morphology": {
-			        "cell_morphology": "Normal",
-			        "percent_cell_viability": 92,
-			        "cell_viability_method": "Trypan blue / manual haemacytometer (C-chip)"
-			    },
-				'''
-				for k in value:
-					if type (value[k]) is list:
-						continue
-					elif k in ["biomaterial_id", "biomaterial_name"]:
-						continue
-					else:
-						feature = k
-						feature_data = value[k]
-						feature_list = processFeature(fout, feature, feature_data, feature_list)
-
-	return feature_list
+	return dic
 
 if len(sys.argv[:]) != 4:
 	print "python metadataFromManifestDownloadSmartseq2.py inputdir mtx_type_output clinicalMatrix_output"
 	print
 	sys.exit()
-
-
 
 inputdir = sys.argv[1]
 mtx_type_output = sys.argv[2]
@@ -136,14 +151,16 @@ for subdir in os.listdir(inputdir):
 	# h5 10xgenomics file, cell suspension id is used as prefix for barcode
 	import cell_suspension_id
 	cell_suspension_id = cell_suspension_id.cellSuspensionID (dir + "/" + cell_suspension_file)
-	feature_list = parseMeta_to_mtx (dir, cell_suspension_id, fout)
+	feature_dic = parseMeta_to_mtx (dir, cell_suspension_id)
 
-	allFeatures = allFeatures.union(feature_list)
+	allFeatures = allFeatures.union(feature_dic.keys())
 	cells.append(cell_suspension_id)
+
+	mtx_output(feature_dic, cell_suspension_id, fout)
 
 fout.close()
 
-cellIndex ={} # key: cell value: cell index
+cellIndex = {} # key: cell value: cell index
 for i in range(0, len(cells)):
 	cellIndex[cells[i]] =  i
 
@@ -157,7 +174,6 @@ for i in range (0,len(cells)):
 	matrix.append([])
 	for j in range (0, len(allFeatures)):
 		matrix[i].append('')
-
 
 fin = open(mtx_type_output, 'U')
 while 1:
