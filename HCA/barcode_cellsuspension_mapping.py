@@ -1,5 +1,6 @@
 import string, sys, os
 import h5py
+from sets import Set
 sys.path.insert(0, os.path.dirname(__file__))
 
 cell_suspension_file = "cell_suspension_0.json"
@@ -32,6 +33,7 @@ for subdir in os.listdir(inputdir):
 	hF = h5py.File(dir + "/" + h5_file)
 	barcodes = hF[h5Group + "/barcodes"]
 	barcodes = map(lambda x: cell_suspension_id + '_' + x, barcodes)
+	barcodes = list(set(barcodes))
 	output(barcodes, cell_suspension_id, fout)
 
 fout.close()
