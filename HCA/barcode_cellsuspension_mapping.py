@@ -33,7 +33,7 @@ for subdir in os.listdir(inputdir):
 
 	hF = h5py.File(dir + "/" + h5_file)
 	barcodes = hF[h5Group + "/barcodes"]
-	barcodes = map(lambda x:  + '_' + x, barcodes)
+	barcodes = map(lambda x:  cell_suspension_id + '_' + x, barcodes)
 	output(barcodes, cell_suspension_id, fout)
 
 fout.close()
