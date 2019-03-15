@@ -18,15 +18,16 @@ def genesPerCell_h5 (hF):
 	rowN = shape[0] # number of genes
 	colN = shape[1] # number of samples
 	counter_indptr_size = rowN
+        
+        #the standard CSC representation
+        #where the row indices for column i are stored in indices[indptr[i]:indptr[i+1]] and
+        #their corresponding values are stored in data[indptr[i]:indptr[i+1]].
+        #If the shape parameter is not supplied, the matrix dimensions are inferred from the index arrays.
 
-    #the standard CSC representation
-    #where the row indices for column i are stored in indices[indptr[i]:indptr[i+1]] and
-    #their corresponding values are stored in data[indptr[i]:indptr[i+1]].
-    #If the shape parameter is not supplied, the matrix dimensions are inferred from the index arrays.
-
-    for i in range (0, colN):
- 		print i, len(data[indptr[i]:indptr[i+1]])
-
+        for i in range (0, colN):
+                genesInCell = len(data[indptr[i]:indptr[i+1]])
+                if genesInCell == 0:
+                        print i
 if len(sys.argv[:]) != 3:
 	print "python genesPerCell_h5.py inputdir output"
 	print
