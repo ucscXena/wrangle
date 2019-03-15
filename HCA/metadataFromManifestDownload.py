@@ -48,7 +48,7 @@ def parseMeta_to_mtx (indir):
 			fin.close()
 
 			for key in J.keys():
-				if key in  ["describedBy","schema_type","provenance"]:
+				if key in  ["describedBy","schema_type","provenance","total_estimated_cells"]:
 					continue
 
 				value = J[key]
