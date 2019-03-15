@@ -152,8 +152,9 @@ for subdir in os.listdir(inputdir):
 	# get the id for the cell suspension
 	# for smart-seq2, cell suspension id is the id used in the matrix file
 	# h5 10xgenomics file, cell suspension id is used as prefix for barcode
-	import cell_suspension_id
-	cell_suspension_id = cell_suspension_id.cellSuspensionID (dir + "/" + cell_suspension_file)
+	#import cell_suspension_id
+	#cell_suspension_id = cell_suspension_id.cellSuspensionID (dir + "/" + cell_suspension_file)
+	cell_suspension_id = subdir	# HCA data has duplicate cell suspension id weird, so use subdir for now
 	feature_dic = parseMeta_to_mtx (dir)
 
 	allFeatures = allFeatures.union(feature_dic.keys())

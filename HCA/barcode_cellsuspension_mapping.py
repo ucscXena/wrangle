@@ -27,13 +27,13 @@ for subdir in os.listdir(inputdir):
 	if not os.path.isdir(dir):
 		continue
 
-	import cell_suspension_id
-	cell_suspension_id = cell_suspension_id.cellSuspensionID (dir + "/" + cell_suspension_file)
+	# import cell_suspension_id
+	# cell_suspension_id = cell_suspension_id.cellSuspensionID (dir + "/" + cell_suspension_file)
+	cell_suspension_id = subdir # HCA data has duplicate cell suspension id weird, so use subdir for now
 
 	hF = h5py.File(dir + "/" + h5_file)
 	barcodes = hF[h5Group + "/barcodes"]
-	barcodes = map(lambda x: cell_suspension_id + '_' + x, barcodes)
-	barcodes = list(set(barcodes))
+	barcodes = map(lambda x:  + '_' + x, barcodes)
 	output(barcodes, cell_suspension_id, fout)
 
 fout.close()
