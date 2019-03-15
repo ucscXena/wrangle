@@ -30,7 +30,7 @@ for (( i=0; i<$numdir+$numPerRUN-1; i=i+$numPerRUN )) do
 	     input_h5=$dir/filtered_gene_bc_matrices_h5.h5
 	     output=$dir/filtered_gene_bc_matrices.tsv
 	     #prefix=`python $HCAcodeDir/cell_suspension_id.py $dir/cell_suspension_0.json`
-       prefix=$dir # HCA data has duplicate cell suspension id weird, so use subdir for now
+	     prefix=$(basename $dir) # HCA data has duplicate cell suspension id weird, so use subdir for now
 	     command="$command nice python $xenaH5Dir/h5_xena.py $input_h5 GRCh38 $output $prefix ; "
 	 fi
      fi
