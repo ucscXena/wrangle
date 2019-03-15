@@ -38,7 +38,7 @@ def stats(numbers, fout):
 		if numbers[i] > current_value:
 			cumulative = i / float(N)
 			fout.write(str(current_value) + '\t' + str(cumulative) +'\n')
-				current_value = numbers[i]
+			current_value = numbers[i]
 	fout.write(str(current_value) + '\t1.0\n')
 	
 if len(sys.argv[:]) != 3:
