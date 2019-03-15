@@ -7,9 +7,9 @@ cell_suspension_file = "cell_suspension_0.json"
 h5_file = "filtered_gene_bc_matrices_h5.h5"
 h5Group = "GRCh38"
 
-def output(barcodes, cell_suspension_id, fout):
+def output(barcodes, bundle_uuid, fout):
 	for barcode in barcodes:
-		fout.write(barcode + '\t' + cell_suspension_id +'\n')
+		fout.write(barcode + '\t' + bundle_uuid +'\n')
 
 
 if len(sys.argv[:]) != 3:
@@ -29,11 +29,11 @@ for subdir in os.listdir(inputdir):
 
 	# import cell_suspension_id
 	# cell_suspension_id = cell_suspension_id.cellSuspensionID (dir + "/" + cell_suspension_file)
-	cell_suspension_id = subdir # HCA data has duplicate cell suspension id weird, so use subdir for now
+	bundle_uuid = subdir # HCA data has duplicate cell suspension id weird, so use subdir/bundle_uuid for now
 
 	hF = h5py.File(dir + "/" + h5_file)
 	barcodes = hF[h5Group + "/barcodes"]
-	barcodes = map(lambda x:  cell_suspension_id + '_' + x, barcodes)
-	output(barcodes, cell_suspension_id, fout)
+	barcodes = map(lambda x:  bundle_uuid + '_' + x, barcodes)
+	output(barcodes, bundle_uuid, fout)
 
 fout.close()

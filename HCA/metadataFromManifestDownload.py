@@ -21,12 +21,12 @@ datafileShortTitle = {
 }
 
 
-def mtx_output(feature_dic, cell_suspension_id, fout):
+def mtx_output(feature_dic, bundle_uuid, fout):
 	for feature in feature_dic:
                 value = map(str, feature_dic[feature])
                 value.sort()
 		value = string.join(value, '; ')
-		fout.write(cell_suspension_id + '\t' + feature + '\t' + value +'\n')
+		fout.write(bundle_uuid + '\t' + feature + '\t' + value +'\n')
 
 def addToDic (dic, key, feature_data):
 	if key not in dic:
@@ -154,13 +154,13 @@ for subdir in os.listdir(inputdir):
 	# h5 10xgenomics file, cell suspension id is used as prefix for barcode
 	#import cell_suspension_id
 	#cell_suspension_id = cell_suspension_id.cellSuspensionID (dir + "/" + cell_suspension_file)
-	cell_suspension_id = subdir	# HCA data has duplicate cell suspension id weird, so use subdir for now
+	bundle_uuid = subdir	# HCA data has duplicate cell suspension id weird, so use subdir for now
 	feature_dic = parseMeta_to_mtx (dir)
 
 	allFeatures = allFeatures.union(feature_dic.keys())
-	cells.append(cell_suspension_id)
+	cells.append(bundle_uuid)
 
-	mtx_output(feature_dic, cell_suspension_id, fout)
+	mtx_output(feature_dic, bundle_uuid, fout)
 
 fout.close()
 
