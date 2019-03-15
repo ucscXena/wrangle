@@ -27,7 +27,7 @@ for subdir in os.listdir(inputdir):
 	if not os.path.isdir(dir):
 		continue
 
-	if not os.path.exists(dir + "/" + h5_file):
+	if not os.path.exists(dir + "/" + cell_suspension_file):
 		continue
 		
 	# import cell_suspension_id
