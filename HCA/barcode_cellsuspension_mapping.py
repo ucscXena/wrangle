@@ -27,6 +27,9 @@ for subdir in os.listdir(inputdir):
 	if not os.path.isdir(dir):
 		continue
 
+	if not os.path.exists(dir + "/" + h5_file):
+		continue
+		
 	# import cell_suspension_id
 	# cell_suspension_id = cell_suspension_id.cellSuspensionID (dir + "/" + cell_suspension_file)
 	bundle_uuid = subdir # HCA data has duplicate cell suspension id weird, so use subdir/bundle_uuid for now
