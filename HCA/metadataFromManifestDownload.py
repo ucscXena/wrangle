@@ -149,6 +149,9 @@ for subdir in os.listdir(inputdir):
 	if not os.path.isdir(dir):
 		continue
 
+        if not os.path.exists(dir + "/"+ cell_suspension_file):
+                continue
+        
 	# get the id for the cell suspension
 	# for smart-seq2, cell suspension id is the id used in the matrix file
 	# h5 10xgenomics file, cell suspension id is used as prefix for barcode
@@ -189,7 +192,7 @@ while 1:
 	matrix[cellIndex[cell]][featureIndex[feature]] = value
 
 fout = open(clinicalMatrix_output, 'w')
-fout.write('sample' + '\t' + string.join(allFeatures, '\t') + '\n')
+fout.write('xena_sample' + '\t' + string.join(allFeatures, '\t') + '\n')
 for cell in cells:
 	fout.write(cell)
 	for feature in allFeatures:
