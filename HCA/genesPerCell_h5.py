@@ -29,6 +29,19 @@ def genesPerCell_h5 (hF):
 	
 	return genesInCell_list
 
+def stats(numbers, fout):
+	N = len(numbers)
+	#data =[]
+	current_value = 0.0
+	for i in range (0, N):
+		if numbers[i] > current_value:
+			culmulative = i / float(N)
+			fout.write(str(current_value) + '\t' + str(culmulative) +'\n')
+			#data.append([current_value, culmulative])
+			current_value = numbers[i]
+	fout.write(str(current_value) + '\t1.0\n')
+	#data.append([current_value, 1.0])
+
 if len(sys.argv[:]) != 3:
 	print "python genesPerCell_h5.py inputdir output"
 	print
@@ -46,9 +59,12 @@ for subdir in os.listdir(inputdir):
 	if not os.path.exists(dir + "/" + cell_suspension_file):
 		continue
 
-	list = []
+	numbers = []
 	hF = h5py.File(dir + "/" + h5_file)
 	genesInCell_list = genesPerCell_h5 (hF)
-	list.extend(genesInCell_list)
+	numbers.extend(genesInCell_list)
 
-	list.sort()
+fout = open(output, 'w')
+numbers.sort()
+stats(numbers, fout)
+fout.close()
