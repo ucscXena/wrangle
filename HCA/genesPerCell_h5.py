@@ -25,9 +25,10 @@ def genesPerCell_h5 (hF):
 	#If the shape parameter is not supplied, the matrix dimensions are inferred from the index arrays.
 
 	sampleIndex = range(0, colN)
-	genesInCell_list = map(lambda x: len(data[indptr[i]:indptr[i+1]]), sampleIndex)
-	genesInCell_list.sort()
-	print "done"
+	genesInCell_list = map(lambda i: len(data[indptr[i]:indptr[i+1]]), sampleIndex)
+	
+	return genesInCell_list
+
 if len(sys.argv[:]) != 3:
 	print "python genesPerCell_h5.py inputdir output"
 	print
@@ -45,5 +46,9 @@ for subdir in os.listdir(inputdir):
 	if not os.path.exists(dir + "/" + cell_suspension_file):
 		continue
 
+	list = []
 	hF = h5py.File(dir + "/" + h5_file)
-	genesPerCell_h5 (hF)
+	genesInCell_list = genesPerCell_h5 (hF)
+	list.extend(genesInCell_list)
+
+	list.sort()
