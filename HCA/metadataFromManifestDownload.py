@@ -115,7 +115,8 @@ def parseMeta_to_mtx (indir, cell_suspension_id):
 						elif k in ["biomaterial_id", "biomaterial_name"]:
 							continue
 						elif k == "biomaterial_description":
-							feature = datafileShortTitle[file]
+							prefix = string.join(string.split(file[:-4],'_')[:-1], '_')
+							feature = datafileShortTitle[prefix]
 							feature_data = value[k]
 							dic = addToDic (dic, key, feature_data)
 							#feature_list = processFeature(fout, feature, feature_data, feature_list)
@@ -123,7 +124,7 @@ def parseMeta_to_mtx (indir, cell_suspension_id):
 							feature = k
 							feature_data = value[k]
 							dic = addToDic (dic, key, feature_data)
-							feature_list = processFeature(fout, feature, feature_data, feature_list)
+							#feature_list = processFeature(fout, feature, feature_data, feature_list)
 
 	return dic
 
