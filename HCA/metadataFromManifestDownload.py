@@ -13,27 +13,29 @@ bio_metadatafiles =[
 ]
 
 datafileShortTitle = {
-	"cell_suspension_0": "cell_suspension",
-	"cell_line_0.json" : "cell_line",
-	"organoid_0.json" : "organoid",
-	"specimen_from_organism_0.json": "specimen",
-	"donor_organism_0.json": "donor"
+	"cell_suspension": "cell_suspension",
+	"cell_line" : "cell_line",
+	"organoid" : "organoid",
+	"specimen_from_organism": "specimen",
+	"donor_organism": "donor"
 }
 
 
 def mtx_output(feature_dic, cell_suspension_id, fout):
 	for feature in feature_dic:
-		value = string.join(feature_dic[feature].sort(), '; ')
+                value = map(str, feature_dic[feature])
+                value.sort()
+		value = string.join(value, '; ')
 		fout.write(cell_suspension_id + '\t' + feature + '\t' + value +'\n')
 
 def addToDic (dic, key, feature_data):
 	if key not in dic:
 		dic[key] =[]
-	elif feature_data not in dic[key]:
+	if feature_data not in dic[key]:
 		dic[key].append(feature_data)
 	return dic
 
-def parseMeta_to_mtx (indir, cell_suspension_id):
+def parseMeta_to_mtx (indir):
 	dic ={}
 
 	# go through bio metadata files
@@ -60,8 +62,7 @@ def parseMeta_to_mtx (indir, cell_suspension_id):
 					'''
 					feature = key
 					feature_data = value
-					dic = addToDic (dic, key, feature_data)
-					#feature_list = processFeature(fout, feature, feature_data, feature_list)
+					dic = addToDic (dic, feature, feature_data)
 				
 				elif type(value) is list and type(value[0]) is dict and value[0].has_key("text"):
 					'''
@@ -75,7 +76,7 @@ def parseMeta_to_mtx (indir, cell_suspension_id):
 		    		'''
 					feature = key
 					feature_data = value[0]["text"]
-					dic = addToDic (dic, key, feature_data)
+					dic = addToDic (dic, feature, feature_data)
 					#feature_list = processFeature(fout, feature, feature_data, feature_list)
 				
 				elif type(value) is dict and value.has_key("text"):
@@ -88,7 +89,7 @@ def parseMeta_to_mtx (indir, cell_suspension_id):
 					'''
 					feature = key
 					feature_data = value["text"]
-					dic = addToDic (dic, key, feature_data)
+					dic = addToDic (dic, feature, feature_data)
 					#feature_list = processFeature(fout, feature, feature_data, feature_list)
 				
 				elif type(value) is dict:
@@ -112,19 +113,20 @@ def parseMeta_to_mtx (indir, cell_suspension_id):
 					for k in value:
 						if type (value[k]) is list:
 							continue
-						elif k in ["biomaterial_id", "biomaterial_name"]:
-							continue
-						elif k == "biomaterial_description":
-							prefix = string.join(string.split(file[:-4],'_')[:-1], '_')
-							feature = datafileShortTitle[prefix]
+						elif k in ["biomaterial_id", "biomaterial_name", "biomaterial_description"]:
+							prefix = string.join(string.split(file[:-4], '_')[:-1], '_')
+                                                        if k == "biomaterial_id":
+                                                                feature = datafileShortTitle[prefix] + "_id"
+                                                        elif k == "biomaterial_description":
+                                                                feature = datafileShortTitle[prefix] + "_description"
+                                                        else:
+                                                                continue
 							feature_data = value[k]
-							dic = addToDic (dic, key, feature_data)
-							#feature_list = processFeature(fout, feature, feature_data, feature_list)
+							dic = addToDic (dic, feature, feature_data)
 						else:
 							feature = k
 							feature_data = value[k]
-							dic = addToDic (dic, key, feature_data)
-							#feature_list = processFeature(fout, feature, feature_data, feature_list)
+							dic = addToDic (dic, feature, feature_data)
 
 	return dic
 
@@ -152,7 +154,7 @@ for subdir in os.listdir(inputdir):
 	# h5 10xgenomics file, cell suspension id is used as prefix for barcode
 	import cell_suspension_id
 	cell_suspension_id = cell_suspension_id.cellSuspensionID (dir + "/" + cell_suspension_file)
-	feature_dic = parseMeta_to_mtx (dir, cell_suspension_id)
+	feature_dic = parseMeta_to_mtx (dir)
 
 	allFeatures = allFeatures.union(feature_dic.keys())
 	cells.append(cell_suspension_id)
