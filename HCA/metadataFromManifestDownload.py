@@ -21,12 +21,12 @@ datafileShortTitle = {
 }
 
 
-def mtx_output(feature_dic, bundle_uuid, fout):
+def mtx_output(feature_dic, id, fout):
 	for feature in feature_dic:
                 value = map(str, feature_dic[feature])
                 value.sort()
 		value = string.join(value, '; ')
-		fout.write(bundle_uuid + '\t' + feature + '\t' + value +'\n')
+		fout.write(id + '\t' + feature + '\t' + value +'\n')
 
 def addToDic (dic, key, feature_data):
 	if key not in dic:
@@ -130,14 +130,23 @@ def parseMeta_to_mtx (indir):
 
 	return dic
 
-if len(sys.argv[:]) != 4:
-	print "python metadataFromManifestDownloadSmartseq2.py inputdir mtx_type_output clinicalMatrix_output"
+def printHelp():
+	print "python metadataFromManifestDownloadSmartseq2.py type(h5/smartseq2) inputdir mtx_type_output clinicalMatrix_output"
 	print
+	
+
+if len(sys.argv[:]) != 5:
+	printHelp()
 	sys.exit()
 
-inputdir = sys.argv[1]
-mtx_type_output = sys.argv[2]
-clinicalMatrix_output = sys.argv[3]
+filetype = sys.argv[1]
+inputdir = sys.argv[2]
+mtx_type_output = sys.argv[3]
+clinicalMatrix_output = sys.argv[4]
+
+if filetype not in ["h5", "smartseq2"]:
+	printHelp()
+	sys.exit()
 
 allFeatures = Set([])
 cells = []
@@ -152,18 +161,20 @@ for subdir in os.listdir(inputdir):
 	if not os.path.exists(dir + "/"+ cell_suspension_file):
 		continue
 
-	# get the id for the cell suspension
-	# for smart-seq2, cell suspension id is the id used in the matrix file
-	# h5 10xgenomics file, cell suspension id is used as prefix for barcode
-	#import cell_suspension_id
-	#cell_suspension_id = cell_suspension_id.cellSuspensionID (dir + "/" + cell_suspension_file)
-	bundle_uuid = subdir	# HCA data has duplicate cell suspension id weird, so use subdir for now
+	if filetype == "smartseq2":
+		# for smart-seq2, cell suspension id is the id used in the matrix file
+		import cell_suspension_id
+		id = cell_suspension_id.cellSuspensionID (dir + "/" + cell_suspension_file)
+	elif filetype == "h5":
+		# h5 10xgenomics file, cell suspension does not seems to be uniq, use bundle_uuid
+		id = subdir	# bundle_uuid HCA data has duplicate cell suspension id weird, so use subdir for now
+	
 	feature_dic = parseMeta_to_mtx (dir)
 
 	allFeatures = allFeatures.union(feature_dic.keys())
-	cells.append(bundle_uuid)
+	cells.append(id)
 
-	mtx_output(feature_dic, bundle_uuid, fout)
+	mtx_output(feature_dic, id, fout)
 
 fout.close()
 
