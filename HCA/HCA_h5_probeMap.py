@@ -1,7 +1,7 @@
 import string, sys
 import h5py
 
-gencode_gene_probemap = "/mnt/singlecell/xena/files/gencode.v27.annotation.gene.Comprehensive.CHR.probemap"
+gencode_gene_probemap = "/mnt/singlecell/xena/files/Homo_sapiens.GRCh38.90.PAR_Y.gene.probemap"
 group = "GRCh38"
 
 def parse(gencode_gene_probemap):
@@ -19,7 +19,7 @@ def parse(gencode_gene_probemap):
 
 if len(sys.argv[:]) != 3:
 	print "python HCA_h5_probeMap.py input_example_h5_file output_probeMap"
-	print "use gencode.v27.annotation.gene.Comprehensive.CHR.probemap as the base"
+	print "use Homo_sapiens.GRCh38.90.PAR_Y.gene.probemap as the base"
 	print
 	sys.exit()
 
