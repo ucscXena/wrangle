@@ -26,7 +26,7 @@ if len(sys.argv[:]) != 3:
 matrix_h5 = sys.argv[1]
 
 hF = h5py.File(matrix_h5, 'r')
-genes = hF[group + "/genes"]
+genes = map(lambda x: x, hF[group + "/genes"])
 hF.close()
 
 baseProbeMap = parse(gencode_gene_probemap)
@@ -37,6 +37,6 @@ for gene in genes:
 	if gene in baseProbeMap:
 		fout.write(baseProbeMap[gene])
 	else:
-		print "ERROR," gene, "not found"
+		print "ERROR:", gene, "not found"
 fout.close()
 
