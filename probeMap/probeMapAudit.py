@@ -3,6 +3,7 @@ import xenaPython as xena
 
 if len(sys.argv[:])!= 2:
 	print "python probeMapAudit.py xena/files/dir"
+	print "genomic_matrix_file_with_probeMap  if_it_is_in_reference_hub"
 	print
 	sys.exit()
 
