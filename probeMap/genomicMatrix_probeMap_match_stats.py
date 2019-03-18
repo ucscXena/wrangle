@@ -28,5 +28,11 @@ probeMap_file = sys.argv[2]
 probeMap_ids = Set(parse(probeMap_file))
 gMX_identifiers = Set(parse(genomicMatrix_file))
 
+overlap = len(probeMap_ids.intersection(gMX_identifiers))
+
 print "probeMap id:", len(probeMap_ids)
 print "genomicMatrix id:", len(gMX_identifiers)
+print "overlap:", overlap
+
+if overlap < len(gMX_identifiers):
+	print gMX_identifiers.gMX_identifiers(probeMap_ids)
