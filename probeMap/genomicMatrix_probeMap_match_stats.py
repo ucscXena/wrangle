@@ -35,4 +35,13 @@ print "genomicMatrix id:", len(gMX_identifiers)
 print "overlap:", overlap
 
 if overlap < len(gMX_identifiers):
-	print gMX_identifiers.gMX_identifiers(probeMap_ids)
+        print
+	print "missing in probeMap"
+        print gMX_identifiers.difference(probeMap_ids)
+        print
+
+if overlap < len(probeMap_ids):
+        print
+        print "extra in probeMap"
+        print probeMap_ids.difference(gMX_identifiers.difference)
+        print
