@@ -118,7 +118,7 @@ def readProbeMap(probeMapFile):
     fp.readline()
     for row in fp:
         tokens = row.rstrip().split("\t")
-        probeMap[tokens[0]] = tokens[1]
+        probeMap[tokens[0]] = string.split(tokens[1],',')[0]
     fp.close()
     return(probeMap)
 
