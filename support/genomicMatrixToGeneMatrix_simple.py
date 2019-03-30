@@ -9,8 +9,7 @@ def main():
     args = parser.parse_args()
 
     probeMap = readProbeMap(args.probeMap)
-    geneMatrix, colN = process (args.genomicMatrixInput, probeMap, args.geneMatrixOutput)
-    outputMatrix (geneMatrix, args.geneMatrixOutput, args.type, args.log2, args.theta, colN)
+    process (args.genomicMatrixInput, probeMap, args.geneMatrixOutput)
 
 def process(genomicMatrixInput, probeMap, output):
     genomicFp = open(genomicMatrixInput)
@@ -25,7 +24,7 @@ def process(genomicMatrixInput, probeMap, output):
             break
         
         firstEnd = line.find('\t')
-        probe = data[0:firstEnd]
+        probe = line[0:firstEnd]
         if probe not in probeMap:
             gene = probe
             print probe, "not found in probeMap"
