@@ -127,9 +127,10 @@ for root, dirs, files in os.walk(h5filedir):
 			counter_data,  counter_indptr = \
 				addH5file(h5file, group, fout[group], bundle_uuid, counter_data, counter_indptr)
 
-    
+    '''
 	if count == 2:
 		break		
+    '''
     
 #set shape
 fout[group].attrs['shape'] = fout[group]['shape']
