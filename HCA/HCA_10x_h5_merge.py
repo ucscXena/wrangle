@@ -28,7 +28,7 @@ def output_init (output, group, size_data, size_indptr, example_file):
 	g.create_dataset('indptr', (size_indptr,), dtype='i8', compression="gzip")
 	g.create_dataset('data', (size_data,), dtype='i4', compression="gzip")
 	g.create_dataset('indices', (size_data,), dtype='i8', compression="gzip")
-	g.create_dataset('barcodes', (size_indptr-1,),  dtype='S18', compression="gzip")
+	g.create_dataset('barcodes', (size_indptr-1,),  dtype='S55', compression="gzip")
 	g.create_dataset('shape', (2,), dtype='i4')
 	g.create_dataset('genes', data = this_genes, compression="gzip")
 	g.create_dataset('gene_names', data = this_gene_names, compression="gzip")
