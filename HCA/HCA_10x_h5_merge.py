@@ -35,7 +35,7 @@ def output_init (output, group, size_data, size_indptr, example_file):
 	g['indptr'][0] = 0
 	return f
 
-def addH5file(h5file, group, g, counter_data, counter_indptr):
+def addH5file(h5file, group, g, bundle_uuid, counter_data, counter_indptr):
 	print h5file
 
 	hF = h5py.File(h5file)
@@ -68,7 +68,8 @@ def addH5file(h5file, group, g, counter_data, counter_indptr):
 	#print g['indptr'][counter_indptr], this_indptr[0], g['indptr'][0]
 
 	# barcode
-	g['barcodes'][counter_indptr :  counter_indptr + len(this_barcodes)] = this_barcodes[:]
+	g['barcodes'][counter_indptr :  counter_indptr + len(this_barcodes)] = \
+		map(lambda x: bundle_uuid + '_' + x, this_barcodes[:])
 	# counter_indptr
 	counter_indptr = counter_indptr + len(this_indptr) - 1
 
@@ -120,9 +121,11 @@ for root, dirs, files in os.walk(h5filedir):
 		if file == namepatten:
 			h5file = root + '/' +  file
 			count = count +1
-			# HCA data has duplicate cell suspension id weird, so use subdir/bundle_uuid for now
-			print root, os.path.dirname(root)
-			counter_data,  counter_indptr = addH5file(h5file, group, fout[group], counter_data, counter_indptr)
+			# HCA data has duplicate cell suspension id weird, so use subdir/bundle_uuid for now 
+			# unix bundle_uuid=$(basename $dir)
+			bundle_uuid = os.path.basename(root)
+			counter_data,  counter_indptr = \
+				addH5file(h5file, group, fout[group], bundle_uuid, counter_data, counter_indptr)
 
     
 	if count == 2:
