@@ -1,4 +1,5 @@
 import string, sys
+import sets
 
 def allCells (big_genomic):
 	fin = open(big_genomic, 'r')
@@ -6,26 +7,31 @@ def allCells (big_genomic):
 	fin.close()
 	return cells
 
-def fill_small (small_clin, cells, big_clin):
+def fill_small (small_clin, all_cells, big_clin):
 	fin = open(small_clin ,'r')
-	fout = open(big_clin, 'w')
 
 	#header
 	line = fin.readline()
 	N = string.split(line,'\t')
-	fout.write(line)
-	#data
+
+	#small_clin_cells
+	small_clin_cells =[]
 	while 1:
 		line = fin.readline()
 		if line == '':
 			break
 		cell = line[:line.find('\t')]
-		if cell not in cells:
-			fout.write(cell + '\t'* (N-1) + '\n')
-		else:
-			fout.write(line)
-
+		small_clin_cells.append(cell)
 	fin.close()
+
+	s = sets.Set(all_cells)
+	t = sets.Set(small_clin_cells)
+	missing = s.difference_update(t) #return set s after removing elements found in t
+
+	os.system("cp " + small_clin +" " + big_clin)
+	fout = open(big_clin, 'a')
+	for cell in missing:
+		fout.write(cell + '\t'* (N-1) + '\n')
 	fout.close()
 
 if len(sys.argv[:]) != 4:
