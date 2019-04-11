@@ -12,7 +12,7 @@ def fill_small (small_clin, all_cells, big_clin):
 
 	#header
 	line = fin.readline()
-	N = string.split(line,'\t')
+	N = len (string.split(line,'\t'))
 
 	#small_clin_cells
 	small_clin_cells =[]
@@ -26,7 +26,8 @@ def fill_small (small_clin, all_cells, big_clin):
 
 	s = sets.Set(all_cells)
 	t = sets.Set(small_clin_cells)
-	missing = list(s.difference_update(t)) #return set s after removing elements found in t
+	s.difference_update(t) #return set s after removing elements found in t
+        missing = s
 
 	os.system("cp " + small_clin +" " + big_clin)
 	fout = open(big_clin, 'a')
