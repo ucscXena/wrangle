@@ -1,4 +1,4 @@
-import string, sys
+import string, sys, os
 import sets
 
 def allCells (big_genomic):
@@ -26,7 +26,7 @@ def fill_small (small_clin, all_cells, big_clin):
 
 	s = sets.Set(all_cells)
 	t = sets.Set(small_clin_cells)
-	missing = s.difference_update(t) #return set s after removing elements found in t
+	missing = list(s.difference_update(t)) #return set s after removing elements found in t
 
 	os.system("cp " + small_clin +" " + big_clin)
 	fout = open(big_clin, 'a')
