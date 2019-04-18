@@ -162,8 +162,6 @@ for subdir in os.listdir(inputdir):
 		continue
 
 	feature_dic = parseMeta_to_mtx (dir)
-	allFeatures = allFeatures.union(feature_dic.keys())
-	cells.append(id)
 
 	if filetype == "smartseq2":
 		# for smart-seq2, cell suspension id is the id used in the matrix file
@@ -171,10 +169,14 @@ for subdir in os.listdir(inputdir):
 		id = cell_suspension_id.cellSuspensionID (dir + "/" + cell_suspension_file)
 		bundle_uuid = subdir 
 		addToDic(feature_dic, "bundle_uuid", bundle_uuid)
+                allFeatures = allFeatures.union(["bundle_uuid"])
 	elif filetype == "h5":
 		# h5 10xgenomics file, cell suspension does not seems to be uniq, use bundle_uuid
 		id = subdir	# bundle_uuid HCA data has duplicate cell suspension id weird, so use subdir for now
 	
+	allFeatures = allFeatures.union(feature_dic.keys())
+	cells.append(id)
+
 	mtx_output(feature_dic, id, fout)
 
 fout.close()
