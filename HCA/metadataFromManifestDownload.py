@@ -23,8 +23,8 @@ datafileShortTitle = {
 
 def mtx_output(feature_dic, id, fout):
 	for feature in feature_dic:
-        value = map(str, feature_dic[feature])
-        value.sort()
+		value = map(str, feature_dic[feature])
+		value.sort()
 		value = string.join(value, '; ')
 		fout.write(id + '\t' + feature + '\t' + value +'\n')
 
@@ -115,12 +115,12 @@ def parseMeta_to_mtx (indir):
 							continue
 						elif k in ["biomaterial_id", "biomaterial_name", "biomaterial_description"]:
 							prefix = string.join(string.split(file[:-4], '_')[:-1], '_')
-                            if k == "biomaterial_id":
-                                    feature = datafileShortTitle[prefix] + "_id"
-                            elif k == "biomaterial_description":
-                                    feature = datafileShortTitle[prefix] + "_description"
-                            else:
-                                    continue
+							if k == "biomaterial_id":
+								feature = datafileShortTitle[prefix] + "_id"
+							elif k == "biomaterial_description":
+								feature = datafileShortTitle[prefix] + "_description"
+							else:
+								continue
 							feature_data = value[k]
 							dic = addToDic (dic, feature, feature_data)
 						else:
