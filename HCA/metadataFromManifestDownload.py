@@ -23,8 +23,8 @@ datafileShortTitle = {
 
 def mtx_output(feature_dic, id, fout):
 	for feature in feature_dic:
-                value = map(str, feature_dic[feature])
-                value.sort()
+        value = map(str, feature_dic[feature])
+        value.sort()
 		value = string.join(value, '; ')
 		fout.write(id + '\t' + feature + '\t' + value +'\n')
 
@@ -115,12 +115,12 @@ def parseMeta_to_mtx (indir):
 							continue
 						elif k in ["biomaterial_id", "biomaterial_name", "biomaterial_description"]:
 							prefix = string.join(string.split(file[:-4], '_')[:-1], '_')
-                                                        if k == "biomaterial_id":
-                                                                feature = datafileShortTitle[prefix] + "_id"
-                                                        elif k == "biomaterial_description":
-                                                                feature = datafileShortTitle[prefix] + "_description"
-                                                        else:
-                                                                continue
+                            if k == "biomaterial_id":
+                                    feature = datafileShortTitle[prefix] + "_id"
+                            elif k == "biomaterial_description":
+                                    feature = datafileShortTitle[prefix] + "_description"
+                            else:
+                                    continue
 							feature_data = value[k]
 							dic = addToDic (dic, feature, feature_data)
 						else:
@@ -161,19 +161,20 @@ for subdir in os.listdir(inputdir):
 	if not os.path.exists(dir + "/"+ cell_suspension_file):
 		continue
 
+	feature_dic = parseMeta_to_mtx (dir)
+	allFeatures = allFeatures.union(feature_dic.keys())
+	cells.append(id)
+
 	if filetype == "smartseq2":
 		# for smart-seq2, cell suspension id is the id used in the matrix file
 		import cell_suspension_id
 		id = cell_suspension_id.cellSuspensionID (dir + "/" + cell_suspension_file)
+		bundle_uuid = subdir 
+		addToDic(feature_dic, "bundle_uuid", bundle_uuid)
 	elif filetype == "h5":
 		# h5 10xgenomics file, cell suspension does not seems to be uniq, use bundle_uuid
 		id = subdir	# bundle_uuid HCA data has duplicate cell suspension id weird, so use subdir for now
 	
-	feature_dic = parseMeta_to_mtx (dir)
-
-	allFeatures = allFeatures.union(feature_dic.keys())
-	cells.append(id)
-
 	mtx_output(feature_dic, id, fout)
 
 fout.close()
