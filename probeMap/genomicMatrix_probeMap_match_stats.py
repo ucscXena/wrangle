@@ -15,8 +15,11 @@ def parse(genomicMatrix_OR_probemap_file):
 		line = fin.readline()
 		if line == '':
 			break
-		data = string.split(line, '\t')
-		probe = data[0]
+		pos = line.find('\t')
+		if pos == -1:
+			print "ERROR"
+			sys.exit()
+		probe = data[:pos]
 		identifiers.append(probe)
 	fin.close()
 
