@@ -19,7 +19,7 @@ def parse(genomicMatrix_OR_probemap_file):
 		if pos == -1:
 			print "ERROR"
 			sys.exit()
-		probe = data[:pos]
+		probe = line[:pos]
 		identifiers.append(probe)
 	fin.close()
 
