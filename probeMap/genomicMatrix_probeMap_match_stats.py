@@ -46,5 +46,5 @@ if overlap < len(gMX_identifiers):
 if overlap < len(probeMap_ids):
         print
         print "extra in probeMap"
-        print probeMap_ids.difference(gMX_identifiers.difference)
+        print probeMap_ids.difference(gMX_identifiers)
         print
