@@ -12,6 +12,8 @@ def main():
     process (args.genomicMatrixInput, probeMap, args.geneMatrixOutput)
 
 def process(genomicMatrixInput, probeMap, output):
+    geneCount = {}
+
     genomicFp = open(genomicMatrixInput)
     fout = open(output, 'w')
 
@@ -31,7 +33,14 @@ def process(genomicMatrixInput, probeMap, output):
         else:
             gene = probeMap[probe]
     
-        fout.write(gene+ line[firstEnd:])
+        if gene not in geneCount:
+            geneCount[gene] = 0
+        geneCount[gene] = geneCount[gene] + 1
+
+        if geneCount[gene] > 10:
+            print gene, "too many for the simple version", probe, "skip"
+        else:
+            fout.write(gene+ line[firstEnd:])
     genomicFp.close()
     fout.close()
 
