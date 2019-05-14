@@ -1,7 +1,5 @@
 import sys, string, math
 
-
-
 def convertToGeneLevelZscore(expdata, output):
 	fin = open(expdata, 'U')
 	fout = open(output,'w')
@@ -46,6 +44,5 @@ if len(sys.argv[:])!= 3:
 
 expdata = sys.argv[1]
 zdata = sys.argv[2]
-
 
 convertToGeneLevelZscore(expdata, zdata)
