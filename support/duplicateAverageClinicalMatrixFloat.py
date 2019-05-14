@@ -71,8 +71,9 @@ if len(sys.argv[:]) != 3:
 inputfile = sys.argv[1]
 outputfile = sys.argv[2]
 
-if detectDup (inputfile):
-    print "there is dups"
+dups = detectDup (inputfile)
+if dups:
+    print "there are", dups, "dups"
 else:
     print "no dups"
     sys.exit()
