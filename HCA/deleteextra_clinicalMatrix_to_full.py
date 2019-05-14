@@ -9,7 +9,7 @@ def allCells (big_genomic):
 
 def deleteextra_big (big_clin, all_cells, small_clin):
 	fin = open(big_clin ,'r')
-
+	fout = open(small_clin ,'w')
 	#header
 	line = fin.readline()
 	N = len (string.split(line,'\t'))
