@@ -1,8 +1,14 @@
 import string, sys, os
 import sets
+import gzip, mimetypes
 
 def allCells (big_genomic):
-	fin = open(big_genomic, 'r')
+	type = mimetypes.guess_type("big_genomic")[1]
+	if type == 'gzip':
+		fin = gzip.open(big_genomic, 'rb')
+	else:
+		fin = open(big_genomic, 'r')
+
 	cells = string.split(fin.readline()[:-1],'\t')[1:]
 	fin.close()
 	return cells
@@ -36,7 +42,7 @@ def fill_small (small_clin, all_cells, big_clin):
 	fout.close()
 
 if len(sys.argv[:]) != 4:
-	print "python fill_clinicalMatrix_to_full.py in_small_clinical in_big_genomic out_big_clinical"
+	print "python fill_clinicalMatrix_to_full.py in_small_clinical in_big_genomic(gzip or uncompressed) out_big_clinical"
 	print
 	sys.exit()
 
