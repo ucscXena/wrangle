@@ -3,7 +3,7 @@ import sets
 import gzip, mimetypes
 
 def allCells (big_genomic):
-	type = mimetypes.guess_type("big_genomic")[1]
+	type = mimetypes.guess_type(big_genomic)[1]
 	if type == 'gzip':
 		fin = gzip.open(big_genomic, 'rb')
 	else:
@@ -37,8 +37,9 @@ def fill_small (small_clin, all_cells, big_clin, fill_value):
 
 	os.system("cp " + small_clin +" " + big_clin)
 	fout = open(big_clin, 'a')
+        fill_value = ('\t'+fill_value) * (N-1)
 	for cell in missing:
-		fout.write(cell + (fill_value + '\t')* (N-1) + '\n')
+		fout.write(cell + fill_value + '\n')
 	fout.close()
 
 if len(sys.argv[:]) not in [4,5]:
@@ -56,5 +57,4 @@ if len(sys.argv[:]) == 5:
 
 
 cells = allCells (big_genomic)
-
 fill_small (small_clin, cells, big_clin, fill_value)
