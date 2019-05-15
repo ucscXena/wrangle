@@ -13,7 +13,7 @@ def allCells (big_genomic):
 	fin.close()
 	return cells
 
-def fill_small (small_clin, all_cells, big_clin):
+def fill_small (small_clin, all_cells, big_clin, fill_value):
 	fin = open(small_clin ,'r')
 
 	#header
@@ -38,18 +38,23 @@ def fill_small (small_clin, all_cells, big_clin):
 	os.system("cp " + small_clin +" " + big_clin)
 	fout = open(big_clin, 'a')
 	for cell in missing:
-		fout.write(cell + '\t'* (N-1) + '\n')
+		fout.write(cell + (fill_value + '\t')* (N-1) + '\n')
 	fout.close()
 
-if len(sys.argv[:]) != 4:
-	print "python fill_clinicalMatrix_to_full.py in_small_clinical in_big_genomic(gzip or uncompressed) out_big_clinical"
+if len(sys.argv[:]) not in [4,5]:
+	print "python fill_clinicalMatrix_to_full.py in_small_clinical in_big_genomic(gzip or uncompressed) out_big_clinical fill_in_value(optional)"
 	print
 	sys.exit()
 
 small_clin = sys.argv[1]
 big_genomic = sys.argv[2]
 big_clin = sys.argv[3]
+fill_value = ''
+
+if len(sys.argv[:]) == 5:
+	fill_value = sys.argv[4]
+
 
 cells = allCells (big_genomic)
 
-fill_small (small_clin, cells, big_clin)
+fill_small (small_clin, cells, big_clin, fill_value)
