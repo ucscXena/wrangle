@@ -37,7 +37,7 @@ def merge (infile_list, outfile, root ="./"):
         c=c+1
         nCOLs = getColumnSize (infile)
         cur_genes={}
-        cur_genes = setGeneOrder (infile,cur_genes, tmpDir)
+        cur_genes = MapGeneOrder (infile,cur_genes, tmpDir)
 
         for i in range (2,nCOLs+1, 250):
             tmpfile = tmpDir+"/"+str(c)+"_tmp_"+str(int(i/250.0))
@@ -80,6 +80,17 @@ def setGeneOrder (infile,genes, tmpDir):
         if hugo not in genes:
             p=len(genes)
             genes[hugo]=p
+    fin.close()
+    return genes
+
+def MapGeneOrder (infile, genes, tmpDir):
+    os.system("cut -f 1 "+infile +" > "+ tmpDir+"/tmpid")
+    fin=open(tmpDir+"/tmpid",'U')
+    fin.readline()
+    lines = fin.readlines()
+    for i in range (0, len(lines)):
+        hugo = lines[i][:-1]
+        genes[hugo]= i
     fin.close()
     return genes
 
