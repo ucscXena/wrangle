@@ -1,18 +1,22 @@
-import string, sys
+import string, sys, os
 import json
 
 import perSampleEventN
 
-if len(sys.argv[:]) < 4 and (__name__ == "__main__"):
-	print "python observed.py pathway_input cohort dataInputfile(s)"
+if len(sys.argv[:]) < 5 and (__name__ == "__main__"):
+	print "python observed.py pathway_input mode cohort dataInputfile(s)"
 	print
 	sys.exit()
 
 pathway_input  = sys.argv[1]
-cohort = sys.argv[2]
-dataInputfiles = sys.argv[3:]
+mode = sys.argv[2]
+cohort = sys.argv[3]
+dataInputfiles = sys.argv[4:]
 
-summaryfile = cohort +"_pathway_observed"
+if not os.path.exists(mode):
+	os.system("mkdir " + mode)
+
+summaryfile = mode + '/' + cohort +"_pathway_observed"
 
 # read pathway information
 fpathway = open(pathway_input, 'U')

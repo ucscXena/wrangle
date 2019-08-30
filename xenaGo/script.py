@@ -1,24 +1,24 @@
 import string, sys, os
 import json
 
-mode = "cnv_mutation"
+#mode = "cnv_mutation"
 #mode = "mutation"
-#mode = "cnv"
+mode = "cnv"
 
 defaultDatafile = "defaultDatasetForGeneset.json"
 genome_total_gene_N = 25 * 1000 # 0: use total gene in data
 settings = {
 	"cnv_mutation":{
-		"step2datadir": "cnv_mutation/",
+		"step2datadir": "cnv_mutation",
 		"inputdata": ["mutation", "CopyNumber"],
 		"individualFilterDir": ["mutation", 'cnv']
 	},
 	"mutation":{
-		"step2datadir": "mutation/",
+		"step2datadir": "mutation",
 		"inputdata": ["mutation"]
 	},
 	"cnv":{
-		"step2datadir": "cnv/",
+		"step2datadir": "cnv",
 		"inputdata": ["CopyNumber"]
 	}
 }
@@ -33,6 +33,9 @@ def stepDir():
 
 def stepDownload():
 	for cohort in defaults:
+		#if cohort != "CCLE_Breast":
+		#	continue
+
 		print cohort
 		# download
 		host = defaults[cohort]["simple somatic mutation"]["host"]
@@ -50,26 +53,26 @@ def stepDownload():
 
 def stepRunExpObs():
 	for cohort in defaults:
-		if cohort != "CCLE_Breast":
-			continue
+		#if cohort != "CCLE_Breast":
+		#	continue
 
 		print cohort
 		# expected runs
 		if len(settings[mode]["inputdata"]) == 1:
-			command = "python2.7 expectedHypergeometric.py tgac.js " + cohort + " " + str(genome_total_gene_N)
+			command = "python2.7 expectedHypergeometric.py tgac.js " + step2datadir + ' ' + cohort + " " + str(genome_total_gene_N)
 			file = settings[mode]["inputdata"][0]
 			command = command + " " + cohort + "/*" + file + "*"
 			command= command + " &"	
 			os.system(command)
 		else:
-			command = "python2.7 mergeExpectedHypergeometric.py tgac.js " + cohort
+			command = "python2.7 mergeExpectedHypergeometric.py tgac.js " + step2datadir + ' ' + cohort
 			for dir in settings[mode]["individualFilterDir"]:
 				command = command + " " + dir + "/" + cohort + "_sampleEvent"
 			command= command + " &"	
 			os.system(command)
 
 		# observed runs
-		command = "python2.7 observed.py tgac.js " + cohort
+		command = "python2.7 observed.py tgac.js " + step2datadir + ' ' + cohort
 		for file in settings[mode]["inputdata"]:
 			 command = command + " " + cohort + "/*" + file + "*"
 		command= command + " &"	
@@ -78,8 +81,8 @@ def stepRunExpObs():
 def stepRunChiSquare():
 	for cohort in defaults:
 		print cohort
-		os.system("python2.7 chiSquare.py tgac.js " + step2datadir + cohort + "_pathway_expected " 
-			+ step2datadir + cohort + "_pathway_observed " + cohort + "_output")
+		os.system("python2.7 chiSquare.py tgac.js " + step2datadir + '/'+ cohort + "_pathway_expected " 
+			+ step2datadir + '/' + cohort + "_pathway_observed " + step2datadir + '/' + cohort + "_output")
 		
 
 def stepCompileOutput():
@@ -134,6 +137,6 @@ fdefaultdata.close()
 
 #stepDir()
 #stepDownload()
-stepRunExpObs()
-#stepRunChiSquare()
+#stepRunExpObs()
+stepRunChiSquare()
 #stepCompileOutput()

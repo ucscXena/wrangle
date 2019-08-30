@@ -1,4 +1,4 @@
-import string, sys
+import string, sys, os
 import json
 
 # Hypergeometric distribution https://en.wikipedia.org/wiki/Hypergeometric_distribution
@@ -28,25 +28,30 @@ def addIndepProb (prob_list):	# p = PA + PB - PAB, etc
 	return total_prob
 
 
-if len(sys.argv[:]) < 4 and (__name__ == "__main__"):
-	print "python  mergeExpectedHypergeometric.py pathway_input cohort genome_total_gene_N perSampleNFiles"
+if len(sys.argv[:]) < 5 and (__name__ == "__main__"):
+	print "python  mergeExpectedHypergeometric.py pathway_input mode cohort genome_total_gene_N perSampleNFiles"
 	print
 	sys.exit()
 
 
 pathway_input  = sys.argv[1]
-cohort = sys.argv[2]
-perSampleNInputfiles = sys.argv[3:]
+mode = sys.argv[2]
+cohort = sys.argv[3]
+perSampleNInputfiles = sys.argv[4:]
 
-perSampleN_output = cohort + "_sampleEvent"
-outputfile = cohort +"_sample_expected"
-summaryfile = cohort +"_pathway_expected"
+if not os.path.exists(mode):
+	os.system("mkdir " + mode)
+
+perSampleN_output = mode + '/' + cohort + "_sampleEvent"
+outputfile = mode + '/' + cohort +"_sample_expected"
+summaryfile = mode + '/' + cohort +"_pathway_expected"
 
 #calculate perSample Event number by merging perSample Event number from multiple filters
 mergedDataDic = {}
 mergedSampleTotalGenes = {}
 mergedSamples ={}
 
+print perSampleNInputfiles
 for file in perSampleNInputfiles:
 	fperSampleN = open(file, 'U')
 	fperSampleN.readline()

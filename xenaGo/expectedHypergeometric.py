@@ -1,4 +1,4 @@
-import string, sys
+import string, sys, os
 import json
 
 import perSampleEventN
@@ -14,20 +14,24 @@ import perSampleEventN
 #          N * (N-1) * ... * (N- (n-1))
 # goal: calculate prob(k>=1)
 
-if len(sys.argv[:]) !=5 and (__name__ == "__main__"):
-	print "python  expectedHypergeometric.py pathway_input cohort genome_total_gene_N dataInputfile"
+if len(sys.argv[:]) !=6 and (__name__ == "__main__"):
+	print "python  expectedHypergeometric.py pathway_input mode cohort genome_total_gene_N dataInputfile"
 	print
 	sys.exit()
 
 
 pathway_input  = sys.argv[1]
-cohort = sys.argv[2]
-genome_total_gene_N = int(sys.argv[3])
-dataInputfile = sys.argv[4]
+mode = sys.argv[2]
+cohort = sys.argv[3]
+genome_total_gene_N = int(sys.argv[4])
+dataInputfile = sys.argv[5]
 
-perSampleN_input = cohort + "_sampleEvent"
-outputfile = cohort +"_sample_expected"
-summaryfile = cohort +"_pathway_expected"
+if not os.path.exists(mode):
+	os.system("mkdir " + mode)
+
+perSampleN_input = mode + '/' + cohort + "_sampleEvent"
+outputfile = mode + '/' + cohort +"_sample_expected"
+summaryfile = mode + '/' + cohort +"_pathway_expected"
 
 #calculate perSample Event number using module
 dataDic, genes, genome_total_gene_N, samples = perSampleEventN.perSampleEventN(dataInputfile, genome_total_gene_N)
