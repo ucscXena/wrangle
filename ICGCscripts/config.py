@@ -1,10 +1,8 @@
 import urllib2,sys,json
 
-bigDir = "/inside/depot/icgcFiles/"
-#bigDir = "/mnt/test/icgcFiles/"
-smallDir = "/data/TCGA/icgcFiles/"
-#smallDir = "/mnt/test/icgcFiles/"
-release = "release_22"
+#downloadDir = "/dev/shm/data/"
+downloadDir = "/mnt/efsICGCnew/data/"
+release = "release_28"
 
 MAX_projects =100
 
@@ -16,17 +14,17 @@ icgcDataTypes = [ # only the dataset types of interest
     #'donor_family',
     #'donor_therapy',
 
-    #'exp_array',
+    #'protein_expression',  ## ALL US
     #'mirna_seq',
-    #'meth_array',
     #'meth_seq',
-
+    #'meth_array',
     #'copy_number_somatic_mutation',
-    #'exp_seq',
-    #'protein_expression',
-    'simple_somatic_mutation.open',
+    #'simple_somatic_mutation.open',
+    #'exp_seq',  ## NOT THE SAME UNIT
     #'structural_somatic_mutation',
     #'splice_variant'
+
+    ##'exp_array',
 ]
 
 def getProjects():

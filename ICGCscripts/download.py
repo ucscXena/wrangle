@@ -23,18 +23,18 @@ def curlDownload(outdir, file, url):
 
 def downloadOriginals(projects, dataTypes):
     print projects
+    print dataTypes
     for t in dataTypes:
         for p in projects:
-            if p == "BRCA-EU":
-                continue
+            #if p == "BRCA-EU":
+            #    continue
             url = downloadProjectUrl(p, t)
             file = t + '.' + p + '.tsv.gz'
-            outdir = config.smallDir
-            if string.find(t,"meth_")!=-1:
-                outdir = config.bigDir
+            outdir = config.downloadDir
             try:
                 curlDownload(outdir, file, url)
             except:
+                print t, p
                 pass
 def downloadSummary(dataTypes):
     for t in dataTypes:
@@ -47,7 +47,7 @@ def downloadSummary(dataTypes):
 if __name__ == '__main__':
     print config.getProjects()
     downloadOriginals(config.getProjects(), config.icgcDataTypes)
-    #downloadOriginals(["HNSC-US","LUAD-US","BRCA-US"], config.icgcDataTypes)
+    ##downloadOriginals(["HNSC-US","LUAD-US","BRCA-US"], config.icgcDataTypes)
     #downloadSummary(config.icgcDataTypes)
-    os.system("gunzip -f "+config.smallDir+"*gz")
-    #os.system("gunzip -f "+config.bigDir+"*gz")
+    
+    #os.system("gunzip -f "+config.downloadDir+"*gz")
