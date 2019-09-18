@@ -94,4 +94,4 @@ outfile = sys.argv[2]
 hasHeader = int(sys.argv[3])
 if hasHeader not in [0,1]:
     print "ERROR, hasHeader must be 0 , 1"
-buildMatrix(infile, outfile)
+buildMatrix(infile, outfile, hasHeader)
