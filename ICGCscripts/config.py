@@ -7,7 +7,7 @@ release = "release_28"
 MAX_projects =100
 
 icgcDataTypes = [ # only the dataset types of interest
-    #'sample',
+    ##'sample',
     #'specimen',
     #'donor',
     #'donor_exposure',
@@ -17,12 +17,12 @@ icgcDataTypes = [ # only the dataset types of interest
     #'protein_expression',  ## ALL US
     #'mirna_seq',
     #'meth_seq',
-    #'meth_array',
-    #'copy_number_somatic_mutation',
-    #'simple_somatic_mutation.open',
-    #'exp_seq',  ## NOT THE SAME UNIT
-    #'structural_somatic_mutation',
-    #'splice_variant'
+    'meth_array',
+    'copy_number_somatic_mutation',
+    'simple_somatic_mutation.open',
+    'exp_seq',  ## NOT THE SAME UNIT
+    'structural_somatic_mutation',
+    'splice_variant'
 
     ##'exp_array',
 ]
