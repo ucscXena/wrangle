@@ -18,7 +18,7 @@ def outputMatrix(outfile, matrix, row, column, Garray, Sarray):
     fout.close()
 
 
-def buildMatrix(infile, outfile):
+def buildMatrix(infile, outfile, hasHeader):
     # here gene is just a general term for FEATURES
     samples={}
     genes ={}
@@ -26,8 +26,12 @@ def buildMatrix(infile, outfile):
 
     sampleFile ="tmpSamples"
     geneFile ="tmpGenes"
-    os.system("cut -f 1 "+ infile +" | tail -n +2 | sort |uniq > "+ sampleFile)
-    os.system("cut -f 2 "+ infile +" | tail -n +2 | sort |uniq > "+ geneFile)
+    if hasHeader:
+        os.system("cut -f 1 "+ infile +" | tail -n +2 | sort |uniq > "+ sampleFile)
+        os.system("cut -f 2 "+ infile +" | tail -n +2 | sort |uniq > "+ geneFile)
+    else:
+        os.system("cut -f 1 "+ infile +" | sort |uniq > "+ sampleFile)
+        os.system("cut -f 2 "+ infile +" | sort |uniq > "+ geneFile)
 
     fin = open(sampleFile,'r')
     for line in fin.readlines():
@@ -55,7 +59,8 @@ def buildMatrix(infile, outfile):
         matrix.append(list(gene_array))
 
     fin =open(infile,'r')
-    fin.readline() # skip first line
+    if hasHeader:
+        fin.readline() # skip first line
     while 1:
         line = fin.readline()[:-1]
         if line =="":
@@ -81,9 +86,12 @@ def buildMatrix(infile, outfile):
     outputMatrix(outfile, matrix, len(genes),len(samples), Garray, Sarray)
 
 if len (sys.argv[:])!=3:
-    print "python tupleToMatrix.py infile outfile"
+    print "python tupleToMatrix.py infile outfile hasHeader(0,1)"
     sys.exit()
 
 infile = sys.argv[1]
 outfile = sys.argv[2]
+hasHeader = int(sys.argv[3])
+if hasHeader not in [0,1]:
+    print "ERROR, hasHeader must be 0 , 1"
 buildMatrix(infile, outfile)
