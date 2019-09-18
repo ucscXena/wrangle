@@ -41,14 +41,12 @@ def downloadSummary(dataTypes):
         url = downloadSummaryUrl(t)
         file = t + '.all_projects.tsv.gz'
         print file
-        outdir = config.downloadDir
+        outdir = config.downloadSummaryDir
         curlDownload(outdir, file, url)
 
 if __name__ == '__main__':
     print config.getProjects()
-    #downloadOriginals(config.getProjects(), config.icgcDataTypes)
+    downloadOriginals(config.getProjects(), config.icgcDataTypes)
     ##downloadOriginals(["HNSC-US","LUAD-US","BRCA-US"], config.icgcDataTypes)
-
     downloadSummary(config.icgcDataTypes)
-    
-    #os.system("gunzip -f "+config.downloadDir+"*gz")
+    os.system("gunzip -f "+config.downloadDir+"*gz")

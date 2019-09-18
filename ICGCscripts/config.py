@@ -1,7 +1,7 @@
 import urllib2,sys,json
 
-#downloadDir = "/dev/shm/data/"
 downloadDir = "/mnt/efsICGCnew/data/"
+downloadSummaryDir = "/mnt/efsICGCnew/data/all_projects/"
 release = "release_28"
 
 MAX_projects =100
