@@ -85,7 +85,7 @@ def buildMatrix(infile, outfile, hasHeader):
 
     outputMatrix(outfile, matrix, len(genes),len(samples), Garray, Sarray)
 
-if len (sys.argv[:])!=3:
+if len (sys.argv[:])!=4:
     print "python tupleToMatrix.py infile outfile hasHeader(0,1)"
     sys.exit()
 
