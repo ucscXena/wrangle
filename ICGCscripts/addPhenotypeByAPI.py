@@ -20,8 +20,6 @@ if len(sys.argv[:])!=3:
     print "python addPhenotypeByAPI.py inputClinicalMatrix outputClinicalMatrix"
     sys.exit()
 
-config.getPrimaryDisease()
-
 inFile = sys.argv[1]
 outFile = sys.argv[2]
 clinMatrix =ClinicalMatrixNew(inFile,"matrix")

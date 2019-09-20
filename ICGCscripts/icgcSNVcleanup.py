@@ -4,10 +4,9 @@ import urllib2
 sys.path.insert(0, os.path.dirname(sys.argv[0])+"/../support/")
 import probMap_genePred
 
-#ensemblCanonical_url = "http://xena-probemap.s3.amazonaws.com/reference_master/ensemblCanonical"
-ensemblBasic_url ="http://xena-probemap.s3.amazonaws.com/reference_master/ensemblBasic"
-gencodeGene_url = "http://xena-probemap.s3.amazonaws.com/probemap-master/gencode.v19.annotation.gene.probemap"
-upstream =200
+ensemblBasic_url =os.path.dirname(sys.argv[0])+"/wgEncodeGencodeBasicV19"
+gencodeGene_url = os.path.dirname(sys.argv[0])+"/gencode.v19.annotation.gene.probemap"
+upstream = 200
 
 typeRank ={
     "stop_gained":0,
@@ -53,8 +52,9 @@ def enemblIDtoHugo(fin):
 # returen dic key are ensembl Transcripts
 def collectT(fin):
     transcripts ={}
+    fin.readline()
     for line in fin.readlines():
-        ensemblT = string.strip(line)
+        ensemblT = line.split('\t')[1]
         transcripts[ensemblT]=0
     fin.close()
     return transcripts
@@ -113,16 +113,13 @@ if len(sys.argv[:])!= 3:
 infile = sys.argv[1]
 outfile = sys.argv[2]
 
-#fin = urllib2.urlopen(ensemblCanonical_url)
-#cTranscripts = collectT(fin)
-
-fin = urllib2.urlopen(ensemblBasic_url)
+fin = open(ensemblBasic_url, 'r')
 basicTranscripts = collectT(fin)
 
-fin = urllib2.urlopen(gencodeGene_url)
+fin = open(gencodeGene_url, 'r')
 idToHugo = enemblIDtoHugo(fin)
 
-fin = urllib2.urlopen(gencodeGene_url)
+fin = open(gencodeGene_url, 'r')
 g = lambda key: string.split(key,'.')[0]
 emsemblGeneDic = probMap_genePred.parseProbeMapToGene(fin, g)
 
