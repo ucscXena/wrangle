@@ -27,7 +27,7 @@ def totalDatasets(hubs):
   for hub in hubs:
     totalDatasets.extend(xena.datasets_list(hub))
   print "total datasets:", len(totalDatasets)
-
+  print xena.datasets_list(hub)
 
 hubs = [
 #  "https://tcga.xenahubs.net",
