@@ -1,11 +1,11 @@
 import sys,os, string
 import urllib2
 
-sys.path.insert(0, os.path.dirname(sys.argv[0])+"/../support/")
+sys.path.insert(0, os.path.dirname(sys.argv[0]) + "/../support/")
 import probMap_genePred
 
-ensemblBasic_url =os.path.dirname(sys.argv[0])+"/wgEncodeGencodeBasicV19"
-gencodeGene_url = os.path.dirname(sys.argv[0])+"/gencode.v19.annotation.gene.probemap"
+ensemblBasic_url = os.path.dirname(sys.argv[0]) + "/wgEncodeGencodeBasicV19"
+gencodeGene_url = os.path.dirname(sys.argv[0]) + "/gencode.v19.annotation.gene.probemap"
 upstream = 200
 
 typeRank ={
@@ -61,7 +61,10 @@ def collectT(fin):
 
 def parseSNV(fin, emsemblGeneDic, upstreamDis):
     dic ={}
-    for line in fin.readlines():
+    while 1:
+        line = fin.readline()
+        if line == '':
+            break
         data = string.split(line[:-1],'\t')
         sample= data[0]
         chr = data[1]
@@ -123,13 +126,11 @@ fin = open(gencodeGene_url, 'r')
 g = lambda key: string.split(key,'.')[0]
 emsemblGeneDic = probMap_genePred.parseProbeMapToGene(fin, g)
 
-
+####### parse
 fin = open(infile,'r')
-#######parse
 data = parseSNV(fin, emsemblGeneDic, upstream)
 
 fout = open(outfile,'w')
-
 for key in data:
     transcripts = data[key].keys()
 
