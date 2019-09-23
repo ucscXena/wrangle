@@ -1,0 +1,93 @@
+set up / mount to /mnt/efsICGCnew/
+
+./download.py (update release number, summary for process, individual simple mutation for process, rest individual for checking)
+
+cd /mnt/efsICGCnew/data/all_projects/
+
+################ id mapping  ##############
+
+cut -f 1,5 specimen.all_projects.tsv > mapping_icgc_specimen_donor
+manual remove first line
+note: there are a lot of donors and specimens
+
+################ Phenotype ################
+
+specimen.all_projects.tsv: take as is
+donor_family.all_projects.tsv: take as is
+donor_exposure.all_projects.tsv: take as is
+donor_therapy.all_projects.tsv: take as is
+
+# add primary_site and primary_disease to donor phenotype
+python ~/wrangle/ICGCscripts/addPhenotypeByAPI.py donor.all_projects.tsv donor.all_projects.phenotype
+
+# survival
+cut -f 1,6,17 donor.all_projects.tsv |sed 's/alive/0/'| sed 's/deceased/1/' > donor.all_projects.overallSurvival
+manual change feature to OS OS.time
+
+# clinical donor pushdown
+python ~/wrangle/support/clinicalPushDown.py donor.all_projects.phenotype mapping_icgc_specimen_donor donor.all_projects.phenotype_transfer_specimen
+python ~/wrangle/support/clinicalPushDown.py donor_family.all_projects.tsv mapping_icgc_specimen_donor donor_family.all_projects_transfer_specimen
+python ~/wrangle/support/clinicalPushDown.py donor_exposure.all_projects.tsv mapping_icgc_specimen_donor donor_exposure.all_projects_transfer_specimen
+python ~/wrangle/support/clinicalPushDown.py donor_therapy.all_projects.tsv mapping_icgc_specimen_donor donor_therapy.all_projects_transfer_specimen
+python ~/wrangle/support/clinicalPushDown.py donor.all_projects.overallSurvival mapping_icgc_specimen_donor donor.all_projects.overallSurvival_transfer_specimen
+
+# keep all phenotype files except donor.all_projects.tsv
+
+################ protein expression (????????????) #####################
+
+# there is only US projects has protein data
+
+cut -f 1,7,11 protein_expression.all_projects.tsv > protein_expression.all_projects.donor
+cut -f 3,7,11 protein_expression.all_projects.tsv > protein_expression.all_projects.specimen
+python ~/wrangle/ICGCscripts/tupleToMatrix.py protein_expression.all_projects.donor protein_expression.all_projects.donor.xena.tsv 1
+python ~/wrangle/ICGCscripts/tupleToMatrix.py protein_expression.all_projects.specimen protein_expression.all_projects.specimen.xena.tsv 1
+
+################  RNA-seq (???????????) #####################  DO I NEED TO CONVERT E-6 number?????????????
+
+# still not uniform by checking a US project vs IN project
+# only collect US project: use experimental_protocol == RNASeqV2_RSEM_genes 
+
+grep RNASeqV2_RSEM_genes exp_seq.all_projects.tsv |cut -f 1,8,9 > exp_seq.all_projects.donor
+grep RNASeqV2_RSEM_genes exp_seq.all_projects.tsv |cut -f 3,8,9 > exp_seq.all_projects.specimen
+
+python ~/wrangle/ICGCscripts/tupleToMatrix.py  exp_seq.all_projects.donor  exp_seq.all_projects.donor.USonly.xena.tsv 0
+python ~/wrangle/ICGCscripts/tupleToMatrix.py  exp_seq.all_projects.specimen  exp_seq.all_projects.specimen.USonly.xena.tsv 0
+
+############### copy number (segment_mean) ########################
+
+# all projects mixed platform
+
+echo -e 'sampleID\tchr\tstart\tend\tvalue' >copy_number_somatic_mutation.all_projects.donor
+cut -f 1,10,12-14  /mnt/efsICGCnew/data/all_projects/copy_number_somatic_mutation.all_projects.tsv| tail -n +2 | awk 'BEGIN{FS="\t";OFS="\t"}{print $1,$3,$4,$5,$2}' >> copy_number_somatic_mutation.all_projects.donor
+
+echo -e 'sampleID\tchr\tstart\tend\tvalue' >copy_number_somatic_mutation.all_projects.specimen
+cut -f 3,10,12-14  /mnt/efsICGCnew/data/all_projects/copy_number_somatic_mutation.all_projects.tsv| tail -n +2 | awk 'BEGIN{FS="\t";OFS="\t"}{print $1,$3,$4,$5,$2}' >> copy_number_somatic_mutation.all_projects.specimen
+
+
+############### simple mutation (GRCh37) ########################
+
+cd /mnt/efsICGCnew/data/
+
+snv_parse.bash
+
+# make SNV.header
+
+# sp non-US all mutations
+test=$(ls simple_somatic_mutation.open.*.sp.xena |grep -v -e '-US')
+cat SNV.header $test > all_projects/SNV.sp.allMutation-nonUSprojects
+
+# sp all projects, coding mutations
+cp SNV.header all_projects/SNV.sp.codingMutation-allProjects
+
+cat simple_somatic_mutation.open.*.sp.xena | grep "stop_gained\|frameshift_variant\|splice_acceptor_variant\|splice_donor_variant\|start_lost\|stop_lost\|missense_variant\|inframe_deletion\|inframe_insertion\|disruptive_inframe_insertion\|disruptive_inframe_deletion\|5_prime_UTR_premature_start_codon_gain_variant\|splice_region_variant\|synonymous_variant\|initiator_codon_variant\|stop_retained_variant\|coding_sequence_variant"  >> all_projects/SNV.sp.codingMutation-allProjects
+
+# donor non-US all mutations
+test=$(ls simple_somatic_mutation.open.*.donor.xena |grep -v -e '-US')
+cat SNV.header $test > all_projects/SNV.donor.allMutation-nonUSprojects
+
+# donor all projects, coding mutations
+cp SNV.header all_projects/SNV.donor.codingMutation-allProjects
+
+cat SNV.header simple_somatic_mutation.open.*.donor.xena | grep "stop_gained\|frameshift_variant\|splice_acceptor_variant\|splice_donor_variant\|start_lost\|stop_lost\|missense_variant\|inframe_deletion\|inframe_insertion\|disruptive_inframe_insertion\|disruptive_inframe_deletion\|5_prime_UTR_premature_start_codon_gain_variant\|splice_region_variant\|synonymous_variant\|initiator_codon_variant\|stop_retained_variant\|coding_sequence_variant"  > all_projects/SNV.donor.codingMutation-allProjects
+
+
