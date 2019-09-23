@@ -59,8 +59,11 @@ def collectT(fin):
     fin.close()
     return transcripts
 
-def parseSNV(fin, emsemblGeneDic, upstreamDis):
+def parseSNV(fin, fout, emsemblGeneDic, upstreamDis):
+    fin = open(infile,'r')
+    fout = open(outfile,'w')
     dic ={}
+
     while 1:
         line = fin.readline()
         if line == '':
@@ -88,25 +91,106 @@ def parseSNV(fin, emsemblGeneDic, upstreamDis):
             #    if int(start) > item['end']+upstreamDis:
             #        continue
 
-        record ={}
-        record[transcript]=data
+        # record ={}
+        # record[transcript]=data
         id = string.join([sample, chr, start, end, alt, enGene],"_")
-        if id not in dic:
+
+        if len(dic) != 0  and dic.keys()[0] != id:
+            output (fout, dic)
+            dic ={}
+
+        if len(dic) == 0:
+        #if id not in dic:
             dic[id]={}
+
         if transcript not in dic[id]:
             dic[id][transcript]=data
         elif dic[id][transcript][6] != data[6]:
-            print dic[id][transcript][6], data
-            
+            print id, "old", dic[id][transcript][6], "new", data
+
     fin.close()
-    return dic
+    fout.close()
+
+def output(fout, data):
+    for key in data:
+        transcripts = data[key].keys()
+
+        #use ensembl canonical
+        #foundC =0
+        #for t in transcripts:
+        #    if t in cTranscripts:
+        #        record = data[key][t]
+        #        hugo= findHugo(idToHugo, record[8], record[9])
+        #        record[8] = hugo
+        #        fout.write(string.join(record[:9], "\t")+"\n")
+        #        foundC= foundC +1
+        #if foundC:
+        #    continue
+        
+        if len(data[key])==1:
+            t = data[key].keys()[0]
+            record = data[key][t]
+            hugo= findHugo(idToHugo, record[8], record[9])
+            record[8] = hugo
+            fout.write(string.join(record[:9], "\t")+"\n")
+            continue
+
+        uniq_v =[]
+        for value in data[key].values():
+            if value[:9] not in uniq_v:
+                uniq_v.append(value[:9])
+
+        if len(uniq_v)==1:
+            record = uniq_v[0]
+            hugo= findHugo(idToHugo, record[8], data[key].values()[0][9])
+            record[8] = hugo
+            fout.write(string.join(record, "\t")+"\n")
+            continue
+
+        #use ensembl basic
+        foundC =0
+        record =[]
+        for t in transcripts:
+            if t in basicTranscripts:
+                record = data[key][t]
+                foundC= foundC +1
+        if foundC==1:
+            hugo= findHugo(idToHugo, record[8], record[9])
+            record[8] = hugo
+            fout.write(string.join(record[:9], "\t")+"\n")
+            continue
+
+        #selet best type of mutation within ensembl basic
+        #print foundC, key, data[key].values()
+        minRank =5
+        bestRecord=[]
+        for t in transcripts:
+            if t in basicTranscripts:
+                record = data[key][t]
+                type = record[6]
+                if type in typeRank:
+                    rank = typeRank[type]
+                else:
+                    print "missing type:", type
+                    continue
+                if rank < minRank:
+                    minRank = rank
+                    bestRecord = record
+        if bestRecord !=[]:
+            hugo= findHugo(idToHugo, bestRecord[8], bestRecord[9])
+            record[8] = hugo
+            bestRecord[8] = hugo
+            fout.write(string.join(bestRecord[:9], "\t")+"\n")
+            continue
+
+        #only hits in non-basic transcript
+        fout.write(string.join(data[key].values()[0][:6], "\t")+"\t\t\t\n")
 
 def findHugo(idToHugo, gene, transcript):
     if gene in idToHugo:
         return idToHugo[gene]
     if transcript in idToHugo:
         return idToHugo[transcript]
-    print gene, transcript
     return ""
 
 if len(sys.argv[:])!= 3:
@@ -127,82 +211,6 @@ g = lambda key: string.split(key,'.')[0]
 emsemblGeneDic = probMap_genePred.parseProbeMapToGene(fin, g)
 
 ####### parse
-fin = open(infile,'r')
-data = parseSNV(fin, emsemblGeneDic, upstream)
+data = parseSNV(infile, outfile, emsemblGeneDic, upstream)
 
-fout = open(outfile,'w')
-for key in data:
-    transcripts = data[key].keys()
 
-    #use ensembl canonical
-    #foundC =0
-    #for t in transcripts:
-    #    if t in cTranscripts:
-    #        record = data[key][t]
-    #        hugo= findHugo(idToHugo, record[8], record[9])
-    #        record[8] = hugo
-    #        fout.write(string.join(record[:9], "\t")+"\n")
-    #        foundC= foundC +1
-    #if foundC:
-    #    continue
-    
-    if len(data[key])==1:
-        t = data[key].keys()[0]
-        record = data[key][t]
-        hugo= findHugo(idToHugo, record[8], record[9])
-        record[8] = hugo
-        fout.write(string.join(record[:9], "\t")+"\n")
-        continue
-
-    uniq_v =[]
-    for value in data[key].values():
-        if value[:9] not in uniq_v:
-            uniq_v.append(value[:9])
-
-    if len(uniq_v)==1:
-        record = uniq_v[0]
-        hugo= findHugo(idToHugo, record[8], data[key].values()[0][9])
-        record[8] = hugo
-        fout.write(string.join(record, "\t")+"\n")
-        continue
-
-    #use ensembl basic
-    foundC =0
-    record =[]
-    for t in transcripts:
-        if t in basicTranscripts:
-            record = data[key][t]
-            foundC= foundC +1
-    if foundC==1:
-        hugo= findHugo(idToHugo, record[8], record[9])
-        record[8] = hugo
-        fout.write(string.join(record[:9], "\t")+"\n")
-        continue
-
-    #selet best type of mutation within ensembl basic
-    #print foundC, key, data[key].values()
-    minRank =5
-    bestRecord=[]
-    for t in transcripts:
-        if t in basicTranscripts:
-            record = data[key][t]
-            type = record[6]
-            if type in typeRank:
-                rank = typeRank[type]
-            else:
-                print "missing type:", type
-                continue
-            if rank < minRank:
-                minRank = rank
-                bestRecord = record
-    if bestRecord !=[]:
-        hugo= findHugo(idToHugo, bestRecord[8], bestRecord[9])
-        record[8] = hugo
-        bestRecord[8] = hugo
-        fout.write(string.join(bestRecord[:9], "\t")+"\n")
-        continue
-
-    #only hits in non-basic transcript
-    fout.write(string.join(data[key].values()[0][:6], "\t")+"\t\t\t\n")
-
-fout.close()
