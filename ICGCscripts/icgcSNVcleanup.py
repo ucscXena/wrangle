@@ -107,7 +107,8 @@ def parseSNV(fin, fout, emsemblGeneDic, upstreamDis):
             dic[id][transcript]=data
         elif dic[id][transcript][6] != data[6]:
             print id, "old", dic[id][transcript][6], "new", data
-
+    
+    output (fout, dic)
     fin.close()
     fout.close()
 
@@ -134,7 +135,6 @@ def output(fout, data):
             record[8] = hugo
             fout.write(string.join(record[:9], "\t")+"\n")
             continue
-
 
         uniq_v =[]
         for value in data[key].values():
@@ -177,7 +177,6 @@ def output(fout, data):
                 if rank < minRank:
                     minRank = rank
                     bestRecord = record
-
         if bestRecord !=[]:
             hugo= findHugo(idToHugo, bestRecord[8], bestRecord[9])
             record[8] = hugo
@@ -186,7 +185,7 @@ def output(fout, data):
             continue
 
         #only hits in non-basic transcript, only write out if there is no other genes
-        if len(data[key]) == 1:
+        if len(data) == 1:
             fout.write(string.join(data[key].values()[0][:6], "\t")+"\t\t\t\n")
 
 def findHugo(idToHugo, gene, transcript):
