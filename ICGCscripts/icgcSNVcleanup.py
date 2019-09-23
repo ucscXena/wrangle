@@ -93,14 +93,14 @@ def parseSNV(fin, fout, emsemblGeneDic, upstreamDis):
 
         # record ={}
         # record[transcript]=data
+        pos_id = string.join([sample, chr, start, end, alt], "_")
         id = string.join([sample, chr, start, end, alt, enGene],"_")
-
-        if len(dic) != 0  and dic.keys()[0] != id:
+        
+        if len(dic) != 0  and string.join(string.split(dic.keys()[0], '_')[:-1], '_') != pos_id:
             output (fout, dic)
             dic ={}
 
-        if len(dic) == 0:
-        #if id not in dic:
+        if id not in dic:
             dic[id]={}
 
         if transcript not in dic[id]:
@@ -134,6 +134,7 @@ def output(fout, data):
             record[8] = hugo
             fout.write(string.join(record[:9], "\t")+"\n")
             continue
+
 
         uniq_v =[]
         for value in data[key].values():
@@ -184,8 +185,9 @@ def output(fout, data):
             fout.write(string.join(bestRecord[:9], "\t")+"\n")
             continue
 
-        #only hits in non-basic transcript
-        fout.write(string.join(data[key].values()[0][:6], "\t")+"\t\t\t\n")
+        #only hits in non-basic transcript, only write out if there is no other genes
+        if len(data[key]) == 1:
+            fout.write(string.join(data[key].values()[0][:6], "\t")+"\t\t\t\n")
 
 def findHugo(idToHugo, gene, transcript):
     if gene in idToHugo:
