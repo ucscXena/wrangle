@@ -1,7 +1,7 @@
 #!/bin/bash
 
-#cancer='*'
-cancer='SKCA-BR'
+cancer='*'
+#cancer='SKCA-BR'
 
 for file in simple_somatic_mutation.open.$cancer.tsv ; do
     output=${file/.tsv/.donor.xena}

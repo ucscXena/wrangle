@@ -154,6 +154,7 @@ def output(fout, data):
             if t in basicTranscripts:
                 record = data[key][t]
                 foundC= foundC +1
+
         if foundC==1:
             hugo= findHugo(idToHugo, record[8], record[9])
             record[8] = hugo
@@ -161,8 +162,7 @@ def output(fout, data):
             continue
 
         #selet best type of mutation within ensembl basic
-        #print foundC, key, data[key].values()
-        minRank =5
+        minRank = 6
         bestRecord=[]
         for t in transcripts:
             if t in basicTranscripts:
@@ -176,6 +176,7 @@ def output(fout, data):
                 if rank < minRank:
                     minRank = rank
                     bestRecord = record
+
         if bestRecord !=[]:
             hugo= findHugo(idToHugo, bestRecord[8], bestRecord[9])
             record[8] = hugo
