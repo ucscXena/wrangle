@@ -54,7 +54,7 @@ def collectT(fin):
     transcripts ={}
     fin.readline()
     for line in fin.readlines():
-        ensemblT = line.split('\t')[1]
+        ensemblT = line.split('\t')[1].split('.')[0]
         transcripts[ensemblT]=0
     fin.close()
     return transcripts
