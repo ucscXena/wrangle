@@ -42,7 +42,7 @@ cut -f 3,7,11 protein_expression.all_projects.tsv > protein_expression.all_proje
 python ~/wrangle/ICGCscripts/tupleToMatrix.py protein_expression.all_projects.donor protein_expression.all_projects.donor.xena.tsv 1
 python ~/wrangle/ICGCscripts/tupleToMatrix.py protein_expression.all_projects.specimen protein_expression.all_projects.specimen.xena.tsv 1
 
-################  RNA-seq (???????????) #####################  DO I NEED TO CONVERT E-6 number?????????????
+################  RNA-seq (normalized_read_count, US only) #####################  DO I NEED TO CONVERT E-6 number?????????????
 
 # still not uniform by checking a US project vs IN project
 # only collect US project: use experimental_protocol == RNASeqV2_RSEM_genes 
@@ -52,6 +52,7 @@ grep RNASeqV2_RSEM_genes exp_seq.all_projects.tsv |cut -f 3,8,9 > exp_seq.all_pr
 
 python ~/wrangle/ICGCscripts/tupleToMatrix.py  exp_seq.all_projects.donor  exp_seq.all_projects.donor.USonly.xena.tsv 0
 python ~/wrangle/ICGCscripts/tupleToMatrix.py  exp_seq.all_projects.specimen  exp_seq.all_projects.specimen.USonly.xena.tsv 0
+
 
 ############### copy number (segment_mean) ########################
 
@@ -90,4 +91,24 @@ cp SNV.header all_projects/SNV.donor.codingMutation-allProjects
 
 cat SNV.header simple_somatic_mutation.open.*.donor.xena | grep "stop_gained\|frameshift_variant\|splice_acceptor_variant\|splice_donor_variant\|start_lost\|stop_lost\|missense_variant\|inframe_deletion\|inframe_insertion\|disruptive_inframe_insertion\|disruptive_inframe_deletion\|5_prime_UTR_premature_start_codon_gain_variant\|splice_region_variant\|synonymous_variant\|initiator_codon_variant\|stop_retained_variant\|coding_sequence_variant"  > all_projects/SNV.donor.codingMutation-allProjects
 
+
+############### genomic only IDs ########################
+
+cut -f 1 copy_number_somatic_mutation.all_projects.donor SNV.donor.codingMutation-allProjects SNV.donor.allMutation-nonUSprojects >  allIDs.donor
+head -n 1 protein_expression.all_projects.donor.xena.tsv |tr '\t' '\n' >> allIDs.donor
+head -n 1 exp_seq.all_projects.donor.USonly.xena.tsv |tr '\t' '\n' >> allIDs.donor
+
+sort allIDs.donor |uniq > new
+mv new allIDs.donor 
+# fix, remove "sample" line
+
+
+cut -f 1 copy_number_somatic_mutation.all_projects.specimen SNV.sp.allMutation-nonUSprojects SNV.sp.codingMutation-allProjects > allIDs.sp
+head -n 1 protein_expression.all_projects.specimen.xena.tsv |tr '\t' '\n' >> allIDs.sp 
+head -n 1 exp_seq.all_projects.specimen.USonly.xena.tsv |tr '\t' '\n' >> allIDs.sp 
+
+sort allIDs.sp |uniq > new
+mv new allIDs.sp 
+# fix, remove "sample" line
+############### in phenotype file only keep genomic only IDs ########################
 
