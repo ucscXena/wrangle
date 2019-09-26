@@ -58,11 +58,11 @@ python ~/wrangle/ICGCscripts/tupleToMatrix.py  exp_seq.all_projects.specimen  ex
 
 # all projects mixed platform
 
-echo -e 'sampleID\tchr\tstart\tend\tvalue' >copy_number_somatic_mutation.all_projects.donor
-cut -f 1,10,12-14  /mnt/efsICGCnew/data/all_projects/copy_number_somatic_mutation.all_projects.tsv| tail -n +2 | awk 'BEGIN{FS="\t";OFS="\t"}{print $1,$3,$4,$5,$2}' >> copy_number_somatic_mutation.all_projects.donor
+echo -e 'sampleID\tchr\tstart\tend\tvalue' > copy_number_somatic_mutation.all_projects.donor
+grep -v "BRCA-EU\|PACA-CA\|OS-US\|AML-US\|ALL-US" /mnt/efsICGCnew/data/all_projects/copy_number_somatic_mutation.all_projects.tsv | cut -f 1,10,12-14 | tail -n +2 | awk 'BEGIN{FS="\t";OFS="\t"}{print $1,$3,$4,$5,$2}' >> copy_number_somatic_mutation.all_projects.donor
 
-echo -e 'sampleID\tchr\tstart\tend\tvalue' >copy_number_somatic_mutation.all_projects.specimen
-cut -f 3,10,12-14  /mnt/efsICGCnew/data/all_projects/copy_number_somatic_mutation.all_projects.tsv| tail -n +2 | awk 'BEGIN{FS="\t";OFS="\t"}{print $1,$3,$4,$5,$2}' >> copy_number_somatic_mutation.all_projects.specimen
+echo -e 'sampleID\tchr\tstart\tend\tvalue' > copy_number_somatic_mutation.all_projects.specimen
+grep -v "BRCA-EU\|PACA-CA\|OS-US\|AML-US\|ALL-US" /mnt/efsICGCnew/data/all_projects/copy_number_somatic_mutation.all_projects.tsv | cut -f 3,10,12-14 | tail -n +2 | awk 'BEGIN{FS="\t";OFS="\t"}{print $1,$3,$4,$5,$2}' >> copy_number_somatic_mutation.all_projects.specimen
 
 
 ############### simple mutation (GRCh37) ########################
