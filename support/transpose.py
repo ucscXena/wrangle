@@ -3,7 +3,7 @@ import csv
 from itertools import izip
 import uuid
 
-def process (infile, outfile):
+def process (infile, outfile, input_delimiter):
     fout=open(outfile,'w')
     fout.close()
     fout=open(outfile,'a')
@@ -11,7 +11,7 @@ def process (infile, outfile):
     #header
     fin=open(infile,'rU')
     line = fin.readline()
-    totalN = len(string.split(line,'\t'))
+    totalN = len(string.split(line, input_delimiter))
     fin.close()
 
     k = 200
@@ -26,7 +26,7 @@ def process (infile, outfile):
         os.system(command)
 
         fin=open(tmpinfile,'rU')
-        a = izip(*csv.reader(fin, delimiter="\t"))
+        a = izip(*csv.reader(fin, delimiter = input_delimiter))
         fin.close()
         csv.writer(fout, delimiter="\t", lineterminator="\n").writerows(a)
         os.system("rm -rf " + tmpinfile)
@@ -34,12 +34,14 @@ def process (infile, outfile):
     fout.close()
     os.system("rm -rf " + tmpFile)
 
-if len(sys.argv[:])!= 3:
-    print "python transpose.py fin fout"
+if len(sys.argv[:])!= 5:
+    print "python transpose.py fin fout input_delimiter(e.g.\"\\t\") size(e.g.200 larger the file, smaller the size)"
     sys.exit()
 
 infile = sys.argv[1]
 outfile= sys.argv[2]
+input_delimiter = sys.argv[3]
+k = sys.argv[4]
 
-process(infile, outfile)
+process(infile, outfile, input_delimiter)
 
