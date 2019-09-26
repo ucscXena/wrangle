@@ -3,7 +3,21 @@ import csv
 from itertools import izip
 import uuid
 
-def process (infile, outfile, input_delimiter):
+probeMap = ""
+
+def parse(probeMap):
+    probeID_gene_mapping = {}
+    fin = open(probeMap, 'r')
+    fin.readline()
+    for line in fin.readlines():
+        data = line[:-1].split('\t')
+        probe = data[0]
+        gene = data[1]
+        probeID_gene_mapping[probe] = gene
+    fin.close()
+    return probeID_gene_mapping
+
+def process (infile, outfile, input_delimiter, probeID_gene_mapping):
     fout=open(outfile,'w')
     fout.close()
     fout=open(outfile,'a')
@@ -30,8 +44,10 @@ def process (infile, outfile, input_delimiter):
         fin.close()
 
         #switch gene ids in a
-        
-        
+        for row in a:
+            probeID = row[0]
+            gene = probeID_gene_mapping[probeID]
+            row[0] = gene
         csv.writer(fout, delimiter="\t", lineterminator="\n").writerows(a)
         os.system("rm -rf " + tmpinfile)
 
@@ -47,5 +63,6 @@ outfile= sys.argv[2]
 input_delimiter = sys.argv[3]
 k = sys.argv[4]
 
-process(infile, outfile, input_delimiter)
+probeID_gene_mapping = parse(probeMap)
+process(infile, outfile, input_delimiter, probeID_gene_mapping)
 
