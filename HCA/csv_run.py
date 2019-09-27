@@ -22,40 +22,30 @@ if not os.path.exists(configfile):
 	sys.exit()
 
 metaDic = parse(configfile)
-if "version" in metaDic:
-	version = metaDic["version"]
-else:
+if "version" not in metaDic:
 	print ("missing version")
 	sys.exit()
 
-if "cohort" in metaDic:
-	cohort = metaDic["cohort"]
-else:
+if "cohort" not in metaDic:
 	print ("missing cohort")
 	sys.exit()
 
-if "url" in metaDic:
-	url = metaDic["url"]
-else:
+if "url" not in metaDic:
 	print ("missing url")
+	sys.exit()
+
+if "exp_unit" not in metaDic:
+	print ("missing exp_unit")
+	sys.exit()
+
+if "exp_label" not in metaDic:
+	print ("missing exp_label")
 	sys.exit()
 
 if "size" in metaDic:
 	size = metaDic["size"]
 else:
 	print ("missing size")
-	sys.exit()
-
-if "exp_unit" in metaDic:
-	size = metaDic["exp_unit"]
-else:
-	print ("missing exp_unit")
-	sys.exit()
-
-if "exp_label" in metaDic:
-	size = metaDic["exp_label"]
-else:
-	print ("missing exp_label")
 	sys.exit()
 
 codedir = os.path.dirname(sys.argv[0])
