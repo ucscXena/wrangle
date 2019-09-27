@@ -13,7 +13,7 @@ if len(sys.argv[:])!= 3:
     print ("python csv_run.py dataDir")
     sys.exit()
 
- configfile = dir + '/config'
+configfile = dir + '/config'
 
  if not os.exits(configfile):
  	print ("not config file")
