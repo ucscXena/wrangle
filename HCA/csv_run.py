@@ -9,13 +9,14 @@ def parse(configfile):
 	fin.close()
 	return dic
 
-if len(sys.argv[:])!= 2:
-	print ("python csv_run.py dataDir")
+if len(sys.argv[:])!= 3:
+	print ("python csv_run.py dataDir runExpression(0,1)")
 	sys.exit()
     
 dir = sys.argv[1]
-configfile = dir + '/config'
+expressionRun = int(sys.argv[2])
 
+configfile = dir + '/config'
 if not os.path.exists(configfile):
 	print ("not config file")
 	sys.exit()
@@ -34,18 +35,20 @@ else:
 	sys.exit()
 
 if "url" in metaDic:
-	version = metaDic["url"]
+	url = metaDic["url"]
 else:
 	print ("missing url")
 	sys.exit()
 
 if "size" in metaDic:
-	version = metaDic["size"]
+	size = metaDic["size"]
 else:
 	print ("missing size")
 	sys.exit()
 
-os.system("python cells.csv.json.py " + dir + " " + version + " " + cohort + " " + url)
-os.system("python expression.csv.json.py " + dir + " " + version + " " + cohort + " " + url)
-os.system("python cells.csv.py " + dir)
-os.system("python expression.csv.py " + dir + " " + size)
+codedir = os.path.listdir(sys.argv[0])
+os.system("python " + codedir + "/cells.csv.json.py " + dir + " " + version + " " + cohort + " " + url)
+os.system("python " + codedir + "/expression.csv.json.py " + dir + " " + version + " " + cohort + " " + url)
+os.system("python " + codedir + "/cells.csv.py " + dir)
+if (expressionRun):
+	os.system("python " + codedir + "/expression.csv.py " + dir + " " + size)
