@@ -61,7 +61,7 @@ dir = sys.argv[1]
 infile = dir + '/expression.csv' 
 genes_file = dir + '/genes.csv'
 outfile= dir + '/expression.tsv' 
-k = sys.argv[2]
+k = int(sys.argv[2])
 
 probeID_gene_mapping = parse(genes_file)
 input_delimiter = ',' # HCA matrix csv
