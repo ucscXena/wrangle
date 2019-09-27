@@ -10,14 +10,14 @@ def parse(configfile):
 	return dic
 
 if len(sys.argv[:])!= 2:
-    print ("python csv_run.py dataDir")
-    sys.exit()
+        print ("python csv_run.py dataDir")
+        sys.exit()
     
 dir = sys.argv[1]
 configfile = dir + '/config'
 
-if not os.exits(configfile):
- 	print ("not config file")
+if not os.path.exists(configfile):
+        print ("not config file")
  	sys.exit()
 
 metaDic = parse(configfile)
