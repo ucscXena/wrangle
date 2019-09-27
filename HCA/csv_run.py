@@ -9,7 +9,7 @@ def parse(configfile):
 	fin.close()
 	return dic
 
-if len(sys.argv[:])!= 3:
+if len(sys.argv[:])!= 2:
     print ("python csv_run.py dataDir")
     sys.exit()
 
