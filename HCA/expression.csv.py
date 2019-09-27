@@ -53,16 +53,15 @@ def process (infile, outfile, input_delimiter, k, probeID_gene_mapping):
 
 # transpose
 # switch id to gene
-if len(sys.argv[:])!= 4:
-    print "python expression.csv.py dataDir fout chunk_size(e.g.200 larger the file, smaller the size)"
+if len(sys.argv[:])!= 3:
+    print "python expression.csv.py dataDir chunk_size(e.g.200 larger the file, smaller the size)"
     sys.exit()
 
 dir = sys.argv[1]
 infile = dir + '/expression.csv' 
 genes_file = dir + '/genes.csv'
-outfile= sys.argv[2]
-k = sys.argv[3]
-
+outfile= dir + '/expression.tsv' 
+k = sys.argv[2]
 
 probeID_gene_mapping = parse(genes_file)
 input_delimiter = ',' # HCA matrix csv
