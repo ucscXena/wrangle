@@ -12,7 +12,8 @@ def parse(configfile):
 if len(sys.argv[:])!= 2:
     print ("python csv_run.py dataDir")
     sys.exit()
-
+    
+dir = sys.argv[1]
 configfile = dir + '/config'
 
 if not os.exits(configfile):
