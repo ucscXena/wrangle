@@ -49,8 +49,8 @@ def process (infile, outfile, input_delimiter, k, probeID_gene_mapping):
             except:
                 print probeID
                 gene = probeID
-            row[0] = gene
-        csv.writer(fout, delimiter="\t", lineterminator="\n").writerows(a)
+            fout.write(gene+'\t')
+            csv.writer(fout, delimiter="\t", lineterminator="\n").writerow(row[1:])
         os.system("rm -rf " + tmpinfile)
 
     fout.close()
