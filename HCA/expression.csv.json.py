@@ -13,12 +13,14 @@ outfile = dir + '/cells.tsv.json'
 fout = open(outfile,'w')
 
 J ={}
-J["type"] = "clinicalMatrix"
+J["type"] = "genomicMatrix"
 J["version"] = version
 J["cohort"] = cohort
-J["label"] = "cell metadata"
-J["dataSubtype"] = "phenotype"
+J["label"] = "Optimus count"
+J["unit"] = "count"
 J["url"] = url
+J["colNormalization"] = "log2(x)"
+J["dataSubtype"] = "single cell RNAseq gene expression"
 
 json.dump(J, fout, indent =4)
 fout.close()
