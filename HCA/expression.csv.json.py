@@ -9,7 +9,7 @@ version = sys.argv[2]
 cohort = sys.argv[3]
 url = sys.argv[4]
 
-outfile = dir + '/cells.tsv.json'
+outfile = dir + '/expression.tsv.json'
 fout = open(outfile,'w')
 
 J ={}
