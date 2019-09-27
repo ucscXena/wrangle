@@ -3,12 +3,12 @@ import csv
 from itertools import izip
 import uuid
 
-def parse(probeMap):
+def parse(genes_file):
     probeID_gene_mapping = {}
-    fin = open(probeMap, 'r')
+    fin = open(genes_file, 'r')
     fin.readline()
     for line in fin.readlines():
-        data = line[:-1].split('\t')
+        data = line[:-1].split(',') # HCA genes csv
         probe = data[0]
         gene = data[1]
         probeID_gene_mapping[probe] = gene
@@ -48,21 +48,23 @@ def process (infile, outfile, input_delimiter, k, probeID_gene_mapping):
         csv.writer(fout, delimiter="\t", lineterminator="\n").writerows(a)
         os.system("rm -rf " + tmpinfile)
 
-    fout.close()
+    fout.close()¯
     os.system("rm -rf " + tmpFile)
 
 # transpose
 # switch id to gene
-if len(sys.argv[:])!= 5:
-    print "python expression.csv.py fin fout mapping_probeMap chunk_size(e.g.200 larger the file, smaller the size)"
+if len(sys.argv[:])!= 4:
+    print "python expression.csv.py dataDir fout chunk_size(e.g.200 larger the file, smaller the size)"
     sys.exit()
 
-infile = sys.argv[1]
+dir = sys.argv[1]
+infile = dir + '/expression.csv' 
+genes_file = dir + '/genes.csv'
 outfile= sys.argv[2]
-probeMap = sys.argv[3]
-k = sys.argv[4]
+k = sys.argv[3]
 
-probeID_gene_mapping = parse(probeMap)
+
+probeID_gene_mapping = parse(genes_file)
 input_delimiter = ',' # HCA matrix csv
 process(infile, outfile, input_delimiter, k, probeID_gene_mapping)
 
