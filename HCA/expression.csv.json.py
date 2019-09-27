@@ -1,7 +1,7 @@
 import sys, json
 
 if len(sys.argv[:])!= 5:
-    print "python cells.csv.json.py dataDir version cohort url"
+    print "python expression.csv.json.py dataDir version cohort url"
     sys.exit()
 
 dir = sys.argv[1]
