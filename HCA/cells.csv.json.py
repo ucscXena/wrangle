@@ -1,5 +1,14 @@
 import sys, json
 
+def parse(configfile):
+	fin = open(configfile, 'r')
+	dic ={}
+	for line in fin.readlines():
+		key, value = line[:-1].split('\t')
+		dic[key] = value
+	fin.close()
+	return dic
+
 if len(sys.argv[:])!= 2:
     print "python cells.csv.json.py dataDir"
     sys.exit()
