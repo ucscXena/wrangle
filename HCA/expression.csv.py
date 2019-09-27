@@ -48,7 +48,7 @@ def process (infile, outfile, input_delimiter, k, probeID_gene_mapping):
         csv.writer(fout, delimiter="\t", lineterminator="\n").writerows(a)
         os.system("rm -rf " + tmpinfile)
 
-    fout.close()¯
+    fout.close()
     os.system("rm -rf " + tmpFile)
 
 # transpose
