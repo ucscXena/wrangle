@@ -17,5 +17,5 @@ J["version"] = version
 J["cohort"] = cohort
 J["label"] = "cell metadata"
 
-fout.write(json.dumps(J), indent =4)
+json.dump(J, fout, indent =4)
 fout.close()
