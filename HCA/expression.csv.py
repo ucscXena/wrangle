@@ -44,7 +44,11 @@ def process (infile, outfile, input_delimiter, k, probeID_gene_mapping):
         #switch gene ids in a
         for row in a:
             probeID = row[0]
-            gene = probeID_gene_mapping[probeID]
+            try:
+                gene = probeID_gene_mapping[probeID]
+            except:
+                print probeID
+                gene = probeID
             row[0] = gene
         csv.writer(fout, delimiter="\t", lineterminator="\n").writerows(a)
         os.system("rm -rf " + tmpinfile)
