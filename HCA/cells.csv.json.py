@@ -1,6 +1,6 @@
 import sys, json
 
-if len(sys.argv[:])!= 3:
+if len(sys.argv[:])!= 4:
     print "python cells.csv.json.py dataDir version cohort"
     sys.exit()
 

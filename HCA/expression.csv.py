@@ -57,7 +57,7 @@ def process (infile, outfile, input_delimiter, k, probeID_gene_mapping):
     os.system("rm -rf " + tmpFile)
 
 # transpose
-# switch id to gene
+# switch ensemble to gene
 if len(sys.argv[:])!= 3:
     print "python expression.csv.py dataDir chunk_size(e.g.200 larger the file, smaller the size)"
     sys.exit()

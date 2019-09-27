@@ -1,4 +1,4 @@
-import sys
+import sys, os
 
 if len(sys.argv[:])!= 2:
     print "python cells.csv.py dataDir"
