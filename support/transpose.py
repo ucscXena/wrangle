@@ -22,7 +22,7 @@ def process (infile, outfile, input_delimiter):
         count = count + 1
         tmpinfile = tmpFile + "/." + str(count)
         start = i + 1 #linux cut
-        command = "cut -f " + str(start) + "-" + str(start+k-1) +" " + infile + " > " + tmpinfile
+        command = "cut -d '" + input_delimiter + "'' -f " + str(start) + "-" + str(start+k-1) +" " + infile + " > " + tmpinfile
         os.system(command)
 
         fin=open(tmpinfile,'rU')
