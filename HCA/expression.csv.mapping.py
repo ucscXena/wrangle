@@ -1,7 +1,7 @@
 import sys, os
 
 def mapping(infile, outfile):
-	os.system("cut -d , -f 1 " + infile + ' | tail -n + 2 | cat -n > ' + outfile)
+	os.system("cut -d , -f 1 " + infile + ' | tail -n +2 | cat -n > ' + outfile)
 
 if len(sys.argv[:])!= 2:
     print "python expression.csv.mapping.py dataDir"
