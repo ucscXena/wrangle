@@ -31,6 +31,7 @@ def process (infile, outfile, input_delimiter, k, probeID_gene_mapping):
     os.system("mkdir " + tmpFile)
     for i in range (0, totalN, k):
         count = count + 1
+        print count
         tmpinfile = tmpFile + "/." + str(count)
         start = i + 1 #linux cut
         command = "cut -f " + str(start) + "-" + str(start+k-1) +" " + infile + " > " + tmpinfile
