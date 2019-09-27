@@ -10,7 +10,7 @@ def parse(configfile):
 	return dic
 
 if len(sys.argv[:])!= 2:
-    print "python cells.csv.json.py dataDir"
+    print ("python cells.csv.json.py dataDir")
     sys.exit()
 
 dir = sys.argv[1]
@@ -21,9 +21,6 @@ version = metaDic["version"]
 cohort = metaDic["cohort"]
 url = metaDic["url"]
 
-outfile = dir + '/cells.tsv.json'
-fout = open(outfile,'w')
-
 J ={}
 J["type"] = "clinicalMatrix"
 J["version"] = version
@@ -32,5 +29,12 @@ J["label"] = "cell metadata"
 J["dataSubtype"] = "phenotype"
 J["url"] = url
 
+outfile = dir + '/cells.tsv.json'
+fout = open(outfile,'w')
+json.dump(J, fout, indent =4)
+fout.close()
+
+outfile = dir + '/cells.xena.tsv.json'
+fout = open(outfile,'w')
 json.dump(J, fout, indent =4)
 fout.close()

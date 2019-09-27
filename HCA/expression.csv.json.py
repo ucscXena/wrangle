@@ -10,7 +10,7 @@ def parse(configfile):
 	return dic
 
 if len(sys.argv[:])!= 2:
-    print "python expression.csv.json.py dataDir"
+    print ("python expression.csv.json.py dataDir")
     sys.exit()
 
 dir = sys.argv[1]
@@ -24,9 +24,6 @@ url = metaDic["url"]
 exp_unit = metaDic["exp_unit"]
 exp_label = metaDic["exp_label"]
 
-outfile = dir + '/expression.tsv.json'
-fout = open(outfile,'w')
-
 J ={}
 J["type"] = "genomicMatrix"
 J["version"] = version
@@ -37,5 +34,12 @@ J["url"] = url
 J["colNormalization"] = "log2(x)"
 J["dataSubtype"] = "single cell RNAseq gene expression"
 
+outfile = dir + '/expression.tsv.json'
+fout = open(outfile,'w')
+json.dump(J, fout, indent =4)
+fout.close()
+
+outfile = dir + '/expression.xena.tsv.json'
+fout = open(outfile,'w')
 json.dump(J, fout, indent =4)
 fout.close()
