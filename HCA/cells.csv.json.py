@@ -16,6 +16,7 @@ J["type"] = "clinicalMatrix"
 J["version"] = version
 J["cohort"] = cohort
 J["label"] = "cell metadata"
+J["dataSubtype"] = "phenotype"
 
 json.dump(J, fout, indent =4)
 fout.close()

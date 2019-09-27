@@ -7,4 +7,4 @@ if len(sys.argv[:])!= 2:
 dir = sys.argv[1]
 infile = dir + '/cells.csv' 
 outfile = dir + '/cells.tsv'
-os.system("cat " + infile + " | tr , '\t' > " + oupfile)
+os.system("cat " + infile + " | tr , '\t' > " + outfile)
