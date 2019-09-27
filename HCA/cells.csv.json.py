@@ -1,13 +1,16 @@
 import sys, json
 
-if len(sys.argv[:])!= 5:
-    print "python cells.csv.json.py dataDir version cohort url"
+if len(sys.argv[:])!= 2:
+    print "python cells.csv.json.py dataDir"
     sys.exit()
 
 dir = sys.argv[1]
-version = sys.argv[2]
-cohort = sys.argv[3]
-url = sys.argv[4]
+configfile = dir + '/config'
+metaDic = parse(configfile)
+
+version = metaDic["version"]
+cohort = metaDic["cohort"]
+url = metaDic["url"]
 
 outfile = dir + '/cells.tsv.json'
 fout = open(outfile,'w')
