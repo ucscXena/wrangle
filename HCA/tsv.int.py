@@ -10,6 +10,7 @@ def parse(mappingfile):
 		cell_int, cellkey = line.split()
 		mapping[cellkey] = cell_int
 	fin.close()
+	return mapping
 
 def convertExp(expfile, expXenafile, mapping):
 	# first line header change
