@@ -15,9 +15,9 @@ if len(sys.argv[:])!= 3:
 
 configfile = dir + '/config'
 
- if not os.exits(configfile):
+if not os.exits(configfile):
  	print ("not config file")
  	sys.exit()
 
 metaDic = parse(configfile)
-print metaDic
+print (metaDic)
