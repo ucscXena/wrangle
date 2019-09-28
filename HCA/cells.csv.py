@@ -25,7 +25,7 @@ def convertCell(cellfile, cellXenafile, mapping):
 		line = fin.readline()
 		if line == '':
 			break
-		cellkey = line.split('\t')[0]
+		cellkey = line.split(',')[0]
 		intKey = mapping[cellkey]
 		fout.write(intKey+'\t')
 		fout.write(line.replace(',', '\t')) 
