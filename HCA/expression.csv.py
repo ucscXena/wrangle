@@ -43,7 +43,7 @@ def process (infile, outfile, input_delimiter, k, total_cell, probeID_gene_mappi
     os.system("mkdir " + tmpdir)
 
     #first line in output file because mapping is generated using the exp file, it is just sequential nubmers
-    fout.write('xena_cell_id\t')
+    fout.write('xena_cell_id')
     for i in range(1, total_cell + 1):
         fout.write('\t' + str(i))
     fout.write('\n')
@@ -74,7 +74,7 @@ def process (infile, outfile, input_delimiter, k, total_cell, probeID_gene_mappi
         os.system("rm -rf " + tmpinfile)
 
     fout.close()
-    os.system("rm -rf " + tmpFile)
+    os.system("rm -rf " + tmpdir)
 
 # transpose
 # switch ensemble to gene
