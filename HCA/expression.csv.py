@@ -15,21 +15,41 @@ def parse(genes_file):
     fin.close()
     return probeID_gene_mapping
 
-def process (infile, outfile, input_delimiter, k, probeID_gene_mapping):
+def parse(mappingfile):
+    mapping = {}
+    fin = open(mappingfile, 'r')
+    while 1:
+        line = fin.readline()
+        if line == '':
+            break
+        cell_int, cellkey = line.split()
+        mapping[cellkey] = cell_int
+    fin.close()
+    return mapping
+
+def process (infile, outfile, input_delimiter, k, total_cell, probeID_gene_mapping):
     fout=open(outfile,'w')
     fout.close()
     fout=open(outfile,'a')
 
-    #header
+    # read header count gene number
     fin=open(infile,'rU')
     line = fin.readline()
     totalN = len(string.split(line, input_delimiter))
     fin.close()
 
     count = 0
-    tmpFile = str(uuid.uuid4())
-    os.system("mkdir " + tmpFile)
-    for i in range (0, totalN, k):
+    tmpdir = str(uuid.uuid4())
+    os.system("mkdir " + tmpdir)
+
+    #first line in output file because mapping is generated using the exp file, it is just sequential nubmers
+    fout.write('xena_cell_id\t')
+    for i in range(1, total_cell + 1):
+        fout.write('\t' + str(i))
+    fout.write('\n')
+
+    # rest columns
+    for i in range (1, totalN, k):
         count = count + 1
         print count
         tmpinfile = tmpFile + "/" + str(count)
@@ -65,10 +85,14 @@ if len(sys.argv[:])!= 3:
 dir = sys.argv[1]
 infile = dir + '/expression.csv' 
 genes_file = dir + '/genes.csv'
-outfile= dir + '/expression.tsv' 
+outfile= dir + '/expression.tsv'
+mappingfile= dir + '/mapping'
+
+mapping = parse(mappingfile)
+total_cell = len(mapping)
 k = int(sys.argv[2])
 
 probeID_gene_mapping = parse(genes_file)
 input_delimiter = ',' # HCA matrix csv
-process(infile, outfile, input_delimiter, k, probeID_gene_mapping)
+process(infile, outfile, input_delimiter, k, total_cell, probeID_gene_mapping)
 

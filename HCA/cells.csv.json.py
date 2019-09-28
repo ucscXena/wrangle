@@ -33,8 +33,3 @@ outfile = dir + '/cells.tsv.json'
 fout = open(outfile,'w')
 json.dump(J, fout, indent =4)
 fout.close()
-
-outfile = dir + '/cells.xena.tsv.json'
-fout = open(outfile,'w')
-json.dump(J, fout, indent =4)
-fout.close()

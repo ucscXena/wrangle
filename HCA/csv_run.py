@@ -49,6 +49,7 @@ else:
 	sys.exit()
 
 codedir = os.path.dirname(sys.argv[0])
+os.system("python " + codedir + "/expression.csv.mapping.py " + dir)
 os.system("python " + codedir + "/cells.csv.json.py " + dir)
 os.system("python " + codedir + "/expression.csv.json.py " + dir)
 os.system("python " + codedir + "/cells.csv.py " + dir)
