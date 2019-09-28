@@ -3,7 +3,7 @@ import csv
 from itertools import izip
 import uuid
 
-def parse(genes_file):
+def parse_gene(genes_file):
     probeID_gene_mapping = {}
     fin = open(genes_file, 'r')
     fin.readline()
@@ -52,7 +52,7 @@ def process (infile, outfile, input_delimiter, k, total_cell, probeID_gene_mappi
     for i in range (1, totalN, k):
         count = count + 1
         print (count)
-        tmpinfile = tmpFile + "/" + str(count)
+        tmpinfile = tmpdir + "/" + str(count)
         start = i + 1 #linux cut
         command = "cut -d , -f " + str(start) + "-" + str(start+k-1) +" " + infile + " > " + tmpinfile
         os.system(command)
@@ -91,8 +91,9 @@ mappingfile= dir + '/mapping'
 mapping = parse(mappingfile)
 total_cell = len(mapping)
 k = int(sys.argv[2])
+print (total_cell)
 
-probeID_gene_mapping = parse(genes_file)
+probeID_gene_mapping = parse_gene(genes_file)
 input_delimiter = ',' # HCA matrix csv
 process(infile, outfile, input_delimiter, k, total_cell, probeID_gene_mapping)
 
