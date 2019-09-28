@@ -51,7 +51,7 @@ def process (infile, outfile, input_delimiter, k, total_cell, probeID_gene_mappi
     # rest columns
     for i in range (1, totalN, k):
         count = count + 1
-        print count
+        print (count)
         tmpinfile = tmpFile + "/" + str(count)
         start = i + 1 #linux cut
         command = "cut -d , -f " + str(start) + "-" + str(start+k-1) +" " + infile + " > " + tmpinfile
@@ -67,7 +67,7 @@ def process (infile, outfile, input_delimiter, k, total_cell, probeID_gene_mappi
             try:
                 gene = probeID_gene_mapping[probeID]
             except:
-                print probeID
+                print (probeID)
                 gene = probeID
             fout.write(gene+'\t')
             csv.writer(fout, delimiter="\t", lineterminator="\n").writerow(row[1:])
@@ -79,7 +79,7 @@ def process (infile, outfile, input_delimiter, k, total_cell, probeID_gene_mappi
 # transpose
 # switch ensemble to gene
 if len(sys.argv[:])!= 3:
-    print "python expression.csv.py dataDir chunk_size(e.g.200 larger the file, smaller the size)"
+    print ("python expression.csv.py dataDir chunk_size(e.g.200 larger the file, smaller the size)")
     sys.exit()
 
 dir = sys.argv[1]

@@ -33,7 +33,7 @@ def convertCell(cellfile, cellXenafile, mapping):
 	fout.close()
 
 if len(sys.argv[:])!= 2:
-    print "python cells.csv.py dataDir"
+    print ("python cells.csv.py dataDir")
     sys.exit()
 
 dir = sys.argv[1]
