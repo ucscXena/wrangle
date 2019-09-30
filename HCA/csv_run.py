@@ -56,4 +56,4 @@ os.system("python " + codedir + "/cells.csv.json.py " + dir)
 os.system("python " + codedir + "/expression.csv.json.py " + dir)
 os.system("python " + codedir + "/cells.csv.py " + dir)
 if (expressionRun):
-	os.system("python " + codedir + "/expression.csv.py " + dir + " " + size)
+	os.system("python2 " + codedir + "/expression.csv.py " + dir + " " + size)
