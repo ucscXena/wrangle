@@ -8,12 +8,12 @@ def mapping (mfile):
     fin = open(mfile,'U')
     mapDic ={}
     for line in fin.readlines():
-        data = string.split(line[:-1],'\t')
+        data = line[:-1].split()
         xenaSampleID, sourceID = data[0:2]
         if sourceID not in mapDic:
             mapDic [sourceID]=xenaSampleID
         else:
-            print "ERROR", sourceID, "exists"
+            print ("ERROR", sourceID, "exists")
     fin.close()
     return mapDic
 
@@ -34,15 +34,15 @@ def switchIDs (inputFile, outputFile, mapDic, strict_inclusion = False, exclusio
         if id not in mapDic:
             newID = id
             if strict_inclusion:
-                print id, "not found skip"
+                print (id, "not found skip")
                 continue
             else:
-                print id, "not found keep"
+                print (id, "not found keep")
         else:
             newID = mapDic[id]
 
         if id in exclusion_mapDic:
-            print id, "skip"
+            print (id, "skip")
             continue
 
         data[0]=newID
@@ -52,9 +52,10 @@ def switchIDs (inputFile, outputFile, mapDic, strict_inclusion = False, exclusio
 
 if len(sys.argv[:]) < 4 or  len(sys.argv[:]) > 5 :
     print
-    print "xenaIDreplaceMutationVector_clinicalMatrix.py mutationVector_clinMatrix_file(with_Header) inclusion_mappingfile(new current) strict_inclusion(T/F) exclusion_mappping_file(optional)"
-    print "mapping file: no header"
-    print "              new_id old_id"
+    print ("xenaIDreplaceMutationVector_clinicalMatrix.py mutationVector_clinMatrix_file(with_Header) \
+        inclusion_mappingfile(new current) strict_inclusion(T/F) exclusion_mappping_file(optional)")
+    print ("mapping file: no header")
+    print ("              new_id old_id")
     print
     sys.exit()
 
@@ -65,7 +66,7 @@ mapDic = mapping (mappingfile)
 
 strict_inclusion = sys.argv[3]
 if strict_inclusion not in ["T","F"]:
-    print "bad strict_inclusion value"
+    print ("bad strict_inclusion value")
     sys.exit()
 if strict_inclusion == "T":
     strict_inclusion = True
