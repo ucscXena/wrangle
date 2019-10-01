@@ -45,6 +45,6 @@ output = sys.argv[2]
 bigfile = sys.argv[3] # big
 
 mapDic = mapping(smallfile)
-blah (bigfile, smallfile, outputFile, mapDic)
+blah (bigfile, smallfile, output, mapDic)
 
 
