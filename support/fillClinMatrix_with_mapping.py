@@ -8,7 +8,6 @@ def mapping (mfile):
 		xenaSampleID = data[0]
 		mapDic [xenaSampleID] = line
 	fin.close()
-	print (mapDic)
 	return mapDic
 
 def blah (bigfile, smallfile, outputFile, mapDic):
@@ -28,7 +27,7 @@ def blah (bigfile, smallfile, outputFile, mapDic):
 		if line =="":
 			break
 		data = line[:-1].split()
-		id = data[0]
+		id = data[1]
 		if id not in mapDic:
 			fout.write(id + '\t' + '\t'* N +'\n')
 		else:
@@ -38,7 +37,7 @@ def blah (bigfile, smallfile, outputFile, mapDic):
 	fout.close()
 
 if len(sys.argv[:]) != 4:
-	print ("python fillClinMatrix_with_big_useNULL.py input_small(clin, Mutaiton, etc) outupt big(first col id, no header)")
+	print ("python cluster_script.py cluster_results_small cluster_results_big big(mapping)")
 	sys.exit()
 
 smallfile = sys.argv[1] # small
