@@ -14,7 +14,7 @@ def blah (bigfile, smallfile, outputFile, mapDic):
 	fin = open(bigfile,'r')
 	fout = open(outputFile,'w')
 
-    #header
+    #header use small file
 	fsmall = open(smallfile, 'r')
 	line = fin.readline()
 	N = len(line.split('\t')) - 1
@@ -26,7 +26,7 @@ def blah (bigfile, smallfile, outputFile, mapDic):
 		line = fin.readline()
 		if line =="":
 			break
-		data = line[:-1].split('\t')
+		data = line[:-1].split()
 		id = data[0]
 		if id not in mapDic:
 			fout.write(id + '\t' + '\t'* N +'\n')
