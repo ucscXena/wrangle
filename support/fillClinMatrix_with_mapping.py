@@ -8,7 +8,7 @@ def mapping (mfile):
 		xenaSampleID = data[0]
 		mapDic [xenaSampleID] = line
 	fin.close()
-	print mapDic
+	print (mapDic)
 	return mapDic
 
 def blah (bigfile, smallfile, outputFile, mapDic):
