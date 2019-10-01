@@ -5,7 +5,7 @@ def copyOriginalFile (filename):
     return filename+"_BK"
 
 def mapping (mfile):
-    fin = open(mfile,'U')
+    fin = open(mfile,'r')
     mapDic ={}
     for line in fin.readlines():
         data = line[:-1].split()
