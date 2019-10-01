@@ -1,4 +1,4 @@
-import string, sys,os
+import sys,os
 
 def copyOriginalFile (filename):
     os.system("cp " +filename +" "+filename+"_BK")
@@ -18,7 +18,7 @@ def mapping (mfile):
     return mapDic
 
 def switchIDs (inputFile, outputFile, mapDic, strict_inclusion = False, exclusion_mapDic = {}):
-    fin = open(inputFile,'U')
+    fin = open(inputFile,'r')
     fout = open(outputFile,'w')
 
     #header
@@ -29,7 +29,7 @@ def switchIDs (inputFile, outputFile, mapDic, strict_inclusion = False, exclusio
         line = fin.readline()
         if line =="":
             break
-        data = string.split(line[:-1],'\t')
+        data = line[:-1].split('\t')
         id = data[0]
         if id not in mapDic:
             newID = id
@@ -46,7 +46,7 @@ def switchIDs (inputFile, outputFile, mapDic, strict_inclusion = False, exclusio
             continue
 
         data[0]=newID
-        fout.write(string.join(data,'\t')+'\n')
+        fout.write('\t'.join(data)+'\n')
     fin.close()
     fout.close()
 
