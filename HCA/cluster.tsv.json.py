@@ -10,7 +10,7 @@ def parse(configfile):
 	return dic
 
 if len(sys.argv[:])!= 2:
-    print ("python cells.csv.json.py dataDir")
+    print ("python cluster.tsv.json.py dataDir")
     sys.exit()
 
 dir = sys.argv[1]
@@ -19,18 +19,17 @@ metaDic = parse(configfile)
 
 version = metaDic["version"]
 cohort = metaDic["cohort"]
-url = metaDic["url"]
 
 J ={}
 J["type"] = "clinicalMatrix"
 J["version"] = version
 J["cohort"] = cohort
-J["label"] = "cell metadata"
+J["label"] = "louvain clusters"
 J["dataSubtype"] = "phenotype"
-J["url"] = url
-J[":clinFeature"]="/HCA/clinicalFeature"
+J[":clinicalFeature"]="/HCA/clinicalFeature"
+J["wrangling_procedure"]="Michael Krauss scanpy clustering run"
 
-outfile = dir + '/cells.tsv.json'
+outfile = dir + '/cluster.tsv.json'
 fout = open(outfile,'w')
 json.dump(J, fout, indent =4)
 fout.close()
