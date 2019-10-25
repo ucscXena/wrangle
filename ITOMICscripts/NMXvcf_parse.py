@@ -72,7 +72,7 @@ def CNV_data (vcffile, sampleTumor, sampleNormal, outdir, sampleLabel):
         type =  record.ALT[0].type
         if type in ["CNV"]:
             if len(record.FILTER)!=0:
-                print record, record.FILTER
+                print (record, record.FILTER)
 
             #print record.genotype(sampleTumor)
             #print record.genotype(sampleNormal)
@@ -109,7 +109,7 @@ def output_dic (sample, unit, dataSubType, dataDic, file):
     fout.close()
 
 if len(sys.argv[:])!=4:
-    print "python NMXvcf_parse.py vcf dataType(EXP,CNV) sampleLabel"
+    print ("python NMXvcf_parse.py vcf dataType(EXP,CNV) sampleLabel")
     sys.exit()
 
 vcffile = sys.argv[1]
@@ -118,18 +118,18 @@ sampleLabel = sys.argv[3]
 outdir ="./"
 
 samples =  findSamples(vcffile)
-print samples
+print (samples)
 
 sampleTumorRNA = "TUMOR_RNA"
 sampleTumor = "TUMOR"
 sampleNormal = "NORMAL"
 
 if sampleTumor not in samples or sampleNormal not in samples:
-    print "bad sample name"
+    print ("bad sample name")
     sys.exit()
 
 if sampleTumorRNA not in samples:
-    print "bad sample name"
+    print ("bad sample name")
     sys.exit()
 
 if dataType == "EXP":
