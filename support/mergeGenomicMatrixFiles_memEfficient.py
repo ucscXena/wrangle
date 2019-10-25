@@ -18,7 +18,7 @@ def merge (infile_list, outfile, root ="./"):
     tmpList =[]
     for infile in infile_list:
         if not os.path.exists(infile):
-            print infile, "not exists, skip"
+            print (infile, "not exists, skip")
         else:
             tmpList.append(infile)
 
@@ -127,12 +127,12 @@ def process(cur_genes, infile, allgenes, outfile):
     return
 
 if __name__ == "__main__" and len(sys.argv[:])<4:
-    print "python mergeGenomicMatrixFiles_memEfficient.py outfile tmpDirRoot infiles"
+    print ("python mergeGenomicMatrixFiles_memEfficient.py outfile tmpDirRoot infiles")
     sys.exit()
 
 if __name__ == "__main__":
     outfile = sys.argv[1]
     root = sys.argv[2]
     infile_list =sys.argv[3:]
-    print root, infile_list, outfile
+    print (root, infile_list, outfile)
     merge (infile_list, outfile, root)
