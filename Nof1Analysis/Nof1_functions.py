@@ -66,7 +66,7 @@ def checkFields (fields, mapping, hub, dataset, cleanFuntion):
         else:
             print original_field, "is not found in dataset."
             print
-            print "Find out the dataset identifiers:", "https://xenabrowser.net/datapages/?host="+ hub + "&dataset="+ dataset + "&allFields=true"
+            print "Find out the dataset identifiers:", "https://xenabrowser.net/datapages/?host="+ hub + "&dataset="+ dataset + "&allIdentifiers=true"
             return 1
     return 0
 
