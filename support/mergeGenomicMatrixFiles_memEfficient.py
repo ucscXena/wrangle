@@ -110,7 +110,7 @@ def process(cur_genes, infile, allgenes, outfile):
     nCOL = len(string.split(line,'\t'))
     emptyList =[]
     for i in range(0,nCOL):
-        emptyList.append("")
+        emptyList.append("NA")
     emptyLine =string.join(emptyList,'\t')+"\n"
 
     lines = fin.readlines()

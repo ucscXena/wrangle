@@ -134,7 +134,7 @@ def process (hub, dataset, samples, mode, pseudo, method, genes, outputMatrix_T,
             values = method(values, parameter, pseudo)
 
             fout_T.write(sample+'\t')
-            fout_T.write(string.join(map(lambda x: str(x), values),'\t')+'\n')
+            fout_T.write(string.join(map(lambda x: 'NA' if math.isnan(x) else (str(x)), values),'\t')+'\n')
 
     fout_T.close()
 
