@@ -40,7 +40,7 @@ def filer_header (comparison_list, itomic_samples, Nof1_item, Nof1_sample, fout)
 
         header2ndList.append("ttest p")
         header2ndList.append("ttest t")
-        header2ndList.append("mean itomic")
+        header2ndList.append("mean " + Nof1_item["label"])
         header2ndList.append("mean " + item["label"])
 
     headerList.extend([Nof1_sample, Nof1_sample])
@@ -124,8 +124,8 @@ def itomic_Nof1(Nof1_sample, Nof1_item, original_labels, geneMappping, external_
     fout.close()
 
 def itomic_legend():
-    print "\nExpression values are sorted from high to low."
-    print "Low rank means high expression."
+    print "\nExpression values are sorted from high to low, low rank means high expression."
+    print
     print "Rank % is the percentile of samples with lower expression than sample of interest."
     print "Higher Rank %  means higher expression."
     print
