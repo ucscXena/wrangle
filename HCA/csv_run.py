@@ -57,3 +57,5 @@ os.system("python " + codedir + "/expression.csv.json.py " + dir)
 os.system("python " + codedir + "/cells.csv.py " + dir)
 if (expressionRun):
 	os.system("python2 " + codedir + "/expression.csv.py " + dir + " " + size)
+        print("gzip " + dir + "/expression.csv")
+        os.system("gzip " + dir + '/expression.csv')
