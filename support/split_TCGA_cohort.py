@@ -145,9 +145,9 @@ def parse_table_data (data_file, project_code_dic, projects, outputdir):
 		fout = project_file_dic[project]
 		fout.close()
 
-if len(sys.argv[:]) != 5:
-	print ("python split_cohort.py data_file example_json table/matrix outputdir")
-	print
+if len(sys.argv[:]) != 6:
+	print ("python split_cohort.py data_file example_json table/matrix outputdir run_parse(0,1)")
+	print ("\n")
 	sys.exit()
 
 
@@ -155,6 +155,7 @@ data_file = sys.argv[1]
 example_json = sys.argv[2]
 datatype = sys.argv[3]
 outputdir = sys.argv[4]
+run = int(sys.argv[5])
 
 project_code_dic, projects = parse_project_code (project_code_file)
 
@@ -162,7 +163,8 @@ os.system("mkdir " + outputdir)
 
 build_json(projects, outputdir, example_json)
 
-if datatype == "matrix":
-	parse_matrix_data (data_file, project_code_dic, projects, outputdir)
-elif datatype == 'table':
-	parse_table_data (data_file, project_code_dic, projects, outputdir)
+if run:
+	if datatype == "matrix":
+		parse_matrix_data (data_file, project_code_dic, projects, outputdir)
+	elif datatype == 'table':
+		parse_table_data (data_file, project_code_dic, projects, outputdir)
