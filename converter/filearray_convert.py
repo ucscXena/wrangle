@@ -37,6 +37,9 @@ def sampleInfo(sample_mapping_file):
 	for line in fin.readlines():
 		id, file = line.strip().split('\t')
 		dic[file] = id
+		if re.search('.gz$' file) != -1:
+			file = re.sub('.gz$', '', file)
+			dic[file] = id
 	fin.close()
 	return dic
 
