@@ -43,7 +43,7 @@ def sampleInfo(sample_mapping_file):
 def fileArrayToXena(suffix, columns, maxNum, inputdir, output_prefix, sample_mapping_file = None):
 	file_sample_info = None
 	if sample_mapping_file:
-		file_sample_info = case, sampleInfo(sample_mapping_file)
+		file_sample_info = sampleInfo(sample_mapping_file)
 
 	for file in os.listdir(inputdir):
 		if re.search(suffix, file) == -1:
