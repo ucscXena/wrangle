@@ -31,8 +31,20 @@ def finalizeDir(dataFileList, output_prefix, columns):
 		os.system('rm -f ' + ' '.join(files))
 	os.system('rm -f id')
 
+def sampleInfo(sample_mapping_file):
+	dic ={}
+	fin = open(sample_mapping_file, 'r')
+	for line in fin.readlines():
+		id, file = line.strip().split('\t')
+		dic[file] = id
+	fin.close()
+	return dic
 
-def fileArrayToXena(suffix, columns, maxNum, inputdir, output_prefix):
+def fileArrayToXena(suffix, columns, maxNum, inputdir, output_prefix, sample_mapping_file = None):
+	file_sample_info = None
+	if sample_mapping_file:
+		file_sample_info = case, sampleInfo(sample_mapping_file)
+
 	for file in os.listdir(inputdir):
 		if re.search(suffix, file) == -1:
 			continue
@@ -56,7 +68,10 @@ def fileArrayToXena(suffix, columns, maxNum, inputdir, output_prefix):
 		for column in columns:
 			pos = columnPos[column]
 			output = tmpdir + "/" + str(counter) + column
-			sample = file.split('.')[0]
+			if file_sample_info:
+				sample = file_sample_info[file]
+			else:
+				sample = file.split('.')[0]
 			os.system("echo " + sample + " > " + output)
 			os.system('cut -f ' + str(pos + 1) + ' ' + filename + " | tail -n +2 >> " + output)
 		if counter == maxNum:
