@@ -58,7 +58,7 @@ def fileArrayToXena(suffix, columns, maxNum, inputdir, output_prefix):
 			output = tmpdir + "/" + str(counter) + column
 			sample = file.split('.')[0]
 			os.system("echo " + sample + " > " + output)
-			os.system('cut -f ' + str(pos + 1) + ' ' + filename + " | tail +2 >> " + output)
+			os.system('cut -f ' + str(pos + 1) + ' ' + filename + " | tail -n +2 >> " + output)
 		if counter == maxNum:
 			collectDir(tmpdir, dataFileList, columns)
 			tmpdir = setupDir()
