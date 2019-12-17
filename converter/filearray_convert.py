@@ -1,4 +1,4 @@
-import os, re, uuid
+import os, re, uuid, math
 
 def findColumns(file, columns):
 	columnPos ={}

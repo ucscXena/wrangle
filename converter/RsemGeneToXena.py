@@ -9,7 +9,8 @@ pseudocounts = [1, 0.001, 0.001]
 maxNum = 500
 
 if len(sys.argv[:]) < 3:
-	print ("python RsemGeneToXena.py inputFileDir output_prefix sample_id_mapping(optional, id file_id) probeMapfilename")
+	print ("python RsemGeneToXena.py inputFileDir output_prefix \
+		sample_id_mapping(optional, id file_id) probeMapfilename(optional)")
 	print ()
 	sys.exit(1)
 
