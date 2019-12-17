@@ -80,7 +80,7 @@ def finalizeDir(dataFileList, output_prefix, columns, pseudocounts):
 
 	os.system('rm -f id')
 
-def buildJson(column, pseudocount, cohort, output_prefix, probeMapfilename):
+def buildExpJson(column, pseudocount, cohort, output_prefix, probeMapfilename):
 	output = output_prefix + '_' + column + '.txt.json'
 	fout = open(output, 'w')
 	J = {}
@@ -89,6 +89,17 @@ def buildJson(column, pseudocount, cohort, output_prefix, probeMapfilename):
 		J['probeMap'] = probeMapfilename
 	J['unit'] = 'log2('+ column + '+' + str(pseudocount) +')'
 	J['pseudocount'] = pseudocount
+	J['cohort'] = cohort
+	json.dump(J, fout, indent = 4)
+	fout.close()
+
+def buildSNVJson(assembly, cohort, output):
+	output = output + '.json'
+	fout = open(output, 'w')
+	J = {}
+	J['type'] ='mutationVector'
+	J['dataSubtype'] = 'somatic mutation (SNP and INDEL)'
+	J['assembly'] = assembly
 	J['cohort'] = cohort
 	json.dump(J, fout, indent = 4)
 	fout.close()
@@ -173,7 +184,7 @@ def fileArrayExpToXena(suffix, columns, maxNum, inputdir, output, pseudocounts,
 	for i in range (0, len(columns)):
 		column = columns[i]
 		pseudocount = pseudocounts[i]
-		buildJson(column, pseudocount, cohort, output_prefix, probeMapfilename)
+		buildExpJson(column, pseudocount, cohort, output_prefix, probeMapfilename)
 
 def buildMVHeader(columnfunctions):
 	columnHeader = range(0,len(columnfunctions.keys()))
@@ -215,5 +226,8 @@ def fileArrayMafToXena(suffix, columns, inputdir, output,
 
 		parseMAF(filename, sample, columnPos, columnfunctions, header, fout)
 	fout.close()
+
+	buildSNVJson(assembly, cohort, output)
+
 
 
