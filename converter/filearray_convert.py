@@ -10,12 +10,13 @@ def findColumns(file, columns):
 			break
 		if line[0] == '#':
 			continue
-		data = fin.readline().strip().split('\t')
-		for i in range (0, len(data)):
+		data = line.strip().split('\t')
+	        for i in range (0, len(data)):
 			for column in columns:
 				if data[i] == column:
 					columnPos[column] = i
 					break
+                break
 	fin.close()
 	return columnPos
 
@@ -106,12 +107,16 @@ def sampleInfo(sample_mapping_file):
 
 def parseMAF(input, sample, columnPos, columnfunctions, fout):
 	fin = open(input, 'r')
-	while 1:
+        readData =0
+        while 1:
 		line = fin.readline()
 		if line == '':
 			break
 		if line[0]=='#':
 			continue
+                if not readData:
+                        readData = 1
+                        continue
 		data = line[:-1].split('\t')
 		fout.write(sample)
 		for column in columnfunctions:
