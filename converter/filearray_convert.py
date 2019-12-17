@@ -4,12 +4,18 @@ def findColumns(file, columns):
 	columnPos ={}
 	fin = open(file, 'r')
 	# header
-	data = fin.readline().strip().split('\t')
-	for i in range (0, len(data)):
-		for column in columns:
-			if data[i] == column:
-				columnPos[column] = i
-				break
+	while 1:
+		line = fin.readline()
+		if line == '':
+			break
+		if line[0] == '#':
+			continue
+		data = fin.readline().strip().split('\t')
+		for i in range (0, len(data)):
+			for column in columns:
+				if data[i] == column:
+					columnPos[column] = i
+					break
 	fin.close()
 	return columnPos
 
@@ -98,11 +104,28 @@ def sampleInfo(sample_mapping_file):
 	fin.close()
 	return dic
 
-def fileArrayToXena(suffix, columns, maxNum, inputdir, output_prefix, pseudocounts,
+def parseMAF(input, sample, columns, columnPos, columnfunctions, fout):
+	fin = open(input, 'r')
+	while 1:
+		line = fin.readline()
+		if line == '':
+			break
+		if line[0]=='#':
+			continue
+		data = line[:-1].split('\t')
+		fout.write(sample)
+		for column in columnfunctions:
+			value = columnfunctions[column](data, columns)
+			fout.write('\t' + value)
+		fout.write('\n')
+	fin.close()
+
+def fileArrayExpToXena(suffix, columns, maxNum, inputdir, output, pseudocounts,
 	cohort, sample_mapping_file = None, probeMapfilename = None):
-	file_sample_info = None
 	if sample_mapping_file:
 		file_sample_info = sampleInfo(sample_mapping_file)
+	else:
+		file_sample_info = None
 
 	for file in os.listdir(inputdir):
 		if re.search(suffix, file) == -1:
@@ -145,4 +168,34 @@ def fileArrayToXena(suffix, columns, maxNum, inputdir, output_prefix, pseudocoun
 		column = columns[i]
 		pseudocount = pseudocounts[i]
 		buildJson(column, pseudocount, cohort, output_prefix, probeMapfilename)
+
+def fileArrayMafToXena(suffix, columns, inputdir, output_prefix, 
+	cohort, assembly, columnfunctions, sample_mapping_file = None):
+	if sample_mapping_file:
+		file_sample_info = sampleInfo(sample_mapping_file)
+	else:
+		file_sample_info = None
+
+	for file in os.listdir(inputdir):
+		if re.search(suffix, file) == -1:
+			continue
+		firstfile = re.sub("/$", "", inputdir) + '/'+ file
+		break
+
+	columnPos = findColumns(firstfile, columns)
+	fout = open(output, 'w')
+	for file in os.listdir(inputdir):
+		if re.search(suffix, file) == -1:
+			continue
+		counter = counter + 1
+		filename = re.sub("/$", "", inputdir) + '/'+ file
+
+		if file_sample_info:
+			sample = file_sample_info[file]
+		else:
+			sample = file.split('.')[0]
+
+		parseMAF(filename, sample, columns, columnPos, columnfunctions, fout)
+	fout.close()
+
 
