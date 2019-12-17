@@ -35,7 +35,7 @@ if len(sys.argv[:]) < 5:
 	sys.exit(1)
 
 inputdir = sys.argv[1]
-output_prefix = sys.argv[2]
+output = sys.argv[2]
 cohort = sys.argv[3]
 assembly = sys.argv[4]
 
