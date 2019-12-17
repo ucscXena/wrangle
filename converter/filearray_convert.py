@@ -187,7 +187,7 @@ def fileArrayMafToXena(suffix, columns, inputdir, output,
 	for file in os.listdir(inputdir):
 		if re.search(suffix, file) == -1:
 			continue
-		counter = counter + 1
+
 		filename = re.sub("/$", "", inputdir) + '/'+ file
 
 		if file_sample_info:
