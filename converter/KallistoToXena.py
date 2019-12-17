@@ -24,5 +24,6 @@ if len(sys.argv[:]) >4 :
 	probeMapfilename = sys.argv[4]
 else:
 	probeMapfilename = None
+
 filearray_convert.fileArrayToXena(suffix, columns, maxNum, inputdir, output_prefix, pseudocounts,
 	sample_mapping_file, probeMapfilename)

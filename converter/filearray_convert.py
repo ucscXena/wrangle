@@ -1,4 +1,4 @@
-import os, re, uuid, math
+import os, re, uuid, math, json
 
 def findColumns(file, columns):
 	columnPos ={}
@@ -73,6 +73,18 @@ def finalizeDir(dataFileList, output_prefix, columns, pseudocounts):
 
 	os.system('rm -f id')
 
+def buildJson(column, pseudocount, output_prefix, probeMapfilename):
+	output = output_prefix + '_' + column + '.txt.json'
+	fout = open(output, 'w')
+	J = {}
+	J['type'] ='genomicMatrix'
+	if probeMapfilename:
+		J['probeMap'] = probeMapfilename
+	J['unit'] = 'log2('+ column + '+' + str(pseudocount) +')'
+	J['pseudocount'] = pseudocount
+	fout.write(json.dumps(J), indent = 4)
+	fout.close()
+
 def sampleInfo(sample_mapping_file):
 	dic ={}
 	fin = open(sample_mapping_file, 'r')
@@ -84,15 +96,6 @@ def sampleInfo(sample_mapping_file):
 			dic[file] = id
 	fin.close()
 	return dic
-
-def buildJson(column, probeMapfilename, pseudocount):
-	J = {}
-	J['type'] ='genomicMatrix'
-	if probeMapfilename:
-		J['probeMap'] = probeMapfilename
-	J['unit'] = 'log2('+ column + '+' + str(pseudocount) +')'
-	J['pseudocount'] = pseudocount
-	return J
 
 def fileArrayToXena(suffix, columns, maxNum, inputdir, output_prefix, pseudocounts,
 	sample_mapping_file = None, probeMapfilename = None):
@@ -140,5 +143,5 @@ def fileArrayToXena(suffix, columns, maxNum, inputdir, output_prefix, pseudocoun
 	for i in range (0, len(columns)):
 		column = columns[i]
 		pseudocount = pseudocounts[i]
-		buildJson(column, probeMapfilename, pseudocount)
+		buildJson(column, pseudocount, output_prefix, probeMapfilename)
 
