@@ -189,6 +189,7 @@ def fileArrayMafToXena(suffix, columns, inputdir, output,
 
 	columnPos = findColumns(firstfile, columns)
 	fout = open(output, 'w')
+	fout.write('sample\t' + '\t'.join(columnfunctions.keys()) + '\n')
 	for file in os.listdir(inputdir):
 		if re.search(suffix, file) == -1:
 			continue
