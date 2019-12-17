@@ -175,7 +175,7 @@ def fileArrayExpToXena(suffix, columns, maxNum, inputdir, output, pseudocounts,
 		pseudocount = pseudocounts[i]
 		buildJson(column, pseudocount, cohort, output_prefix, probeMapfilename)
 
-def buildMVHeader(columnfunctions);
+def buildMVHeader(columnfunctions):
 	columnHeader = range(0,len(columnfunctions.keys()))
 	for column in columnfunctions.keys():
 		pos = columnfunctions[column][1]
