@@ -104,7 +104,7 @@ def sampleInfo(sample_mapping_file):
 	fin.close()
 	return dic
 
-def parseMAF(input, sample, columns, columnPos, columnfunctions, fout):
+def parseMAF(input, sample, columnPos, columnfunctions, fout):
 	fin = open(input, 'r')
 	while 1:
 		line = fin.readline()
@@ -115,7 +115,7 @@ def parseMAF(input, sample, columns, columnPos, columnfunctions, fout):
 		data = line[:-1].split('\t')
 		fout.write(sample)
 		for column in columnfunctions:
-			value = columnfunctions[column](data, columns)
+			value = columnfunctions[column](data, columnPos)
 			fout.write('\t' + value)
 		fout.write('\n')
 	fin.close()
@@ -195,7 +195,7 @@ def fileArrayMafToXena(suffix, columns, inputdir, output,
 		else:
 			sample = file.split('.')[0]
 
-		parseMAF(filename, sample, columns, columnPos, columnfunctions, fout)
+		parseMAF(filename, sample, columnPos, columnfunctions, fout)
 	fout.close()
 
 
