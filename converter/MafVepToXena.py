@@ -14,18 +14,18 @@ def doAlt (data, columnPos): return data[columnPos['Tumor_Seq_Allele2']]
 def doGene (data, columnPos): return data[columnPos['Hugo_Symbol']]
 def doEffect (data, columnPos): return data[columnPos['Variant_Classification']]
 def doAA (data, columnPos): return data[columnPos['HGVSp_Short']]
-def doDNA_VAF (data, columnPos): return str(float(data[columnPos['t_depth']]) / float(data[columnPos['t_alt_count']]))
+def doDNA_VAF (data, columnPos): return str(float(data[columnPos['t_alt_count']]) / float(data[columnPos['t_depth']]))
 
 columnfunctions = {
-	'chr': doChr,
-	'start': doStart,
-	'end': doEnd,
-	'reference': doRef,
-	'alt': doAlt, 
-	'gene': doGene,
-	'effect': doEffect,
-	'Amino_Acid_Change': doAA,
-	'DNA_VAF': doDNA_VAF
+	'chr': [doChr, 0],
+	'start': [doStart, 1],
+	'end': [doEnd, 2],
+	'reference': [doRef, 3],
+	'alt': [doAlt, 4], 
+	'gene': [doGene, 5],
+	'effect': [doEffect, 6],
+	'Amino_Acid_Change': [doAA, 7],
+	'DNA_VAF': [doDNA_VAF, 8]
 }
 
 if len(sys.argv[:]) < 5:

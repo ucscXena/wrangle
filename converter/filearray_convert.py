@@ -105,7 +105,7 @@ def sampleInfo(sample_mapping_file):
 	fin.close()
 	return dic
 
-def parseMAF(input, sample, columnPos, columnfunctions, fout):
+def parseMAF(input, sample, columnPos, columnfunctions, header, fout):
 	fin = open(input, 'r')
         readData =0
         while 1:
@@ -119,8 +119,9 @@ def parseMAF(input, sample, columnPos, columnfunctions, fout):
                         continue
 		data = line[:-1].split('\t')
 		fout.write(sample)
-		for column in columnfunctions:
-			value = columnfunctions[column](data, columnPos)
+		for column in header:
+			colfunction = columnfunctions[column][0]
+			value = colfunction(data, columnPos)
 			fout.write('\t' + value)
 		fout.write('\n')
 	fin.close()
@@ -174,6 +175,13 @@ def fileArrayExpToXena(suffix, columns, maxNum, inputdir, output, pseudocounts,
 		pseudocount = pseudocounts[i]
 		buildJson(column, pseudocount, cohort, output_prefix, probeMapfilename)
 
+def buildMVHeader(columnfunctions);
+	columnHeader = range(0,len(columnfunctions.keys()))
+	for column in columnfunctions.keys():
+		pos = columnfunctions[column][1]
+		columnHeader[i] = column
+	return columnHeader
+
 def fileArrayMafToXena(suffix, columns, inputdir, output, 
 	cohort, assembly, columnfunctions, sample_mapping_file = None):
 	if sample_mapping_file:
@@ -189,7 +197,9 @@ def fileArrayMafToXena(suffix, columns, inputdir, output,
 
 	columnPos = findColumns(firstfile, columns)
 	fout = open(output, 'w')
-	fout.write('sample\t' + '\t'.join(columnfunctions.keys()) + '\n')
+	header = buildMVHeader(columnfunctions)
+	fout.write('sample\t' + '\t'.join(header) + '\n')
+
 	for file in os.listdir(inputdir):
 		if re.search(suffix, file) == -1:
 			continue
@@ -201,7 +211,7 @@ def fileArrayMafToXena(suffix, columns, inputdir, output,
 		else:
 			sample = file.split('.')[0]
 
-		parseMAF(filename, sample, columnPos, columnfunctions, fout)
+		parseMAF(filename, sample, columnPos, columnfunctions, header, fout)
 	fout.close()
 
 
