@@ -177,7 +177,9 @@ def fileArrayExpToXena(suffix, columns, maxNum, inputdir, output, pseudocounts,
 
 def buildMVHeader(columnfunctions):
 	columnHeader = range(0,len(columnfunctions.keys()))
-	for column in columnfunctions.keys():
+	index = columnfunctions.keys()
+	for i in range(0, len(index)):
+		column = index[i]
 		pos = columnfunctions[column][1]
 		columnHeader[i] = column
 	return columnHeader
