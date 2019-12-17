@@ -73,7 +73,7 @@ def finalizeDir(dataFileList, output_prefix, columns, pseudocounts):
 
 	os.system('rm -f id')
 
-def buildJson(column, pseudocount, output_prefix, probeMapfilename):
+def buildJson(column, pseudocount, cohort, output_prefix, probeMapfilename):
 	output = output_prefix + '_' + column + '.txt.json'
 	fout = open(output, 'w')
 	J = {}
@@ -82,6 +82,7 @@ def buildJson(column, pseudocount, output_prefix, probeMapfilename):
 		J['probeMap'] = probeMapfilename
 	J['unit'] = 'log2('+ column + '+' + str(pseudocount) +')'
 	J['pseudocount'] = pseudocount
+	J['cohort'] = cohort
 	json.dump(J, fout, indent = 4)
 	fout.close()
 
@@ -98,7 +99,7 @@ def sampleInfo(sample_mapping_file):
 	return dic
 
 def fileArrayToXena(suffix, columns, maxNum, inputdir, output_prefix, pseudocounts,
-	sample_mapping_file = None, probeMapfilename = None):
+	cohort, sample_mapping_file = None, probeMapfilename = None):
 	file_sample_info = None
 	if sample_mapping_file:
 		file_sample_info = sampleInfo(sample_mapping_file)
@@ -143,5 +144,5 @@ def fileArrayToXena(suffix, columns, maxNum, inputdir, output_prefix, pseudocoun
 	for i in range (0, len(columns)):
 		column = columns[i]
 		pseudocount = pseudocounts[i]
-		buildJson(column, pseudocount, output_prefix, probeMapfilename)
+		buildJson(column, pseudocount, cohort, output_prefix, probeMapfilename)
 
