@@ -6,7 +6,10 @@ suffix = 'vep.maf$'
 columns = ['Chromosome', 'Start_Position', 'End_Position', 'Reference_Allele', 'Tumor_Seq_Allele2',
 	'Hugo_Symbol', 'Variant_Classification', 'HGVSp_Short', 't_depth', 't_alt_count']
 
-def doChr (data, columnPos): return data[columnPos['Chromosome']]
+def doChr (data, columnPos):
+	value = 'Chromosome'
+	return data[columnPos[value]]
+
 def doStart (data, columnPos): return data[columnPos['Start_Position']]
 def doEnd(data, columnPos): return data[columnPos['End_Position']]
 def doRef (data, columnPos): return data[columnPos['Reference_Allele']]
