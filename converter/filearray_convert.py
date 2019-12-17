@@ -181,7 +181,7 @@ def buildMVHeader(columnfunctions):
 	for i in range(0, len(index)):
 		column = index[i]
 		pos = columnfunctions[column][1]
-		columnHeader[i] = column
+		columnHeader[pos] = column
 	return columnHeader
 
 def fileArrayMafToXena(suffix, columns, inputdir, output, 
