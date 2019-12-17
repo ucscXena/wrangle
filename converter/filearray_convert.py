@@ -24,11 +24,53 @@ def collectDir(tmpdir, dataFileList, columns):
 		dataFileList[column].append(tmpdir + '_' + column + ".txt")
 	os.system("rm -rf " + tmpdir)
 
-def finalizeDir(dataFileList, output_prefix, columns):
-	for column in columns:
+def Log2plusTheta(inputFile, outputFile, theta):
+    fin = open(inputFile,'r')
+    fout = open(outputFile,'w')
+
+    #header
+    line = fin.readline()
+    fout.write(line)
+
+    #nCOL
+    nCOL = len(line.strip().split('\t'))
+
+    #data
+    while 1:
+        line = fin.readline()
+        if line =="":
+            break
+        data = line[:-1].split('\t')
+        if nCOL != len(data):
+            print ("Wrong nCOL", data[0])
+            sys.exit(1)
+
+        fout.write(data[0])
+
+        for i in range(1, nCOL):
+            if data[i] in ["NA",""]:
+                fout.write("\tNA")
+            else:
+                value = math.log((float(data[i]) + theta),2)
+                value = "%.4f" % (value)
+                fout.write("\t"+value)
+        fout.write("\n")
+    fin.close()
+    fout.close()
+
+def finalizeDir(dataFileList, output_prefix, columns, pseudocounts):
+	for i in range (0, len(columns)):
+		column = columns[i]
+		pseudocount = pseudocounts[i]
 		files = dataFileList[column]
-		os.system("paste id " + ' '.join(files) + ' > ' + output_prefix + '_' + column + '.txt')
+		output = output_prefix + '_' + column + '.txt'
+		tmp_output = output_prefix + '_' + column + '.tmp'
+
+		os.system("paste id " + ' '.join(files) + ' > ' + tmp_output)
+		Log2plusTheta(tmp_output, output, pseudocount)
 		os.system('rm -f ' + ' '.join(files))
+		os.system('rm -f ' + tmp_output)
+
 	os.system('rm -f id')
 
 def sampleInfo(sample_mapping_file):
@@ -43,7 +85,17 @@ def sampleInfo(sample_mapping_file):
 	fin.close()
 	return dic
 
-def fileArrayToXena(suffix, columns, maxNum, inputdir, output_prefix, sample_mapping_file = None):
+def buildJson(column, probeMapfilename, pseudocount):
+	J = {}
+	J['type'] ='genomicMatrix'
+	if probeMapfilename:
+		J['probeMap'] = probeMapfilename
+	J['unit'] = 'log2('+ column + '+' + str(pseudocount) +')'
+	J['pseudocount'] = pseudocount
+	return J
+
+def fileArrayToXena(suffix, columns, maxNum, inputdir, output_prefix, pseudocounts,
+	sample_mapping_file = None, probeMapfilename = None):
 	file_sample_info = None
 	if sample_mapping_file:
 		file_sample_info = sampleInfo(sample_mapping_file)
@@ -83,4 +135,10 @@ def fileArrayToXena(suffix, columns, maxNum, inputdir, output_prefix, sample_map
 			counter = 0
 	collectDir(tmpdir, dataFileList, columns)
 
-	finalizeDir(dataFileList, output_prefix, columns)
+	finalizeDir(dataFileList, output_prefix, columns, pseudocounts)
+
+	for i in range (0, len(columns)):
+		column = columns[i]
+		pseudocount = pseudocounts[i]
+		buildJson(column, probeMapfilename, pseudocount)
+
