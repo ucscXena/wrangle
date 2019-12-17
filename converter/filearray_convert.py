@@ -169,7 +169,7 @@ def fileArrayExpToXena(suffix, columns, maxNum, inputdir, output, pseudocounts,
 		pseudocount = pseudocounts[i]
 		buildJson(column, pseudocount, cohort, output_prefix, probeMapfilename)
 
-def fileArrayMafToXena(suffix, columns, inputdir, output_prefix, 
+def fileArrayMafToXena(suffix, columns, inputdir, output, 
 	cohort, assembly, columnfunctions, sample_mapping_file = None):
 	if sample_mapping_file:
 		file_sample_info = sampleInfo(sample_mapping_file)
