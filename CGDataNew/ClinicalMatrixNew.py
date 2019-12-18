@@ -51,7 +51,7 @@ class ClinicalMatrixNew():
             #fix col
             new_d= col_fix(d)
             if new_d!=d:
-                #print "WARNING, feature name is modified", d, "new name:", new_d
+                print ("WARNING, feature name is modified", d, "new name:", new_d)
                 # modify ClinF if exist
                 if ClinF:
                     #ClinF.replaceFeatureName(d, new_d)
@@ -83,11 +83,11 @@ class ClinicalMatrixNew():
             data =line
             #bad line
             if ignoreCol==[] and len(data[1:]) != self.__COL:
-                print "WARNING detected bad line sample=",data[0]
-                print len(data[1:]), self.__COL, len(ignoreCol)
+                print ("WARNING detected bad line sample=",data[0])
+                print (len(data[1:]), self.__COL, len(ignoreCol))
                 for i in range (0, self.__COL-len(data[1:])):
                     data.append("")
-                print "Fix", len(data[1:]), self.__COL, len(ignoreCol)
+                print ("Fix", len(data[1:]), self.__COL, len(ignoreCol))
 
             if ignoreCol!=[]  and len(data[1:]) != self.__COL+len(ignoreCol):
                 print "WARNING detected bad line sample=",data[0]

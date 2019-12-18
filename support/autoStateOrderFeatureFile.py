@@ -16,7 +16,7 @@ def autoStateOrder(clinMatrix, clinFeature):
                 continue
             if clinFeature.getStateOrder(feature):
                 continue
-            print feature
+            print (feature)
             states.sort()
             stateOrder = states
             clinFeature.setFeatureValueType(feature, "category")
@@ -24,22 +24,23 @@ def autoStateOrder(clinMatrix, clinFeature):
             clinFeature.setFeatureStateOrder(feature, stateOrder)
 
 if len(sys.argv[:]) <3:
-    print "python autoStateOrderFeatureFile.py clinMatrix clinFeatureOut clinFeatureIn(optional)"
-    sys.exit()
+    print ("python autoStateOrderFeatureFile.py clinMatrix clinFeatureOut clinFeatureIn(optional)")
+    print 
+    sys.exit(1)
 
 clinMatrixFile = sys.argv[1]
 output = sys.argv[2]
 
-clinMatrix =ClinicalMatrixNew(clinMatrixFile,"matrix")
+clinMatrix =ClinicalMatrixNew(clinMatrixFile, "matrix")
 clinFeature = None
-
+print (clinMatrix.getCOLs())
 if len(sys.argv[:])==4:
     clinFeatureFile = sys.argv[3]
     if os.path.exists(clinFeatureFile):
         clinFeature = ClinicalFeatureNew(clinFeatureFile,'feature')
     else:
-        print sys.argv[3],"does not exist"
-        sys.exit()
+        print (sys.argv[3],"does not exist")
+        sys.exit(1)
 else:
     clinFeature = ClinicalFeatureNew(None,'feature')
     fout = open(output+".json",'w')
