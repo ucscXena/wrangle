@@ -3,20 +3,40 @@ sys.path.insert(0,os.path.dirname(__file__))
 import filearray_convert
 
 suffix = '.vcf$'
-columns = ['CHROM', 'POS', 'REF', 'ALT']
+columns = ['CHROM', 'POS', 'REF', 'ALT', 'INFO']
+
+def parseInfo(line):
+	dic ={}
+	for item in line.split(";"):
+		key, value = item.split("=")
+		dic[key] = value
+	return dic
 
 def doChr (data, columnPos): return data[columnPos['CHROM']]
 def doStart (data, columnPos): return data[columnPos['POS']]
-def doEnd(data, columnPos): return data[columnPos['POS']]
-def doRef (data, columnPos): return data[columnPos['REF']]
 def doAlt (data, columnPos): return data[columnPos['ALT']]
+def doEffect (data, columnPos): return parseInfo(data[columnPos['INFO']])['SVTYPE']
+def doEnd(data, columnPos): 
+	if parseInfo(data[columnPos['INFO']])['SVTYPE'] == 'BND':
+		return data[columnPos['POS']]
+	else:
+		return parseInfo(data[columnPos['INFO']])['END']
+
+def doRef (data, columnPos):
+	if parseInfo(data[columnPos['INFO']])['SVTYPE'] == 'BND':
+		return data[columnPos['REF']]
+	else:
+		return data[columnPos['POS']] + '-' + parseInfo(data[columnPos['INFO']])['END']
+
+
 
 columnfunctions = {
 	'chr': [doChr, 0],
 	'start': [doStart, 1],
 	'end': [doEnd, 2],
 	'reference': [doRef, 3],
-	'alt': [doAlt, 4]
+	'alt': [doAlt, 4],
+	'effect': [doEffect, 5]
 }
 
 def buildjson(assembly, cohort, output):
