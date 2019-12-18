@@ -55,7 +55,7 @@ if len(sys.argv[:]) > 5 :
 else:
 	sample_mapping_file = None
 
-filearray_convert.fileArrayMafToXena(suffix, columns, inputdir, output, columnfunctions, sample_mapping_file)
+filearray_convert.fileArrayTableToXena(suffix, columns, inputdir, output, columnfunctions, sample_mapping_file)
 
 buildjson(assembly, cohort, output)
 

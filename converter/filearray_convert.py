@@ -11,12 +11,33 @@ def findColumns(file, columns):
 		if line[0] == '#':
 			continue
 		data = line.strip().split('\t')
-	        for i in range (0, len(data)):
+		for i in range (0, len(data)):
 			for column in columns:
 				if data[i] == column:
 					columnPos[column] = i
 					break
-                break
+		break
+	fin.close()
+	return columnPos
+
+def findVcfColumns(file, columns):
+	columnPos ={}
+	fin = open(file, 'r')
+	# header
+	while 1:
+		line = fin.readline()
+		if line == '':
+			break
+		if line[0:2] == '##':
+			continue
+		elif line[0] == '#':
+			data = line[1:].strip().split('\t')
+			for i in range (0, len(data)):
+				for column in columns:
+					if data[i] == column:
+						columnPos[column] = i
+						break
+		break
 	fin.close()
 	return columnPos
 
@@ -92,18 +113,35 @@ def sampleInfo(sample_mapping_file):
 	fin.close()
 	return dic
 
-def parseMAF(input, sample, columnPos, columnfunctions, header, fout):
+def parseTable(input, sample, columnPos, columnfunctions, header, fout):
 	fin = open(input, 'r')
-        readData =0
-        while 1:
+	readData =0
+	while 1:
 		line = fin.readline()
 		if line == '':
 			break
 		if line[0]=='#':
 			continue
-                if not readData:
-                        readData = 1
-                        continue
+		if not readData:
+			readData = 1
+			continue
+		data = line[:-1].split('\t')
+		fout.write(sample)
+		for column in header:
+			colfunction = columnfunctions[column][0]
+			value = colfunction(data, columnPos)
+			fout.write('\t' + value)
+		fout.write('\n')
+	fin.close()
+
+def parseVcf(input, sample, columnPos, columnfunctions, header, fout):
+	fin = open(input, 'r')
+	while 1:
+		line = fin.readline()
+		if line == '':
+			break
+		if line[0]=='#':
+			continue
 		data = line[:-1].split('\t')
 		fout.write(sample)
 		for column in header:
@@ -156,7 +194,7 @@ def fileArrayExpToXena(suffix, columns, maxNum, inputdir, output_prefix, pseudoc
 
 	finalizeDir(dataFileList, output_prefix, columns, pseudocounts)
 
-def buildMVHeader(columnfunctions):
+def buildTableHeader(columnfunctions):
 	columnHeader = range(0,len(columnfunctions.keys()))
 	index = columnfunctions.keys()
 	for i in range(0, len(index)):
@@ -165,7 +203,7 @@ def buildMVHeader(columnfunctions):
 		columnHeader[pos] = column
 	return columnHeader
 
-def fileArrayMafToXena(suffix, columns, inputdir, output, columnfunctions, sample_mapping_file = None):
+def fileArrayTableToXena(suffix, columns, inputdir, output, columnfunctions, sample_mapping_file = None):
 	if sample_mapping_file:
 		file_sample_info = sampleInfo(sample_mapping_file)
 	else:
@@ -179,7 +217,7 @@ def fileArrayMafToXena(suffix, columns, inputdir, output, columnfunctions, sampl
 
 	columnPos = findColumns(firstfile, columns)
 	fout = open(output, 'w')
-	header = buildMVHeader(columnfunctions)
+	header = buildTableHeader(columnfunctions)
 	fout.write('sample\t' + '\t'.join(header) + '\n')
 
 	for file in os.listdir(inputdir):
@@ -193,8 +231,38 @@ def fileArrayMafToXena(suffix, columns, inputdir, output, columnfunctions, sampl
 		else:
 			sample = file.split('.')[0]
 
-		parseMAF(filename, sample, columnPos, columnfunctions, header, fout)
+		parseTable(filename, sample, columnPos, columnfunctions, header, fout)
 	fout.close()
 
+def fileArrayVcfToXena(suffix, columns, inputdir, output, columnfunctions, sample_mapping_file = None):
+	if sample_mapping_file:
+		file_sample_info = sampleInfo(sample_mapping_file)
+	else:
+		file_sample_info = None
+
+	for file in os.listdir(inputdir):
+		if re.search(suffix, file) == -1:
+			continue
+		firstfile = re.sub("/$", "", inputdir) + '/'+ file
+		break
+
+	columnPos = findVcfColumns(firstfile, columns)
+	fout = open(output, 'w')
+	header = buildTableHeader(columnfunctions)
+	fout.write('sample\t' + '\t'.join(header) + '\n')
+
+	for file in os.listdir(inputdir):
+		if re.search(suffix, file) == -1:
+			continue
+
+		filename = re.sub("/$", "", inputdir) + '/'+ file
+
+		if file_sample_info:
+			sample = file_sample_info[file]
+		else:
+			sample = file.split('.')[0]
+
+		parseVcf(filename, sample, columnPos, columnfunctions, header, fout)
+	fout.close()
 
 
