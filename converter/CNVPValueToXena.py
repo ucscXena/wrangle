@@ -26,6 +26,9 @@ def buildjson(assembly, cohort, output):
 	J['assembly'] = assembly
 	J['cohort'] = cohort
 	J['colNormalization'] = 'normal2'
+	J['max'] = 4
+	J['origin'] = 2
+	J['thresh'] = 0 
 	json.dump(J, fout, indent = 4)
 	fout.close()
 
