@@ -45,3 +45,5 @@ else:
 
 filearray_convert.fileArrayExpToXena(suffix, columns, maxNum, inputdir, output_prefix, pseudocounts, 
 	cohort, sample_mapping_file)
+
+buildExpJson(cohort, output_prefix, probeMapfilename)
