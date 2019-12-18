@@ -24,7 +24,7 @@ def doEnd(data, columnPos):
 	else:
 		return parseInfo(data[columnPos['INFO']])['END']
 def doRef (data, columnPos):
-	if parseInfo(data[columnPos['INFO']])['SVTYPE'] == 'BND':
+	if parseInfo(data[columnPos['INFO']])['SVTYPE'] in ['BND', 'INS']:
 		return data[columnPos['REF']]
 	else:
 		return data[columnPos['CHROM']]+ ":"+data[columnPos['POS']] + '-' + parseInfo(data[columnPos['INFO']])['END']
