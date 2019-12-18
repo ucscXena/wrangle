@@ -113,7 +113,7 @@ def parseMAF(input, sample, columnPos, columnfunctions, header, fout):
 		fout.write('\n')
 	fin.close()
 
-def fileArrayExpToXena(suffix, columns, maxNum, inputdir, output, pseudocounts,
+def fileArrayExpToXena(suffix, columns, maxNum, inputdir, output_prefix, pseudocounts,
 	cohort, sample_mapping_file = None):
 	if sample_mapping_file:
 		file_sample_info = sampleInfo(sample_mapping_file)
