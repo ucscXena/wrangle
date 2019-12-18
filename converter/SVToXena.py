@@ -10,7 +10,7 @@ def parseInfo(line):
 	for item in line.split(";"):
 		data = item.split("=")
 		if len(data) == 2:
-			key, value = 
+			key, value = data
 		dic[key] = value
 	return dic
 
