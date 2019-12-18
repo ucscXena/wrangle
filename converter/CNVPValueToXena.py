@@ -25,7 +25,7 @@ def buildjson(assembly, cohort, output):
 	J['dataSubtype'] = 'copy number segment'
 	J['assembly'] = assembly
 	J['cohort'] = cohort
-	J['colnormalization'] = 'norm2'
+	J['colNormalization'] = 'normal2'
 	json.dump(J, fout, indent = 4)
 	fout.close()
 
