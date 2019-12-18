@@ -8,7 +8,9 @@ columns = ['CHROM', 'POS', 'REF', 'ALT', 'INFO']
 def parseInfo(line):
 	dic ={}
 	for item in line.split(";"):
-		key, value = item.split("=")
+		data = item.split("=")
+		if len(data) == 2:
+			key, value = 
 		dic[key] = value
 	return dic
 
