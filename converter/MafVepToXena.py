@@ -1,4 +1,4 @@
-import sys,os
+import sys, os, json
 sys.path.insert(0,os.path.dirname(__file__))
 import filearray_convert
 
@@ -28,6 +28,17 @@ columnfunctions = {
 	'DNA_VAF': [doDNA_VAF, 8]
 }
 
+def buildjson(assembly, cohort, output):
+	output = output + '.json'
+	fout = open(output, 'w')
+	J = {}
+	J['type'] ='mutationVector'
+	J['dataSubtype'] = 'somatic mutation (SNP and INDEL)'
+	J['assembly'] = assembly
+	J['cohort'] = cohort
+	json.dump(J, fout, indent = 4)
+	fout.close()
+
 if len(sys.argv[:]) < 5:
 	print ("python MafVepToXena.py inputFileDir output cohort \
 		assembly sample_id_mapping(optional, id file_id)")
@@ -44,5 +55,7 @@ if len(sys.argv[:]) > 5 :
 else:
 	sample_mapping_file = None
 
-filearray_convert.fileArrayMafToXena(suffix, columns, inputdir, output, 
-	cohort, assembly, columnfunctions, sample_mapping_file)
+filearray_convert.fileArrayMafToXena(suffix, columns, inputdir, output, columnfunctions, sample_mapping_file)
+
+buildjson(assembly, cohort, output)
+

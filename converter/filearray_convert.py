@@ -1,4 +1,4 @@
-import os, re, uuid, math, json
+import os, re, uuid, math
 
 def findColumns(file, columns):
 	columnPos ={}
@@ -80,30 +80,6 @@ def finalizeDir(dataFileList, output_prefix, columns, pseudocounts):
 
 	os.system('rm -f id')
 
-def buildExpJson(column, pseudocount, cohort, output_prefix, probeMapfilename):
-	output = output_prefix + '_' + column + '.txt.json'
-	fout = open(output, 'w')
-	J = {}
-	J['type'] ='genomicMatrix'
-	if probeMapfilename:
-		J['probeMap'] = probeMapfilename
-	J['unit'] = 'log2('+ column + '+' + str(pseudocount) +')'
-	J['pseudocount'] = pseudocount
-	J['cohort'] = cohort
-	json.dump(J, fout, indent = 4)
-	fout.close()
-
-def buildSNVJson(assembly, cohort, output):
-	output = output + '.json'
-	fout = open(output, 'w')
-	J = {}
-	J['type'] ='mutationVector'
-	J['dataSubtype'] = 'somatic mutation (SNP and INDEL)'
-	J['assembly'] = assembly
-	J['cohort'] = cohort
-	json.dump(J, fout, indent = 4)
-	fout.close()
-
 def sampleInfo(sample_mapping_file):
 	dic ={}
 	fin = open(sample_mapping_file, 'r')
@@ -138,7 +114,7 @@ def parseMAF(input, sample, columnPos, columnfunctions, header, fout):
 	fin.close()
 
 def fileArrayExpToXena(suffix, columns, maxNum, inputdir, output, pseudocounts,
-	cohort, sample_mapping_file = None, probeMapfilename = None):
+	cohort, sample_mapping_file = None):
 	if sample_mapping_file:
 		file_sample_info = sampleInfo(sample_mapping_file)
 	else:
@@ -181,11 +157,6 @@ def fileArrayExpToXena(suffix, columns, maxNum, inputdir, output, pseudocounts,
 
 	finalizeDir(dataFileList, output_prefix, columns, pseudocounts)
 
-	for i in range (0, len(columns)):
-		column = columns[i]
-		pseudocount = pseudocounts[i]
-		buildExpJson(column, pseudocount, cohort, output_prefix, probeMapfilename)
-
 def buildMVHeader(columnfunctions):
 	columnHeader = range(0,len(columnfunctions.keys()))
 	index = columnfunctions.keys()
@@ -195,8 +166,7 @@ def buildMVHeader(columnfunctions):
 		columnHeader[pos] = column
 	return columnHeader
 
-def fileArrayMafToXena(suffix, columns, inputdir, output, 
-	cohort, assembly, columnfunctions, sample_mapping_file = None):
+def fileArrayMafToXena(suffix, columns, inputdir, output, columnfunctions, sample_mapping_file = None):
 	if sample_mapping_file:
 		file_sample_info = sampleInfo(sample_mapping_file)
 	else:
@@ -226,8 +196,6 @@ def fileArrayMafToXena(suffix, columns, inputdir, output,
 
 		parseMAF(filename, sample, columnPos, columnfunctions, header, fout)
 	fout.close()
-
-	buildSNVJson(assembly, cohort, output)
 
 
 

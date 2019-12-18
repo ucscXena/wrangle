@@ -1,4 +1,4 @@
-import sys, os
+import sys, os, json
 sys.path.insert(0,os.path.dirname(__file__))
 import filearray_convert
 
@@ -6,6 +6,22 @@ suffix = 'abundance.tsv$'
 columns = ["est_counts", "tpm"]
 pseudocounts = [1, 0.001]
 maxNum = 500
+
+def buildExpJson(cohort, output_prefix, probeMapfilename):
+	for i in range (0, len(columns)):
+		column = columns[i]
+		pseudocount = pseudocounts[i]
+		output = output_prefix + '_' + column + '.txt.json'
+		fout = open(output, 'w')
+		J = {}
+		J['type'] ='genomicMatrix'
+		if probeMapfilename:
+			J['probeMap'] = probeMapfilename
+		J['unit'] = 'log2('+ column + '+' + str(pseudocount) +')'
+		J['pseudocount'] = pseudocount
+		J['cohort'] = cohort
+		json.dump(J, fout, indent = 4)
+		fout.close()
 
 if len(sys.argv[:]) < 4:
 	print ("python KallistoToXena.py inputFileDir output_prefix cohort \
@@ -28,4 +44,4 @@ else:
 	sample_mapping_file = None
 
 filearray_convert.fileArrayExpToXena(suffix, columns, maxNum, inputdir, output_prefix, pseudocounts,
-	cohort,	sample_mapping_file, probeMapfilename)
+	cohort,	sample_mapping_file)
