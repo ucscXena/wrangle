@@ -134,7 +134,7 @@ def parseTable(input, sample, columnPos, columnfunctions, header, fout):
 		fout.write('\n')
 	fin.close()
 
-def parseVcf(input, sample, columnPos, columnfunctions, header, fout):
+def parseVcf(input, sample, columnPos, columnfunctions, filterfunction, header, fout):
 	fin = open(input, 'r')
 	while 1:
 		line = fin.readline()
@@ -143,12 +143,13 @@ def parseVcf(input, sample, columnPos, columnfunctions, header, fout):
 		if line[0]=='#':
 			continue
 		data = line[:-1].split('\t')
-		fout.write(sample)
-		for column in header:
-			colfunction = columnfunctions[column][0]
-			value = colfunction(data, columnPos)
-			fout.write('\t' + value)
-		fout.write('\n')
+		if filterfunction(data, columnPos):
+			fout.write(sample)
+			for column in header:
+				colfunction = columnfunctions[column][0]
+				value = colfunction(data, columnPos)
+				fout.write('\t' + value)
+			fout.write('\n')
 	fin.close()
 
 def fileArrayExpToXena(suffix, columns, maxNum, inputdir, output_prefix, pseudocounts, sample_mapping_file = None):
@@ -234,7 +235,7 @@ def fileArrayTableToXena(suffix, columns, inputdir, output, columnfunctions, sam
 		parseTable(filename, sample, columnPos, columnfunctions, header, fout)
 	fout.close()
 
-def fileArrayVcfToXena(suffix, columns, inputdir, output, columnfunctions, sample_mapping_file = None):
+def fileArrayVcfToXena(suffix, columns, inputdir, output, columnfunctions, filterfunction, sample_mapping_file = None):
 	if sample_mapping_file:
 		file_sample_info = sampleInfo(sample_mapping_file)
 	else:
@@ -262,7 +263,7 @@ def fileArrayVcfToXena(suffix, columns, inputdir, output, columnfunctions, sampl
 		else:
 			sample = file.split('.')[0]
 
-		parseVcf(filename, sample, columnPos, columnfunctions, header, fout)
+		parseVcf(filename, sample, columnPos, columnfunctions, filterfunction, header, fout)
 	fout.close()
 
 

@@ -3,7 +3,7 @@ sys.path.insert(0,os.path.dirname(__file__))
 import filearray_convert
 
 suffix = '.vcf$'
-columns = ['CHROM', 'POS', 'REF', 'ALT', 'INFO']
+columns = ['CHROM', 'POS', 'REF', 'ALT', 'INFO', 'FILTER']
 
 def parseInfo(line):
 	dic ={}
@@ -29,7 +29,6 @@ def doRef (data, columnPos):
 	else:
 		return data[columnPos['CHROM']]+ ":"+data[columnPos['POS']] + '-' + parseInfo(data[columnPos['INFO']])['END']
 
-
 columnfunctions = {
 	'chr': [doChr, 0],
 	'start': [doStart, 1],
@@ -38,6 +37,8 @@ columnfunctions = {
 	'alt': [doAlt, 4],
 	'effect': [doEffect, 5]
 }
+
+def filterfunction (data, columnPos): return data[columnPos['FILTER']] == 'PASS'
 
 def buildjson(assembly, cohort, output):
 	output = output + '.json'
@@ -66,6 +67,6 @@ if len(sys.argv[:]) > 5 :
 else:
 	sample_mapping_file = None
 
-filearray_convert.fileArrayVcfToXena(suffix, columns, inputdir, output, columnfunctions, sample_mapping_file)
+filearray_convert.fileArrayVcfToXena(suffix, columns, inputdir, output, columnfunctions, filterfunction, sample_mapping_file)
 
 buildjson(assembly, cohort, output)
