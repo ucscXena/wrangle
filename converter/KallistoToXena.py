@@ -43,6 +43,7 @@ if len(sys.argv[:]) > 5 :
 else:
 	sample_mapping_file = None
 
-filearray_convert.fileArrayExpToXena(suffix, columns, maxNum, inputdir, output_prefix, pseudocounts, sample_mapping_file)
+filearray_convert.fileArrayExpToXena(suffix, columns, maxNum, inputdir, output_prefix, pseudocounts, 
+	sample_mapping_file)
 
 buildExpJson(cohort, output_prefix, probeMapfilename)
