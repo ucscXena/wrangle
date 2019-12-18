@@ -23,13 +23,11 @@ def doEnd(data, columnPos):
 		return data[columnPos['POS']]
 	else:
 		return parseInfo(data[columnPos['INFO']])['END']
-
 def doRef (data, columnPos):
 	if parseInfo(data[columnPos['INFO']])['SVTYPE'] == 'BND':
 		return data[columnPos['REF']]
 	else:
-		return data[columnPos['POS']] + '-' + parseInfo(data[columnPos['INFO']])['END']
-
+		return data[columnPos['CHROM']]+ ":"+data[columnPos['POS']] + '-' + parseInfo(data[columnPos['INFO']])['END']
 
 
 columnfunctions = {
