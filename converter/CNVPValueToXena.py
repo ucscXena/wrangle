@@ -29,7 +29,7 @@ def buildjson(assembly, cohort, output):
 	J['max'] = 4
 	J['origin'] = 2
 	J['thresh'] = 0 
-	J["unit"] = "integer copy number",
+	J['unit'] = 'integer copy number'
 	json.dump(J, fout, indent = 4)
 	fout.close()
 
