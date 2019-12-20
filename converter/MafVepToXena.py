@@ -1,4 +1,4 @@
-import sys, os, json
+import sys, os, json, datetime
 sys.path.insert(0,os.path.dirname(__file__))
 import filearray_convert
 
@@ -36,6 +36,7 @@ def buildjson(assembly, cohort, output):
 	J['dataSubtype'] = 'somatic mutation (SNP and INDEL)'
 	J['assembly'] = assembly
 	J['cohort'] = cohort
+	J['version'] = datetime.date.today().isoformat()
 	json.dump(J, fout, indent = 4)
 	fout.close()
 

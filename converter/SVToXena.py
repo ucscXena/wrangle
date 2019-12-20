@@ -48,6 +48,7 @@ def buildjson(assembly, cohort, output):
 	J['dataSubtype'] = 'somatic structural variant'
 	J['assembly'] = assembly
 	J['cohort'] = cohort
+	J['version'] = datetime.date.today().isoformat()
 	json.dump(J, fout, indent = 4)
 	fout.close()
 

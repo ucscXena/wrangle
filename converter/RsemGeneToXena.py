@@ -1,4 +1,4 @@
-import sys, os, json
+import sys, os, json, datetime
 sys.path.insert(0,os.path.dirname(__file__))
 import filearray_convert
 
@@ -20,6 +20,7 @@ def buildExpJson(cohort, output_prefix, probeMapfilename):
 		J['unit'] = 'log2('+ column + '+' + str(pseudocount) +')'
 		J['pseudocount'] = pseudocount
 		J['cohort'] = cohort
+		J['version'] = datetime.date.today().isoformat()
 		json.dump(J, fout, indent = 4)
 		fout.close()
 

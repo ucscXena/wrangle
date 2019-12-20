@@ -1,4 +1,4 @@
-import sys, os, json
+import sys, os, json, datetime
 sys.path.insert(0,os.path.dirname(__file__))
 import filearray_convert
 
@@ -30,6 +30,7 @@ def buildjson(assembly, cohort, output):
 	J['origin'] = 2
 	J['thresh'] = 0 
 	J['unit'] = 'integer copy number'
+	J['version'] = datetime.date.today().isoformat()
 	json.dump(J, fout, indent = 4)
 	fout.close()
 
