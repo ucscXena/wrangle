@@ -107,7 +107,7 @@ def sampleInfo(sample_mapping_file):
 	for line in fin.readlines():
 		id, file = line.strip().split('\t')
 		dic[file] = id
-		if re.search('.gz$', file) != -1:
+		if re.search('.gz$', file):
 			file = re.sub('.gz$', '', file)
 			dic[file] = id
 	fin.close()
@@ -159,7 +159,7 @@ def fileArrayExpToXena(suffix, columns, maxNum, inputdir, output_prefix, pseudoc
 		file_sample_info = None
 
 	for file in os.listdir(inputdir):
-		if re.search(suffix, file) == -1:
+		if not re.search(suffix, file):
 			continue
 		firstfile = re.sub("/$", "", inputdir) + '/'+ file
 		break
@@ -174,7 +174,7 @@ def fileArrayExpToXena(suffix, columns, maxNum, inputdir, output_prefix, pseudoc
 	counter = 0
 
 	for file in os.listdir(inputdir):
-		if re.search(suffix, file) == -1:
+		if not re.search(suffix, file):
 			continue
 		counter = counter + 1
 		filename = re.sub("/$", "", inputdir) + '/'+ file
@@ -212,7 +212,7 @@ def fileArrayTableToXena(suffix, columns, inputdir, output, columnfunctions, sam
 		file_sample_info = None
 
 	for file in os.listdir(inputdir):
-		if re.search(suffix, file) == -1:
+		if not re.search(suffix, file):
 			continue
 		firstfile = re.sub("/$", "", inputdir) + '/'+ file
 		break
@@ -223,7 +223,7 @@ def fileArrayTableToXena(suffix, columns, inputdir, output, columnfunctions, sam
 	fout.write('sample\t' + '\t'.join(header) + '\n')
 
 	for file in os.listdir(inputdir):
-		if re.search(suffix, file) == -1:
+		if not re.search(suffix, file):
 			continue
 
 		filename = re.sub("/$", "", inputdir) + '/'+ file
@@ -244,7 +244,7 @@ def fileArrayVcfToXena(suffix, columns, inputdir, output, columnfunctions, filte
 		file_sample_info = None
 
 	for file in os.listdir(inputdir):
-		if re.search(suffix, file) == -1:
+		if not re.search(suffix, file):
 			continue
 		firstfile = re.sub("/$", "", inputdir) + '/'+ file
 		break
@@ -255,7 +255,7 @@ def fileArrayVcfToXena(suffix, columns, inputdir, output, columnfunctions, filte
 	fout.write('sample\t' + '\t'.join(header) + '\n')
 
 	for file in os.listdir(inputdir):
-		if re.search(suffix, file) == -1:
+		if not re.search(suffix, file):
 			continue
 
 		filename = re.sub("/$", "", inputdir) + '/'+ file
