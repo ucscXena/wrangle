@@ -16,7 +16,7 @@ def buildExpJson(cohort, output_prefix, probeMapfilename):
 		J = {}
 		J['type'] ='genomicMatrix'
 		if probeMapfilename:
-			J['probeMap'] = probeMapfilename
+			J[':probeMap'] = probeMapfilename
 		J['unit'] = 'log2('+ column + '+' + str(pseudocount) +')'
 		J['pseudocount'] = pseudocount
 		J['cohort'] = cohort
