@@ -18,6 +18,7 @@ def buildExpJson(cohort, output_prefix, probeMapfilename):
 		if probeMapfilename:
 			J[':probeMap'] = probeMapfilename
 		J['unit'] = 'log2('+ column + '+' + str(pseudocount) +')'
+		assert pseudocount >= 0
 		J['pseudocount'] = pseudocount
 		J['cohort'] = cohort
 		J['version'] = datetime.date.today().isoformat()

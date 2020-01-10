@@ -86,16 +86,21 @@ def Log2plusTheta(inputFile, outputFile, theta):
     fin.close()
     fout.close()
 
-def finalizeDir(dataFileList, output_prefix, columns, pseudocounts):
+def finalizeExpDir(dataFileList, output_prefix, columns, pseudocounts):
 	for i in range (0, len(columns)):
 		column = columns[i]
 		pseudocount = pseudocounts[i]
+		assert pseudocount >= 0
 		files = dataFileList[column]
 		output = output_prefix + '_' + column + '.txt'
 		tmp_output = output_prefix + '_' + column + '.tmp'
 
 		os.system("paste id " + ' '.join(files) + ' > ' + tmp_output)
-		Log2plusTheta(tmp_output, output, pseudocount)
+		if pseudocount > 0:
+			Log2plusTheta(tmp_output, output, pseudocount)
+		else:
+			os.system('cp ' + tmp_output + ' ' + output)
+
 		os.system('rm -f ' + ' '.join(files))
 		os.system('rm -f ' + tmp_output)
 
@@ -194,7 +199,7 @@ def fileArrayExpToXena(suffix, columns, maxNum, inputdir, output_prefix, pseudoc
 			counter = 0
 	collectDir(tmpdir, dataFileList, columns)
 
-	finalizeDir(dataFileList, output_prefix, columns, pseudocounts)
+	finalizeExpDir(dataFileList, output_prefix, columns, pseudocounts)
 
 def buildTableHeader(columnfunctions):
 	columnHeader = range(0,len(columnfunctions.keys()))
