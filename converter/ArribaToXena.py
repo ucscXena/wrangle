@@ -1,20 +1,18 @@
 import sys, os, json, datetime
-import requests
+# import requests
 sys.path.insert(0,os.path.dirname(__file__))
 import filearray_convert
 
 suffix = 'arriba.fusions.tsv$'
-columns = ['breakpoint1', 'breakpoint2', 'gene1', 'gene2', 'site1', 'site2', 'type', 'direction1', 'direction2',
- 'reading_frame', 'confidence']
+columns = ['breakpoint1', 'breakpoint2', 'gene1', 'gene2', 'site1', 'site2', 'strand1',
+	'type', 'direction1', 'direction2', 'fusion_transcript', 'reading_frame', 'confidence']
 
-def parseInfo(line):
-	dic ={}
-	for item in line.split(";"):
-		data = item.split("=")
-		if len(data) == 2:
-			key, value = data
-		dic[key] = value
-	return dic
+compliment = {
+	'A' : 'T',
+	'T' : 'A',
+	'G' : 'C',
+	'C' : 'G'
+}
 
 def parsePos(genomicPos):
 	Chr, pos = genomicPos.split(':')
@@ -28,6 +26,12 @@ def parsePos(genomicPos):
 def doChr (data, columnPos): return parsePos(data[columnPos['breakpoint1']])['Chr']
 def doPos (data, columnPos): return parsePos(data[columnPos['breakpoint1']])['pos']
 def doRef (data, columnPos):
+	DNA = data[columnPos['fusion_transcript']].split('|')[0][-1]
+	strand = data[columnPos['strand1']].split('/')[1]
+	if strand == '-':
+		DNA = compliment[DNA]
+	return DNA
+	'''
 	r = parsePos(data[columnPos['breakpoint1']])
 	Chr = r['Chr']
 	pos = r['pos']
@@ -42,6 +46,7 @@ def doRef (data, columnPos):
 	else:
 		print ('FAILED api.genome.ucsc.edu call')
 		return 'ERROR'
+	'''
 
 def doAlt (data, columnPos):
 	ref = doRef(data, columnPos)
