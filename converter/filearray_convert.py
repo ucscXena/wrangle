@@ -189,7 +189,7 @@ def fileArrayExpToXena(suffix, columns, maxNum, inputdir, output_prefix, pseudoc
 			if file_sample_info:
 				sample = file_sample_info[file]
 			else:
-				print file
+				print (file)
 				sample = file.split('.')[0]
 			os.system("echo " + sample + " > " + output)
 			os.system('cut -f ' + str(pos + 1) + ' ' + filename + " | tail -n +2 >> " + output)
@@ -236,7 +236,7 @@ def fileArrayTableToXena(suffix, columns, inputdir, output, columnfunctions, sam
 		if file_sample_info:
 			sample = file_sample_info[file]
 		else:
-			print file
+			print (file)
 			sample = file.split('.')[0]
 
 		parseTable(filename, sample, columnPos, columnfunctions, header, fout)
