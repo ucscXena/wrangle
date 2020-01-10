@@ -4,7 +4,7 @@ sys.path.insert(0,os.path.dirname(__file__))
 import filearray_convert
 
 suffix = 'arriba.fusions.tsv$'
-columns = ['breakpoint1', 'breakpoint2', 'gene1', 'gene2', 'site1', 'site2', 'strand1',
+columns = ['breakpoint1', 'breakpoint2', 'gene1', 'gene2', 'site1', 'site2', 'strand1(gene/fusion)',
 	'type', 'direction1', 'direction2', 'fusion_transcript', 'reading_frame', 'confidence']
 
 compliment = {
@@ -27,7 +27,7 @@ def doChr (data, columnPos): return parsePos(data[columnPos['breakpoint1']])['Ch
 def doPos (data, columnPos): return parsePos(data[columnPos['breakpoint1']])['pos']
 def doRef (data, columnPos):
 	DNA = data[columnPos['fusion_transcript']].split('|')[0][-1]
-	strand = data[columnPos['strand1']].split('/')[1]
+	strand = data[columnPos['strand1(gene/fusion)']].split('/')[1]
 	if strand == '-':
 		DNA = compliment[DNA]
 	return DNA
