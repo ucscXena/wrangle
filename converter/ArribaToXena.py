@@ -74,6 +74,7 @@ def doAltGene(data, columnPos):
 
 def doEffect (data, columnPos): return data[columnPos['type']]
 def doReadingFrame (data, columnPos): return data[columnPos['reading_frame']]
+def doConfidence(data, columnPos): return data[columnPos['confidence']]
 
 columnfunctions = {
 	'chr': [doChr, 0],
@@ -84,7 +85,8 @@ columnfunctions = {
 	'gene': [doGene, 5],
 	'altGene': [doAltGene, 6],
 	'effect': [doEffect, 7],
-	'reading_frame': [doReadingFrame, 8]
+	'reading_frame': [doReadingFrame, 8],
+	'confidence' :[doConfidence, 9]
 }
 
 def filterfunction (data, columnPos): return data[columnPos['confidence']] in ['high', 'medium']
