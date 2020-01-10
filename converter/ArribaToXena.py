@@ -1,5 +1,4 @@
 import sys, os, json, datetime
-# import requests
 sys.path.insert(0,os.path.dirname(__file__))
 import filearray_convert
 
@@ -31,22 +30,6 @@ def doRef (data, columnPos):
 	if strand == '-':
 		DNA = compliment[DNA]
 	return DNA
-	'''
-	r = parsePos(data[columnPos['breakpoint1']])
-	Chr = r['Chr']
-	pos = r['pos']
-	url = 'https://api.genome.ucsc.edu/getData/sequence?genome=' + assembly + \
-		';chrom=' + Chr + \
-		';start=' + str(int(pos) - 1) + \
-		';end=' + pos
-	r = requests.get(url)
-	if r.status_code == 200:
-		ref = r.json()['dna']
-		return ref
-	else:
-		print ('FAILED api.genome.ucsc.edu call')
-		return 'ERROR'
-	'''
 
 def doAlt (data, columnPos):
 	ref = doRef(data, columnPos)
@@ -101,8 +84,8 @@ def buildjson(assembly, cohort, output):
 	fout = open(output, 'w')
 	J = {}
 	J['type'] ='mutationVector'
-	J['dataSubtype'] = 'somatic structural variant'
-	J['label'] = 'gene fusion RNA-seq'
+	J['dataSubtype'] = 'gene fusion RNA-seq'
+	J['label'] = 'Arriba fusion'
 	J['assembly'] = assembly
 	J['cohort'] = cohort
 	J['version'] = datetime.date.today().isoformat()
