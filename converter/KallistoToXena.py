@@ -21,6 +21,7 @@ def buildExpJson(cohort, output_prefix, probeMapfilename):
 		J['pseudocount'] = pseudocount
 		J['cohort'] = cohort
 		J['version'] = datetime.date.today().isoformat()
+		J['dataSubtype'] = 'transcript expression'
 		json.dump(J, fout, indent = 4)
 		fout.close()
 
