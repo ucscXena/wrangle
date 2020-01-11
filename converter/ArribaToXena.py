@@ -185,6 +185,6 @@ else:
 	sample_mapping_file = None
 
 filearray_convert.fileArrayFusionToXena(suffix, columns, inputdir, output, columnfunctions, paired_columnfunctions, 
-	filterfunction, sample_mapping_file)
+	assembly, filterfunction, sample_mapping_file)
 
 buildjson(assembly, cohort, output)
