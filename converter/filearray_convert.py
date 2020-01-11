@@ -1,6 +1,6 @@
 import os, re, uuid, math
 
-def findColumns(file, columns):
+def findColumns_withNoPoundLine(file, columns): # header no #
 	columnPos ={}
 	fin = open(file, 'r')
 	# header
@@ -20,7 +20,7 @@ def findColumns(file, columns):
 	fin.close()
 	return columnPos
 
-def findVcfColumns(file, columns):
+def findColumns_bySinglePoundLine(file, columns):  # header is the first line start with a single #
 	columnPos ={}
 	fin = open(file, 'r')
 	# header
@@ -157,6 +157,31 @@ def parseVcf(input, sample, columnPos, columnfunctions, filterfunction, header, 
 			fout.write('\n')
 	fin.close()
 
+def parseFusion(input, sample, columnPos, columnfunctions, paired_columnfunctions, filterfunction, header, fout):
+	fin = open(input, 'r')
+	while 1:
+		line = fin.readline()
+		if line == '':
+			break
+		if line[0]=='#':
+			continue
+		data = line[:-1].split('\t')
+		if filterfunction(data, columnPos):
+			fout.write(sample)
+			for column in header:
+				colfunction = columnfunctions[column][0]
+				value = colfunction(data, columnPos)
+				fout.write('\t' + value)
+			fout.write('\n')
+			#paired 
+			fout.write(sample)
+			for column in header:
+				colfunction = paired_columnfunctions[column][0]
+				value = colfunction(data, columnPos)
+				fout.write('\t' + value)
+			fout.write('\n')
+	fin.close()
+
 def fileArrayExpToXena(suffix, columns, maxNum, inputdir, output_prefix, pseudocounts, sample_mapping_file = None):
 	if sample_mapping_file:
 		file_sample_info = sampleInfo(sample_mapping_file)
@@ -169,7 +194,7 @@ def fileArrayExpToXena(suffix, columns, maxNum, inputdir, output_prefix, pseudoc
 		firstfile = re.sub("/$", "", inputdir) + '/'+ file
 		break
 
-	columnPos = findColumns(firstfile, columns)
+	columnPos = findColumns_withNoPoundLine(firstfile, columns)
 	os.system('cut -f 1 ' + firstfile + " > id")
 
 	dataFileList = {}
@@ -210,6 +235,7 @@ def buildTableHeader(columnfunctions):
 		columnHeader[pos] = column
 	return columnHeader
 
+#  header is first line without #
 def fileArrayTableToXena(suffix, columns, inputdir, output, columnfunctions, sample_mapping_file = None):
 	if sample_mapping_file:
 		file_sample_info = sampleInfo(sample_mapping_file)
@@ -222,7 +248,7 @@ def fileArrayTableToXena(suffix, columns, inputdir, output, columnfunctions, sam
 		firstfile = re.sub("/$", "", inputdir) + '/'+ file
 		break
 
-	columnPos = findColumns(firstfile, columns)
+	columnPos = findColumns_withNoPoundLine(firstfile, columns)
 	fout = open(output, 'w')
 	header = buildTableHeader(columnfunctions)
 	fout.write('sample\t' + '\t'.join(header) + '\n')
@@ -242,6 +268,7 @@ def fileArrayTableToXena(suffix, columns, inputdir, output, columnfunctions, sam
 		parseTable(filename, sample, columnPos, columnfunctions, header, fout)
 	fout.close()
 
+#  header is the line start with single #
 def fileArrayVcfToXena(suffix, columns, inputdir, output, columnfunctions, filterfunction, sample_mapping_file = None):
 	if sample_mapping_file:
 		file_sample_info = sampleInfo(sample_mapping_file)
@@ -254,7 +281,7 @@ def fileArrayVcfToXena(suffix, columns, inputdir, output, columnfunctions, filte
 		firstfile = re.sub("/$", "", inputdir) + '/'+ file
 		break
 
-	columnPos = findVcfColumns(firstfile, columns)
+	columnPos = findColumns_bySinglePoundLine(firstfile, columns)
 	fout = open(output, 'w')
 	header = buildTableHeader(columnfunctions)
 	fout.write('sample\t' + '\t'.join(header) + '\n')
@@ -268,9 +295,43 @@ def fileArrayVcfToXena(suffix, columns, inputdir, output, columnfunctions, filte
 		if file_sample_info:
 			sample = file_sample_info[file]
 		else:
+			print (file)
 			sample = file.split('.')[0]
 
 		parseVcf(filename, sample, columnPos, columnfunctions, filterfunction, header, fout)
 	fout.close()
 
+#  header is the line start with single # , similarly to VCF
+def fileArrayFusionToXena(suffix, columns, inputdir, output, columnfunctions, paired_columnfunctions, 
+	filterfunction, sample_mapping_file = None):
+	if sample_mapping_file:
+		file_sample_info = sampleInfo(sample_mapping_file)
+	else:
+		file_sample_info = None
+
+	for file in os.listdir(inputdir):
+		if not re.search(suffix, file):
+			continue
+		firstfile = re.sub("/$", "", inputdir) + '/'+ file
+		break
+
+	columnPos = findColumns_bySinglePoundLine(firstfile, columns)
+	fout = open(output, 'w')
+	header = buildTableHeader(columnfunctions)
+	fout.write('sample\t' + '\t'.join(header) + '\n')
+
+	for file in os.listdir(inputdir):
+		if not re.search(suffix, file):
+			continue
+
+		filename = re.sub("/$", "", inputdir) + '/'+ file
+
+		if file_sample_info:
+			sample = file_sample_info[file]
+		else:
+			print (file)
+			sample = file.split('.')[0]
+
+		parseFusion(filename, sample, columnPos, columnfunctions, paired_columnfunctions, filterfunction, header, fout)
+	fout.close()
 
