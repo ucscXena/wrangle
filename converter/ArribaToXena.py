@@ -42,9 +42,11 @@ def doRef1 (data, columnPos):
 		';start=' + str(int(pos) -1) + \
 		';end=' + pos
 		r = requests.get(url)
-		return r.json()['dna']
-
-	DNA = seq[0][-1]
+		DNA =  r.json()['dna']
+	else:
+		DNA = seq[0][-1]
+	
+	DNA = DNA.upper()
 	strand = data[columnPos['strand1(gene/fusion)']].split('/')[1]
 	if strand == '-':
 		DNA = compliment[DNA]
@@ -95,8 +97,11 @@ def doRef2 (data, columnPos):
 		';start=' + str(int(pos) -1) + \
 		';end=' + pos
 		r = requests.get(url)
-		return r.json()['dna']
-	DNA = seq[1][0]
+		DNA =  r.json()['dna']
+	else:
+		DNA = seq[1][0]
+
+	DNA = DNA.upper()
 	strand = data[columnPos['strand2(gene/fusion)']].split('/')[1]
 	if strand == '-':
 		DNA = compliment[DNA]
