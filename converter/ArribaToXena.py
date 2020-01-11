@@ -18,6 +18,8 @@ compliment = {
 	'C' : 'G'
 }
 
+ASSEMBLY = ''
+
 def parsePos(genomicPos):
 	Chr, pos = genomicPos.split(':')
 	if Chr[0:3].upper() != 'CHR':
@@ -27,6 +29,9 @@ def parsePos(genomicPos):
 		'pos': pos
 	}
 
+def getAssembly():
+	return ASSEMBLY
+
 def doChr1 (data, columnPos): return parsePos(data[columnPos['breakpoint1']])['Chr']
 def doPos1 (data, columnPos): return parsePos(data[columnPos['breakpoint1']])['pos']
 def doRef1 (data, columnPos, assembly):
@@ -34,14 +39,14 @@ def doRef1 (data, columnPos, assembly):
 	if len(seq) != 2:
 		Chr = doChr1(data, columnPos)
 		pos = doPos1(data, columnPos)
-		url = 'https://api.genome.ucsc.edu/getData/sequence?genome=' + assembly + \
+		url = 'https://api.genome.ucsc.edu/getData/sequence?genome=' + getAssembly() + \
 		';chrom=' + Chr + \
 		';start=' + str(int(pos) -1) + \
 		';end=' + pos
 		r = requests.get(url)
 		return r.json()['dna']
 
- 	DNA = seq[0][-1]
+	DNA = seq[0][-1]
 	strand = data[columnPos['strand1(gene/fusion)']].split('/')[1]
 	if strand == '-':
 		DNA = compliment[DNA]
@@ -87,7 +92,7 @@ def doRef2 (data, columnPos, assembly):
 	if len(seq) != 2:
 		Chr = doChr2(data, columnPos)
 		pos = doPos2(data, columnPos)
-		url = 'https://api.genome.ucsc.edu/getData/sequence?genome=' + assembly + \
+		url = 'https://api.genome.ucsc.edu/getData/sequence?genome=' + getAssembly() + \
 		';chrom=' + Chr + \
 		';start=' + str(int(pos) -1) + \
 		';end=' + pos
@@ -185,6 +190,6 @@ else:
 	sample_mapping_file = None
 
 filearray_convert.fileArrayFusionToXena(suffix, columns, inputdir, output, columnfunctions, paired_columnfunctions, 
-	assembly, filterfunction, sample_mapping_file)
+	filterfunction, sample_mapping_file)
 
 buildjson(assembly, cohort, output)

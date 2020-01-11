@@ -157,8 +157,7 @@ def parseVcf(input, sample, columnPos, columnfunctions, filterfunction, header, 
 			fout.write('\n')
 	fin.close()
 
-def parseFusion(input, sample, columnPos, columnfunctions, paired_columnfunctions, 
-	assembly, filterfunction, header, fout):
+def parseFusion(input, sample, columnPos, columnfunctions, paired_columnfunctions, filterfunction, header, fout):
 	fin = open(input, 'r')
 	while 1:
 		line = fin.readline()
@@ -171,14 +170,14 @@ def parseFusion(input, sample, columnPos, columnfunctions, paired_columnfunction
 			fout.write(sample)
 			for column in header:
 				colfunction = columnfunctions[column][0]
-				value = colfunction(data, columnPos, assembly)
+				value = colfunction(data, columnPos)
 				fout.write('\t' + value)
 			fout.write('\n')
 			#paired 
 			fout.write(sample)
 			for column in header:
 				colfunction = paired_columnfunctions[column][0]
-				value = colfunction(data, columnPos, assembly)
+				value = colfunction(data, columnPos)
 				fout.write('\t' + value)
 			fout.write('\n')
 	fin.close()
@@ -304,7 +303,7 @@ def fileArrayVcfToXena(suffix, columns, inputdir, output, columnfunctions, filte
 
 #  header is the line start with single # , similarly to VCF
 def fileArrayFusionToXena(suffix, columns, inputdir, output, columnfunctions, paired_columnfunctions, 
-	assembly, filterfunction, sample_mapping_file = None):
+	filterfunction, sample_mapping_file = None):
 	if sample_mapping_file:
 		file_sample_info = sampleInfo(sample_mapping_file)
 	else:
@@ -334,6 +333,6 @@ def fileArrayFusionToXena(suffix, columns, inputdir, output, columnfunctions, pa
 			sample = file.split('.')[0]
 
 		parseFusion(filename, sample, columnPos, columnfunctions, paired_columnfunctions, 
-			assembly, filterfunction, header, fout)
+			filterfunction, header, fout)
 	fout.close()
 
