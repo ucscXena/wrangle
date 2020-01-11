@@ -131,7 +131,7 @@ paired_columnfunctions = {
 	'confidence' :[doConfidence, 9]
 }
 
-def filterfunction (data, columnPos): return data[columnPos['confidence']] in ['high', 'medium']
+def filterfunction (data, columnPos): return data[columnPos['confidence']] == 'high'
 
 def buildjson(assembly, cohort, output):
 	output = output + '.json'
