@@ -18,8 +18,6 @@ compliment = {
 	'C' : 'G'
 }
 
-ASSEMBLY = ''
-
 def parsePos(genomicPos):
 	Chr, pos = genomicPos.split(':')
 	if Chr[0:3].upper() != 'CHR':
@@ -30,12 +28,12 @@ def parsePos(genomicPos):
 	}
 
 def getAssembly():
-	return ASSEMBLY
+	return sys.argv[4]
 
 def doChr1 (data, columnPos): return parsePos(data[columnPos['breakpoint1']])['Chr']
 def doPos1 (data, columnPos): return parsePos(data[columnPos['breakpoint1']])['pos']
 def doRef1 (data, columnPos):
-	seq = data[columnPos['fusion_transcript']].split('|')[0]
+	seq = data[columnPos['fusion_transcript']].split('|')
 	if len(seq) != 2:
 		Chr = doChr1(data, columnPos)
 		pos = doPos1(data, columnPos)
@@ -88,7 +86,7 @@ def doConfidence(data, columnPos): return data[columnPos['confidence']]
 def doChr2 (data, columnPos): return parsePos(data[columnPos['breakpoint2']])['Chr']
 def doPos2 (data, columnPos): return parsePos(data[columnPos['breakpoint2']])['pos']
 def doRef2 (data, columnPos):
-	seq = data[columnPos['fusion_transcript']].split('|')[0]
+	seq = data[columnPos['fusion_transcript']].split('|')
 	if len(seq) != 2:
 		Chr = doChr2(data, columnPos)
 		pos = doPos2(data, columnPos)
