@@ -124,8 +124,8 @@ paired_columnfunctions = {
 	'end': [doPos2, 2],
 	'reference': [doRef2, 3],
 	'alt': [doAlt2, 4],
-	'gene2': [doGene1, 5],
-	'altGene2': [doAltGene1, 6],
+	'gene': [doGene2, 5],
+	'altGene': [doAltGene2, 6],
 	'effect': [doEffect, 7],
 	'reading_frame': [doReadingFrame, 8],
 	'confidence' :[doConfidence, 9]
