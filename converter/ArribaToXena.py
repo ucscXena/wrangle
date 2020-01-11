@@ -34,7 +34,7 @@ def getAssembly():
 
 def doChr1 (data, columnPos): return parsePos(data[columnPos['breakpoint1']])['Chr']
 def doPos1 (data, columnPos): return parsePos(data[columnPos['breakpoint1']])['pos']
-def doRef1 (data, columnPos, assembly):
+def doRef1 (data, columnPos):
 	seq = data[columnPos['fusion_transcript']].split('|')[0]
 	if len(seq) != 2:
 		Chr = doChr1(data, columnPos)
@@ -87,7 +87,7 @@ def doConfidence(data, columnPos): return data[columnPos['confidence']]
 
 def doChr2 (data, columnPos): return parsePos(data[columnPos['breakpoint2']])['Chr']
 def doPos2 (data, columnPos): return parsePos(data[columnPos['breakpoint2']])['pos']
-def doRef2 (data, columnPos, assembly):
+def doRef2 (data, columnPos):
 	seq = data[columnPos['fusion_transcript']].split('|')[0]
 	if len(seq) != 2:
 		Chr = doChr2(data, columnPos)
