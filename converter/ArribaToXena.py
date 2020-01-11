@@ -1,4 +1,5 @@
 import sys, os, json, datetime
+import requests
 sys.path.insert(0,os.path.dirname(__file__))
 import filearray_convert
 
@@ -28,8 +29,19 @@ def parsePos(genomicPos):
 
 def doChr1 (data, columnPos): return parsePos(data[columnPos['breakpoint1']])['Chr']
 def doPos1 (data, columnPos): return parsePos(data[columnPos['breakpoint1']])['pos']
-def doRef1 (data, columnPos):
-	DNA = data[columnPos['fusion_transcript']].split('|')[0][-1]
+def doRef1 (data, columnPos, assembly):
+	seq = data[columnPos['fusion_transcript']].split('|')[0]
+	if len(seq) != 2:
+		Chr = doChr1(data, columnPos)
+		pos = doPos1(data, columnPos)
+		url = 'https://api.genome.ucsc.edu/getData/sequence?genome=' + assembly + \
+		';chrom=' + Chr + \
+		';start=' + str(int(pos) -1) + \
+		';end=' + pos
+		r = requests.get(url)
+		return r.json()['dna']
+
+ 	DNA = seq[0][-1]
 	strand = data[columnPos['strand1(gene/fusion)']].split('/')[1]
 	if strand == '-':
 		DNA = compliment[DNA]
@@ -70,8 +82,18 @@ def doConfidence(data, columnPos): return data[columnPos['confidence']]
 
 def doChr2 (data, columnPos): return parsePos(data[columnPos['breakpoint2']])['Chr']
 def doPos2 (data, columnPos): return parsePos(data[columnPos['breakpoint2']])['pos']
-def doRef2 (data, columnPos):
-	DNA = data[columnPos['fusion_transcript']].split('|')[1][0]
+def doRef2 (data, columnPos, assembly):
+	seq = data[columnPos['fusion_transcript']].split('|')[0]
+	if len(seq) != 2:
+		Chr = doChr2(data, columnPos)
+		pos = doPos2(data, columnPos)
+		url = 'https://api.genome.ucsc.edu/getData/sequence?genome=' + assembly + \
+		';chrom=' + Chr + \
+		';start=' + str(int(pos) -1) + \
+		';end=' + pos
+		r = requests.get(url)
+		return r.json()['dna']
+	DNA = seq[1][0]
 	strand = data[columnPos['strand2(gene/fusion)']].split('/')[1]
 	if strand == '-':
 		DNA = compliment[DNA]
