@@ -3,8 +3,12 @@ sys.path.insert(0,os.path.dirname(__file__))
 import filearray_convert
 
 suffix = 'arriba.fusions.tsv$'
-columns = ['breakpoint1', 'breakpoint2', 'gene1', 'gene2', 'site1', 'site2', 'strand1(gene/fusion)',
-	'type', 'direction1', 'direction2', 'fusion_transcript', 'reading_frame', 'confidence']
+columns = ['breakpoint1', 'breakpoint2', 
+	'gene1', 'gene2', 
+	'site1', 'site2', 
+	'strand1(gene/fusion)', 'strand2(gene/fusion)',
+	'direction1', 'direction2', 
+	'type', 'fusion_transcript', 'reading_frame', 'confidence']
 
 compliment = {
 	'A' : 'T',
