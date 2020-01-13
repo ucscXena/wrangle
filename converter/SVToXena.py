@@ -49,6 +49,7 @@ def buildjson(assembly, cohort, output):
 	J['assembly'] = assembly
 	J['cohort'] = cohort
 	J['version'] = datetime.date.today().isoformat()
+	J['wrangling_procedure'] = "Only variants with FILTER = PASS is kept"
 	json.dump(J, fout, indent = 4)
 	fout.close()
 

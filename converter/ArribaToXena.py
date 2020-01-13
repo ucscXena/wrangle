@@ -168,11 +168,12 @@ def buildjson(assembly, cohort, output):
 	fout = open(output, 'w')
 	J = {}
 	J['type'] ='mutationVector'
-	J['dataSubtype'] = 'somatic structural variant'
+	J['dataSubtype'] = 'gene fusion SV'
 	J['label'] = 'Arriba fusion'
 	J['assembly'] = assembly
 	J['cohort'] = cohort
 	J['version'] = datetime.date.today().isoformat()
+	J['wrangling_procedure'] = "Only fusion variants with confidence = high is kept"
 	json.dump(J, fout, indent = 4)
 	fout.close()
 
