@@ -73,10 +73,8 @@ def doAlt1 (data, columnPos):
 			alt = '[' + bp2 + '[' + ref
 	return alt
 
-def doGene1(data, columnPos):
-	data[columnPos['LeftGene']].split('^')[0]
-def doAltGene1(data, columnPos):
-	data[columnPos['RightGene']].split('^')[0]
+def doGene1(data, columnPos): return data[columnPos['LeftGene']].split('^')[0]
+def doAltGene1(data, columnPos): return	data[columnPos['RightGene']].split('^')[0]
 def doEffect (data, columnPos): 
 	r = json.loads(data[columnPos['annots']])
 	return ', '.join(r)
@@ -128,10 +126,8 @@ def doAlt2 (data, columnPos):
 			alt = '[' + bp2 + '[' + ref
 	return alt
 
-def doGene2(data, columnPos):
-	data[columnPos['RightGene']].split('^')[0]
-def doAltGene2(data, columnPos):
-	data[columnPos['LeftGene']].split('^')[0]
+def doGene2(data, columnPos): return data[columnPos['RightGene']].split('^')[0]
+def doAltGene2(data, columnPos): return data[columnPos['LeftGene']].split('^')[0]
 
 columnfunctions = {
 	'chr': [doChr1, 0],
