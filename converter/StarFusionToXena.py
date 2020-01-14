@@ -3,7 +3,7 @@ import requests
 sys.path.insert(0,os.path.dirname(__file__))
 import filearray_convert
 
-suffix = 'STAR.fusion*.tsv$'
+suffix = 'STAR.fusion'
 columns = ['LeftBreakpoint', 'RightBreakpoint', 
 	'LeftGene', 'RightGene',
 	'LeftBreakDinuc', 'RightBreakDinuc',
@@ -159,7 +159,7 @@ paired_columnfunctions = {
 	'FFPM' :[doFFPM, 9]
 }
 
-def filterfunction (data, columnPos): return data[columnPos['FFPM']] > 0.1
+def filterfunction (data, columnPos): return float(data[columnPos['FFPM']]) > 0.1
 
 def buildjson(assembly, cohort, output):
 	output = output + '.json'
