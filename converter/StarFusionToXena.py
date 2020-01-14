@@ -59,7 +59,7 @@ def doAlt1 (data, columnPos):
 		d1 = 'upstream' # partner
 		d2 = 'downstream' # partner
 
-	bp2 = RightBreakpoint['Chr'] + ':' + RightBreakpoint['pos']
+	bp2 = RightBreakpoint['Chr'][3:] + ':' + RightBreakpoint['pos']
 
 	if d1 == 'downstream':
 		if d2 == 'upstream': # d2 is the downstream piece
@@ -112,7 +112,7 @@ def doAlt2 (data, columnPos):
 		d2 = 'upstream' # partner
 		d1 = 'downstream' # partner
 
-	bp2 = LeftBreakpoint['Chr'] + ':' + LeftBreakpoint['pos']
+	bp2 = LeftBreakpoint['Chr'][3:] + ':' + LeftBreakpoint['pos']
 
 	if d1 == 'downstream':
 		if d2 == 'upstream': # d2 is the downstream piece
