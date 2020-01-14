@@ -161,7 +161,7 @@ paired_columnfunctions = {
 	'confidence' :[doConfidence, 9]
 }
 
-def filterfunction (data, columnPos): return data[columnPos['confidence']] in ['high', 'medium']
+def filterfunction (data, columnPos): return data[columnPos['confidence']] == 'high'
 
 def buildjson(assembly, cohort, output):
 	output = output + '.json'
@@ -173,7 +173,7 @@ def buildjson(assembly, cohort, output):
 	J['assembly'] = assembly
 	J['cohort'] = cohort
 	J['version'] = datetime.date.today().isoformat()
-	J['wrangling_procedure'] = "Only fusion variants with confidence = high and medium is kept"
+	J['wrangling_procedure'] = "Only fusion variants with confidence = high is kept"
 	json.dump(J, fout, indent = 4)
 	fout.close()
 
