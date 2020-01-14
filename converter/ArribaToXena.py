@@ -168,7 +168,7 @@ def buildjson(assembly, cohort, output):
 	fout = open(output, 'w')
 	J = {}
 	J['type'] ='mutationVector'
-	J['dataSubtype'] = 'gene fusion SV'
+	J['dataSubtype'] = 'gene fusion SV (RNA-seq)'
 	J['label'] = 'Arriba fusion'
 	J['assembly'] = assembly
 	J['cohort'] = cohort
