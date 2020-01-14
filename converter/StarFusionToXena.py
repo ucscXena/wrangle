@@ -3,7 +3,7 @@ import requests
 sys.path.insert(0,os.path.dirname(__file__))
 import filearray_convert
 
-suffix = 'STAR.fusion'
+suffix = 'STAR.fusion.*tsv$'
 columns = ['LeftBreakpoint', 'RightBreakpoint', 
 	'LeftGene', 'RightGene',
 	'LeftBreakDinuc', 'RightBreakDinuc',
