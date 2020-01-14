@@ -86,7 +86,7 @@ def doPos2 (data, columnPos): return parsePos(data[columnPos['RightBreakpoint']]
 
 def doRef2 (data, columnPos):
 	strand = parsePos(data[columnPos['RightBreakpoint']])['strand']
-	DNA = data[columnPos['RightBreakpoint']][1]	
+	DNA = data[columnPos['RightBreakDinuc']][1]
 	DNA = DNA.upper()
 	if strand == '-':
 		DNA = compliment[DNA]
