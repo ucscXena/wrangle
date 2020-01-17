@@ -51,7 +51,7 @@ def buildjson(cohort, output):
 	J['dataSubtype'] = 'proteomics'
 	J['cohort'] = cohort
 	J['unit'] = 'log2(sample/pooled reference)'
-	J['label'] = 'relative phosphosite abundance'
+	J['label'] = 'phosphosite abundance (Tandem mass tag)'
 	J['version'] = datetime.date.today().isoformat()
 	json.dump(J, fout, indent = 4)
 	fout.close()
