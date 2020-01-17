@@ -28,6 +28,7 @@ def doRef (data, columnPos):
 		return data[columnPos['REF']]
 	else:
 		return data[columnPos['CHROM']]+ ":"+data[columnPos['POS']] + '-' + parseInfo(data[columnPos['INFO']])['END']
+def doFilter (data, columnPos): return data[columnPos['FILTER']]
 
 columnfunctions = {
 	'chr': [doChr, 0],
@@ -35,7 +36,8 @@ columnfunctions = {
 	'end': [doEnd, 2],
 	'reference': [doRef, 3],
 	'alt': [doAlt, 4],
-	'effect': [doEffect, 5]
+	'effect': [doEffect, 5],
+	'filter': [doFilter, 6]
 }
 
 def filterfunction (data, columnPos): return data[columnPos['FILTER']] == 'PASS'
