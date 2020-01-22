@@ -2,7 +2,7 @@ import re
 
 def col_fix( name ):
     newName=""
-    regex = re.compile('[a-z,A-Z,0-9,_, ]')
+    regex = re.compile('[\x00-\x7F]')  # only ascii or printable characters allowed
     for i in range (0,len(name)):
         if not regex.match(name[i]):
             if i==0:
