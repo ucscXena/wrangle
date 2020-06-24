@@ -40,15 +40,13 @@ else:
 # In[ ]:
 
 import re
-import string
 genes = raw_input('Enter a single or a list of gene names (e.g. PTEN or PTEN,TP53 or a column of gene names copied from a spreadsheet): ') or "PTEN,TP53"
 genes = filter(lambda x: x!='', re.split(';|,| |\n', genes))
-new_genes =[]
-new_genes = [string.strip (genes[0])]
+new_genes = [genes[0].strip()]
 for i in range (1, len(genes)):
-    gene = string.strip(genes[i])
+    gene = genes[i].strip()
     if gene[0] =="(" and gene[-1] ==")":
-        new_genes[-1] = new_genes[-1] + " (" + string.strip(gene[1:-1]) +")"
+        new_genes[-1] = new_genes[-1] + " (" + gene[1:-1].strip() +")"
     else:
         new_genes.append(gene)
 genes = new_genes
@@ -89,7 +87,8 @@ genaname_mapping ={
 # In[ ]:
 
 def cleanGeneName_Funtion (originalLable):
-    return string.strip(string.split(originalLable,'(')[0])
+    return originalLable.split('(')[0].strip()
+
 
 if (Nof1_functions.checkFields(genes, genaname_mapping, Nof1_item["hub"], Nof1_item["dataset"], cleanGeneName_Funtion)):
     sys.exit()

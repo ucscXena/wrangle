@@ -1,4 +1,4 @@
-import string, math, sys
+import math, sys
 import xenaPython as xena
 
 def average (v_list):
@@ -30,6 +30,7 @@ def clean (v_list):
 #    return K+1, 0.0
 
 def rank_and_percentage (v, v_list):
+    v_list = list(v_list)
     v_list.sort()  #low to high
     v = float(v)
     K = len(v_list)
@@ -45,10 +46,10 @@ def checkSamples (Nof1_sample, hub, dataset):
     samples = xena.xenaAPI.dataset_samples(hub, dataset)
 
     if Nof1_sample not in samples:
-        print Nof1_sample, "is not found in dataset."
-        print
-        print "Find out the dataset samples:", "https://xenabrowser.net/datapages/?host="+ hub + "&dataset="+ dataset + "&allSamples=true&label="+dataset
-        print
+        print (Nof1_sample, "is not found in dataset.")
+        print ()
+        print ("Find out the dataset samples:", "https://xenabrowser.net/datapages/?host="+ hub + "&dataset="+ dataset + "&allSamples=true&label="+dataset)
+        print ()
         return 1
     else:
         return 0
@@ -59,14 +60,14 @@ def checkFields (fields, mapping, hub, dataset, cleanFuntion):
         field = cleanFuntion (original_field)
         if field in d_fields:
            mapping[original_field] = field
-        elif string.upper(field) in d_fields:
-            mapping[original_field] = string.upper(field)
+        elif field.upper() in d_fields:
+            mapping[original_field] = field.upper()
         elif original_field in mapping and mapping[original_field] in d_fields:
             pass
         else:
-            print original_field, "is not found in dataset."
-            print
-            print "Find out the dataset identifiers:", "https://xenabrowser.net/datapages/?host="+ hub + "&dataset="+ dataset + "&allIdentifiers=true"
+            print (original_field, "is not found in dataset.")
+            print ()
+            print ("Find out the dataset identifiers:", "https://xenabrowser.net/datapages/?host="+ hub + "&dataset="+ dataset + "&allIdentifiers=true")
             return 1
     return 0
 
