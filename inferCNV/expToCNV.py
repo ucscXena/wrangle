@@ -91,7 +91,8 @@ def convertExpToCNV(zDic, genePos, N):
 	for i in range (0, N):
 		total.append(0.0)
 
-	chromOrder = genePos.keys.sort()
+	chromOrder = genePos.keys()
+	chromOrder.sort()
 	for chr in chromOrder:
 		genes = map(lambda x: x[1], genePos[chr][:window])
 		total = calculateCNVtotal(genes, zDic, N)
