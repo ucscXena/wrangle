@@ -98,7 +98,9 @@ def convertExpToCNV(zDic, genePos, N):
 		total = calculateCNVtotal(genes, zDic, N)
 		
 		i = 0
-		cnvDic[chr + '_' + str(i)] = total
+		probe = 'chr' + str(chr) + '_' + str(i)
+		cnvDic[probe] = total
+		cnvDicKeyOrder.append(probe)
 		
 		while 1:
 			i = i + jump
