@@ -1,4 +1,4 @@
-import string, sys
+import sys
 import scipy.stats
 import numpy
 import statsmodels.sandbox.stats.multicomp
@@ -13,20 +13,21 @@ def get_itomic_Data (gene, hub, dataset, samples):
 
 
 def Nof1_output (Nof1_sample, original_label, gene, itomic_Data, Nof1_theta):
-    print
-    print 'Sample: ', Nof1_sample
-    print 'Gene:', original_label
+    print ()
+    print ('Sample: ', Nof1_sample)
+    print ('Gene:', original_label)
     if original_label!= gene:
-        print 'HUGO gene name:', gene
+        print ('HUGO gene name:', gene)
 
     Nof1_value = itomic_Data[Nof1_sample]
     Nof1_TPM = revert_Log2_theta(Nof1_value, Nof1_theta)
 
-    print "log2(TPM):", Nof1_value, "TPM:", '{:.2f}'.format(Nof1_TPM)
+    print ("log2(TPM):", Nof1_value, "TPM:", '{:.2f}'.format(Nof1_TPM))
 
 def filer_header (comparison_list, Nof1_sample, fout):
     headerList =["label","gene"]
     header2ndList =["",""]
+
     for item in comparison_list:
         headerList.append(item["label"]+ ' (n=' + str(len(item["samples"]))+")")
         headerList.append("Range of ITOMIC samples vs. " + item["label"])
@@ -48,8 +49,8 @@ def filer_header (comparison_list, Nof1_sample, fout):
     headerList.extend([Nof1_sample, Nof1_sample])
     header2ndList.extend(["log2(TPM)","TPM"])
 
-    fout.write(string.join(headerList,'\t') +'\n')
-    fout.write(string.join(header2ndList,'\t') +'\n')
+    fout.write("\t".join(headerList) +'\n')
+    fout.write('\t'.join(header2ndList) +'\n')
 
 
 def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_list, outputfile):
@@ -82,7 +83,7 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_list, outpu
             samples = item["samples"]
             name = item["name"]
             mode = item["mode"]
-            gene = string.upper(gene)
+            gene = gene.upper()
 
             if mode == "gene":
                 values = xena.xenaAPI.Gene_values(hub, dataset, samples, gene)
@@ -94,8 +95,9 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_list, outpu
             outputList.append('{:.2f}%'.format(percentage))
 
             r_and_p_values = map(lambda x: rank_and_percentage(x, h_l_values), itomic_Data.values())
-            outputList.append(string.join(map(lambda x: '100' if (x[1] > 99.5) else '{:.2g}'.format(x[1]),
-                r_and_p_values),', '))
+            outputList.append(
+                ', '.join(map(lambda x: '100' if (x[1] > 99.5) else '{:.2g}'.format(x[1]), r_and_p_values))
+            )
 
             # log2TPM statistics
             # ttest p value
@@ -125,27 +127,23 @@ def itomic_Nof1(Nof1_item, original_labels, geneMappping, comparison_list, outpu
                 outputList.append('')
                 outputList.append('')
 
-            print
-            print name +" ( n=", len(h_l_values), "):"
-            print "rank:", rank
-            #print map(lambda x: x[0], r_and_p_values)
+            print ()
+            print (name +" ( n=", len(list(h_l_values)), "):")
+            print ("rank:", rank)
 
-            print "Rank %:", '{:.2f}%'.format(percentage)
-
-            #for list in zip(itomic_Data.keys(), r_and_p_values):
-            #    print list[0], list[1][0], '{:.2f}%'.format(list[1][1])
+            print ("Rank %:", '{:.2f}%'.format(percentage))
 
         outputList.append('{:.2f}'.format(Nof1_value))
         outputList.append('{:.2f}'.format(revert_Log2_theta(Nof1_value, Nof1_item["log2Theta"])))
-        fout.write(string.join(outputList,'\t') +'\n')
+        fout.write('\t'.join(outputList) +'\n')
     fout.write("\n")
     fout.write("Rank % : percentile of samples with lower expression than sample of interest.\n")
     fout.write("Higher Rank %  means higher expression.\n")
     fout.close()
 
 def itomic_legend():
-    print "\nExpression values are sorted from high to low."
-    print "Low rank means high expression."
-    print "Rank % is the percentile of samples with lower expression than sample of interest."
-    print "Higher Rank %  means higher expression."
-    print
+    print ("\nExpression values are sorted from high to low.")
+    print ("Low rank means high expression.")
+    print ("Rank % is the percentile of samples with lower expression than sample of interest.")
+    print ("Higher Rank %  means higher expression.")
+    print ()

@@ -1,4 +1,4 @@
-import string, sys
+import sys
 import scipy.stats
 import numpy
 import statsmodels.sandbox.stats.multicomp
@@ -13,16 +13,16 @@ def get_itomic_Data (gene, hub, dataset, samples):
 
 
 def Nof1_output (Nof1_sample, original_label, gene, itomic_Data, Nof1_theta):
-    print
-    print 'Sample: ', Nof1_sample
-    print 'Gene:', original_label
+    print ()
+    print ('Sample: ', Nof1_sample)
+    print ('Gene:', original_label)
     if original_label!= gene:
-        print 'HUGO gene name:', gene
+        print ('HUGO gene name:', gene)
 
     Nof1_value = itomic_Data[Nof1_sample]
     Nof1_TPM = revert_Log2_theta(Nof1_value, Nof1_theta)
 
-    print "log2(TPM):", Nof1_value, "TPM:", '{:.2f}'.format(Nof1_TPM)
+    print ("log2(TPM):", Nof1_value, "TPM:", '{:.2f}'.format(Nof1_TPM))
 
 def filer_header (comparison_list, itomic_samples, Nof1_item, Nof1_sample, fout):
     headerList =["label","gene"]
@@ -46,12 +46,12 @@ def filer_header (comparison_list, itomic_samples, Nof1_item, Nof1_sample, fout)
     headerList.extend([Nof1_sample, Nof1_sample])
     header2ndList.extend(["log2(TPM-uq)","TPM-uq"])
 
-    fout.write(string.join(headerList,'\t') +'\n')
-    fout.write(string.join(header2ndList,'\t') +'\n')
+    fout.write('\t'.join(headerList) +'\n')
+    fout.write('\t'.join(header2ndList) +'\n')
 
 
 def itomic_Nof1(Nof1_sample, Nof1_item, original_labels, geneMappping, external_comparison_list, outputfile):
-    if Nof1_item.has_key("samples"):
+    if  "samples" in Nof1_item:
         itomic_samples = Nof1_item["samples"]
     else:
         itomic_samples = xena.xenaAPI.dataset_samples(Nof1_item["hub"], Nof1_item["dataset"])
@@ -84,7 +84,7 @@ def itomic_Nof1(Nof1_sample, Nof1_item, original_labels, geneMappping, external_
             samples = item["samples"]
             name = item["name"]
             mode = item["mode"]
-            gene = string.upper(gene)
+            gene = gene.upper()
 
             if mode == "gene":
                 values = xena.xenaAPI.Gene_values(hub, dataset, samples, gene)
@@ -109,14 +109,14 @@ def itomic_Nof1(Nof1_sample, Nof1_item, original_labels, geneMappping, external_
                 outputList.append('')
                 outputList.append('')
 
-        print
-        print Nof1_item["label"] +" ( n=", len(itomic_samples), "):"
-        print "rank:", rank
-        print "Rank %:", '{:.2f}%'.format(percentage)
+        print ()
+        print (Nof1_item["label"] +" ( n=", len(itomic_samples), "):")
+        print ("rank:", rank)
+        print ("Rank %:", '{:.2f}%'.format(percentage))
 
         outputList.append('{:.2f}'.format(Nof1_value))
         outputList.append('{:.2f}'.format(revert_Log2_theta(Nof1_value, Nof1_item["log2Theta"])))
-        fout.write(string.join(outputList,'\t') +'\n')
+        fout.write('\t'.join(outputList) +'\n')
 
     fout.write("\n")
     fout.write("Rank % : percentile of samples with lower expression than sample of interest.\n")
@@ -124,8 +124,8 @@ def itomic_Nof1(Nof1_sample, Nof1_item, original_labels, geneMappping, external_
     fout.close()
 
 def itomic_legend():
-    print "\nExpression values are sorted from high to low, low rank means high expression."
-    print
-    print "Rank % is the percentile of samples with lower expression than sample of interest."
-    print "Higher Rank %  means higher expression."
-    print
+    print ("\nExpression values are sorted from high to low, low rank means high expression.")
+    print ()
+    print ("Rank % is the percentile of samples with lower expression than sample of interest.")
+    print ("Higher Rank %  means higher expression.")
+    print ()
