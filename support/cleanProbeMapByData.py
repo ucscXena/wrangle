@@ -1,4 +1,4 @@
-import string, sys, os
+import sys, os
 
 def cleanProbeMapByData (matrixfile, probeMapfile, outputfile):
     #matrix features
@@ -8,7 +8,7 @@ def cleanProbeMapByData (matrixfile, probeMapfile, outputfile):
         line = fin.readline()
         if line == "":
             break
-        data = string.split(line[:-1],'\t')
+        data = line[:-1].split('\t')
         f = data[0]
         #print f
         for item in data[1:]:
@@ -30,7 +30,7 @@ def cleanProbeMapByData (matrixfile, probeMapfile, outputfile):
         if line =="":
             break
 
-        data = string.split(line[:-1],'\t')
+        data = line[:-1].split('\t')
         if data[0] in features:
            fout.write(line)
 
@@ -38,8 +38,8 @@ def cleanProbeMapByData (matrixfile, probeMapfile, outputfile):
     fout.close()
 
 if len(sys.argv[:])!=4:
-    print "\npython cleanProbeMapByData.py genomicMatrix probeMap newProbeMap"
-    print "\n new probeMap file remove all the null probes, i.e. probes that does not have any genomic data\n"
+    print ("\npython cleanProbeMapByData.py genomicMatrix probeMap newProbeMap")
+    print ("\n new probeMap file remove all the null probes, i.e. probes that does not have any genomic data\n")
     sys.exit()
 
 matrixfile = sys.argv[1]
