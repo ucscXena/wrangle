@@ -1,12 +1,14 @@
 import string, copy, numpy
+import re
 
-zdata = 'z.txt'
-probeMap = 'hugo_gencode_good_hg19_V24lift37_probemap'
+#zdata = 'z.txt'
+zdata = 'infercnv.observations.txt'
+probeMap = 'NI03_CNV_hg19_genes_ordered_correct_noXY.probeMap'
 cnvOutput = 'cnv.txt'
 
-window =100  # gene number window for averaging
-jump = 10 #select every N genes to output , display limitation
-
+window =100  			# gene number window for averaging
+jump = 10 				# select every N genes to output , display limitation
+centerCell = False		# center cell value
 
 def parseZdata(zdata):
 	fin =open(zdata,'r')
@@ -48,7 +50,14 @@ def parseProbeMap(probeMap, zDic):
 		chr = data[2]
 		if string.find(chr,'_') != -1:
 			continue
-		start= float(data[3])
+		start = float(data[3])
+
+		# convert chr1 CHR1 to 1, numbers only
+		chr = re.sub(re.escape('chr'), '', chr, flags=re.IGNORECASE)
+		try:
+			chr = int(chr) # ignore X Y
+		except:
+			pass
 		if chr not in genePos:
 			genePos[chr] =[]
 		genePos[chr].append([start, gene])
@@ -77,11 +86,13 @@ def calculateCNVincrement(genesAdd, genesMinus, zDic, N, total):
 
 def convertExpToCNV(zDic, genePos, N):
 	cnvDic = {}
+	cnvDicKeyOrder = [] # because we compute from chr1,chr2, we want to keep the order
 	total =[]
 	for i in range (0, N):
 		total.append(0.0)
 
-	for chr in genePos:
+	chromOrder = genePos.keys.sort()
+	for chr in chromOrder:
 		genes = map(lambda x: x[1], genePos[chr][:window])
 		total = calculateCNVtotal(genes, zDic, N)
 		
@@ -96,8 +107,9 @@ def convertExpToCNV(zDic, genePos, N):
 			genesMinus = map(lambda x: x[1], genePos[chr][i-jump: i])
 			
 			total = calculateCNVincrement(genesAdd, genesMinus, zDic, N, total)
-			cnvDic[chr + '_' + str(i)] = copy.deepcopy(total)
-			
+			probe = 'chr' + str(chr) + '_' + str(i)
+			cnvDic[probe] = copy.deepcopy(total)
+			cnvDicKeyOrder.append(probe)
 
 #		for i in range (jump, len(genePos[chr]) - window, jump):
 #			genesAdd = map(lambda x: x[1], genePos[chr][i + window -1 : i + window - 1 + jump])
@@ -105,7 +117,7 @@ def convertExpToCNV(zDic, genePos, N):
 
 #			total = calculateCNVincrement(genesAdd, genesMinus, zDic, N, total)
 #			cnvDic[chr + '_' + str(i)] = copy.deepcopy(total)
-	return cnvDic
+	return cnvDic, cnvDicKeyOrder
 
 def centerPerCell(cnvDic, N):
 	posList = cnvDic.keys()
@@ -118,10 +130,10 @@ def centerPerCell(cnvDic, N):
 			cnvDic[pos][i] = cnvDic[pos][i] - average
 	return cnvDic
 
-def output (samples, cnvDic, cnvOutput):
+def output (samples, cnvDic, cnvOutput, cnvDicKeyOrder):
 	fout = open(cnvOutput, 'w')
 	fout.write('cell\t' + string.join(samples,'\t') +'\n')
-	for key in cnvDic:
+	for key in cnvDicKeyOrder:
 		fout.write(key+'\t')
 		fout.write(string.join(map(lambda x: numpy.format_float_positional(x/window), cnvDic[key]),'\t'))
 		fout.write('\n')
@@ -129,6 +141,7 @@ def output (samples, cnvDic, cnvOutput):
 
 N, samples, zDic = parseZdata(zdata)
 genePos = parseProbeMap(probeMap, zDic)
-cnvDic = convertExpToCNV(zDic, genePos, N)
-cnvDic = centerPerCell(cnvDic, N)
-output (samples, cnvDic, cnvOutput)
+cnvDic, cnvDicKeyOrder = convertExpToCNV(zDic, genePos, N)
+if centerCell:
+	cnvDic = centerPerCell(cnvDic, N)
+output (samples, cnvDic, cnvOutput, cnvDicKeyOrder)
