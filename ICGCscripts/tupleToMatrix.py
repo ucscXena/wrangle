@@ -69,7 +69,7 @@ def buildMatrix(infile, outfile, hasHeader):
         value = float(value)
         sampleP = samples[sample]
         geneP = genes[gene]
-        matrix[geneP][sampleP]= value
+        matrix[geneP][sampleP]= value # TODO: averaging!!!
     
     Sarray = [] # sample array
     for i in range(0,len(samples)):
