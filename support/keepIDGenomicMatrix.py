@@ -12,26 +12,39 @@ def listing (mfile):
     return list
 
 def keepIDs (inputFile, outputFile, keep_list):
-    fin = open(inputFile,'U')
-
     goodPos=[]
-    #   ids = string.split(fin.readline()[:-1],'\t')
+
+    fin = open(inputFile,'r')
     ids = fin.readline()[:-1].split('\t')
-    for i in range (0, len(ids)):
-        if ids[i] in keep_list:
-            goodPos.append(i)
-            print ids[i], i
     fin.close()
 
-    goodPos.sort()
-    s= "cut -f 1,"  #pos=0 always in
-    for i in goodPos[:-1]:
-        s = s + str(1+i) + ","
-    s = s + str(1 + goodPos[-1]) + " " + inputfile + " > " + outputFile
-    os.system(s)
+    for i in range (len(keep_list)):
+        keepID = keep_list[i]
+        try:
+            index = ids.index(keepID)
+            goodPos.append(index)
+        except:
+            continue
+
+    fin = open(inputFile,'r')
+    fout = open(outputFile, 'w')
+    while 1:
+        line = fin.readline()
+        if line == '':
+            break
+        data = line[:-1].split('\t')
+        good_data =[]
+        #row name
+        fout.write(data[0]+'\t')
+        # rest of the line
+        for pos in goodPos:
+            good_data.append(data[pos])
+        fout.write('\t'.join(good_data)+'\n')
+    fin.close()
+    fout.close()
 
 if len(sys.argv[:])!=4:
-    print ("python keepIDGenomicMatrix.py matrixfile output keep_list(one_sample_id_per_line, first column is id)")
+    print ("python keepIDGenomicMatrix.py matrixInfile matrixOutfile(same order as in keep_list) keep_list(one_sample_id_per_line, first column ID, no header)")
     sys.exit(1)
 
 listfile = sys.argv[3]
