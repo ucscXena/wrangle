@@ -1,4 +1,4 @@
-import string, sys, math
+import sys, math
 
 def Log2xplusTheta  (inputFile, outputFile,theta):
     fin = open(inputFile,'U')
@@ -9,16 +9,16 @@ def Log2xplusTheta  (inputFile, outputFile,theta):
     fout.write(line)
 
     #nCOL
-    nCOL = len(string.split(line[:-1],'\t'))
+    nCOL = len(line[:-1].split('\t'))
 
     #data
     while 1:
         line = fin.readline()
         if line =="":
             break
-        data = string.split(line[:-1],'\t')
+        data = line[:-1].split('\t')
         if nCOL != len(data):
-            print "Wrong nCOL", data[0]
+            print ("Wrong nCOL", data[0])
             sys.exit()
 
         fout.write(data[0])
@@ -35,7 +35,7 @@ def Log2xplusTheta  (inputFile, outputFile,theta):
     fout.close()
 
 if len(sys.argv[:])!=4:
-    print "python Log2xplusTheta.py input(nolog) output(log2(x+theta)) theta"
+    print ("python Log2xplusTheta.py input(nolog) output(log2(x+theta)) theta")
     sys.exit()
 
 inputfile = sys.argv[1]
