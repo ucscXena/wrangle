@@ -4,7 +4,7 @@ def matchProbeMapByData (matrixfile, probeMapfile):
     #matrix features
     features = {}
     fin = open(matrixfile,'r')
-    line = fprobe.readline()
+    line = fin.readline()
     while 1:
         line = fin.readline()
         if line == "":
