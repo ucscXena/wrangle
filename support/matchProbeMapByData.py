@@ -10,7 +10,7 @@ def matchProbeMapByData (matrixfile, probeMapfile):
             break
         data = line[:-1].split('\t')
         feature = data[0]
-        features[f]=''
+        features[feature]=''
     fin.close()
     matrix_set = {features.keys()}
     
@@ -25,7 +25,7 @@ def matchProbeMapByData (matrixfile, probeMapfile):
 
         data = line[:-1].split('\t')
         feature = data[0]
-        features[f]=''
+        features[feature]=''
     fprobe.close()
     probemap_set = {features.keys()}
 
