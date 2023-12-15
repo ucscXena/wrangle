@@ -40,7 +40,7 @@ def matchProbeMapByData (matrixfile, probeMapfile):
 
 if len(sys.argv[:])!=3:
     print 
-    print ("python matchProbeMapByData.py genomicMatrix probeMap newProbeMap\n")
+    print ("python matchProbeMapByData.py genomicMatrix probeMap\n")
     sys.exit()
 
 matrixfile = sys.argv[1]
