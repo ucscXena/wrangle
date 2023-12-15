@@ -12,7 +12,7 @@ def matchProbeMapByData (matrixfile, probeMapfile):
         feature = data[0]
         features[feature]=''
     fin.close()
-    matrix_set = {features.keys()}
+    matrix_set = set(features.keys())
     
     #probeMap
     features = {}
@@ -27,7 +27,7 @@ def matchProbeMapByData (matrixfile, probeMapfile):
         feature = data[0]
         features[feature]=''
     fprobe.close()
-    probemap_set = {features.keys()}
+    probemap_set = set(features.keys())
 
     # overlap
     overlap_set = set.intersection(matrix_set, probemap_set)
