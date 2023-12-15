@@ -46,4 +46,4 @@ if len(sys.argv[:])!=3:
 matrixfile = sys.argv[1]
 probeMapfile = sys.argv[2]
 
-mathProbeMapByData (matrixfile, probeMapfile)
+matchProbeMapByData (matrixfile, probeMapfile)
